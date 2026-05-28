@@ -1,0 +1,72 @@
+
+# =========================
+# FLUTTER / DART
+# =========================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+pubspec.lock
+
+# =========================
+# IDE
+# =========================
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# =========================
+# ANDROID
+# =========================
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/key.properties
+
+# =========================
+# IOS
+# =========================
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+
+# =========================
+# MAC / SYSTEM
+# =========================
+.DS_Store
+*.log
+
+# =========================
+# WINDOWS
+# =========================
+*.exe
+*.dll
+*.so
+*.cache
+
+# =========================
+# ENV / SECRET FILES
+# =========================
+.env
+*.env
+*.pem
+*.keystore
+
+# =========================
+# BUILD OUTPUT (EXTRA SAFETY)
+# =========================
+/build/
+/android/app/.cxx/
+/ios/Flutter/engine/
+build/
+.dart_tool/
+.idea/
+*.log

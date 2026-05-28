@@ -1,0 +1,7 @@
+flutter_application_id:
+  android:
+    id: "com.aplikasii.mybalifriendz"
+    name: "My bali Friendz"
+  ios:
+    id: "com.aplikasii.mybalifriendz"
+    name: "My bali Friendz"

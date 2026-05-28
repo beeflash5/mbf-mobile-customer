@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "1033816567831",
+    "project_id": "mybalifriendz-a2e3d",
+    "storage_bucket": "mybalifriendz-a2e3d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033816567831:android:de172a5dba910c09cbac52",
+        "android_client_info": {
+          "package_name": "com.aplikasii.mybalifriendz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033816567831-3r2g9guvhs1ihhic3c4so1anjj7enm1c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aplikasii.mybalifriendz",
+            "certificate_hash": "ef59b62664d45bbb1f9cd16ba30bdc19e3eccb25"
+          }
+        },
+        {
+          "client_id": "1033816567831-j3fdo5co95cr2pdrmfehvbuuljtmotuk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aplikasii.mybalifriendz",
+            "certificate_hash": "859d8ee08d4057980a1d0baa7f5d39564489dbd4"
+          }
+        },
+        {
+          "client_id": "1033816567831-l1c235q24i561jg1mdj57tb6entv66jr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyaum4Blupgn26RIXsKxSEjsLup-FxvIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033816567831-l1c235q24i561jg1mdj57tb6entv66jr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1033816567831-5vpkgb45ajmsspb407l8o57kr1ciu79g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aplikasii.mybalifriendz"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033816567831:android:2258598cdba77371cbac52",
+        "android_client_info": {
+          "package_name": "com.aplikasii.mybalifriendz.merchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033816567831-l1c235q24i561jg1mdj57tb6entv66jr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyaum4Blupgn26RIXsKxSEjsLup-FxvIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033816567831-l1c235q24i561jg1mdj57tb6entv66jr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1033816567831-5vpkgb45ajmsspb407l8o57kr1ciu79g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aplikasii.mybalifriendz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
