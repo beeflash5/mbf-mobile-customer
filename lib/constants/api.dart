@@ -1,10 +1,19 @@
 import 'package:fuodz/services/auth.service.dart';
 
 class Api {
+  // REST API → Spring backend (api.mybalifriendz.co). The endpoint paths below
+  // are served by Spring, ported 1:1 from the old Laravel routes.
   static String get baseUrl {
-    return "https://mybalifriendz.co/api";
-    // return "https://ojekk.blini.my.id/api";
+    return "https://api.mybalifriendz.co/api";
+    // return "https://mybalifriendz.co/api";
     // return "http://192.168.1.6:8000/api";
+  }
+
+  // Web pages (terms/privacy/support/share), the web→app auth redirect and
+  // Laravel Echo/Reverb broadcasting are NOT served by Spring — they stay on
+  // the Laravel web app. Derived from the API host by default; override here.
+  static String get webBaseUrl {
+    return "https://panel.mybalifriendz.co";
   }
 
   static const appSettings = "/app/settings";
@@ -126,60 +135,60 @@ class Api {
 
   // Other pages
   static String get privacyPolicy {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/privacy/policy";
   }
 
   static String get terms {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/pages/terms";
   }
 
   static String get paymentTerms {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/pages/payment/terms";
   }
 
   static String get refundTerms {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/pages/refund/terms";
   }
 
   static String get cancelTerms {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/pages/cancel/terms";
   }
 
   static String get shippingTerms {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/pages/shipping/terms";
   }
 
   static String get contactUs {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     // return "$webUrl/pages/vendor/contact";
     return "$webUrl/pages/contact";
   }
 
   static String get contactUsWeb {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/pages/vendor/contact";
     // return "$webUrl/pages/contact";
   }
 
   static String get inappSupport {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/support/chat";
   }
 
   static String get appShareLink {
-    final webUrl = baseUrl.replaceAll('/api', '');
+    final webUrl = webBaseUrl;
     return "$webUrl/preview/share";
   }
 
   static Future<String> redirectAuth({String? url, String? route}) async {
     final userToken = await AuthServices.getAuthBearerToken();
-    final webUrl = "$baseUrl/external/web/redirect";
+    final webUrl = "$webBaseUrl/external/web/redirect";
     return "$webUrl?token=$userToken&route=$route&url=$url";
   }
 }

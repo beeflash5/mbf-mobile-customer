@@ -32,7 +32,8 @@ class WebsocketService {
 
     try {
       final userToken = await AuthServices.getAuthBearerToken();
-      String authBaseUrl = Api.baseUrl.replaceAll('/api', '');
+      // Broadcasting/auth is Laravel Reverb, not Spring — use the web host.
+      String authBaseUrl = Api.webBaseUrl;
       String wsHost = getWebsocketDetail("REVERB_HOST");
       String wsPort = getWebsocketDetail("REVERB_PORT");
       String wsAppKey = getWebsocketDetail("REVERB_APP_KEY");
