@@ -49,8 +49,7 @@ class OrderProduct {
         updatedAt: json["updated_at"] == null
             ? DateTime.now()
             : DateTime.parse(json["updated_at"]),
-        formattedDate:
-            json["formatted_date"] == null ? null : json["formatted_date"],
+        formattedDate: json["formatted_date"] ?? "",
         product:
             json["product"] == null ? null : Product.fromJson(json["product"]),
       );

@@ -1,4 +1,4 @@
-import 'package:fuodz/enums/product_fetch_data_type.enum.dart';
+import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/tag.dart';

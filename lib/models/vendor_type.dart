@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:fuodz/constants/app_colors.dart';
+import 'package:fuodz/utils/local_storage.service.dart';
 
 VendorType vendorTypeFromJson(String str) =>
     VendorType.fromJson(json.decode(str));
@@ -35,18 +35,18 @@ class VendorType {
   bool hasBanners;
 
   factory VendorType.fromJson(Map<String, dynamic> json) => VendorType(
-        id: json["id"] == null ? null : json["id"],
-        name: json["name"] == null ? null : json["name"],
-        description: json["description"] == null ? null : json["description"],
-        slug: json["slug"] == null ? null : json["slug"],
+        id: json["id"] ?? 0,
+        name: json["name"] ?? "",
+        description: json["description"] ?? "",
+        slug: json["slug"] ?? "",
         color: json["color"] == null
-            ? AppColor.colorEnv("primaryColor")
+            ? colorEnv("primaryColor")
             : (json["color"].toString().length == 7
                 ? json["color"]
-                : AppColor.colorEnv("primaryColor")),
-        isActive: json["is_active"] == null ? null : json["is_active"],
-        logo: json["logo"] == null ? null : json["logo"],
-        website_header: json["website_header"] == null ? null : json["website_header"],
+                : colorEnv("primaryColor")),
+        isActive: json["is_active"] ?? 0,
+        logo: json["logo"] ?? "",
+        website_header: json["website_header"] ?? "",
         hasBanners: json["has_banners"] == null
             ? false
             : ((json["has_banners"] is bool)

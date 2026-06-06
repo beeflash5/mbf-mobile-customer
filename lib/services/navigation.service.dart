@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fuodz/constants/app_routes.dart';
+import 'package:fuodz/utils/app_routes.dart';
+import 'package:fuodz/utils/extensions/router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/models/search.dart';
@@ -8,28 +10,21 @@ import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/auth.service.dart';
-import 'package:fuodz/views/pages/auth/login.page.dart';
-import 'package:fuodz/views/pages/booking/booking.page.dart';
-import 'package:fuodz/views/pages/category/categories.page.dart';
-import 'package:fuodz/views/pages/category/subcategories.page.dart';
-import 'package:fuodz/views/pages/commerce/commerce.page.dart';
-import 'package:fuodz/views/pages/food/food.page.dart';
-import 'package:fuodz/views/pages/grocery/grocery.page.dart';
-import 'package:fuodz/views/pages/parcel/parcel.page.dart';
-import 'package:fuodz/views/pages/pharmacy/pharmacy.page.dart';
-import 'package:fuodz/views/pages/product/amazon_styled_commerce_product_details.page.dart';
-import 'package:fuodz/views/pages/product/product_details.page.dart';
-import 'package:fuodz/views/pages/search/product_search.page.dart';
-import 'package:fuodz/views/pages/search/search.page.dart';
-import 'package:fuodz/views/pages/search/service_search.page.dart';
-import 'package:fuodz/views/pages/service/custom_service.page.dart';
-import 'package:fuodz/views/pages/service/custom_service_booking_data.page.dart';
-// import 'package:fuodz/views/pages/service/service.page.dart';
-import 'package:fuodz/views/pages/taxi/taxi.page.dart';
-import 'package:fuodz/views/pages/vendor/vendor.page.dart';
-import 'package:fuodz/views/pages/vendor_details/vendor_details.page.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:fuodz/extensions/context.dart';
+import 'package:fuodz/pages/booking/booking.page.dart';
+import 'package:fuodz/pages/commerce/commerce.page.dart';
+import 'package:fuodz/pages/food/food.page.dart';
+import 'package:fuodz/pages/grocery/grocery.page.dart';
+import 'package:fuodz/pages/parcel/parcel.page.dart';
+import 'package:fuodz/pages/pharmacy/pharmacy.page.dart';
+import 'package:fuodz/pages/product/amazon_styled_commerce_product_details.page.dart';
+import 'package:fuodz/pages/product/product_details.page.dart';
+import 'package:fuodz/pages/search/product_search.page.dart';
+import 'package:fuodz/pages/search/search.page.dart';
+import 'package:fuodz/pages/search/service_search.page.dart';
+import 'package:fuodz/pages/service/custom_service_booking_data.page.dart';
+// import 'package:fuodz/pages/service/service.page.dart';
+import 'package:fuodz/pages/taxi/taxi.page.dart';
+import 'package:fuodz/pages/vendor/vendor.page.dart';
 
 class NavigationService {
   static pageSelected(
@@ -41,15 +36,20 @@ class NavigationService {
 
     //
     if (vendorType.authRequired && !AuthServices.authenticated()) {
-      final result = await context.push((context) => LoginPage(required: true));
-      //
+      final result = await context.pushRoute<bool>(
+        AppRoutes.loginRoute,
+        extra: true,
+      );
       if (result == null || !result) {
         return;
       }
     }
     //
     if (loadNext) {
-      context.nextPage(nextpage);
+      // Use go_router with a custom page route for dynamic vendor-type pages.
+      // The destination widget is computed locally by `vendorTypePage()`
+      // because each vendor type maps to a different page implementation.
+      GoRouter.of(context).push('/vendor-type', extra: nextpage);
     }
   }
 
@@ -131,7 +131,7 @@ class NavigationService {
     }
   }
 
-  //open service search
+  //open service search — dispatched via /search route
   static openServiceSearch(
     BuildContext context, {
     Category? category,
@@ -140,31 +140,35 @@ class NavigationService {
     bool showServices = true,
     bool byLocation = true,
   }) {
-    context.nextPage(
-      ServiceSearchPage(
-        category: category,
-        vendorType: vendorType,
-        showVendors: showVendors,
-        showServices: showServices,
-        byLocation: byLocation,
-      ),
+    final search = Search(
+      vendorType: vendorType,
+      category: category,
+      byLocation: byLocation,
+      showVendorsTag: showVendors,
+      showServicesTag: showServices,
+      showProvidesTag: showVendors,
     );
+    GoRouter.of(context).push('/search', extra: search);
   }
 
   static openVendorDetailsPage(Vendor vendor, {required BuildContext context}) {
-    context.nextPage(VendorDetailsPage(vendor: vendor));
+    GoRouter.of(context).push('/vendors/${vendor.id}', extra: vendor);
   }
 
   static void openCategoriesPage({VendorType? vendorType}) {
-    AppService().navigatorKey.currentContext!.nextPage(
-      CategoriesPage(vendorType: vendorType),
-    );
+    final ctx = AppService().navigatorKey.currentContext;
+    if (ctx == null) return;
+    GoRouter.of(ctx).push('/categories', extra: vendorType);
   }
 
   static categorySelected(Category category) async {
-    Widget page;
+    final ctx = AppService().navigatorKey.currentContext;
+    if (ctx == null) return;
     if (category.hasSubcategories) {
-      page = SubcategoriesPage(category: category);
+      GoRouter.of(ctx).push(
+        '/categories/${category.id}/sub',
+        extra: category,
+      );
     } else {
       final search = Search(
         vendorType: category.vendorType,
@@ -173,16 +177,17 @@ class NavigationService {
         showVendorsTag: !(category.vendorType?.isService ?? false),
         showServicesTag: (category.vendorType?.isService ?? false),
         showProvidesTag: (category.vendorType?.isService ?? false),
-        // showType: (category.vendorType?.isService ?? false) ? 5 : 4,
       );
-      page = NavigationService().searchPageWidget(search);
+      GoRouter.of(ctx).push('/search', extra: search);
     }
-    AppService().navigatorKey.currentContext!.nextPage(page);
   }
 
   static void openServiceDetails(Service service) {
-    Navigator.of(
-      AppService().navigatorKey.currentContext!,
-    ).pushNamed(AppRoutes.serviceDetails, arguments: service);
+    final ctx = AppService().navigatorKey.currentContext;
+    if (ctx == null) return;
+    GoRouter.of(ctx).push(
+      '${AppRoutes.serviceDetails}/${service.id}',
+      extra: service,
+    );
   }
 }

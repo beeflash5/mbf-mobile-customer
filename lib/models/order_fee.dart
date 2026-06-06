@@ -26,7 +26,7 @@ class OrderFee {
       id: json["id"],
       name: json["name"] == null ? "" : json["name"],
       amount:
-          json["amount"] == null ? 0 : json["amount"].toString().toDouble()!,
+          json["amount"] == null ? 0 : (json["amount"].toString().toDouble() ?? 0.0),
     );
   }
 

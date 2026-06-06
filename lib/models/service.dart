@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:fuodz/extensions/dynamic.dart';
 import 'package:fuodz/models/age_base_price.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/guide.dart';
@@ -46,7 +45,7 @@ class Service {
     this.vendor_type_id,
     this.type,
   }) {
-    this.heroTag = dynamic.randomAlphaNumeric(15) + "$id";
+    this.heroTag = 'service-$id-${DateTime.now().microsecondsSinceEpoch}';
   }
 
   int id;
@@ -88,8 +87,8 @@ class Service {
     bool rawDescription = true,
   }) {
     return Service(
-      id: json["id"] == null ? null : json["id"],
-      name: json["name"] == null ? null : json["name"],
+      id: json["id"] == null ? 0 : int.parse(json["id"].toString()),
+      name: json["name"] ?? "",
       description:
           json["description"] == null
               ? ""
@@ -99,23 +98,29 @@ class Service {
                 RegExp(r'<[^>]*>'),
                 '',
               ),
-      price: double.parse(json["price"].toString()),
+      price: json["price"] == null ? 0.0 : double.parse(json["price"].toString()),
       discountPrice:
           json["discount_price"] == null
-              ? 0
+              ? 0.0
               : double.parse(json["discount_price"].toString()),
-      duration: json["duration"],
+      duration: json["duration"] ?? "fixed",
       isActive:
           json["is_active"] == null
               ? 0
               : int.parse(json["is_active"].toString()),
-      vendorId: int.parse(json["vendor_id"].toString()),
-      categoryId: json["category_id"] == null ? null : json["category_id"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
+      vendorId: json["vendor_id"] == null ? 0 : int.parse(json["vendor_id"].toString()),
+      categoryId: json["category_id"] == null ? null : int.tryParse(json["category_id"].toString()),
+      createdAt: json["created_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
+      updatedAt: json["updated_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
       formattedDate:
-          json["formatted_date"] == null ? null : json["formatted_date"],
-      vendor: Vendor.fromJson(json["vendor"]),
+          json["formatted_date"] ?? "",
+      vendor: json["vendor"] == null
+          ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
+          : Vendor.fromJson(json["vendor"]),
       category:
           json["category"] == null ? null : Category.fromJson(json["category"]),
       subcategory:
@@ -127,7 +132,7 @@ class Service {
       photos:
           json["photos"] == null
               ? []
-              : List<String>.from(json["photos"].map((x) => x)),
+              : List<String>.from(json["photos"].map((x) => x.toString())),
       location: json["location"] ?? true,
 
       //
@@ -153,7 +158,7 @@ class Service {
       //
       token: json["token"],
       ageRestricted: json["age_restricted"] ?? false,
-      description_url: json["description_url"],
+      description_url: json["description_url"] ?? "",
       shareable_link: json["shareable_link"],
       deep_link: json["deep_link"],
       video: json["video"],
@@ -181,16 +186,16 @@ class Service {
     "option_groups":
         optionGroups == null
             ? null
-            : List<dynamic>.from(optionGroups!.map((x) => x.toJson())),
+            : List<dynamic>.from((optionGroups ?? []).map((x) => x.toJson())),
 
     "agebasePrice":
         agebasePrice == null
             ? null
-            : List<dynamic>.from(agebasePrice!.map((x) => x.toJson())),
+            : List<dynamic>.from((agebasePrice ?? []).map((x) => x.toJson())),
     "guide":
         guide == null
             ? null
-            : List<dynamic>.from(guide!.map((x) => x.toJson())),
+            : List<dynamic>.from((guide ?? []).map((x) => x.toJson())),
 
     "token": token,
     "age_restricted": ageRestricted,
@@ -229,6 +234,6 @@ class Service {
 
   //
   bool get hasOptions {
-    return optionGroups != null && optionGroups!.length > 0;
+    return optionGroups != null && (optionGroups?.length ?? 0) > 0;
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/local_storage.service.dart';
-import 'package:fuodz/widgets/bottomsheets/location_permission.bottomsheet.dart';
+import 'package:fuodz/component/bottom_sheet/location_permission.bottomsheet.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 // import 'package:geocoder/geocoder.dart';
@@ -177,10 +177,8 @@ class LocationService {
         final addresses = await GeocoderService().findAddressesFromCoordinates(
           coordinates,
         );
-        //
-        currenctAddress = addresses.first;
-        //
-        if (currenctAddress != null) {
+        if (addresses.isNotEmpty) {
+          currenctAddress = addresses.first;
           currenctAddressSubject.add(currenctAddress!);
           //set and save for next time
           final mDeliveryaddress = DeliveryAddress(
@@ -218,8 +216,9 @@ class LocationService {
       final addresses = await GeocoderService().findAddressesFromCoordinates(
         coordinates,
       );
-      //
-      address = addresses.first;
+      if (addresses.isNotEmpty) {
+        address = addresses.first;
+      }
     } catch (error) {
       print("Issue with addressFromCoordinates ==> $error");
     }

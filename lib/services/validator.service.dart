@@ -1,5 +1,5 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:fuodz/extensions/dynamic.dart';
+import 'package:fuodz/utils/extensions/dynamic.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:inspection/inspection.dart';

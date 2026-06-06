@@ -77,7 +77,7 @@ class OrderStop {
         "formatted_date": formattedDate == null ? null : formattedDate,
         "delivery_address": deliveryAddress?.toJson(),
         "attachments": attachments != null
-            ? List<dynamic>.from(attachments!.map((x) => x.toJson()))
-            : [],
+            ? List<dynamic>.from((attachments ?? []).map((x) => x.toJson()))
+            : null,
       };
 }

@@ -1,8 +1,6 @@
-import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/models/service.dart';
 import 'package:fuodz/models/vendor_type.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class Category {
   int id;
@@ -35,14 +33,14 @@ class Category {
 
   factory Category.fromJson(dynamic jsonObject) {
     return Category(
-      id: jsonObject["id"],
-      name: jsonObject["name"],
-      imageUrl: jsonObject["photo"],
-      photo: jsonObject["photo"],
+      id: jsonObject["id"] ?? 0,
+      name: jsonObject["name"] ?? "",
+      imageUrl: jsonObject["photo"] ?? "",
+      photo: jsonObject["photo"] ?? "",
       color:
           jsonObject["color"] != null
               ? jsonObject["color"]
-              : AppColor.primaryColor.toHex(),
+              : '#000000',
       hasSubcategories:
           jsonObject["has_subcategories"] != null
               ? (jsonObject["has_subcategories"] as bool)

@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:fuodz/constants/app_colors.dart';
-import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/utils/app_colors.dart';
+import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/http.service.dart';
@@ -185,7 +185,7 @@ class Utils {
     String countryCode = "US";
     try {
       //make request to get country code
-      final response = await HttpService().dio!.get(
+      final response = await HttpService().dio.get(
         "http://ip-api.com/json/?fields=countryCode",
         //timeout like 2seconds
         options: Options(receiveTimeout: 5.seconds, sendTimeout: 2.seconds),

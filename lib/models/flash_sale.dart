@@ -40,10 +40,10 @@ class FlashSale {
       };
 
   Duration get countDownDuration {
-    return expiresAt!.difference(DateTime.now());
+    return (expiresAt ?? DateTime.now()).difference(DateTime.now());
   }
 
   bool get isExpired {
-    return expiresAt!.difference(DateTime.now()).inSeconds <= 0;
+    return (expiresAt ?? DateTime.now()).difference(DateTime.now()).inSeconds <= 0;
   }
 }

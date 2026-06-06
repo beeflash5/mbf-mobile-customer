@@ -123,8 +123,8 @@ class Coupon {
       throw "Order amount is less than coupon minimum allowed order".tr();
     }
 
-    if (this.max_coupon_amount != null && discount > this.max_coupon_amount!) {
-      return this.max_coupon_amount!;
+    if (this.max_coupon_amount != null && discount > (this.max_coupon_amount ?? 0)) {
+      return (this.max_coupon_amount ?? 0);
     } else {
       return discount;
     }

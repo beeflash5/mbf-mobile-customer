@@ -132,7 +132,7 @@
             android:value="2" />
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyD6eltnuOy-9r5dEFm-zTWYIxX4FbvTlOs"/>
+               android:value="AIzaSyD98jX5-thKKT7e0YY-OxE_Q_eowEgGIxI"/>
 
         <provider
             android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"

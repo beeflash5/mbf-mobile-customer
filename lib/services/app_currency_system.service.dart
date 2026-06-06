@@ -1,13 +1,10 @@
 import 'package:dartx/dartx.dart';
-import 'package:fuodz/constants/app_strings.dart';
-import 'package:fuodz/extensions/context.dart';
+import 'package:fuodz/utils/app_strings.dart';
+import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/services/local_storage.service.dart';
 import 'package:singleton/singleton.dart';
 import 'package:fuodz/models/currency.dart';
 import 'package:fuodz/services/app.service.dart';
-import 'package:fuodz/views/pages/profile/currency_selection.page.dart';
-import 'package:fuodz/views/pages/splash.page.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class AppCurrencySystemService {
   static const String selectedCurrencyCodeKey = "selected_currency_code";
@@ -114,9 +111,8 @@ class AppCurrencySystemService {
   void initAppCurrencyChange() async {
     final context = AppService().navigatorKey.currentContext;
     if (context != null) {
-      final selectedCurrency = await context.push((context) {
-        return CurrencySelectionPage(currentCurrency: _currency);
-      });
+      final selectedCurrency =
+          await context.pushRoute('/profile/currency', extra: _currency);
 
       //selectedCurrency != null
       if (selectedCurrency != null && selectedCurrency is Currency) {
@@ -135,7 +131,7 @@ class AppCurrencySystemService {
     // Navigate to splash page to reload app settings
     final context = AppService().navigatorKey.currentContext;
     if (context != null) {
-      context.nextAndRemoveUntilPage(SplashPage());
+      context.goRoute('/splash');
     }
   }
 }

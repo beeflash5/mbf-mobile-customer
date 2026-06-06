@@ -24,16 +24,28 @@ class User {
     required this.walletAddress,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return User(
+        id: 0,
+        name: "",
+        email: "",
+        phone: "",
+        countryCode: "",
+        photo: "",
+        role: "client",
+        walletAddress: "",
+      );
+    }
     return User(
-      id: json['id'],
+      id: json['id'] == null ? 0 : int.parse(json['id'].toString()),
       code: json['code'],
-      name: json['name'],
-      email: json['email'],
+      name: json['name'] ?? "",
+      email: json['email'] ?? "",
       phone: json['phone'] ?? "",
       rawPhone: json['raw_phone'],
       walletAddress: json['wallet_address'] ?? "",
-      countryCode: json['country_code'],
+      countryCode: json['country_code'] ?? "",
       photo: json['photo'] ?? "",
       role: json['role_name'] ?? "client",
     );

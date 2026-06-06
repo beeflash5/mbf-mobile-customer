@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:fuodz/extensions/dynamic.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/delivery_slot.dart';
@@ -14,7 +13,7 @@ import 'package:fuodz/models/package_type_pricing.dart';
 import 'package:fuodz/models/vendor_category.dart';
 import 'package:fuodz/models/vendor_date.dart';
 import 'package:fuodz/models/vendor_type.dart';
-import 'package:fuodz/utils/utils.dart';
+import 'package:fuodz/utils/extensions/string.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class Vendor {
@@ -77,7 +76,7 @@ class Vendor {
     this.can_dinein,
     // this.table_use,
   }) {
-    this.heroTag = dynamic.randomAlphaNumeric(25) + "$id";
+    this.heroTag = 'vendor-$id-${DateTime.now().microsecondsSinceEpoch}';
   }
 
   int id;
@@ -101,7 +100,7 @@ class Vendor {
   double? maxOrder;
   int pickup;
   int delivery;
-  int rating;
+  double rating;
   int reviews_count;
   int chargePerKm;
   bool isOpen;
@@ -148,16 +147,28 @@ class Vendor {
     bool rawDescription = true,
   }) {
     Vendor vendor = Vendor(
-      id: json["id"] == null ? null : json["id"],
-      vendorTypeId: json["vendor_type_id"],
-      vendorType: VendorType.fromJson(json["vendor_type"]),
-      name: json["name"] == null ? null : json["name"],
+      id: json["id"] ?? 0,
+      vendorTypeId: json["vendor_type_id"] ?? 0,
+      vendorType: json["vendor_type"] == null
+          ? VendorType(
+              id: 0,
+              name: "",
+              description: "",
+              slug: "",
+              color: "#000000",
+              isActive: 0,
+              logo: "",
+              website_header: "",
+              hasBanners: false,
+            )
+          : VendorType.fromJson(json["vendor_type"]),
+      name: (json["name"] ?? "").toString().parseLocalized(),
       description:
           json["description"] == null
               ? ""
               : !rawDescription
-              ? json["description"]
-              : json["description"].toString().replaceAll(
+              ? json["description"].toString().parseLocalized()
+              : json["description"].toString().parseLocalized().replaceAll(
                 RegExp(r'<[^>]*>'),
                 '',
               ),
@@ -174,9 +185,9 @@ class Vendor {
               ? 0
               : double.parse(json["delivery_range"].toString()),
       distance: double.tryParse(json["distance"].toString()),
-      tax: json["tax"] == null ? null : json["tax"],
-      phone: json["phone"] == null ? null : json["phone"],
-      email: json["email"] == null ? null : json["email"],
+      tax: json["tax"] ?? "0",
+      phone: json["phone"] ?? "",
+      email: json["email"] ?? "",
       address: json["address"] == null ? "" : json["address"],
       latitude: json["latitude"] == null ? "0.00" : json["latitude"],
       longitude: json["longitude"] == null ? "0.00" : json["longitude"],
@@ -187,8 +198,11 @@ class Vendor {
       pickup: json["pickup"] == null ? 0 : int.parse(json["pickup"].toString()),
       delivery:
           json["delivery"] == null ? 0 : int.parse(json["delivery"].toString()),
-      rating: json["rating"] == null ? 5 : int.parse(json["rating"].toString()),
-      reviews_count: json["reviews_count"],
+      rating:
+          json["rating"] == null
+              ? 5.0
+              : double.parse(json["rating"].toString()),
+      reviews_count: json["reviews_count"] ?? 0,
       chargePerKm:
           json["charge_per_km"] == null
               ? 0
@@ -198,13 +212,16 @@ class Vendor {
           json["is_active"] == null
               ? 0
               : int.parse(json["is_active"].toString()),
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
+      createdAt: json["created_at"] == null
+          ? DateTime.now()
+          : DateTime.parse(json["created_at"]),
+      updatedAt: json["updated_at"] == null
+          ? DateTime.now()
+          : DateTime.parse(json["updated_at"]),
       formattedDate:
-          json["formatted_date"] == null ? null : json["formatted_date"],
-      logo: json["logo"] == null ? null : json["logo"],
-      featureImage:
-          json["feature_image"] == null ? null : json["feature_image"],
+          json["formatted_date"] == null ? "" : json["formatted_date"],
+      logo: json["logo"] ?? "",
+      featureImage: json["feature_image"] ?? "",
       menus:
           json["menus"] == null
               ? []
@@ -257,7 +274,7 @@ class Vendor {
               : List<Fee>.from(json["fees"].map((x) => Fee.fromJson(x))),
 
       //
-      canRate: json["can_rate"] == null ? null : json["can_rate"],
+      canRate: json["can_rate"] ?? false,
       hasSubcategories:
           json["has_sub_categories"] == null
               ? false
@@ -307,7 +324,7 @@ class Vendor {
             return VendorDay.fromJson(vendorDay);
           }).toList(),
       isFavourite: json["is_favourite"] ?? false,
-      description_url: json['description_url'],
+      description_url: json['description_url'] ?? "",
       shareable_link: json['shareable_link'],
       deep_link: json['deep_link'],
       qty_tables:
@@ -319,7 +336,7 @@ class Vendor {
 
     //check if distance is null, then call utils to calculate distance
     if (vendor.distance == null) {
-      vendor.distance = Utils.vendorDistance(vendor);
+      // Utils.vendorDistance removed during legacy cleanup
     }
     //
     return vendor;

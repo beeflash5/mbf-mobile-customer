@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dartx/dartx.dart';
-import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/models/coupon.dart';
 import 'package:fuodz/models/product.dart';

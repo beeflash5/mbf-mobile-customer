@@ -1,10 +1,10 @@
 import 'package:fuodz/constants/api.dart';
-import 'package:fuodz/constants/app_map_settings.dart';
-import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/utils/app_map_settings.dart';
+import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/models/address.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/coordinates.dart';
-import 'package:fuodz/services/http.service.dart';
+import 'package:fuodz/services/api_service.dart';
 import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/utils/utils.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -13,7 +13,7 @@ import 'package:singleton/singleton.dart';
 export 'package:fuodz/models/address.dart';
 export 'package:fuodz/models/coordinates.dart';
 
-class GeocoderService extends HttpService {
+class GeocoderService extends ApiService {
 //
   /// Factory method that reuse same instance automatically
   factory GeocoderService() => Singleton.lazy(() => GeocoderService._());

@@ -39,7 +39,6 @@ dependencies:
     git:
       url: https://github.com/ambrosethebuild/custom_faqs
       ref: main
-  custom_sliding_segmented_control: 1.7.5
   dartx: ^1.1.0
   device_info_plus: ^12.1.0
   dio: ^5.8.0+1
@@ -49,9 +48,6 @@ dependencies:
   double_back_to_close: ^2.0.0
   dynamic_height_grid_view: ^0.0.3
   easy_refresh: ^3.4.0
-  equatable: ^2.0.3
-  eva_icons_flutter: ^3.1.0
-  expand_widget: ^2.1.0
   firebase_auth: ^6.0.2
   firebase_core: ^4.1.0
   firebase_crashlytics: ^5.0.1
@@ -60,13 +56,11 @@ dependencies:
   flag: ^7.0.0
   flutter:
     sdk: flutter
+  flutter_cache_manager: ^3.3.1
   flutter_dropdown_alert: ^1.0.7
   flutter_facebook_auth: ^7.1.1
   flutter_form_builder: ^10.0.1
-  flutter_icons:
-    git:
-      url: https://github.com/imclerran/flutter-icons.git
-      ref: dart-3
+  flutter_html: ^3.0.0
   flutter_image_compress: ^2.4.0
   flutter_inappwebview: ^6.1.5
   flutter_localizations:
@@ -74,35 +68,34 @@ dependencies:
   flutter_overboard: ^3.1.1
   flutter_polyline_points: ^1.0.0
   flutter_rating_bar: ^4.0.1
-  flutter_signin_button: ^2.0.0
+  flutter_riverpod: ^2.6.1
   flutter_staggered_animations: ^1.0.0
-  flutter_svg: ^2.0.9
   flutter_typeahead: ^5.2.0
-  form_builder_extra_fields: ^12.0.0
+  flutter_widget_from_html_core: any
   geohash_plus: ^1.1.1
   geolocator: ^14.0.0
-  glass: ^1.0.1+1
   glass_kit: 3.0.0
-  google_fonts: ^6.2.1
+  go_router: ^14.6.2
+  google_fonts: ^8.1.0
   google_maps_flutter: ^2.12.1
   google_maps_place_picker_mb_v2: ^1.0.1
-  google_nav_bar: ^5.0.6
   google_places_flutter: ^2.1.0
   google_sign_in: ^5.3.3
-  group_radio_button: 1.2.0
+  http: any
   hugeicons: ^0.0.7
   image_picker: ^1.1.2
   in_app_review: ^2.0.11
   inspection: ^0.0.13
+  intl: any
   jiffy: ^6.4.3
   keyboard_dismisser: ^3.0.0
   laravel_echo_null: ^0.1.1
   localize_and_translate: ^4.1.1
   location: ^8.0.0
   map_launcher: ^3.5.0
-  maps_toolkit: ^3.1.0
   masonry_grid: ^1.0.0
   measure_size: ^3.0.1
+  package_info_plus: any
   permission_handler: ^12.0.0+1
   pin_code_fields: ^8.0.1
   pinch_zoom: ^1.0.0
@@ -121,10 +114,7 @@ dependencies:
   singleton: ^0.0.3-nullsafety
   slide_countdown: ^0.2.8
   sliding_up_panel: ^2.0.0+1
-  sliver_snap: ^1.2.0
   smooth_page_indicator: ^1.0.0+2
-  stacked: ^3.5.0
-  sticky_headers: ^0.3.0+2
   supercharged: ^2.1.1
   synchronized: ^3.0.1
   timelines_plus: ^1.0.4
@@ -133,9 +123,6 @@ dependencies:
   velocity_x: ^4.3.1
   video_player: ^2.10.1
   what3words: ^3.1.0
-  flutter_cache_manager: ^3.3.1
-  flutter_html: ^3.0.0
-
 dependency_overrides:
   # archive: ^3.6.1
   flutter_widget_from_html: ^0.10.1
@@ -148,6 +135,11 @@ dependency_overrides:
   # win32: ^5.5.4
   package_info_plus: ^8.3.0
   webview_flutter_android: ^4.4.2
+  # pusher_client_socket 0.0.6+ changed PusherAuthOptions.headers from a
+  # Map<String,String> to a Future<Map> Function(), which breaks
+  # laravel_echo_null 0.1.1 (it still passes a Map). Pin to 0.0.5 — the last
+  # version with map headers — so the Echo connector compiles.
+  pusher_client_socket: 0.0.5
   # url_launcher_ios: ^6.3.1
   flutter_inappwebview_ios:
     git:

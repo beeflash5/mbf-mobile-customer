@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:fuodz/requests/auth.request.dart';
+import 'package:fuodz/services/auth.request.dart';
 import 'package:fuodz/services/auth.service.dart';
 import 'package:singleton/singleton.dart';
 

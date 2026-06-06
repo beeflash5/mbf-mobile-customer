@@ -3,7 +3,6 @@
 //     final taxiOrder = taxiOrderFromJson(jsonString);
 
 import 'dart:convert';
-import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/currency.dart';
 import 'package:fuodz/models/vehicle_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -53,18 +52,39 @@ class TaxiOrder {
   String? trip_time;
   VehicleType vehicleType;
 
-  factory TaxiOrder.fromJson(Map<String, dynamic> json) => TaxiOrder(
-      id: int.parse(json["id"].toString()),
-      orderId: int.parse(json["order_id"].toString()),
-      vehicleTypeId: int.parse(json["vehicle_type_id"].toString()),
-      pickupLatitude: json["pickup_latitude"],
-      pickupLongitude: json["pickup_longitude"],
-      pickupAddress: json["pickup_address"],
-      dropoffLatitude: json["dropoff_latitude"],
-      dropoffLongitude: json["dropoff_longitude"],
-      dropoffAddress: json["dropoff_address"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
+  factory TaxiOrder.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return TaxiOrder(
+        id: 0,
+        orderId: 0,
+        vehicleTypeId: 0,
+        pickupLatitude: "0.0",
+        pickupLongitude: "0.0",
+        pickupAddress: "",
+        dropoffLatitude: "0.0",
+        dropoffLongitude: "0.0",
+        dropoffAddress: "",
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        vehicleType: VehicleType.fromJson(null),
+      );
+    }
+    return TaxiOrder(
+      id: json["id"] == null ? 0 : int.parse(json["id"].toString()),
+      orderId: json["order_id"] == null ? 0 : int.parse(json["order_id"].toString()),
+      vehicleTypeId: json["vehicle_type_id"] == null ? 0 : int.parse(json["vehicle_type_id"].toString()),
+      pickupLatitude: json["pickup_latitude"] ?? "0.0",
+      pickupLongitude: json["pickup_longitude"] ?? "0.0",
+      pickupAddress: json["pickup_address"] ?? "",
+      dropoffLatitude: json["dropoff_latitude"] ?? "0.0",
+      dropoffLongitude: json["dropoff_longitude"] ?? "0.0",
+      dropoffAddress: json["dropoff_address"] ?? "",
+      createdAt: json["created_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
+      updatedAt: json["updated_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
       currency:
           json['currency'] != null ? Currency.fromJSON(json['currency']) : null,
       //Breakdown
@@ -73,7 +93,9 @@ class TaxiOrder {
       time_fare: json['time_fare'],
       trip_distance: json['trip_distance'],
       trip_time: json['trip_time'],
-      vehicleType: VehicleType.fromJson(json['vehicle_type']));
+      vehicleType: VehicleType.fromJson(json['vehicle_type']),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -87,7 +109,7 @@ class TaxiOrder {
         "dropoff_address": dropoffAddress,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
-        "currency": currency != null ? currency!.toJson() : null,
+        "currency": currency?.toJson(),
         //Breakdown
         "base_fare": base_fare,
         "distance_fare": distance_fare,
@@ -108,6 +130,6 @@ class TaxiOrder {
 
   //
   String get currencySymbol {
-    return currency != null ? currency!.symbol : AppStrings.currencySymbol;
+    return currency?.symbol ?? '';
   }
 }

@@ -38,7 +38,7 @@ class ServiceOption {
         id: json["id"],
         name: json["name"],
         description: json["description"] ?? "",
-        price: json["price"] == null ? 0 : json["price"].toString().toDouble()!,
+        price: json["price"] == null ? 0 : (json["price"].toString().toDouble() ?? 0.0),
         serviceOptionGroupId: json["service_option_group_id"],
         vendorId: json["vendor_id"],
         formattedDate: json["formatted_date"],

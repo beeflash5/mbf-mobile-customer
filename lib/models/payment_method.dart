@@ -33,21 +33,36 @@ class PaymentMethod {
   bool useExternalBrowser;
 
   factory PaymentMethod.fromJson(Map<String, dynamic> json) {
+    int parseBoolOrInt(dynamic val, int defaultValue) {
+      if (val == null) return defaultValue;
+      if (val is bool) return val ? 1 : 0;
+      if (val is int) return val;
+      return int.tryParse(val.toString()) ?? defaultValue;
+    }
+
+    bool parseBool(dynamic val, bool defaultValue) {
+      if (val == null) return defaultValue;
+      if (val is bool) return val;
+      if (val is int) return val == 1;
+      return val.toString().toLowerCase() == 'true' || val.toString() == '1';
+    }
+
     return PaymentMethod(
-      id: json["id"],
-      name: json["name"],
-      slug: json["slug"],
+      id: json["id"] == null ? 0 : int.parse(json["id"].toString()),
+      name: json["name"] ?? "",
+      slug: json["slug"] ?? "",
       instruction: json["instruction"],
-      isActive: int.parse(json["is_active"].toString()),
-      isCash: int.parse(json["is_cash"].toString()),
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
-      formattedDate: json["formatted_date"],
-      photo: json["photo"],
-      useExternalBrowser:
-          json["use_external_browser"] == null
-              ? false
-              : json["use_external_browser"],
+      isActive: parseBoolOrInt(json["is_active"], 0),
+      isCash: parseBoolOrInt(json["is_cash"], 0),
+      createdAt: json["created_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
+      updatedAt: json["updated_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
+      formattedDate: json["formatted_date"] ?? "",
+      photo: json["photo"] ?? "",
+      useExternalBrowser: parseBool(json["use_external_browser"], false),
     );
   }
 

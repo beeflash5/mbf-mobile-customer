@@ -8,25 +8,23 @@ import 'package:awesome_notifications/awesome_notifications.dart'
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firestore_chat/firestore_chat.dart';
-import 'package:flutter/material.dart';
-import 'package:fuodz/constants/app_routes.dart';
-import 'package:fuodz/constants/app_ui_settings.dart';
+import 'package:fuodz/utils/app_routes.dart';
+import 'package:fuodz/utils/app_ui_settings.dart';
+import 'package:go_router/go_router.dart';
 import 'package:fuodz/models/notification.dart';
 import 'package:fuodz/models/order.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/models/service.dart';
 import 'package:fuodz/models/vendor.dart';
-import 'package:fuodz/requests/order.request.dart';
-import 'package:fuodz/requests/product.request.dart';
-import 'package:fuodz/requests/service.request.dart';
-import 'package:fuodz/requests/vendor.request.dart';
+import 'package:fuodz/services/order.request.dart';
+import 'package:fuodz/services/product.request.dart';
+import 'package:fuodz/services/service.request.dart';
+import 'package:fuodz/services/vendor.request.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/chat.service.dart';
 import 'package:fuodz/services/notification.service.dart';
 import 'package:fuodz/services/toast.service.dart';
-import 'package:fuodz/views/pages/home.page.dart';
-import 'package:fuodz/views/pages/service/service_details.page.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:singleton/singleton.dart';
@@ -237,28 +235,23 @@ class FirebaseService {
                     : "Chat with driver".tr(),
             supportMedia: AppUISettings.canCustomerChatSupportMedia,
           );
-          //
-          Navigator.of(
-            AppService().navigatorKey.currentContext!,
-          ).pushNamed(AppRoutes.chatRoute, arguments: chatEntity);
+          GoRouter.of(AppService().navigatorKey.currentContext!).push(
+            AppRoutes.chatRoute,
+            extra: chatEntity,
+          );
         }
         //order
         else if (isOrder) {
-          //
           try {
-            //fetch order from api
             int orderId = int.parse("${notificationPayloadData!['order_id']}");
             Order order = await OrderRequest().getOrderDetails(id: orderId);
-            //
-            Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).pushNamed(AppRoutes.orderDetailsRoute, arguments: order);
+            GoRouter.of(AppService().navigatorKey.currentContext!).push(
+              '${AppRoutes.orderDetailsRoute}/${order.id}',
+              extra: order,
+            );
           } catch (error) {
-            //navigate to orders page
-            await Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).push(MaterialPageRoute(builder: (_) => HomePage()));
-            //then switch to orders tab
+            GoRouter.of(AppService().navigatorKey.currentContext!)
+                .go(AppRoutes.homeRoute);
             AppService().changeHomePageIndex();
           }
         }
@@ -282,14 +275,14 @@ class FirebaseService {
             }
           }
           try {
-            Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).pushNamed(AppRoutes.vendorDetails, arguments: vendor);
+            GoRouter.of(AppService().navigatorKey.currentContext!).push(
+              '${AppRoutes.vendorDetails}/${vendor?.id}',
+              extra: vendor,
+            );
           } catch (error) {
             ToastService.toastError("Unable to fetch vendor details".tr());
-            Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).pushNamed(AppRoutes.homeRoute);
+            GoRouter.of(AppService().navigatorKey.currentContext!)
+                .go(AppRoutes.homeRoute);
           }
 
           //
@@ -315,14 +308,14 @@ class FirebaseService {
             }
           }
           try {
-            Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).pushNamed(AppRoutes.product, arguments: product);
+            GoRouter.of(AppService().navigatorKey.currentContext!).push(
+              '${AppRoutes.product}/${product?.id}',
+              extra: product,
+            );
           } catch (error) {
             ToastService.toastError("Unable to fetch product details".tr());
-            Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).pushNamed(AppRoutes.homeRoute);
+            GoRouter.of(AppService().navigatorKey.currentContext!)
+                .go(AppRoutes.homeRoute);
           }
         }
         //service type of notification
@@ -346,27 +339,27 @@ class FirebaseService {
             }
           }
           try {
-            Navigator.of(AppService().navigatorKey.currentContext!).push(
-              MaterialPageRoute(builder: (_) => ServiceDetailsPage(service!)),
+            GoRouter.of(AppService().navigatorKey.currentContext!).push(
+              '${AppRoutes.serviceDetails}/${service?.id}',
+              extra: service,
             );
           } catch (error) {
             ToastService.toastError("Unable to fetch service details".tr());
-            Navigator.of(
-              AppService().navigatorKey.currentContext!,
-            ).pushNamed(AppRoutes.homeRoute);
+            GoRouter.of(AppService().navigatorKey.currentContext!)
+                .go(AppRoutes.homeRoute);
           }
         }
         //regular notifications
         else {
-          Navigator.of(AppService().navigatorKey.currentContext!).pushNamed(
+          GoRouter.of(AppService().navigatorKey.currentContext!).push(
             AppRoutes.notificationDetailsRoute,
-            arguments: notificationModel,
+            extra: notificationModel,
           );
         }
       } else {
-        Navigator.of(AppService().navigatorKey.currentContext!).pushNamed(
+        GoRouter.of(AppService().navigatorKey.currentContext!).push(
           AppRoutes.notificationDetailsRoute,
-          arguments: notificationModel,
+          extra: notificationModel,
         );
       }
     } catch (error) {

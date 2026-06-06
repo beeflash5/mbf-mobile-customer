@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart'
     hide NotificationModel;
 import 'package:flutter/services.dart';
-import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/models/notification.dart';
 import 'package:fuodz/services/firebase.service.dart';
 

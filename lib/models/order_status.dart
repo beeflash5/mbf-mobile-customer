@@ -3,6 +3,7 @@
 //     final orderStatus = orderStatusFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:fuodz/utils/extensions/string.dart';
 
 OrderStatus orderStatusFromJson(String str) =>
     OrderStatus.fromJson(json.decode(str));
@@ -33,7 +34,7 @@ class OrderStatus {
   factory OrderStatus.fromJson(Map<String, dynamic> json) {
     return OrderStatus(
       id: json["id"] == null ? null : json["id"],
-      name: json["name"] == null ? null : json["name"],
+      name: json["name"] == null ? null : json["name"].toString().parseLocalized(),
       reason: json["reason"],
       modelType: json["model_type"] == null ? null : json["model_type"],
       modelId: json["model_id"] == null ? null : json["model_id"],

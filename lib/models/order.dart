@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/driver.dart';
 import 'package:fuodz/models/order_attachment.dart';
@@ -14,6 +13,7 @@ import 'package:fuodz/models/order_product.dart';
 import 'package:fuodz/models/payment_method.dart';
 import 'package:fuodz/models/user.dart';
 import 'package:dartx/dartx.dart';
+import 'package:fuodz/utils/extensions/string.dart';
 
 Order orderFromJson(String str) => Order.fromJson(json.decode(str));
 
@@ -176,20 +176,18 @@ class Order {
     }
 
     return Order(
-      id: json["id"] == null ? null : json["id"],
-      canRate: json["can_rate"] == null ? null : json["can_rate"],
-      isCancellable: json["can_cancel"] == null ? null : json["can_cancel"],
-      rateDriver:
-          json["can_rate_driver"] == null ? false : json["can_rate_driver"],
-      code: json["code"] == null ? null : json["code"],
+      id: json["id"] ?? 0,
+      canRate: json["can_rate"] ?? false,
+      isCancellable: json["can_cancel"] ?? false,
+      rateDriver: json["can_rate_driver"] ?? false,
+      code: json["code"] ?? "",
       photo: json["photo"],
       verificationCode:
           json["verification_code"] == null ? "" : json["verification_code"],
       note: json["note"] == null ? "--" : json["note"],
-      type: json["type"] == null ? null : json["type"],
-      status: json["status"] == null ? null : json["status"],
-      paymentStatus:
-          json["payment_status"] == null ? null : json["payment_status"],
+      type: json["type"] ?? "",
+      status: (json["status"] ?? "pending").toString().parseLocalized(),
+      paymentStatus: json["payment_status"] ?? "pending",
       subTotal:
           json["sub_total"] == null
               ? null
@@ -228,13 +226,13 @@ class Order {
           json["vendor_id"] == null
               ? null
               : int.parse(json["vendor_id"].toString()),
-      userId: int.parse(json["user_id"].toString()),
+      userId: json["user_id"] == null ? 0 : int.parse(json["user_id"].toString()),
       driverId:
           json["driver_id"] == null
               ? null
               : int.parse(json["driver_id"].toString()),
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
+      createdAt: json["created_at"] == null ? DateTime.now() : DateTime.parse(json["created_at"]),
+      updatedAt: json["updated_at"] == null ? DateTime.now() : DateTime.parse(json["updated_at"]),
       formattedDate:
           json["formatted_date"] == null ? null : json["formatted_date"],
       paymentLink: json["payment_link"] == null ? "" : json["payment_link"],
@@ -340,10 +338,8 @@ class Order {
           json["reser_table"] == null
               ? 0
               : int.parse(json["reser_table"].toString()),
-      checkin_status:
-          json["checkin_status"] == null ? null : json["checkin_status"],
-      can_reschedule:
-          json["can_reschedule"] == null ? null : json["can_reschedule"],
+      checkin_status: json["checkin_status"] ?? false,
+      can_reschedule: json["can_reschedule"] ?? false,
       check_in:
           json["check_in"] == null ? 0 : int.parse(json["check_in"].toString()),
       confirmation_note:
@@ -385,11 +381,11 @@ class Order {
     "products":
         orderProducts == null
             ? []
-            : List<dynamic>.from(orderProducts!.map((x) => x.toJson())),
+            : List<dynamic>.from((orderProducts ?? []).map((x) => x.toJson())),
     "stops":
         orderStops == null
             ? []
-            : List<dynamic>.from(orderStops!.map((x) => x.toJson())),
+            : List<dynamic>.from((orderStops ?? []).map((x) => x.toJson())),
     "user": user.toJson(),
     "driver": driver?.toJson(),
     "delivery_address": deliveryAddress?.toJson(),
@@ -401,9 +397,9 @@ class Order {
     "attachments":
         attachments == null
             ? []
-            : List<dynamic>.from(attachments!.map((x) => x.toJson())),
+            : List<dynamic>.from((attachments ?? []).map((x) => x.toJson())),
     "fees":
-        fees == null ? [] : List<dynamic>.from(fees!.map((x) => x.toJson())),
+        fees == null ? [] : List<dynamic>.from((fees ?? []).map((x) => x.toJson())),
 
     "tatto_placement": tatto_placement,
     "tatto_size": tatto_size,
@@ -522,17 +518,11 @@ class Order {
 
   //status => 'pending','preparing','enroute','failed','cancelled','delivered'
   get canChatVendor {
-    if (!AppStrings.enableChat) {
-      return false;
-    }
     return vendor != null &&
         ["pending", "preparing", "enroute"].contains(status);
   }
 
   get canChatDriver {
-    if (!AppStrings.enableChat) {
-      return false;
-    }
     return driver != null && ["enroute"].contains(status);
   }
 

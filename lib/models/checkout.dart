@@ -99,7 +99,7 @@ class CheckOut {
           json["total"] == null ? 0.00 : double.parse(json["total"].toString()),
       totalWithTip:
           json["total_with_tip"] == null
-              ? 0.00
+              ? (json["total"] == null ? 0.00 : double.parse(json["total"].toString()))
               : double.parse(json["total_with_tip"].toString()),
       isPickup: json["is_pickup"] == null ? false : json["is_pickup"],
       isScheduled: json["is_scheduled"] == null ? false : json["is_scheduled"],

@@ -1,13 +1,13 @@
 import 'dart:async';
 // import 'package:cool_alert/cool_alert.dart';
-import 'package:fuodz/constants/app_strings.dart';
-import 'package:fuodz/constants/sizes.dart';
+import 'package:fuodz/utils/app_strings.dart';
+import 'package:fuodz/utils/sizes.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:flutter/material.dart';
-import 'package:fuodz/constants/app_colors.dart';
+import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:fuodz/extensions/context.dart';
+import 'package:fuodz/utils/extensions/context.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 

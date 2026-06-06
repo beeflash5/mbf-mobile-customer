@@ -1,5 +1,4 @@
 import 'package:dartx/dartx.dart';
-import 'package:fuodz/extensions/dynamic.dart';
 import 'package:fuodz/models/digital_file.dart';
 import 'package:fuodz/models/option.dart';
 import 'package:fuodz/models/tag.dart';
@@ -44,7 +43,7 @@ class Product {
     this.expires_at,
     this.vendor_type_id,
   }) {
-    this.heroTag = dynamic.randomAlphaNumeric(15) + "$id";
+    this.heroTag = 'product-$id-${DateTime.now().microsecondsSinceEpoch}';
   }
 
   int id;
@@ -98,8 +97,8 @@ class Product {
               json["option_groups"].map((x) => OptionGroup.fromJson(x)),
             );
     return Product(
-      id: json["id"],
-      name: json["name"],
+      id: json["id"] ?? 0,
+      name: json["name"] ?? "",
       barcode: json["barcode"],
       description:
           json["description"] == null
@@ -107,9 +106,9 @@ class Product {
               : !rawDescription
               ? json["description"]
               : json["description"].toString().replaceAll(
-                RegExp(r'<[^>]*>'),
-                '',
-              ),
+                 RegExp(r'<[^>]*>'),
+                 '',
+               ),
       price: double.parse(json["price"].toString()),
       discountPrice:
           json["discount_price"] == null
@@ -142,8 +141,10 @@ class Product {
               : int.parse(json["is_active"].toString()),
       vendorId: int.parse(json["vendor_id"].toString()),
       categoryId: json["category_id"],
-      photo: json["photo"],
-      vendor: Vendor.fromJson(json["vendor"]),
+      photo: json["photo"] ?? "",
+      vendor: json["vendor"] == null
+          ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
+          : Vendor.fromJson(json["vendor"]),
       optionGroups: productOptions,
       digitalFiles:
           json["digital_files"] == null
@@ -183,7 +184,7 @@ class Product {
               : List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
       //
       token: json["token"],
-      description_url: json["description_url"],
+      description_url: json["description_url"] ?? "",
       shareable_link: json["shareable_link"],
       deep_link: json["deep_link"],
       expires_at: json["expires_at"],
@@ -214,7 +215,7 @@ class Product {
     "digital_files":
         digitalFiles == null
             ? null
-            : List<dynamic>.from(digitalFiles!.map((x) => x.toJson())),
+            : List<dynamic>.from((digitalFiles ?? []).map((x) => x.toJson())),
 
     //
     "available_qty": availableQty,
@@ -224,7 +225,7 @@ class Product {
     "reviews_count": reviewsCount,
     "age_restricted": ageRestricted,
     "tags":
-        tags == null ? null : List<dynamic>.from(tags!.map((x) => x.toJson())),
+        tags == null ? null : List<dynamic>.from((tags ?? []).map((x) => x.toJson())),
     "token": token,
     "description_url": description_url,
     "shareable_link": shareable_link,
@@ -247,7 +248,7 @@ class Product {
   //getters
   get showDiscount => (discountPrice > 0.00) && (discountPrice < price);
   get canBeDelivered => deliverable == 1;
-  bool get hasStock => availableQty == null || availableQty! > 0;
+  bool get hasStock => availableQty == null || (availableQty ?? 0) > 0;
   double get sellPrice {
     return showDiscount ? discountPrice : price;
   }

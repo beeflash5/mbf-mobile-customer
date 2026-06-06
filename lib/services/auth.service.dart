@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart' hide User;
-import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/models/user.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/firebase.service.dart';
-import 'package:fuodz/services/http.service.dart';
-import 'package:fuodz/view_models/splash.vm.dart';
+import 'package:fuodz/services/api_service.dart';
+import 'package:fuodz/services/splash.service.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 
 import 'local_storage.service.dart';
@@ -108,8 +108,9 @@ class AuthServices {
 
       //log the new
       if (reload) {
-        await SplashViewModel(AppService().navigatorKey.currentContext!)
-            .loadAppSettings();
+        await SplashService.loadAppSettings(
+          AppService().navigatorKey.currentContext!,
+        );
       }
 
       return currentUser;
@@ -122,7 +123,7 @@ class AuthServices {
   ///
   //
   static Future<void> logout() async {
-    await HttpService().getCacheManager().clearAll();
+    await ApiService().cacheManager.clearAll();
     await LocalStorageService.prefs?.clear();
     await LocalStorageService.rxPrefs?.clear();
     await LocalStorageService.prefs?.setBool(AppStrings.firstTimeOnApp, false);

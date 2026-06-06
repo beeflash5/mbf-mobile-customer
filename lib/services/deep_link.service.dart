@@ -3,7 +3,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/models/apple_login_data.dart';
 import 'package:fuodz/services/app.service.dart';
-import 'package:fuodz/views/pages/deep_link_loading.page.dart';
+import 'package:fuodz/pages/deep_link_loading.page.dart';
 import 'package:singleton/singleton.dart';
 
 class DeepLinkService {

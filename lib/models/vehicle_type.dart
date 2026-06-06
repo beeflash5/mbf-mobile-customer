@@ -56,28 +56,52 @@ class VehicleType {
   String? icon;
   String? iconBase64;
 
-  factory VehicleType.fromJson(Map<String, dynamic> json) {
+  factory VehicleType.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return VehicleType(
+        id: 0,
+        name: "",
+        slug: "",
+        baseFare: 0.0,
+        distanceFare: 0.0,
+        timeFare: 0.0,
+        minFare: 0.0,
+        total: 0.0,
+        tax: 0.0,
+        isActive: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        formattedDate: "",
+        photo: "",
+        currency: null,
+        encrypted: null,
+      );
+    }
     return VehicleType(
-      id: json["id"],
-      name: json["name"],
-      slug: json["slug"],
+      id: json["id"] == null ? 0 : int.parse(json["id"].toString()),
+      name: json["name"] ?? "",
+      slug: json["slug"] ?? "",
       baseFare: json["base_fare"].toString().toDoubleOrNull() ?? 0,
       distanceFare: json["distance_fare"].toString().toDoubleOrNull() ?? 0,
       timeFare: json["time_fare"].toString().toDoubleOrNull() ?? 0,
       minFare: json["min_fare"].toString().toDoubleOrNull() ?? 0,
       total: json["total"].toString().toDoubleOrNull() ?? 0,
       tax: json["tax"].toString().toDoubleOrNull() ?? 0,
-      isActive: json["is_active"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
-      formattedDate: json["formatted_date"],
-      photo: json["photo"],
+      isActive: json["is_active"] == null ? 0 : int.parse(json["is_active"].toString()),
+      createdAt: json["created_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
+      updatedAt: json["updated_at"] == null
+          ? DateTime.now()
+          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
+      formattedDate: json["formatted_date"] ?? "",
+      photo: json["photo"] ?? "",
       encrypted: json["encrypted"],
       currency:
           json["currency"] != null ? Currency.fromJSON(json["currency"]) : null,
       //new fields
       surgeRate: json["surge_rate"] != null
-          ? (json["surge_rate"].toString().toDouble())
+          ? (json["surge_rate"].toString().toDoubleOrNull())
           : null,
       icon: json["icon"],
       iconBase64: json["icon_base64"],
@@ -109,6 +133,6 @@ class VehicleType {
 
   //
   bool get hasSurge {
-    return surgeRate != null && surgeRate! > 0;
+    return surgeRate != null && (surgeRate ?? 0) > 0;
   }
 }
