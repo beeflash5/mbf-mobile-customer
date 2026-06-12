@@ -296,7 +296,8 @@ class CheckoutController
 
   void togglePickupStatus(bool? value) {
     final isPickup = value ?? false;
-    final isScheduled = value == true ? false : true;
+    final bool allowSchedule = state.vendor?.allowScheduleOrder == true || state.vendor?.isFoodOrBeverage == true;
+    final isScheduled = value == true ? false : allowSchedule;
     final co = state.checkout;
     co.deliveryAddress = isPickup ? null : state.deliveryAddress;
     state = state.copyWith(

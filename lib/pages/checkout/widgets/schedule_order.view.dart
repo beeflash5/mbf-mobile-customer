@@ -56,7 +56,7 @@ class ScheduleOrderView extends StatelessWidget {
         .contains(vendor.vendorType.slug.toLowerCase());
     final bool isTattoo = vendor.vendorType.slug.toLowerCase() == "tattoo";
     return Visibility(
-      visible: vendor.allowScheduleOrder || isServiceBooking || isTattoo,
+      visible: vendor.allowScheduleOrder || isServiceBooking || isTattoo || vendor.isFoodOrBeverage,
       child: VStack([
         if (!isServiceBooking)
           HStack([
