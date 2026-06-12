@@ -30,6 +30,7 @@ import 'package:fuodz/pages/home.page.dart';
 import 'package:fuodz/pages/loyalty/loyalty_point.page.dart';
 import 'package:fuodz/pages/notification/notifications.page.dart';
 import 'package:fuodz/pages/order/orders.page.dart';
+import 'package:fuodz/pages/chat/order_chat.page.dart';
 import 'package:fuodz/pages/review/post_product_review.page.dart';
 import 'package:fuodz/pages/review/product_reviews.page.dart';
 import 'package:fuodz/pages/vendor/vendor_reviews.page.dart';
@@ -158,11 +159,22 @@ class AppRouter {
         },
       ),
 
-      // Orders
       GoRoute(
         path: '/orders',
         name: 'orders',
         builder: (_, __) => const OrdersPage(),
+      ),
+      GoRoute(
+        path: '/chat',
+        name: 'chat',
+        builder: (_, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return OrderChatPage(
+            orderCode: extra['orderCode'] ?? '',
+            chatType: extra['chatType'] ?? 'customerVendor',
+            receiverId: extra['receiverId'] ?? 0,
+          );
+        },
       ),
       GoRoute(
         path: '/orders/:id',
