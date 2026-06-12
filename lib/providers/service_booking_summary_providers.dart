@@ -651,7 +651,7 @@ class ServiceBookingSummaryController
       final co = state.checkout;
       if (state.vendorTypeId == 13) {
          // Auto-use Cash payment method (id 1) for Tattoo to match Next.js
-         co.paymentMethod = PaymentMethod(id: 1, name: 'Cash', slug: 'cash', isActive: 1, isCash: 1, createdAt: DateTime.now(), updatedAt: DateTime.now(), formattedDate: '', instruction: '', photo: '', useExternalBrowser: false);
+         co.paymentMethod = PaymentMethod(id: 1, name: 'Cash', slug: 'cash', isActive: 1, isCash: 1, createdAt: DateTime.now(), updatedAt: DateTime.now(), formattedDate: '', instruction: '', photo: '', useExternalBrowser: false, useWallet: 0);
       }
       co.total = co.totalWithTip;
       final apiResponse = await _checkoutRequest.newServiceOrder(
