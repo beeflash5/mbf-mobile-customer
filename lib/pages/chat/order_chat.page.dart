@@ -60,7 +60,11 @@ class _OrderChatPageState extends State<OrderChatPage> {
     setState(() => isBusy = true);
     try {
       Dio dio = Dio();
-      final response = await dio.get("${Api.baseUrl}chat/history/${widget.orderCode}/${widget.chatType}");
+      final token = await AuthServices.getAuthBearerToken();
+      if (token != null) {
+        dio.options.headers["Authorization"] = "Bearer $token";
+      }
+      final response = await dio.get("${Api.baseUrl}/chat/history/${widget.orderCode}/${widget.chatType}");
       if (response.statusCode == 200 && response.data != null) {
         if (mounted) {
           setState(() {
