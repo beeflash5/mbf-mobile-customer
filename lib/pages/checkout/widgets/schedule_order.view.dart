@@ -52,29 +52,32 @@ class ScheduleOrderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isServiceBooking = ["service", "tour", "booking", "bookings", "accommodation"]
+        .contains(vendor.vendorType.slug.toLowerCase());
     return Visibility(
-      visible: vendor.allowScheduleOrder,
+      visible: vendor.allowScheduleOrder || isServiceBooking,
       child: VStack([
-        HStack([
-          vendor.isFoodOrBeverage
-              ? VStack([
-                  "Reservation".tr().text.lg.semiBold.make(),
-                  "Do you want to make a reservation?".tr().text.make(),
-                ]).expand()
-              : VStack([
-                  "Schedule Order".tr().text.lg.semiBold.make(),
-                  "When do you want to book this service?"
-                      .tr()
-                      .text
-                      .color(const Color(0xff808080))
-                      .make(),
-                ]).expand(),
-          Checkbox(value: isScheduled, onChanged: onToggleScheduled),
-        ], crossAlignment: CrossAxisAlignment.start)
-            .wFull(context)
-            .onInkTap(() => onToggleScheduled(!isScheduled)),
+        if (!isServiceBooking)
+          HStack([
+            vendor.isFoodOrBeverage
+                ? VStack([
+                    "Reservation".tr().text.lg.semiBold.make(),
+                    "Do you want to make a reservation?".tr().text.make(),
+                  ]).expand()
+                : VStack([
+                    "Schedule Order".tr().text.lg.semiBold.make(),
+                    "When do you want to book this service?"
+                        .tr()
+                        .text
+                        .color(const Color(0xff808080))
+                        .make(),
+                  ]).expand(),
+            Checkbox(value: isScheduled, onChanged: onToggleScheduled),
+          ], crossAlignment: CrossAxisAlignment.start)
+              .wFull(context)
+              .onInkTap(() => onToggleScheduled(!isScheduled)),
         Visibility(
-          visible: isScheduled,
+          visible: isScheduled || isServiceBooking,
           child: VStack([
             UiSpacer.verticalSpace(),
             "Date slot".tr().text.lg.make(),

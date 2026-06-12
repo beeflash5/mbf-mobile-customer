@@ -209,10 +209,18 @@ class ServiceBookingSummaryController
       co.subTotal += option.price;
     }
     AppService().vendorId = arg.vendor.id;
+
+    final bool isServiceBooking = ["service", "tour", "booking", "bookings", "accommodation"]
+        .contains(arg.vendor.vendorType.slug.toLowerCase());
+    if (isServiceBooking) {
+      co.isScheduled = true;
+    }
+
     return ServiceBookingSummaryState(
       service: arg,
       checkout: co,
       vendor: arg.vendor,
+      isScheduled: isServiceBooking,
     );
   }
 
