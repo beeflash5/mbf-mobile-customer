@@ -7,6 +7,8 @@ import 'package:fuodz/component/custom_dynamic_grid_view.dart';
 import 'package:fuodz/component/list/commerce_product.list_item.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/providers/vendor_sections_providers.dart';
+import 'package:fuodz/services/product_search.helper.dart';
+import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class BestSellingProducts extends ConsumerWidget {
@@ -26,7 +28,22 @@ class BestSellingProducts extends ConsumerWidget {
     final products = asyncProducts.valueOrNull ?? const [];
 
     return VStack([
-      "Best Selling".tr().text.semiBold.lg.make().px12().py2(),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          "Best Selling".tr().text.semiBold.lg.make(),
+          "See all"
+              .tr()
+              .text
+              .color(const Color(0xFF1B8A9E))
+              .make()
+              .onTap(() => ProductSearchHelper.openProductsSeeAllPage(
+                    title: "Best Selling".tr(),
+                    vendorType: vendorType,
+                    type: ProductFetchDataType.BEST,
+                  )),
+        ],
+      ).px12().py2(),
       CustomDynamicHeightGridView(
         noScrollPhysics: true,
         separatorBuilder: (context, index) => UiSpacer.smHorizontalSpace(),

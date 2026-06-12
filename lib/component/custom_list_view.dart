@@ -69,7 +69,7 @@ class CustomListView extends StatelessWidget {
 
   Widget _getBody() {
     final contentBody =
-        this.isLoading
+        (this.isLoading && this.dataSet.isEmpty)
             ? this.loadingWidget ?? LoadingShimmer()
             : this.hasError
             ? this.errorWidget ?? EmptyState(description: "There is an error")

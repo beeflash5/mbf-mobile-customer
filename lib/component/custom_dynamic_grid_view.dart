@@ -80,7 +80,7 @@ class CustomDynamicHeightGridView extends StatelessWidget {
   }
 
   Widget _getBody() {
-    return this.isLoading
+    return (this.isLoading && this.itemCount <= 0)
         ? this.loadingWidget ?? LoadingShimmer()
         : this.hasError
             ? this.errorWidget ?? EmptyState()

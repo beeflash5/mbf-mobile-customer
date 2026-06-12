@@ -48,9 +48,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(searchControllerProvider(widget.search).notifier)
-          .startSearch();
+      final notifier =
+          ref.read(searchControllerProvider(widget.search).notifier);
+      notifier.setSelectedTag(2);
+      notifier.startSearch();
     });
   }
 

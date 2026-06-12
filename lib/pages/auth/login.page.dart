@@ -68,7 +68,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (!mounted) return;
     switch (phase) {
       case LoginSuccess():
-        context.goRoute(AppRoutes.homeRoute);
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context, true);
+        } else {
+          context.goRoute(AppRoutes.homeRoute);
+        }
         break;
       case LoginFailure(:final message):
         AlertService.error(
@@ -115,10 +119,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           }
         },
         child: BasePage(
-          body: Padding(
-            padding: EdgeInsets.only(bottom: context.mq.viewInsets.bottom),
-            child: VStack([
-              ImageLogin(),
+          body: VStack([
+            ImageLogin(),
               VStack([
                 "Login Now!".tr().text.lg.semiBold.make().centered(),
                 "Welcome back. Please enter your details."
@@ -202,9 +204,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   }).expand(),
                 ],
               ).px20(),
-              const SizedBox(height: 30),
             ]).scrollVertical(),
-          ),
         ),
       ),
     );

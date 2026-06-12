@@ -399,7 +399,7 @@ class Vendor {
   //
   bool get allowOnlyDelivery => delivery == 1 && pickup == 0;
   bool get allowOnlyPickup => delivery == 0 && pickup == 1;
-  bool get isServiceType => vendorType.slug == "service";
+  bool get isServiceType => ["service", "tour", "tattoo", "booking", "bookings"].contains(vendorType.slug.toLowerCase());
   bool get isPharmacyType => vendorType.slug == "pharmacy";
   bool get isParcelType => ["parcel", "package"].contains(vendorType.slug);
   bool get isFoodOrBeverage => vendorTypeId == 2 || ["food", "beverage", "beverages"].contains(vendorType.slug.toLowerCase());

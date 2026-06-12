@@ -342,80 +342,88 @@ class _ServiceBookingSummaryPageState
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: const Color(0xffD9D9D9)),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        "Stay Duration".text.bold.lg.make(),
+                        "Choose how long you’ll stay"
+                            .text
+                            .color(const Color(0xff808080))
+                            .make(),
+                      ],
+                    ).expand(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: controller.decrementDuration,
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: Text(
+                            "${state.durationQty}",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: controller.incrementDuration,
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 10),
+
+            if (service.agebasePrice != null && service.agebasePrice!.isNotEmpty)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xffD9D9D9)),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            "Stay Duration".text.bold.lg.make(),
-                            "Choose how long you’ll stay"
-                                .text
-                                .color(const Color(0xff808080))
-                                .make(),
-                          ],
-                        ).expand(),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: controller.decrementDuration,
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.remove,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              child: Text(
-                                "${state.durationQty}",
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: controller.incrementDuration,
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    const Divider(color: Color(0xffD9D9D9)),
-                    const SizedBox(height: 10),
                     "Guest".text.bold.lg.make(),
                     state.guests
                         .where((g) => g.qty > 0)
@@ -518,8 +526,23 @@ class _ServiceBookingSummaryPageState
                         },
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const Divider(color: Color(0xffD9D9D9)),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 10),
+
+            if (service.guide != null && service.guide!.isNotEmpty)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xffD9D9D9)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     "Guide".text.bold.lg.make(),
                     "Enhance your trip with a local guide".text
                         .color(const Color(0xff808080))
@@ -559,6 +582,7 @@ class _ServiceBookingSummaryPageState
                   ],
                 ),
               ),
+            const SizedBox(height: 10),
 
             if (service.location)
               ServiceDeliveryAddressPickerView(

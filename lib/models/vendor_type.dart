@@ -59,8 +59,8 @@ class VendorType {
         .contains(slug.toLowerCase());
   }
 
-  bool get isService => ["service", "services"].contains(slug.toLowerCase());
-  bool get isBooking => ["booking", "bookings"].contains(slug.toLowerCase());
+  bool get isService => ["service", "services", "tour", "tattoo", "booking", "bookings"].contains(slug.toLowerCase());
+  bool get isBooking => ["booking", "bookings", "tour", "tattoo"].contains(slug.toLowerCase());
 
   bool get isGrocery => slug == "grocery";
 

@@ -83,7 +83,18 @@ factory Review.fromJson(Map<String, dynamic> json) {
 
       user: json["user"] != null
           ? User.fromJson(json["user"])
-          : null,
+          : (json["user_name"] != null
+              ? User(
+                  id: json["user_id"] != null ? int.tryParse(json["user_id"].toString()) ?? 0 : 0,
+                  name: json["user_name"] ?? "",
+                  email: "",
+                  phone: "",
+                  countryCode: "",
+                  photo: json["user_photo"] ?? "",
+                  role: "client",
+                  walletAddress: "",
+                )
+              : null),
     );
   } catch (e, s) {
     print("Review Parse Error ==> $e");

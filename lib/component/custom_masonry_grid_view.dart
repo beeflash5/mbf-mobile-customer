@@ -71,15 +71,17 @@ class CustomMasonryGridView extends StatelessWidget {
   }
 
   Widget _getBody() {
-    return this.isLoading
+    return (this.isLoading && this.items.isEmpty)
         ? this.loadingWidget ?? LoadingShimmer()
         : this.hasError
             ? this.errorWidget ?? EmptyState()
-            : this.justList
-                ? _getBodyList()
-                : Expanded(
-                    child: _getBodyList(),
-                  );
+            : this.items.isEmpty
+                ? this.emptyWidget ?? UiSpacer.emptySpace()
+                : this.justList
+                    ? _getBodyList()
+                    : Expanded(
+                        child: _getBodyList(),
+                      );
   }
 
   //

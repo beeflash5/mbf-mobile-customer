@@ -93,10 +93,11 @@ class ProfileController extends AsyncNotifier<ProfileState> {
 
   Future<LogoutResult> logout() async {
     try {
-      final res = await ref.read(_authRequestProvider).logoutRequest();
-      if (!res.allGood && res.code != 401) {
-        return LogoutFailure(res.message ?? '');
-      }
+      await ref.read(_authRequestProvider).logoutRequest();
+    } catch (_) {
+      // Ignore network / request failures during logout to ensure user is not stuck
+    }
+    try {
       await AuthServices.logout();
       return const LogoutSuccess();
     } catch (e) {

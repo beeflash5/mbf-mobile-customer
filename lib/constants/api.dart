@@ -13,7 +13,7 @@ class Api {
   // Laravel Echo/Reverb broadcasting are NOT served by Spring — they stay on
   // the Laravel web app. Derived from the API host by default; override here.
   static String get webBaseUrl {
-    return "https://panel.mybalifriendz.co";
+    return "https://mybalifriendz.co";
   }
 
   static const appSettings = "/app/settings";

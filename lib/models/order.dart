@@ -498,9 +498,9 @@ class Order {
       vendor?.vendorType != null &&
       vendor?.vendorType.slug == "parcel" &&
       packageType != null;
-  get isSerice =>
+  bool get isSerice =>
       vendor?.vendorType != null &&
-      vendor?.vendorType.slug == "service" &&
+      ["service", "tour", "tattoo", "booking", "bookings"].contains(vendor?.vendorType.slug) &&
       orderService != null;
   get isCommerce =>
       vendor?.vendorType != null &&

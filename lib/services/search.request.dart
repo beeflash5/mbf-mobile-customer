@@ -64,6 +64,7 @@ class SearchRequest extends ApiService {
       "tags": search.tags?.map((e) => e.id).toList(),
       "filter": search.productDataFetchType?.toString(),
       "rating": search.ratting?.toString(),
+      "min_rating": search.ratting?.toString(),
     };
 
     //
@@ -142,6 +143,7 @@ class SearchRequest extends ApiService {
       "tags": search.tags?.map((e) => e.id).toList(),
       "filter": search.productDataFetchType?.toString(),
       "rating": search.ratting?.toString(),
+      "min_rating": search.ratting?.toString(),
     };
 
     //

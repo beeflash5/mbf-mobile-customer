@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'package:fuodz/component/states/loading.shimmer.dart';
 import 'package:fuodz/component/bottom_sheet/location_picker.bottomsheet.dart';
 import 'package:fuodz/component/busy_indicator.dart';
 import 'package:fuodz/component/list/home_services.list_item.dart';
@@ -45,6 +46,12 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
     final vendorTypes = state?.vendorTypes ?? const [];
     final topRated = state?.topRated ?? const [];
     final blogs = state?.blogs ?? const [];
+
+    if (asyncState.isLoading && state == null) {
+      return const Scaffold(
+        body: LoadingShimmer(),
+      );
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,

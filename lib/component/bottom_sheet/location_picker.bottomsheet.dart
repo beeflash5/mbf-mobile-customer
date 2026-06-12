@@ -5,6 +5,8 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:fuodz/services/location_picker.helper.dart';
+import 'package:google_maps_place_picker_mb_v2/google_maps_place_picker.dart';
 
 import 'package:fuodz/providers/location_providers.dart';
 import 'package:fuodz/services/geocoder.service.dart';
@@ -232,6 +234,58 @@ class _LocationPickerSheetState extends ConsumerState<_LocationPickerSheet> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // ── choose on map button ──────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final result = await LocationPickerHelper.newPlacePicker(context);
+                      if (result == null) return;
+                      if (result is PickResult) {
+                        String? locality;
+                        String? adminArea;
+                        String? countryName;
+                        if (result.addressComponents != null && result.addressComponents!.isNotEmpty) {
+                          for (final c in result.addressComponents!) {
+                            if (c.types.contains('locality')) locality = c.longName;
+                            if (c.types.contains('administrative_area_level_1')) {
+                              adminArea = c.longName;
+                            }
+                            if (c.types.contains('country')) countryName = c.longName;
+                          }
+                        }
+                        final address = Address(
+                          addressLine: result.formattedAddress,
+                          featureName: result.name ?? result.formattedAddress,
+                          coordinates: Coordinates(
+                            result.geometry?.location.lat ?? 0.0,
+                            result.geometry?.location.lng ?? 0.0,
+                          ),
+                          locality: locality,
+                          adminArea: adminArea,
+                          countryName: countryName,
+                        );
+                        _applyAddress(address);
+                      } else if (result is Address) {
+                        _applyAddress(result);
+                      }
+                    },
+                    icon: const Icon(Icons.map, size: 18),
+                    label: Text("Choose on Map".tr()),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: primaryColor,
+                      side: BorderSide(color: primaryColor, width: 1.5),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
