@@ -103,10 +103,10 @@ class _OrderChatPageState extends State<OrderChatPage> {
     if (text.isEmpty && attachmentUrl == null) return;
 
     final body = {
-      "orderCode": widget.orderCode,
-      "senderId": currentUserId,
-      "receiverId": widget.receiverId,
-      "chatType": widget.chatType,
+      "order_code": widget.orderCode,
+      "sender_id": currentUserId,
+      "receiver_id": widget.receiverId,
+      "chat_type": widget.chatType,
       "message": text,
       "attachment": attachmentUrl,
     };
