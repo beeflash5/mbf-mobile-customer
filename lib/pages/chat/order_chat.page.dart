@@ -143,7 +143,7 @@ class _OrderChatPageState extends State<OrderChatPage> {
       Dio dio = Dio();
       final token = await AuthServices.getAuthBearerToken();
       dio.options.headers["Authorization"] = "Bearer $token";
-      final response = await dio.post("${Api.webBaseUrl}/api/chat/upload", data: formData);
+      final response = await dio.post("${Api.baseUrl}/chat/upload", data: formData);
       if (response.statusCode == 200 && response.data["success"]) {
         final url = response.data["url"];
         _sendMessage(attachmentUrl: url);
