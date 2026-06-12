@@ -15,6 +15,7 @@ import 'package:fuodz/models/option_group.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/pages/product/widgets/product_details.header.dart';
 import 'package:fuodz/pages/product/widgets/product_details_cart.bottom_sheet.dart';
+import 'package:fuodz/pages/product/widgets/product_fav.btn.dart';
 import 'package:fuodz/pages/product/widgets/product_option_group.dart';
 import 'package:fuodz/pages/product/widgets/product_options.header.dart';
 import 'package:fuodz/pages/vendor_details/vendor_details.page.dart';
@@ -43,6 +44,7 @@ class ProductDetailsPage extends ConsumerWidget {
       appBarItemColor: AppColor.primaryColor,
       showCart: true,
       actions: [
+        ProductFavButton(product: detail),
         SizedBox(
           width: 50,
           height: 50,

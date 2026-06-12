@@ -11,7 +11,7 @@ class FavouriteRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       List<Product> products = [];
-      (apiResponse.body as List).forEach(
+      apiResponse.data.forEach(
         (jsonObject) {
           try {
             products.add(Product.fromJson(jsonObject["product"]));
@@ -50,7 +50,7 @@ class FavouriteRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       List<Vendor> dataset = [];
-      (apiResponse.body as List).forEach(
+      apiResponse.data.forEach(
         (jsonObject) {
           try {
             dataset.add(Vendor.fromJson(jsonObject["vendor"]));

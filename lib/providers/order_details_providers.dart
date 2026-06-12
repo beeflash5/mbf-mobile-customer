@@ -101,8 +101,10 @@ class OrderDetailsController
       vendorTypeId = order.orderService?.service?.vendor_type_id ??
           order.vendor?.vendorTypeId;
     } else {
-      vendorTypeId = order.orderProducts?.first.product?.vendor_type_id ??
-          order.vendor?.vendorTypeId;
+      vendorTypeId = (order.orderProducts?.isNotEmpty ?? false)
+          ? order.orderProducts!.first.product?.vendor_type_id ??
+              order.vendor?.vendorTypeId
+          : order.vendor?.vendorTypeId;
     }
     state = state.copyWith(vendorTypeId: vendorTypeId);
     await Future.wait([

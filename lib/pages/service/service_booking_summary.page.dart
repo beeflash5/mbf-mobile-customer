@@ -593,47 +593,71 @@ class _ServiceBookingSummaryPageState
               ).py12(),
             const DottedLine().py12(),
 
-            if (state.vendorTypeId != 13)
-              Column(
-                children: [
-                  PaymentMethodsView(
-                    paymentMethods: state.paymentMethods,
-                    selectedPaymentMethod: state.selectedPaymentMethod,
-                    onSelected: controller.changeSelectedPaymentMethod,
-                  ),
-                  LoadingShimmer(
-                    loading: state.isBusy,
-                    child: OrderSummaryBooking(
-                      total: state.checkout.total,
-                      deliverySlotDate: state.checkout.deliverySlotDate,
-                      deliverySlotTime: state.checkout.deliverySlotTime,
-                      guests: state.guests,
-                      duration: service.duration,
-                      durationQty: state.durationQty,
-                      guidSelected: state.guidSelected,
-                      selectedPaymentMethod: state.selectedPaymentMethod,
-                      subTotal: state.checkout.subTotal,
-                      discount: state.checkout.discount,
-                      deliveryFee:
-                          service.location ? state.checkout.deliveryFee : null,
-                      tax: state.checkout.tax,
-                      vendorTax: vendor?.tax,
-                      fees: vendor?.fees ?? const [],
-                      allowConvert: true,
+            if (service.ageRestricted)
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  border: Border.all(color: Colors.orange.shade200),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: state.ageConfirmed,
+                      onChanged: controller.toggleAgeConfirmed,
+                      activeColor: AppColor.primaryColor,
                     ),
-                  ),
-                  if (AppCurrencySystemService().currentCurrencyCode !=
-                          AppStrings.currencyCode &&
-                      !state.isBusy)
-                    CurrencyConversionNotice(
-                      convertedAmount:
-                          state.checkout.totalWithTip.convertCurrency,
-                      originalAmount: state.checkout.totalWithTip,
-                      baseCurrency: AppStrings.currencyCode,
-                    ).py(Sizes.paddingSizeDefault),
-                  Divider(thickness: 1, height: 1, color: Vx.zinc300).py12(),
-                ],
+                    Expanded(
+                      child: "I confirm that I meet the age requirement to purchase this service. (Saya menyetujui bahwa saya cukup umur untuk membeli layanan ini)"
+                          .text
+                          .size(12)
+                          .color(Colors.orange.shade800)
+                          .make(),
+                    ),
+                  ],
+                ),
               ),
+
+            if (state.vendorTypeId != 13)
+              PaymentMethodsView(
+              paymentMethods: state.paymentMethods,
+              selectedPaymentMethod: state.selectedPaymentMethod,
+              onSelected: controller.changeSelectedPaymentMethod,
+            ),
+            
+            LoadingShimmer(
+              loading: state.isBusy,
+              child: OrderSummaryBooking(
+                total: state.checkout.total,
+                deliverySlotDate: state.checkout.deliverySlotDate,
+                deliverySlotTime: state.checkout.deliverySlotTime,
+                guests: state.guests,
+                duration: service.duration,
+                durationQty: state.durationQty,
+                guidSelected: state.guidSelected,
+                selectedPaymentMethod: state.selectedPaymentMethod,
+                subTotal: state.checkout.subTotal,
+                discount: state.checkout.discount,
+                deliveryFee:
+                    service.location ? state.checkout.deliveryFee : null,
+                tax: state.checkout.tax,
+                vendorTax: vendor?.tax,
+                fees: vendor?.fees ?? const [],
+                allowConvert: true,
+              ),
+            ),
+            if (AppCurrencySystemService().currentCurrencyCode !=
+                    AppStrings.currencyCode &&
+                !state.isBusy)
+              CurrencyConversionNotice(
+                convertedAmount:
+                    state.checkout.totalWithTip.convertCurrency,
+                originalAmount: state.checkout.totalWithTip,
+                baseCurrency: AppStrings.currencyCode,
+              ).py(Sizes.paddingSizeDefault),
+            Divider(thickness: 1, height: 1, color: Vx.zinc300).py12(),
 
             CustomButton(
               title: "Book Now".tr().padRight(14),

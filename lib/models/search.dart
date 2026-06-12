@@ -17,7 +17,7 @@ class Search {
   bool showVendorsTag = false;
   bool showServicesTag = false;
   bool showProvidesTag = false;
-  String? sort = "asc";
+  String? sort;
   String? layoutType = "grid";
   String? minPrice;
   String? maxPrice;

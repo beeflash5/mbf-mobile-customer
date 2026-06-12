@@ -16,7 +16,9 @@ class OrderAddressesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return VStack(
       [
-        if (order.isPackageDelivery)
+        if (order.isPackageDelivery &&
+            order.orderStops != null &&
+            order.orderStops!.isNotEmpty)
           VStack(
             [
               ParcelOrderStopListView(
@@ -25,11 +27,12 @@ class OrderAddressesView extends StatelessWidget {
                 canCall: order.canChatVendor,
               ),
               ..._stopsList(),
-              ParcelOrderStopListView(
-                "Dropoff Location",
-                order.orderStops!.last,
-                canCall: order.canChatVendor,
-              ),
+              if (order.orderStops!.length > 1)
+                ParcelOrderStopListView(
+                  "Dropoff Location",
+                  order.orderStops!.last,
+                  canCall: order.canChatVendor,
+                ),
             ],
           )
         else

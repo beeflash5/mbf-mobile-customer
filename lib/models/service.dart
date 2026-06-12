@@ -157,7 +157,7 @@ class Service {
 
       //
       token: json["token"],
-      ageRestricted: json["age_restricted"] ?? false,
+      ageRestricted: json["age_restricted"] == 1 || json["age_restricted"] == true,
       description_url: json["description_url"] ?? "",
       shareable_link: json["shareable_link"],
       deep_link: json["deep_link"],

@@ -24,86 +24,102 @@ class NewTaxiOrderEntryPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
-    final entryState =
-        ref.watch(taxiOrderEntryControllerProvider(vendorType));
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
+    final entryState = ref.watch(taxiOrderEntryControllerProvider(vendorType));
     final entryController = ref.read(
       taxiOrderEntryControllerProvider(vendorType).notifier,
     );
     return VxBox(
-      child: taxiState.isBusy
-          ? const BusyIndicator().centered().p20()
-          : VStack([
-              VStack([
-                HStack([
-                  const Icon(Icons.close)
-                      .onTap(() => entryController.closePanel(context)),
-                  "Your route".tr().text.bold.xl.make().px12().expand(),
-                ]),
-                UiSpacer.verticalSpace(),
-                NewTaxiOrderScheduleView(vendorType: vendorType),
-                HStack([
-                  const CustomTimelineConnector(height: 50),
-                  UiSpacer.hSpace(10),
-                  VStack([
-                    TaxiCustomTextFormField(
-                      hintText: "Pickup Location".tr(),
-                      controller: taxiController.pickupLocationTEC,
-                      focusNode: taxiController.pickupLocationFocusNode,
-                      onChanged: entryController.searchPlace,
-                      clear: true,
-                      onClearPressed: entryController.clearAlreadySelected,
+          child:
+              taxiState.isBusy
+                  ? const BusyIndicator().centered().p20()
+                  : VStack([
+                    VStack([
+                          HStack([
+                            const Icon(
+                              Icons.close,
+                            ).onTap(() => entryController.closePanel(context)),
+                            "Your route"
+                                .tr()
+                                .text
+                                .bold
+                                .xl
+                                .make()
+                                .px12()
+                                .expand(),
+                          ]),
+                          UiSpacer.verticalSpace(),
+                          NewTaxiOrderScheduleView(vendorType: vendorType),
+                          HStack([
+                            const CustomTimelineConnector(height: 50),
+                            UiSpacer.hSpace(10),
+                            VStack([
+                              TaxiCustomTextFormField(
+                                hintText: "Pickup Location".tr(),
+                                controller: taxiController.pickupLocationTEC,
+                                focusNode:
+                                    taxiController.pickupLocationFocusNode,
+                                onChanged: entryController.searchPlace,
+                                clear: true,
+                                onClearPressed:
+                                    entryController.clearAlreadySelected,
+                              ),
+                              UiSpacer.vSpace(5),
+                              TaxiCustomTextFormField(
+                                hintText: "Drop-off Location".tr(),
+                                controller: taxiController.dropoffLocationTEC,
+                                focusNode:
+                                    taxiController.dropoffLocationFocusNode,
+                                onChanged: entryController.searchPlace,
+                                clear: true,
+                                onClearPressed:
+                                    entryController.clearAlreadySelected,
+                              ),
+                            ]).expand(),
+                          ]),
+                        ])
+                        .p20()
+                        .safeArea()
+                        .box
+                        .shadowSm
+                        .color(context.theme.colorScheme.surface)
+                        .make(),
+                    CustomListView(
+                      padding: EdgeInsets.zero,
+                      isLoading: entryState.placesBusy,
+                      dataSet: entryState.places,
+                      itemBuilder: (ctx, index) {
+                        final place = entryState.places[index];
+                        return AddressListItem(
+                          place,
+                          onAddressSelected:
+                              (addr) => entryController.onAddressSelected(
+                                context,
+                                addr,
+                              ),
+                        );
+                      },
+                      separatorBuilder: (ctx, index) => UiSpacer.divider(),
+                    ).box.make().expand(),
+                    NewTaxiPickOnMapButton(vendorType: vendorType),
+                    Visibility(
+                      visible:
+                          !taxiController.pickupLocationFocusNode.hasFocus &&
+                          !taxiController.dropoffLocationFocusNode.hasFocus,
+                      child: CustomButton(
+                        title: "Next".tr(),
+                        onPressed: entryController.moveToNextStep,
+                      ).p8().safeArea(top: false),
                     ),
-                    UiSpacer.vSpace(5),
-                    TaxiCustomTextFormField(
-                      hintText: "Drop-off Location".tr(),
-                      controller: taxiController.dropoffLocationTEC,
-                      focusNode: taxiController.dropoffLocationFocusNode,
-                      onChanged: entryController.searchPlace,
-                      clear: true,
-                      onClearPressed: entryController.clearAlreadySelected,
-                    ),
-                  ]).expand(),
-                ]),
-              ])
-                  .p20()
-                  .safeArea()
-                  .box
-                  .shadowSm
-                  .color(context.theme.colorScheme.surface)
-                  .make(),
-              CustomListView(
-                padding: EdgeInsets.zero,
-                isLoading: entryState.placesBusy,
-                dataSet: entryState.places,
-                itemBuilder: (ctx, index) {
-                  final place = entryState.places[index];
-                  return AddressListItem(
-                    place,
-                    onAddressSelected: (addr) =>
-                        entryController.onAddressSelected(context, addr),
-                  );
-                },
-                separatorBuilder: (ctx, index) => UiSpacer.divider(),
-              ).expand(),
-              NewTaxiPickOnMapButton(vendorType: vendorType),
-              Visibility(
-                visible: !taxiController.pickupLocationFocusNode.hasFocus &&
-                    !taxiController.dropoffLocationFocusNode.hasFocus,
-                child: CustomButton(
-                  title: "Next".tr(),
-                  onPressed: entryController.moveToNextStep,
-                ).p8().safeArea(top: false),
-              ),
-            ]),
-    )
+                  ]),
+        )
         .color(
           taxiState.isBusy
               ? context.theme.colorScheme.surface.withOpacity(0.5)
               : context.theme.colorScheme.surface,
         )
-        .make()
-        .pOnly(bottom: context.mq.viewInsets.bottom);
+        .make();
   }
 }

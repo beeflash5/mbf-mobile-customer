@@ -170,6 +170,12 @@ class CheckoutController
     } else if (v.allowOnlyPickup) {
       state = state.copyWith(isPickup: true);
     }
+    
+    // Auto-schedule F&B if not pickup
+    if (v.isFoodOrBeverage && !state.isPickup) {
+      state = state.copyWith(isScheduled: true);
+      state.checkout.isScheduled = true;
+    }
   }
 
   Future<void> _prefetchDeliveryAddress() async {
@@ -270,7 +276,7 @@ class CheckoutController
         tip: driverTipTEC.text,
         deliveryAddress: state.deliveryAddress,
       );
-      if (state.vendor?.vendorType.slug == 'food' && state.isScheduled) {
+      if (state.vendor?.isFoodOrBeverage == true && state.isScheduled) {
         final total = updated.total;
         final dp =
             (double.tryParse(AppStrings.down_payment.toString())! / 100) *
@@ -443,7 +449,7 @@ class CheckoutController
       return;
     } else if (!ignore && !_verifyVendorOrderAmountCheck()) {
       return;
-    } else if (state.vendor?.vendorType.slug == "food" &&
+    } else if (state.vendor?.isFoodOrBeverage == true &&
         !state.isPickup &&
         (guestCountTEC.text.isEmpty ||
             (int.tryParse(guestCountTEC.text) ?? 0) < 3)) {
@@ -452,7 +458,7 @@ class CheckoutController
         text: "Minimum 3 guests required".tr(),
       );
       return;
-    } else if (state.vendor?.vendorType.slug == "food" &&
+    } else if (state.vendor?.isFoodOrBeverage == true &&
         !state.isPickup &&
         state.tableSelected == null &&
         state.vendor?.can_dinein == true) {

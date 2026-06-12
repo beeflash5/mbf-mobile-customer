@@ -46,7 +46,9 @@ class CheckoutRequest extends ApiService {
       "schedule_date": checkout.deliverySlotDate,
       "schedule_time": checkout.deliverySlotTime,
       "products": checkout.cartItems?.map((e) => e.toCheckout()).toList(),
-      "vendor_id": checkout.cartItems?.first.product?.vendorId,
+      "vendor_id": (checkout.cartItems?.isNotEmpty ?? false)
+          ? checkout.cartItems!.first.product?.vendorId
+          : null,
       "delivery_address_id": checkout.deliveryAddress?.id,
       "payment_method_id": checkout.paymentMethod?.id,
       "sub_total": checkout.subTotal,
@@ -165,13 +167,17 @@ class CheckoutRequest extends ApiService {
     required Service service,
     double? service_amount,
     String? note,
+    String? tatto_type,
     String? tatto_type_select,
     String? tatto_placement,
     String? tatto_size,
+    String? tatto_msg,
     int? banner_id,
     String? guide,
     List<GuestModel>? guest,
     File? attach,
+    double? options_price,
+    double? tax_rate,
   }) async {
     final params = {
       "type": "service",
@@ -193,15 +199,20 @@ class CheckoutRequest extends ApiService {
       "discount": checkout.discount,
       "delivery_fee": checkout.deliveryFee,
       "tax": checkout.tax,
+      "tax_rate": tax_rate ?? checkout.tax_rate,
       "total": checkout.total,
       "coupon_code": checkout.coupon?.code ?? "",
       "fees": fees,
       "token": checkout.token,
+      "duration": service.selectedQty,
+      "schedule_order": (checkout.deliverySlotDate != null && checkout.deliverySlotDate!.isNotEmpty) ? 1 : 0,
 
       // tattoo
+      "tatto_type": tatto_type,
       "tatto_type_select": tatto_type_select,
       "tatto_placement": tatto_placement,
       "tatto_size": tatto_size,
+      "tatto_msg": tatto_msg,
       "banner_id": banner_id,
       "guide": guide,
       "guest":
@@ -237,25 +248,17 @@ class CheckoutRequest extends ApiService {
       params.addAll({
         "options_flatten": optionFlatten,
         "options_ids": optionIds,
+        "options_price": options_price,
       });
     }
 
-    // 🔥 WITH FILE
     if (attach != null) {
-      final formData = FormData.fromMap({
-        ...params,
-        "attach": await MultipartFile.fromFile(
-          attach.path,
-          filename: attach.path.split('/').last,
-        ),
-      });
-
-      final apiResult = await postWithFiles(Api.orders, formData);
-
-      return ApiResponse.fromResponse(apiResult);
+      final bytes = attach.readAsBytesSync();
+      final base64Image = base64Encode(bytes);
+      // add as base64 string
+      params["attach"] = "data:image/jpeg;base64,$base64Image";
     }
 
-    // 🔥 WITHOUT FILE
     final apiResult = await post(Api.orders, params);
     return ApiResponse.fromResponse(apiResult);
   }

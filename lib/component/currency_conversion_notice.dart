@@ -43,7 +43,7 @@ class CurrencyConversionNotice extends StatelessWidget {
       ),
       child: VStack([
         // Display converted amount
-        "$currentSymbol${convertedAmount.toStringAsFixed(2)}".text
+        "$currentSymbol $convertedAmount".currencyFormat().text
             .textStyle(amountStyle)
             .semiBold
             .lg

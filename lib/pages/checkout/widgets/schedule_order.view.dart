@@ -56,7 +56,7 @@ class ScheduleOrderView extends StatelessWidget {
       visible: vendor.allowScheduleOrder,
       child: VStack([
         HStack([
-          vendor.vendorType.slug == 'food'
+          vendor.isFoodOrBeverage
               ? VStack([
                   "Reservation".tr().text.lg.semiBold.make(),
                   "Do you want to make a reservation?".tr().text.make(),
@@ -170,7 +170,7 @@ class ScheduleOrderView extends StatelessWidget {
                           );
                     },
                   ),
-            if (vendor.vendorType.slug == 'food' &&
+            if (vendor.isFoodOrBeverage &&
                 guestCountController != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

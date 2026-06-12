@@ -154,13 +154,25 @@ class FavouritesPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final list = productsAsync.valueOrNull ?? const [];
                 final product = list[index];
-                return DynamicProductListItem(
-                  product,
-                  padding: EdgeInsets.zero,
-                  onPressed: (p) => _openProductDetails(context, ref, p),
-                ).onLongPress(
-                  () => _confirmRemoveProduct(context, ref, product),
-                  GlobalKey(),
+                return Stack(
+                  children: [
+                    DynamicProductListItem(
+                      product,
+                      padding: EdgeInsets.zero,
+                      onPressed: (p) => _openProductDetails(context, ref, p),
+                    ).onLongPress(
+                      () => _confirmRemoveProduct(context, ref, product),
+                      GlobalKey(),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _confirmRemoveProduct(context, ref, product),
+                      ).box.color(context.theme.colorScheme.surface).roundedFull.outerShadow.make().p4(),
+                    ),
+                  ],
                 );
               },
               separatorBuilder: (_, __) => 10.heightBox,
@@ -183,13 +195,25 @@ class FavouritesPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final list = vendorsAsync.valueOrNull ?? const [];
                 final vendor = list[index];
-                return VendorListItem(
-                  vendor: vendor,
-                  onPressed: (v) => _openVendorDetails(context, ref, v),
-                ).onLongPress(
-                  () => _confirmRemoveVendor(context, ref, vendor),
-                  GlobalKey(),
-                );
+                return Stack(
+                  children: [
+                    VendorListItem(
+                      vendor: vendor,
+                      onPressed: (v) => _openVendorDetails(context, ref, v),
+                    ).onLongPress(
+                      () => _confirmRemoveVendor(context, ref, vendor),
+                      GlobalKey(),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _confirmRemoveVendor(context, ref, vendor),
+                      ).box.color(context.theme.colorScheme.surface).roundedFull.outerShadow.make().p4(),
+                    ),
+                  ],
+                ).centered();
               },
               separatorBuilder: (_, __) => 10.heightBox,
             ),

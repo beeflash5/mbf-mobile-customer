@@ -10,6 +10,7 @@ import 'package:fuodz/component/cart_page_action.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/pages/vendor_details/service_vendor_details.page.dart';
 import 'package:fuodz/pages/vendor_details/widgets/vendor_with_subcategory.view.dart';
+import 'package:fuodz/pages/vendor_details/widgets/vendor_fav.btn.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class VendorPlainDetailsView extends StatelessWidget {
@@ -29,6 +30,7 @@ class VendorPlainDetailsView extends StatelessWidget {
       backgroundColor: context.theme.colorScheme.surface,
       leading: CustomRoundedLeading(),
       actions: [
+        VendorFavButton(vendor: vendor),
         SizedBox(
           width: 50,
           height: 50,

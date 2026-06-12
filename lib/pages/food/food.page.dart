@@ -44,9 +44,10 @@ class _FoodPageState extends ConsumerState<FoodPage>
           SliverAppBar(
             floating: false,
             pinned: true,
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white,
+            backgroundColor:
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black
+                    : Colors.white,
             elevation: 0,
             leading: IconButton(
               icon: Icon(
@@ -55,15 +56,15 @@ class _FoodPageState extends ConsumerState<FoodPage>
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            title: widget.vendorType.name.text
-                .size(16)
-                .color(context.primaryColor)
-                .bold
-                .make(),
+            title:
+                widget.vendorType.name.text
+                    .size(16)
+                    .color(context.primaryColor)
+                    .bold
+                    .make(),
             actions: [
               InkWell(
-                onTap: () =>
-                    context.pushRoute(AppRoutes.notificationsRoute),
+                onTap: () => context.pushRoute(AppRoutes.notificationsRoute),
                 child: Icon(
                   Icons.notifications,
                   color: context.primaryColor,
@@ -107,11 +108,12 @@ class _FoodPageState extends ConsumerState<FoodPage>
                       ),
                       Positioned.fill(
                         child: Center(
-                          child: widget.vendorType.name.text
-                              .size(30)
-                              .color(Colors.white)
-                              .bold
-                              .make(),
+                          child:
+                              widget.vendorType.name.text
+                                  .size(30)
+                                  .color(Colors.white)
+                                  .bold
+                                  .make(),
                         ),
                       ),
                     ],

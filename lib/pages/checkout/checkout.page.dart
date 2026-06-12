@@ -123,7 +123,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             mCurrencySymbol: AppStrings.currentCurrencySymbol,
             allowConvert: true,
           ),
-        if (vendor?.vendorType.slug == 'food' && state.isScheduled)
+        if (vendor?.isFoodOrBeverage == true && state.isScheduled)
           Column(
             children: [
               const SizedBox(height: 10),

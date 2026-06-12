@@ -402,6 +402,7 @@ class Vendor {
   bool get isServiceType => vendorType.slug == "service";
   bool get isPharmacyType => vendorType.slug == "pharmacy";
   bool get isParcelType => ["parcel", "package"].contains(vendorType.slug);
+  bool get isFoodOrBeverage => vendorTypeId == 2 || ["food", "beverage", "beverages"].contains(vendorType.slug.toLowerCase());
 
   //
   bool canServiceLocation(DeliveryAddress deliveryaddress) {

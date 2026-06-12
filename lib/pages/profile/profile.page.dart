@@ -103,6 +103,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
           ),
           20.heightBox,
           MenuItem(
+            title: "Wishlist".tr(),
+            prefix: const Icon(Icons.favorite_outline),
+            onPressed: () => context.pushRoute(AppRoutes.favouritesRoute),
+          ),
+          MenuItem(
             title: "Notifications".tr(),
             prefix: Icon(HugeIcons.strokeRoundedNotification01),
             onPressed: () => context.pushRoute(AppRoutes.notificationsRoute),

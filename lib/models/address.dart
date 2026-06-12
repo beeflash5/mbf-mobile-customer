@@ -5,7 +5,7 @@ class Address {
   final Coordinates? coordinates;
 
   /// The formatted address with all lines.
-  final String? addressLine;
+  String? addressLine;
 
   /// The localized country name of the address.
   final String? countryName;
@@ -14,7 +14,7 @@ class Address {
   final String? countryCode;
 
   /// The feature name of the address.
-  final String? featureName;
+  String? featureName;
 
   /// The postal code.
   final String? postalCode;

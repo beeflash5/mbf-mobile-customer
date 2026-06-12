@@ -58,9 +58,10 @@ class _CommercePageState extends ConsumerState<CommercePage>
           SliverAppBar(
             floating: false,
             pinned: true,
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white,
+            backgroundColor:
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black
+                    : Colors.white,
             elevation: 0,
             leading: IconButton(
               icon: Icon(
@@ -69,15 +70,11 @@ class _CommercePageState extends ConsumerState<CommercePage>
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            title: pageTitle.text
-                .size(16)
-                .color(context.primaryColor)
-                .bold
-                .make(),
+            title:
+                pageTitle.text.size(16).color(context.primaryColor).bold.make(),
             actions: [
               InkWell(
-                onTap: () =>
-                    context.pushRoute(AppRoutes.notificationsRoute),
+                onTap: () => context.pushRoute(AppRoutes.notificationsRoute),
                 child: Icon(
                   Icons.notifications,
                   color: context.primaryColor,
@@ -113,11 +110,12 @@ class _CommercePageState extends ConsumerState<CommercePage>
                       ),
                       Positioned.fill(
                         child: Center(
-                          child: widget.vendorType.name.text
-                              .size(30)
-                              .color(Colors.white)
-                              .bold
-                              .make(),
+                          child:
+                              widget.vendorType.name.text
+                                  .size(30)
+                                  .color(Colors.white)
+                                  .bold
+                                  .make(),
                         ),
                       ),
                     ],
@@ -145,12 +143,12 @@ class _CommercePageState extends ConsumerState<CommercePage>
                 titleCapitalize: false,
                 vendorType: widget.vendorType,
                 type: ProductFetchDataType.NEW,
-                onSeeAllPressed: () =>
-                    ProductSearchHelper.openProductsSeeAllPage(
-                  title: "New Arrivals".tr(),
-                  vendorType: widget.vendorType,
-                  type: ProductFetchDataType.NEW,
-                ),
+                onSeeAllPressed:
+                    () => ProductSearchHelper.openProductsSeeAllPage(
+                      title: "New Arrivals".tr(),
+                      vendorType: widget.vendorType,
+                      type: ProductFetchDataType.NEW,
+                    ),
               ),
             ),
           ),
@@ -183,12 +181,12 @@ class _CommercePageState extends ConsumerState<CommercePage>
                 scrollDirection: Axis.horizontal,
                 showGrid: false,
                 itemBottomPadding: 5,
-                onSeeAllPressed: () =>
-                    ProductSearchHelper.openProductsSeeAllPage(
-                  title: "Best Selling".tr(),
-                  vendorType: widget.vendorType,
-                  type: ProductFetchDataType.BEST,
-                ),
+                onSeeAllPressed:
+                    () => ProductSearchHelper.openProductsSeeAllPage(
+                      title: "Best Selling".tr(),
+                      vendorType: widget.vendorType,
+                      type: ProductFetchDataType.BEST,
+                    ),
               ),
             ),
           ),

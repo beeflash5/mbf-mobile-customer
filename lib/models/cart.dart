@@ -84,7 +84,11 @@ class Cart {
     var optionsSelected = "";
     final optionsLength = options?.length ?? 0;
     options?.asMap().forEach((index, option) {
-      optionsSelected += option.name;
+      if (option.optionGroupId == -1) {
+        optionsSelected += "Variant: ${option.name}";
+      } else {
+        optionsSelected += option.name;
+      }
       if (optionsLength > (index) + 1) {
         optionsSelected += ", ";
       }

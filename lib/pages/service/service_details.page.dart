@@ -575,7 +575,7 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
                   if (widget.service.discountPrice > 0) ...[
                     const SizedBox(width: 8),
                     Text(
-                      '${AppStrings.currentCurrencySymbol} ${(widget.service.price).convertCurrency.toStringAsFixed(2)}'
+                      '${AppStrings.currentCurrencySymbol} ${(widget.service.price).convertCurrency}'
                           .currencyFormat(),
                       style: TextStyle(
                         fontSize: 12,

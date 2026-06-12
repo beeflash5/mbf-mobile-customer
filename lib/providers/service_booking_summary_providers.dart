@@ -56,6 +56,7 @@ class ServiceBookingSummaryState {
     this.selectTattoType = 'Black / Grey',
     this.guidSelected,
     this.newPhoto,
+    this.ageConfirmed = false,
   });
 
   final Service service;
@@ -87,6 +88,7 @@ class ServiceBookingSummaryState {
   final String selectTattoType;
   final String? guidSelected;
   final File? newPhoto;
+  final bool ageConfirmed;
 
   ServiceBookingSummaryState copyWith({
     Service? service,
@@ -118,6 +120,7 @@ class ServiceBookingSummaryState {
     String? selectTattoType,
     Object? guidSelected = _sentinel,
     Object? newPhoto = _sentinel,
+    bool? ageConfirmed,
   }) {
     return ServiceBookingSummaryState(
       service: service ?? this.service,
@@ -167,6 +170,7 @@ class ServiceBookingSummaryState {
           : guidSelected as String?,
       newPhoto:
           identical(newPhoto, _sentinel) ? this.newPhoto : newPhoto as File?,
+      ageConfirmed: ageConfirmed ?? this.ageConfirmed,
     );
   }
 
@@ -319,14 +323,50 @@ class ServiceBookingSummaryController
     try {
       final mCheckout = await _checkoutRequest.serviceOrderSummary(payload);
       final co = state.checkout;
+      
+      final bool hasGuests = state.guests.isNotEmpty;
+      final bool isTattoo = state.vendorTypeId == 13;
+      final double taxRate = mCheckout.tax_rate ?? (double.tryParse(state.vendor!.tax ?? "") ?? 0.0);
+      
+      final double optionsTotal = state.service.selectedOptions.fold<double>(
+        0, (sum, item) => sum + item.price,
+      );
+      final double optionsPrice = isTattoo ? 0 : optionsTotal;
+      
+      double subTotalOut;
+      double taxOut;
+      double totalOut;
+      
+      if (hasGuests) {
+        subTotalOut = guestTotal * state.durationQty;
+        taxOut = subTotalOut * taxRate / 100;
+        double feesTotal = 0.0;
+        for (var f in state.vendor!.fees) {
+           feesTotal += f.isPercentage ? (subTotalOut * f.value / 100) : f.value;
+        }
+        totalOut = subTotalOut + optionsPrice + taxOut + feesTotal;
+      } else if (isTattoo) {
+        subTotalOut = state.service.sellPrice;
+        taxOut = subTotalOut * taxRate / 100;
+        double feesTotal = 0.0;
+        for (var f in state.vendor!.fees) {
+           feesTotal += f.isPercentage ? (subTotalOut * f.value / 100) : f.value;
+        }
+        totalOut = subTotalOut + taxOut + feesTotal;
+      } else {
+        subTotalOut = mCheckout.subTotal ?? state.service.sellPrice * state.durationQty;
+        taxOut = mCheckout.tax ?? (subTotalOut * taxRate / 100);
+        totalOut = mCheckout.total ?? (subTotalOut + optionsPrice + taxOut);
+      }
+
       co.copyWith(
-        subTotal: mCheckout.subTotal,
+        subTotal: subTotalOut,
         discount: mCheckout.discount,
         deliveryFee: mCheckout.deliveryFee,
-        tax: mCheckout.tax,
-        tax_rate: mCheckout.tax_rate,
-        total: mCheckout.total,
-        totalWithTip: mCheckout.totalWithTip,
+        tax: taxOut,
+        tax_rate: taxRate,
+        total: totalOut,
+        totalWithTip: totalOut,
         token: mCheckout.token,
         fees: mCheckout.fees,
       );
@@ -381,7 +421,15 @@ class ServiceBookingSummaryController
 
   Future<void> changePhoto() async {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
+    photoSelected(picked);
+  }
+
+  void photoSelected(XFile? picked) {
     state = state.copyWith(newPhoto: picked != null ? File(picked.path) : null);
+  }
+
+  void toggleAgeConfirmed(bool? value) {
+    state = state.copyWith(ageConfirmed: value ?? false);
   }
 
   // -- Pickup / schedule / time --
@@ -593,20 +641,27 @@ class ServiceBookingSummaryController
     state = state.copyWith(isBusy: true);
     try {
       final co = state.checkout;
+      if (state.vendorTypeId == 13) {
+         // Auto-use Cash payment method (id 1) for Tattoo to match Next.js
+         co.paymentMethod = PaymentMethod(id: 1, name: 'Cash', slug: 'cash', isActive: 1, isCash: 1, createdAt: DateTime.now(), updatedAt: DateTime.now(), formattedDate: '', instruction: '', photo: '', useExternalBrowser: false);
+      }
       co.total = co.totalWithTip;
       final apiResponse = await _checkoutRequest.newServiceOrder(
         co,
-        fees: const [],
         service: state.service,
         service_amount: co.subTotal,
         note: noteTEC.text,
+        tatto_type: "Portrait",
         tatto_placement: tattooPlacementTEC.text,
         tatto_size: tattooSizeTEC.text,
         tatto_type_select: state.selectTattoType,
+        tatto_msg: noteTEC.text,
         attach: state.newPhoto,
         banner_id: state.banner?.id,
         guide: state.guidSelected,
         guest: state.guests,
+        options_price: state.vendorTypeId == 13 ? 0 : state.service.selectedOptions.fold<double>(0, (sum, item) => sum + item.price),
+        tax_rate: co.tax_rate,
       );
       if (apiResponse.allGood) {
         final paymentLink = apiResponse.body["link"].toString();

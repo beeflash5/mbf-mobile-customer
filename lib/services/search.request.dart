@@ -52,10 +52,7 @@ class SearchRequest extends ApiService {
       "merge": "1",
       "page": page,
       "keyword": keyword,
-      "category_id":
-          (search.subcategory == null && search.category != null)
-              ? search.category?.id
-              : null,
+      "category_id": search.category != null ? search.category?.id : null,
       "subcategory_id":
           search.subcategory != null ? search.subcategory?.id : '',
       "vendor_type_id": search.vendorType != null ? search.vendorType?.id : "",
@@ -133,10 +130,7 @@ class SearchRequest extends ApiService {
       "merge": "1",
       "page": page,
       "keyword": keyword,
-      "category_id":
-          (search.subcategory == null && search.category != null)
-              ? search.category?.id
-              : null,
+      "category_id": search.category != null ? search.category?.id : null,
       "subcategory_id":
           search.subcategory != null ? search.subcategory?.id : '',
       "vendor_type_id": search.vendorType != null ? search.vendorType?.id : "",

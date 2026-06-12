@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -99,13 +100,19 @@ class AuthRequest extends ApiService {
     String? phone,
     String? countryCode,
   }) async {
-    final apiResult = await putWithFiles(Api.updateProfile, {
+    final payload = {
       "name": name,
       "email": email,
       "phone": phone,
       "country_code": countryCode,
-      "photo": photo != null ? await MultipartFile.fromFile(photo.path) : null,
-    });
+    };
+    if (photo != null) {
+      final bytes = photo.readAsBytesSync();
+      final base64Image = base64Encode(bytes);
+      payload["photo"] = "data:image/jpeg;base64,$base64Image";
+    }
+    
+    final apiResult = await put(Api.updateProfile, payload);
     return ApiResponse.fromResponse(apiResult);
   }
 

@@ -14,6 +14,7 @@ import 'package:fuodz/component/list/vendor_menu_product.list_item.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/pages/product/product_details.page.dart';
 import 'package:fuodz/pages/vendor_details/widgets/vendor_details_header.view.dart';
+import 'package:fuodz/pages/vendor_details/widgets/vendor_fav.btn.dart';
 import 'package:fuodz/providers/vendor_menu_details_providers.dart';
 import 'package:fuodz/services/cart.helper.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
@@ -74,6 +75,7 @@ class _VendorDetailsWithMenuPageState
               leading: CustomRoundedLeading(),
               backgroundColor: context.backgroundColor,
               actions: [
+                VendorFavButton(vendor: vendor),
                 SizedBox(
                   width: 50,
                   height: 50,

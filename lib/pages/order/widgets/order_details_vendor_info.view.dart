@@ -37,32 +37,30 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
               .gray500
               .medium
               .make(),
-          order.vendor!.name.text.medium.xl.make().py8().pOnly(
-                bottom: Vx.dp4,
-              ),
+          order.vendor!.name.text.medium.xl.make().py8().pOnly(bottom: Vx.dp4),
         ]).expand(),
-        if (vendorTypeId != 13)
-          Visibility(
-            visible: order.canChatVendor && AppUISettings.canCallVendor,
-            child: CustomButton(
-              icon: Icons.phone,
-              iconColor: Colors.white,
-              color: AppColor.primaryColor,
-              shapeRadius: Sizes.radiusSmall,
-              onPressed: onCallVendor,
-            ).h(50).fittedBox(),
-          ),
-        if (order.canChatVendor && vendorTypeId != 13)
-          Visibility(
-            visible: AppUISettings.canVendorChat,
-            child: CustomButton(
-              icon: Icons.chat,
-              iconColor: Colors.white,
-              color: AppColor.primaryColor,
-              shapeRadius: Sizes.radiusSmall,
-              onPressed: onChatVendor,
-            ).h(50).fittedBox(),
-          ),
+        // if (vendorTypeId != 13)
+        //   Visibility(
+        //     visible: order.canChatVendor && AppUISettings.canCallVendor,
+        //     child: CustomButton(
+        //       icon: Icons.phone,
+        //       iconColor: Colors.white,
+        //       color: AppColor.primaryColor,
+        //       shapeRadius: Sizes.radiusSmall,
+        //       onPressed: onCallVendor,
+        //     ).h(50).fittedBox(),
+        //   ),
+        // if (order.canChatVendor && vendorTypeId != 13)
+        //   Visibility(
+        //     visible: AppUISettings.canVendorChat,
+        //     child: CustomButton(
+        //       icon: Icons.chat,
+        //       iconColor: Colors.white,
+        //       color: AppColor.primaryColor,
+        //       shapeRadius: Sizes.radiusSmall,
+        //       onPressed: onChatVendor,
+        //     ).h(50).fittedBox(),
+        //   ),
       ], spacing: 8),
       if (order.canRateVendor)
         CustomButton(

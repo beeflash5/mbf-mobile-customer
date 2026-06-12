@@ -2,91 +2,85 @@ import 'dart:convert';
 import 'package:currency_formatter/currency_formatter.dart';
 import 'package:fuodz/utils/app_strings.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:supercharged/supercharged.dart';
 
 extension NumberParsing on dynamic {
   //
   String currencyFormat([String? currencySymbol]) {
     final uiConfig = AppStrings.uiConfig;
-    if (uiConfig != null && uiConfig["currency"] != null) {
-      //
-      final thousandSeparator = uiConfig["currency"]["format"] ?? ",";
-      final decimalSeparator = uiConfig["currency"]["decimal_format"] ?? ".";
-      final decimals = uiConfig["currency"]["decimals"];
-      final currencylOCATION = uiConfig["currency"]["location"] ?? 'left';
-      final decimalsValue = "".padLeft(decimals.toString().toInt()!, "0");
+    final currencyConfig = uiConfig != null ? uiConfig["currency"] : null;
+    
+    final thousandSeparator = currencyConfig?["format"] ?? ".";
+    final decimalSeparator = currencyConfig?["decimal_format"] ?? ",";
+    final currencylOCATION = currencyConfig?["location"] ?? 'left';
 
-      //
-      if (this.toString().contains(AppStrings.currentCurrencySymbol)) {
-        currencySymbol = AppStrings.currentCurrencySymbol;
-      }
-      //
-      final values = this
-          .toString()
-          .split(" ")
-          .join("")
-          .split(currencySymbol ?? AppStrings.currencySymbol);
-
-      //
-      CurrencyFormat currencySettings = CurrencyFormat(
-        symbol: currencySymbol ?? AppStrings.currencySymbol,
-        symbolSide:
-            currencylOCATION.toLowerCase() == "left"
-                ? SymbolSide.left
-                : SymbolSide.right,
-        thousandSeparator: thousandSeparator,
-        decimalSeparator: decimalSeparator,
-      );
-
-      final double? parsedVal = double.tryParse(values[1]);
-      int decimalCount = decimalsValue.length;
-      if (parsedVal != null && parsedVal % 1 == 0) {
-        decimalCount = 0;
-      }
-
-      return CurrencyFormatter.format(
-        values[1],
-        currencySettings,
-        decimal: decimalCount,
-        enforceDecimals: true,
-      );
-    } else {
-      return this.toString();
+    if (this.toString().contains(AppStrings.currentCurrencySymbol)) {
+      currencySymbol = AppStrings.currentCurrencySymbol;
     }
+    
+    String valStr = this.toString().replaceAll(" ", "");
+    String targetSymbol = currencySymbol ?? AppStrings.currencySymbol;
+    
+    String numberPart = valStr;
+    if (valStr.contains(targetSymbol)) {
+      numberPart = valStr.replaceAll(targetSymbol, "");
+    }
+
+    String cleanNumberPart = numberPart.replaceAll(RegExp(r'[^0-9.-]'), '');
+    num? parsedValue = double.tryParse(cleanNumberPart);
+    if (parsedValue != null) {
+      if (parsedValue == parsedValue.toInt()) {
+        parsedValue = parsedValue.toInt();
+      }
+    }
+
+    CurrencyFormat currencySettings = CurrencyFormat(
+      symbol: targetSymbol,
+      symbolSide:
+          currencylOCATION.toLowerCase() == "left"
+              ? SymbolSide.left
+              : SymbolSide.right,
+      thousandSeparator: thousandSeparator,
+      decimalSeparator: decimalSeparator,
+    );
+
+    return CurrencyFormatter.format(
+      parsedValue ?? numberPart,
+      currencySettings,
+      decimal: 0,
+      enforceDecimals: false,
+    );
   }
 
   //
   String currencyValueFormat() {
     final uiConfig = AppStrings.uiConfig;
-    if (uiConfig != null && uiConfig["currency"] != null) {
-      final thousandSeparator = uiConfig["currency"]["format"] ?? ",";
-      final decimalSeparator = uiConfig["currency"]["decimal_format"] ?? ".";
-      final decimals = uiConfig["currency"]["decimals"];
-      final decimalsValue = "".padLeft(decimals.toString().toInt()!, "0");
-      final values = this.toString().split(" ").join("");
+    final currencyConfig = uiConfig != null ? uiConfig["currency"] : null;
+    
+    final thousandSeparator = currencyConfig?["format"] ?? ".";
+    final decimalSeparator = currencyConfig?["decimal_format"] ?? ",";
+    String values = this.toString().replaceAll(" ", "");
 
-      //
-      CurrencyFormat currencySettings = CurrencyFormat(
-        symbol: "",
-        symbolSide: SymbolSide.right,
-        thousandSeparator: thousandSeparator,
-        decimalSeparator: decimalSeparator,
-      );
-      final double? parsedVal = double.tryParse(values);
-      int decimalCount = decimalsValue.length;
-      if (parsedVal != null && parsedVal % 1 == 0) {
-        decimalCount = 0;
+    String cleanValues = values.replaceAll(RegExp(r'[^0-9.-]'), '');
+    num? parsedValue = double.tryParse(cleanValues);
+    if (parsedValue != null) {
+      if (parsedValue == parsedValue.toInt()) {
+        parsedValue = parsedValue.toInt();
       }
-
-      return CurrencyFormatter.format(
-        values,
-        currencySettings,
-        decimal: decimalCount,
-        enforceDecimals: true,
-      );
-    } else {
-      return this.toString();
     }
+
+    CurrencyFormat currencySettings = CurrencyFormat(
+      symbol: "",
+      symbolSide: SymbolSide.right,
+      thousandSeparator: thousandSeparator,
+      decimalSeparator: decimalSeparator,
+    );
+    
+    return CurrencyFormatter.format(
+      parsedValue ?? values,
+      currencySettings,
+      decimal: 0,
+      enforceDecimals: false,
+    );
   }
 
   bool get isNotDefaultImage {

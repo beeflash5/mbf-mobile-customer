@@ -96,6 +96,33 @@ class Product {
             : List<OptionGroup>.from(
               json["option_groups"].map((x) => OptionGroup.fromJson(x)),
             );
+
+    // Inject variants as an OptionGroup for food & beverage
+    if (json["variants"] != null) {
+      final variantsList = List<dynamic>.from(json["variants"]);
+      if (variantsList.isNotEmpty) {
+        final variantOptions = variantsList.map((v) {
+          return Option(
+            id: v["id"] ?? 0,
+            name: v["name"] ?? "",
+            price: v["price"] != null ? double.parse(v["price"].toString()) : 0.0,
+            photo: "",
+            optionGroupId: -1,
+            description: "",
+          );
+        }).toList();
+
+        productOptions.insert(0, OptionGroup(
+          id: -1,
+          name: "Variant",
+          multiple: 0,
+          required: 0, // "None" is allowed by default
+          isActive: 1,
+          photo: "",
+          options: variantOptions,
+        ));
+      }
+    }
     return Product(
       id: json["id"] ?? 0,
       name: json["name"] ?? "",
@@ -233,6 +260,14 @@ class Product {
     "expires_at": expires_at,
     "vendor_type_id": vendor_type_id,
   };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Product && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toCheckout() => {
     "id": id,
