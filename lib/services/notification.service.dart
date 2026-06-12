@@ -8,6 +8,9 @@ import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/models/notification.dart';
 import 'package:fuodz/services/firebase.service.dart';
 
+import 'package:fuodz/services/auth_services.dart';
+import 'package:fuodz/services/notification.request.dart';
+
 import 'local_storage.service.dart';
 
 class NotificationService {
@@ -102,6 +105,18 @@ class NotificationService {
 
   //
   static Future<List<NotificationModel>> getNotifications() async {
+    try {
+      final token = await AuthServices.getAuthBearerToken();
+      if (token.isNotEmpty) {
+        final backendNotifications = await NotificationRequest().getNotifications();
+        if (backendNotifications.isNotEmpty) {
+          return backendNotifications;
+        }
+      }
+    } catch (e) {
+      print("Error fetching backend notifications: $e");
+    }
+
     //
     final notificationsStringList = (await LocalStorageService.getPrefs())
         .getString(AppStrings.notificationsKey);

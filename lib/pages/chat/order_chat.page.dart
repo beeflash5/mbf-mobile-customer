@@ -84,7 +84,10 @@ class _OrderChatPageState extends State<OrderChatPage> {
       onConnect: (StompFrame frame) {
         StompWebsocketService().subscribe('/topic/chat.${widget.orderCode}.${widget.chatType}', (StompFrame frame) {
           if (frame.body != null) {
-            final newMessage = jsonDecode(frame.body!);
+            final Map<String, dynamic> newMessage = Map<String, dynamic>.from(jsonDecode(frame.body!));
+            if (newMessage["attachment"] != null && (newMessage["attachments"] == null || (newMessage["attachments"] as List).isEmpty)) {
+              newMessage["attachments"] = [newMessage["attachment"]];
+            }
             if (mounted) {
               setState(() {
                 messages.add(newMessage);

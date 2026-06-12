@@ -16,7 +16,7 @@ class WalletRequest extends ApiService {
     throw apiResponse.message!;
   }
 
-  Future<dynamic> walletTopup(String amount, {int? paymentMethodId}) async {
+  Future<String> walletTopup(String amount, {int? paymentMethodId}) async {
     Map<String, dynamic> params = {
       "amount": amount,
     };
@@ -33,11 +33,6 @@ class WalletRequest extends ApiService {
     );
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
-      //
-      if (paymentMethodId != null) {
-        return apiResponse;
-      }
-      //
       return apiResponse.body["link"];
     }
 

@@ -86,8 +86,10 @@ class SearchController extends FamilyAsyncNotifier<SearchState, Search?> {
     if (cur.search == null) return;
     if (initialLoading) {
       state = AsyncData(cur.copyWith(results: const [], page: 1));
+      state = const AsyncLoading();
+    } else {
+      state = AsyncData(cur.copyWith(isLoadingMore: true));
     }
-    state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final page = initialLoading ? 1 : (cur.page + 1);
       final results = await ref.read(_searchRequestProvider).searchRequest(
@@ -95,9 +97,11 @@ class SearchController extends FamilyAsyncNotifier<SearchState, Search?> {
         search: cur.search!,
         page: page,
       );
-      return cur.copyWith(
-        results: initialLoading ? results : [...cur.results, ...results],
+      final latestCur = state.valueOrNull ?? cur;
+      return latestCur.copyWith(
+        results: initialLoading ? results : [...latestCur.results, ...results],
         page: page,
+        isLoadingMore: false,
       );
     });
   }
@@ -174,8 +178,10 @@ class ServiceSearchController
     if (cur == null || cur.search == null) return;
     if (initialLoading) {
       state = AsyncData(cur.copyWith(results: const [], page: 1));
+      state = const AsyncLoading();
+    } else {
+      state = AsyncData(cur.copyWith(isLoadingMore: true));
     }
-    state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final cur2 = state.valueOrNull ?? cur;
       await _doSearch(cur2, initialLoading: initialLoading);

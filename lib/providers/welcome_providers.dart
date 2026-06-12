@@ -17,6 +17,8 @@ import 'package:fuodz/services/order.request.dart';
 import 'package:fuodz/services/vendor_type.request.dart';
 import 'package:fuodz/services/wallet.request.dart';
 
+import 'package:fuodz/services/payment_method.request.dart';
+
 final _vendorTypeRequestProvider =
     Provider<VendorTypeRequest>((_) => VendorTypeRequest());
 final _orderRequestProvider =
@@ -25,6 +27,8 @@ final _walletRequestProvider =
     Provider<WalletRequest>((_) => WalletRequest());
 final _categoryRequestProvider =
     Provider<CategoryRequest>((_) => CategoryRequest());
+final _paymentMethodRequestProvider =
+    Provider<PaymentMethodRequest>((_) => PaymentMethodRequest());
 
 class WelcomeState {
   const WelcomeState({
@@ -173,8 +177,23 @@ class WelcomeController extends AsyncNotifier<WelcomeState> {
 
   Future<WalletTopupResult> initiateWalletTopUp(String amount) async {
     try {
+      int? paymentMethodId;
+      try {
+        final paymentMethods = await ref.read(_paymentMethodRequestProvider).getPaymentOptions();
+        final activeMethods = paymentMethods.where((m) => m.isActive == 1 && m.isCash == 0).toList();
+        if (activeMethods.isNotEmpty) {
+          final topupMethod = activeMethods.firstWhere(
+            (m) => m.slug.toLowerCase().contains('xendit') || m.slug.toLowerCase().contains('midtrans'),
+            orElse: () => activeMethods.first,
+          );
+          paymentMethodId = topupMethod.id;
+        }
+      } catch (e) {
+        print("Error fetching payment methods for topup: $e");
+      }
+
       final link =
-          await ref.read(_walletRequestProvider).walletTopup(amount);
+          await ref.read(_walletRequestProvider).walletTopup(amount, paymentMethodId: paymentMethodId);
       return WalletTopupSuccess(link);
     } catch (e) {
       return WalletTopupFailure('$e');

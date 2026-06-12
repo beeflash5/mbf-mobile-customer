@@ -18,6 +18,7 @@ class PaymentMethod {
     required this.formattedDate,
     required this.photo,
     required this.useExternalBrowser,
+    required this.useWallet,
   });
 
   int id;
@@ -31,6 +32,7 @@ class PaymentMethod {
   String formattedDate;
   String photo;
   bool useExternalBrowser;
+  int useWallet;
 
   factory PaymentMethod.fromJson(Map<String, dynamic> json) {
     int parseBoolOrInt(dynamic val, int defaultValue) {
@@ -63,6 +65,7 @@ class PaymentMethod {
       formattedDate: json["formatted_date"] ?? "",
       photo: json["photo"] ?? "",
       useExternalBrowser: parseBool(json["use_external_browser"], false),
+      useWallet: parseBoolOrInt(json["use_wallet"], 0),
     );
   }
 
@@ -78,5 +81,6 @@ class PaymentMethod {
     "formatted_date": formattedDate,
     "photo": photo,
     "use_external_browser": useExternalBrowser,
+    "use_wallet": useWallet,
   };
 }
