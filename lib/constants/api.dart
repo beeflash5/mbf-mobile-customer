@@ -136,44 +136,42 @@ class Api {
   // Other pages
   static String get privacyPolicy {
     final webUrl = webBaseUrl;
-    return "$webUrl/privacy/policy";
+    return "$webUrl/privacy";
   }
 
   static String get terms {
     final webUrl = webBaseUrl;
-    return "$webUrl/pages/terms";
+    return "$webUrl/terms";
   }
 
   static String get paymentTerms {
     final webUrl = webBaseUrl;
-    return "$webUrl/pages/payment/terms";
+    return "$webUrl/terms";
   }
 
   static String get refundTerms {
     final webUrl = webBaseUrl;
-    return "$webUrl/pages/refund/terms";
+    return "$webUrl/terms";
   }
 
   static String get cancelTerms {
     final webUrl = webBaseUrl;
-    return "$webUrl/pages/cancel/terms";
+    return "$webUrl/terms";
   }
 
   static String get shippingTerms {
     final webUrl = webBaseUrl;
-    return "$webUrl/pages/shipping/terms";
+    return "$webUrl/terms";
   }
 
   static String get contactUs {
     final webUrl = webBaseUrl;
-    // return "$webUrl/pages/vendor/contact";
-    return "$webUrl/pages/contact";
+    return "$webUrl/contact";
   }
 
   static String get contactUsWeb {
     final webUrl = webBaseUrl;
-    return "$webUrl/pages/vendor/contact";
-    // return "$webUrl/pages/contact";
+    return "$webUrl/contact";
   }
 
   static String get inappSupport {
