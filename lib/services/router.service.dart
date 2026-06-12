@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:firestore_chat/firestore_chat.dart';
+
+import 'package:fuodz/pages/chat/order_chat.page.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/utils/app_routes.dart';
 import 'package:fuodz/models/checkout.dart';
@@ -109,7 +110,15 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       );
     //chat page
     case AppRoutes.chatRoute:
-      return FirestoreChat().chatPageWidget(settings.arguments as ChatEntity);
+      final args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+        settings: RouteSettings(name: AppRoutes.chatRoute),
+        builder: (context) => OrderChatPage(
+          orderCode: args['orderCode'],
+          chatType: args['chatType'],
+          receiverId: args['receiverId'],
+        ),
+      );
 
     //
     case AppRoutes.editProfileRoute:

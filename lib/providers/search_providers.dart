@@ -115,7 +115,31 @@ final searchControllerProvider = AsyncNotifierProvider.family<
 class ServiceSearchController
     extends FamilyAsyncNotifier<SearchState, Search?> {
   @override
-  Future<SearchState> build(Search? arg) async => SearchState(search: arg);
+  Future<SearchState> build(Search? arg) async {
+    // Apply default tag (3 = service) so the API type is set correctly
+    arg?.genApiType(3);
+    final initialState = SearchState(search: arg, selectedTagId: 3);
+    state = AsyncData(initialState);
+    // Trigger initial search with empty keyword so list loads immediately
+    await _doSearch(initialState, initialLoading: true);
+    return state.valueOrNull ?? initialState;
+  }
+
+  Future<void> _doSearch(SearchState cur, {required bool initialLoading}) async {
+    if (cur.search == null) return;
+    final page = initialLoading ? 1 : (cur.page + 1);
+    final results =
+        await ref.read(_searchRequestProvider).serviceSearchRequest(
+      keyword: cur.keyword,
+      search: cur.search!,
+      page: page,
+    );
+    final cur2 = state.valueOrNull ?? cur;
+    state = AsyncData(cur2.copyWith(
+      results: initialLoading ? results : [...cur2.results, ...results],
+      page: page,
+    ));
+  }
 
   void setKeyword(String value) {
     final cur = state.valueOrNull;
@@ -148,19 +172,14 @@ class ServiceSearchController
   Future<void> startSearch({bool initialLoading = true}) async {
     final cur = state.valueOrNull;
     if (cur == null || cur.search == null) return;
+    if (initialLoading) {
+      state = AsyncData(cur.copyWith(results: const [], page: 1));
+    }
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final page = initialLoading ? 1 : (cur.page + 1);
-      final results =
-          await ref.read(_searchRequestProvider).serviceSearchRequest(
-        keyword: cur.keyword,
-        search: cur.search!,
-        page: page,
-      );
-      return cur.copyWith(
-        results: initialLoading ? results : [...cur.results, ...results],
-        page: page,
-      );
+      final cur2 = state.valueOrNull ?? cur;
+      await _doSearch(cur2, initialLoading: initialLoading);
+      return state.valueOrNull ?? cur2;
     });
   }
 

@@ -64,6 +64,7 @@ class _TaxiPageState extends ConsumerState<TaxiPage>
       title: widget.vendorType.name,
       appBarColor: context.theme.colorScheme.surface,
       appBarItemColor: AppColor.primaryColor,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           SafeArea(

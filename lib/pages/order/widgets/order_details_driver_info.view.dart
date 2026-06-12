@@ -25,6 +25,10 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (order.driver == null) return UiSpacer.emptySpace();
+
+    bool isTattoo = order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
+        order.vendor?.vendorType?.slug.toLowerCase() == 'tatto';
+
     return VStack(
       [
         HStack(
@@ -42,7 +46,7 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
             ).expand(),
             Visibility(
               visible:
-                  order.canChatDriver && AppUISettings.canCallDriver,
+                  !isTattoo && order.canChatDriver && AppUISettings.canCallDriver,
               child: CustomButton(
                 icon: Icons.phone,
                 iconColor: Colors.white,
@@ -53,7 +57,7 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
             ),
           ],
         ),
-        if (order.canChatDriver && AppUISettings.canDriverChat)
+        if (!isTattoo && order.canChatDriver && AppUISettings.canDriverChat)
           CustomButton(
             icon: Icons.chat,
             iconColor: Colors.white,

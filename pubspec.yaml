@@ -115,6 +115,7 @@ dependencies:
   slide_countdown: ^0.2.8
   sliding_up_panel: ^2.0.0+1
   smooth_page_indicator: ^1.0.0+2
+  stomp_dart_client: ^3.0.1
   supercharged: ^2.1.1
   synchronized: ^3.0.1
   timelines_plus: ^1.0.4

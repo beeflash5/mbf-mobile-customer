@@ -1091,27 +1091,13 @@ class TaxiController
   void openTripChat(BuildContext context) {
     final trip = state.onGoingOrderTrip;
     if (trip == null) return;
-    final peers = <String, PeerUser>{
-      '${trip.userId}': PeerUser(
-        id: '${trip.userId}',
-        name: trip.user.name,
-        image: trip.user.photo,
-      ),
-      '${trip.driver?.id}': PeerUser(
-        id: "${trip.driver?.id}",
-        name: trip.driver?.name ?? "Driver".tr(),
-        image: trip.driver?.photo,
-      ),
+    
+    final extra = {
+      'orderCode': trip.code,
+      'chatType': 'customerDriver',
+      'receiverId': trip.driver?.id ?? 0,
     };
-    final chatEntity = ChatEntity(
-      onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${trip.userId}']!,
-      peers: peers,
-      path: 'orders/' + trip.code + "/customerDriver/chats",
-      title: "Chat with driver".tr(),
-      supportMedia: AppUISettings.canCustomerChatSupportMedia,
-    );
-    context.pushRoute(AppRoutes.chatRoute, extra: chatEntity);
+    context.pushRoute(AppRoutes.chatRoute, extra: extra);
   }
 
   Future<Order?> getLastTripForRating() async {

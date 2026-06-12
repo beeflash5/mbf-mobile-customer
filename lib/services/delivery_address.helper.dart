@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb_v2/google_maps_place_picker.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:localize_and_translate/localize_and_translate.dart' show translator;
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -170,6 +171,14 @@ class DeliveryAddressHelper {
       deliveryAddress.city = result.locality;
       deliveryAddress.state = result.adminArea;
       deliveryAddress.country = result.countryName;
+    } else if (result is Prediction) {
+      addressTEC.text = result.description ?? '';
+      deliveryAddress.address = result.description;
+      if (result.lat != null && result.lng != null) {
+        deliveryAddress.latitude = double.tryParse(result.lat.toString());
+        deliveryAddress.longitude = double.tryParse(result.lng.toString());
+      }
+      await getLocationCityName(deliveryAddress);
     }
     return deliveryAddress;
   }

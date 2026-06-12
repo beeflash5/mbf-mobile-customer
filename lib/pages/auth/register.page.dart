@@ -146,9 +146,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     final state = ref.watch(registerControllerProvider);
     final notifier = ref.read(registerControllerProvider.notifier);
     return BasePage(
-      body: Padding(
-        padding: EdgeInsets.only(bottom: context.mq.viewInsets.bottom),
-        child: VStack([
+      body: VStack([
           ImageLogin(),
           VStack([
             "Register Now!".tr().text.lg.semiBold.make().centered(),
@@ -252,7 +250,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             ).py20(),
           ]).wFull(context).p20(),
         ]).scrollVertical(),
-      ),
     );
   }
 }

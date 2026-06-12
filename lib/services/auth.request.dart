@@ -47,6 +47,13 @@ class AuthRequest extends ApiService {
   }
 
   //
+  Future<ApiResponse> forgotPassword(String email) async {
+    final apiResult = await post(Api.forgotPassword, {
+      "email": email,
+    });
+    return ApiResponse.fromResponse(apiResult);
+  }
+
   Future<ApiResponse> resetPasswordRequest({
     required String phone,
     required String password,

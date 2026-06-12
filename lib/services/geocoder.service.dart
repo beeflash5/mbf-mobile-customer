@@ -179,7 +179,7 @@ class GeocoderService extends ApiService {
     //use in-app geocoding
     final apiKey = AppStrings.googleMapApiKey;
     String url =
-        "https://maps.googleapis.com/maps/api/place/details/json?fields=address_component,formatted_address,name,geometry;place_id=${address.gMapPlaceId};key=$apiKey";
+        "https://maps.googleapis.com/maps/api/place/details/json?fields=address_component,formatted_address,name,geometry&place_id=${address.gMapPlaceId}&key=$apiKey";
     final result = await get(
       Api.externalRedirect,
       queryParameters: {"endpoint": url},

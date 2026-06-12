@@ -56,7 +56,7 @@ class ProfileCard extends ConsumerWidget {
         Navigator.of(context).pop();
         switch (result) {
           case LogoutSuccess():
-            context.goRoute('/splash');
+            context.pushRoute('/splash');
             break;
           case LogoutFailure(:final message):
             AlertService.error(title: "Logout".tr(), text: message);
@@ -86,38 +86,35 @@ class ProfileCard extends ConsumerWidget {
 
     return VStack([
       HStack([
-        CachedNetworkImage(
-          imageUrl: user?.photo ?? "",
-          progressIndicatorBuilder: (context, imageUrl, progress) =>
-              BusyIndicator(),
-          errorWidget: (context, imageUrl, progress) =>
-              Image.asset(AppImages.user),
-        )
-            .wh(Vx.dp64, Vx.dp64)
-            .box
-            .roundedFull
-            .clip(Clip.antiAlias)
-            .make(),
-        VStack([
-          (user?.name ?? '').text.xl.semiBold.make(),
-          (user?.email ?? '').text.light.make(),
-          AppStrings.enableReferSystem
-              ? "Share referral code"
-                  .tr()
-                  .text
-                  .sm
-                  .color(context.textTheme.bodyLarge!.color)
-                  .make()
-                  .box
-                  .px4
-                  .roundedSM
-                  .border(color: Colors.grey)
-                  .make()
-                  .onInkTap(() => _shareReferralCode(user?.name, user?.code))
-                  .py4()
-              : UiSpacer.emptySpace(),
-        ]).px20().expand(),
-      ])
+            CachedNetworkImage(
+              imageUrl: user?.photo ?? "",
+              progressIndicatorBuilder:
+                  (context, imageUrl, progress) => BusyIndicator(),
+              errorWidget:
+                  (context, imageUrl, progress) => Image.asset(AppImages.user),
+            ).wh(Vx.dp64, Vx.dp64).box.roundedFull.clip(Clip.antiAlias).make(),
+            VStack([
+              (user?.name ?? '').text.xl.semiBold.make(),
+              (user?.email ?? '').text.light.make(),
+              AppStrings.enableReferSystem
+                  ? "Share referral code"
+                      .tr()
+                      .text
+                      .sm
+                      .color(context.textTheme.bodyLarge!.color)
+                      .make()
+                      .box
+                      .px4
+                      .roundedSM
+                      .border(color: Colors.grey)
+                      .make()
+                      .onInkTap(
+                        () => _shareReferralCode(user?.name, user?.code),
+                      )
+                      .py4()
+                  : UiSpacer.emptySpace(),
+            ]).px20().expand(),
+          ])
           .p12()
           .wFull(context)
           .box
@@ -131,8 +128,7 @@ class ProfileCard extends ConsumerWidget {
         MenuItem(
           title: "Edit Profile".tr(),
           onPressed: () async {
-            final result =
-                await context.pushRoute(AppRoutes.editProfileRoute);
+            final result = await context.pushRoute(AppRoutes.editProfileRoute);
             if (result == true) {
               ref.read(profileControllerProvider.notifier).refresh();
             }
@@ -148,12 +144,13 @@ class ProfileCard extends ConsumerWidget {
           visible: AppStrings.enableReferSystem,
           child: MenuItem(
             title: "Refer & Earn".tr(),
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => ReferralBottomsheet(user!),
-            ),
+            onPressed:
+                () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => ReferralBottomsheet(user!),
+                ),
             prefix: Icon(HugeIcons.strokeRoundedShare01),
           ),
         ),

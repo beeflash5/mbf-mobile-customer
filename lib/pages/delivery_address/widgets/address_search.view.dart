@@ -41,7 +41,9 @@ class _AddressSearchViewState extends State<AddressSearchView> {
         visible: AppMapSettings.useGoogleOnApp,
         child: GooglePlaceAutoCompleteTextField(
           textEditingController: widget.placeSearchTEC,
-          googleAPIKey: AppStrings.googleMapApiKey,
+          googleAPIKey: AppStrings.googleMapApiKey.isNotEmpty 
+              ? AppStrings.googleMapApiKey 
+              : "AIzaSyD98jX5-thKKT7e0YY-OxE_Q_eowEgGIxI",
           inputDecoration: InputDecoration(
             hintText: "Enter your address...".tr(),
             enabledBorder: InputStyles.inputUnderlineEnabledBorder(),

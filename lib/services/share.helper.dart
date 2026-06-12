@@ -14,7 +14,7 @@ class ShareHelper {
     } else if (product.deep_link != null && product.deep_link!.isNotEmpty) {
       shareLink = product.deep_link!;
     } else {
-      shareLink = "${Api.appShareLink}/product/${product.id}";
+      shareLink = '${Api.appShareLink}product/${product.id}/${product.name}';
     }
     await Share.share(
       shareLink,

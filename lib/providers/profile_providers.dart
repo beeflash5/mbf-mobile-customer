@@ -99,6 +99,12 @@ class ProfileController extends AsyncNotifier<ProfileState> {
     }
     try {
       await AuthServices.logout();
+      state = AsyncData(
+        (state.valueOrNull ?? const ProfileState()).copyWith(
+          authenticated: false,
+          currentUser: null,
+        ),
+      );
       return const LogoutSuccess();
     } catch (e) {
       return LogoutFailure('$e');

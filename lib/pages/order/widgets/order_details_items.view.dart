@@ -26,8 +26,8 @@ class OrderDetailsItemsView extends StatelessWidget {
       (order.isPackageDelivery
               ? "Package Details"
               : order.isSerice
-                  ? "Service"
-                  : "Products")
+              ? "Service"
+              : "Products")
           .tr()
           .text
           .semiBold
@@ -49,7 +49,11 @@ class OrderDetailsItemsView extends StatelessWidget {
         child: VStack([
           HStack([
             "Service".tr().text.make().expand(),
-            "${order.orderService?.service?.name}".text.semiBold.lg.make(),
+            "${order.orderService?.service?.name ?? order.vendor?.name ?? ''}"
+                .text
+                .semiBold
+                .lg
+                .make(),
           ]).py4(),
           if (order.orderService != null &&
               order.orderService!.options != null &&
@@ -58,9 +62,14 @@ class OrderDetailsItemsView extends StatelessWidget {
               "Options".tr().text.make(),
               "${order.orderService?.options}".text.medium.sm.make(),
             ]).py4(),
+          if (order.note.isNotEmpty)
+            VStack([
+              "Note".tr().text.make(),
+              "${order.note}".text.medium.sm.make(),
+            ]).py4(),
           HStack([
             "Category".tr().text.make().expand(),
-            "${order.orderService?.service?.category?.name}"
+            "${order.orderService?.service?.category?.name ?? order.orderService?.service?.subcategory?.name ?? order.vendor?.vendorType?.name ?? ''}"
                 .text
                 .semiBold
                 .lg
@@ -107,9 +116,8 @@ class OrderDetailsItemsView extends StatelessWidget {
               order: order,
             );
           },
-          separatorBuilder: order.isCompleted
-              ? (ctx, index) => UiSpacer.emptySpace()
-              : null,
+          separatorBuilder:
+              order.isCompleted ? (ctx, index) => UiSpacer.emptySpace() : null,
         ),
       if (order.attachments == null || order.attachments!.isEmpty)
         if (order.photo != null && !Utils.isDefaultImg(order.photo!))

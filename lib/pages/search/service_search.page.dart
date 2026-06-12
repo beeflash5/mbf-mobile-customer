@@ -47,8 +47,7 @@ class ServiceSearchPage extends ConsumerStatefulWidget {
   final VendorType? vendorType;
 
   @override
-  ConsumerState<ServiceSearchPage> createState() =>
-      _ServiceSearchPageState();
+  ConsumerState<ServiceSearchPage> createState() => _ServiceSearchPageState();
 }
 
 class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
@@ -67,8 +66,9 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
     final initialTag = widget.showServices ? 3 : (widget.showVendors ? 1 : 2);
     _initialSearch.genApiType(initialTag);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final notifier =
-          ref.read(serviceSearchControllerProvider(_initialSearch).notifier);
+      final notifier = ref.read(
+        serviceSearchControllerProvider(_initialSearch).notifier,
+      );
       notifier.setSelectedTag(initialTag);
     });
   }
@@ -82,10 +82,12 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(serviceSearchControllerProvider(_initialSearch));
-    final notifier =
-        ref.read(serviceSearchControllerProvider(_initialSearch).notifier);
+    final asyncState = ref.watch(
+      serviceSearchControllerProvider(_initialSearch),
+    );
+    final notifier = ref.read(
+      serviceSearchControllerProvider(_initialSearch).notifier,
+    );
     final state = asyncState.valueOrNull;
     final results = state?.results ?? const [];
     final selectTagId = state?.selectedTagId ?? 3;
@@ -110,28 +112,31 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
               notifier.setKeyword(keyword);
               notifier.startSearch();
             },
-            onFilterPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => SearchFilterBottomSheet(
-                search: state?.search ?? _initialSearch,
-                onSubmitted: notifier.updateSearch,
-              ),
-            ),
+            onFilterPressed:
+                () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder:
+                      (_) => SearchFilterBottomSheet(
+                        search: state?.search ?? _initialSearch,
+                        onSubmitted: notifier.updateSearch,
+                      ),
+                ),
           ),
           Visibility(
-            visible: (widget.byLocation ||
-                    (state?.search?.byLocation ?? false)) &&
+            visible:
+                (widget.byLocation || (state?.search?.byLocation ?? false)) &&
                 results.isEmpty &&
                 !isLoading,
-            child: "Results are currently based on your location. You can disable this in the filter section."
-                .tr()
-                .text
-                .center
-                .gray500
-                .makeCentered()
-                .py(10),
+            child:
+                "Results are currently based on your location. You can disable this in the filter section."
+                    .tr()
+                    .text
+                    .center
+                    .gray500
+                    .makeCentered()
+                    .py(10),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -149,74 +154,83 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
           ),
           CustomVisibilty(
             visible: widget.showVendors && selectTagId == 1,
-            child: CustomListView(
-              refreshController: _refreshController,
-              canRefresh: true,
-              canPullUp: true,
-              onRefresh: notifier.startSearch,
-              onLoading: () =>
-                  notifier.startSearch(initialLoading: false),
-              isLoading: isLoading,
-              dataSet: results,
-              itemBuilder: (context, index) {
-                final r = results[index];
-                if (r is Service) {
-                  return GridViewServiceListItem(
-                    service: r,
-                    onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
-                  );
-                }
-                return CardVendor(
-                  vendor: r as Vendor,
-                  onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  UiSpacer.verticalSpace(space: 10),
-              emptyWidget: EmptyServiceSearch(),
-            ).expand(),
+            child:
+                CustomListView(
+                  refreshController: _refreshController,
+                  canRefresh: true,
+                  canPullUp: true,
+                  onRefresh: notifier.startSearch,
+                  onLoading: () => notifier.startSearch(initialLoading: false),
+                  isLoading: isLoading,
+                  dataSet: results,
+                  itemBuilder: (context, index) {
+                    final r = results[index];
+                    if (r is Service) {
+                      return GridViewServiceListItem(
+                        service: r,
+                        onPressed:
+                            (s) => context.pushWidget(ServiceDetailsPage(s)),
+                      );
+                    }
+                    return CardVendor(
+                      vendor: r as Vendor,
+                      onPressed:
+                          (v) =>
+                              context.pushWidget(VendorDetailsPage(vendor: v)),
+                    );
+                  },
+                  separatorBuilder:
+                      (context, index) => UiSpacer.verticalSpace(space: 10),
+                  emptyWidget: EmptyServiceSearch(),
+                ).expand(),
           ),
           CustomVisibilty(
             visible: widget.showServices && selectTagId != 1,
-            child: VStack([
-              CustomMasonryGridView(
-                refreshController: _refreshController,
-                canRefresh: true,
-                canPullUp: true,
-                onRefresh: notifier.startSearch,
-                onLoading: () =>
-                    notifier.startSearch(initialLoading: false),
-                isLoading: isLoading,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                items: results.map((r) {
-                  if (r is Service) {
-                    void open(s) => context.pushWidget(ServiceDetailsPage(s));
-                    if (r.vendor_type_id == 13 ||
-                        (r.vendor_type_id == null &&
-                            r.vendor.vendorTypeId == 13)) {
-                      return HomeServicesListItemTatto(
-                        height: 360,
-                        width: double.infinity,
-                        service: r,
-                        onPressed: open,
-                      );
-                    }
-                    return HomeServicesListItem(
-                      height: 290,
-                      width: double.infinity,
-                      service: r,
-                      onPressed: open,
-                    );
-                  }
-                  return VendorListItem(
-                    vendor: r as Vendor,
-                    onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
-                  );
-                }).toList(),
-                emptyWidget: EmptyServiceSearch(),
-              ).expand(),
-            ]).expand(),
+            child:
+                VStack([
+                  CustomMasonryGridView(
+                    refreshController: _refreshController,
+                    canRefresh: true,
+                    canPullUp: true,
+                    onRefresh: notifier.startSearch,
+                    onLoading:
+                        () => notifier.startSearch(initialLoading: false),
+                    isLoading: isLoading,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    items:
+                        results.map((r) {
+                          if (r is Service) {
+                            void open(s) =>
+                                context.pushWidget(ServiceDetailsPage(s));
+                            if (r.vendor_type_id == 13 ||
+                                (r.vendor_type_id == null &&
+                                    r.vendor.vendorTypeId == 13)) {
+                              return HomeServicesListItemTatto(
+                                height: 360,
+                                width: double.infinity,
+                                service: r,
+                                onPressed: open,
+                              );
+                            }
+                            return HomeServicesListItem(
+                              height: 290,
+                              width: double.infinity,
+                              service: r,
+                              onPressed: open,
+                            );
+                          }
+                          return VendorListItem(
+                            vendor: r as Vendor,
+                            onPressed:
+                                (v) => context.pushWidget(
+                                  VendorDetailsPage(vendor: v),
+                                ),
+                          );
+                        }).toList(),
+                    emptyWidget: EmptyServiceSearch(),
+                  ).expand(),
+                ]).expand(),
           ),
         ]).pSymmetric(h: 12),
       ),

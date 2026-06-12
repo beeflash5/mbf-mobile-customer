@@ -14,10 +14,7 @@ import 'package:fuodz/services/auth.request.dart';
 
 /// Callback API for social media login flows. Replaces the old
 /// LoginViewModel-coupled interface so any Riverpod page can drive these.
-typedef SocialLoginRegister = void Function({
-  String? email,
-  String? name,
-});
+typedef SocialLoginRegister = void Function({String? email, String? name});
 typedef SocialLoginToast = void Function(String message);
 
 class SocialMediaLoginService {
@@ -31,42 +28,68 @@ class SocialMediaLoginService {
   }) async {
     onBusy(true);
     try {
-      final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+      // serverClientId = Web Client ID (type:3) dari google-services.json
+      // WAJIB agar idToken tidak null di Android
+      final googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+        serverClientId:
+            '1033816567831-l1c235q24i561jg1mdj57tb6entv66jr.apps.googleusercontent.com',
+      );
       try {
+        // Selalu disconnect dulu agar account picker selalu muncul
         if (await googleSignIn.isSignedIn()) {
           await googleSignIn.disconnect();
         }
         final googleUser = await googleSignIn.signIn();
         if (googleUser == null) {
-          throw "Google login failed".tr();
+          // User membatalkan login — jangan tampilkan error
+          onBusy(false);
+          return;
         }
         final googleAuth = await googleUser.authentication;
+        final idToken = googleAuth.idToken;
+        final accessToken = googleAuth.accessToken;
+
+        if (idToken == null) {
+          onError(
+            'Google login gagal: idToken null. Pastikan SHA-1 sudah didaftarkan di Firebase Console.',
+          );
+          onBusy(false);
+          return;
+        }
+
+        // Sign in ke Firebase dengan credential Google
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
+          accessToken: accessToken,
+          idToken: idToken,
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // Kirim ke backend MBF
         try {
           final apiResponse = await _authRequest.socialLogin(
             googleUser.email,
-            googleAuth.idToken,
+            idToken,
             'google',
           );
           if (apiResponse != null) await onApiResponse(apiResponse);
         } catch (error) {
-          onError('$error');
-          if (error.toString().toLowerCase().contains('not found') ||
-              error.toString().toLowerCase().contains('register')) {
+          final errStr = '$error';
+          if (errStr.toLowerCase().contains('not found') ||
+              errStr.toLowerCase().contains('register') ||
+              errStr.toLowerCase().contains('404')) {
             onNeedsRegister(
               email: googleUser.email,
               name: googleUser.displayName,
             );
+          } else {
+            onError(errStr);
           }
         }
       } on FirebaseAuthException catch (error) {
-        onError(error.message ?? '');
+        onError('Firebase: ${error.message ?? error.code}');
       } catch (error) {
-        onError('$error');
+        onError('Google: $error');
       }
     } catch (error) {
       onError('$error');
@@ -90,10 +113,12 @@ class SocialMediaLoginService {
           throw "Facebook login failed".tr();
         }
         try {
-          final credential =
-              FacebookAuthProvider.credential(accessToken.tokenString);
-          final userAccount =
-              await FirebaseAuth.instance.signInWithCredential(credential);
+          final credential = FacebookAuthProvider.credential(
+            accessToken.tokenString,
+          );
+          final userAccount = await FirebaseAuth.instance.signInWithCredential(
+            credential,
+          );
           final apiResponse = await _authRequest.socialLogin(
             userAccount.user!.email!,
             accessToken.tokenString,
@@ -121,9 +146,7 @@ class SocialMediaLoginService {
     }
   }
 
-  Future<void> appleLoginAndroid({
-    required SocialLoginToast onError,
-  }) async {
+  Future<void> appleLoginAndroid({required SocialLoginToast onError}) async {
     try {
       await SignInWithApple.getAppleIDCredential(
         scopes: const [
@@ -132,8 +155,9 @@ class SocialMediaLoginService {
         ],
         webAuthenticationOptions: WebAuthenticationOptions(
           clientId: 'com.aplikasii.mybalifriendz.service',
-          redirectUri:
-              Uri.parse('https://mybalifriendz.co/auth/apple/callback'),
+          redirectUri: Uri.parse(
+            'https://mybalifriendz.co/auth/apple/callback',
+          ),
         ),
       );
     } on SignInWithAppleAuthorizationException catch (e) {
@@ -165,8 +189,9 @@ class SocialMediaLoginService {
         rawNonce: rawNonce,
         accessToken: credential.authorizationCode,
       );
-      final userAccount =
-          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      final userAccount = await FirebaseAuth.instance.signInWithCredential(
+        oauthCredential,
+      );
       try {
         final apiResponse = await _authRequest.socialLogin(
           userAccount.user!.email ?? '',

@@ -145,52 +145,22 @@ class OrderDetailsController
 
   void chatVendor(BuildContext context) {
     final order = state.order;
-    final peers = <String, PeerUser>{
-      '${order.userId}': PeerUser(
-        id: '${order.userId}',
-        name: order.user.name,
-        image: order.user.photo,
-      ),
-      'vendor_${order.vendor?.id}': PeerUser(
-        id: "vendor_${order.vendor?.id}",
-        name: order.vendor?.name ?? "",
-        image: order.vendor?.logo,
-      ),
+    final extra = {
+      'orderCode': order.code,
+      'chatType': 'customerVendor',
+      'receiverId': order.vendor?.id ?? 0,
     };
-    final chatEntity = ChatEntity(
-      onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${order.userId}']!,
-      peers: peers,
-      path: 'orders/' + order.code + "/customerVendor/chats",
-      title: "Chat with vendor".tr(),
-      supportMedia: AppUISettings.canCustomerChatSupportMedia,
-    );
-    context.pushRoute(AppRoutes.chatRoute, extra: chatEntity);
+    context.pushRoute(AppRoutes.chatRoute, extra: extra);
   }
 
   void chatDriver(BuildContext context) {
     final order = state.order;
-    final peers = <String, PeerUser>{
-      '${order.userId}': PeerUser(
-        id: '${order.userId}',
-        name: order.user.name,
-        image: order.user.photo,
-      ),
-      '${order.driver?.id}': PeerUser(
-        id: "${order.driver?.id}",
-        name: order.driver?.name ?? "Driver".tr(),
-        image: order.driver?.photo,
-      ),
+    final extra = {
+      'orderCode': order.code,
+      'chatType': 'customerDriver',
+      'receiverId': order.driver?.id ?? 0,
     };
-    final chatEntity = ChatEntity(
-      mainUser: peers['${order.userId}']!,
-      peers: peers,
-      path: 'orders/' + order.code + "/customerDriver/chats",
-      title: "Chat with driver".tr(),
-      onMessageSent: ChatService.sendChatMessage,
-      supportMedia: AppUISettings.canCustomerChatSupportMedia,
-    );
-    context.pushRoute(AppRoutes.chatRoute, extra: chatEntity);
+    context.pushRoute(AppRoutes.chatRoute, extra: extra);
   }
 
   void confirmOrder(BuildContext context) {

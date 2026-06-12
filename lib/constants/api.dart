@@ -183,7 +183,7 @@ class Api {
 
   static String get appShareLink {
     final webUrl = webBaseUrl;
-    return "$webUrl/preview/share";
+    return "$webUrl/";
   }
 
   static Future<String> redirectAuth({String? url, String? route}) async {

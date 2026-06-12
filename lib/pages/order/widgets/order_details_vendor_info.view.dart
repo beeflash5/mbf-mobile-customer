@@ -28,6 +28,9 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTattoo = order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
+        order.vendor?.vendorType?.slug.toLowerCase() == 'tatto';
+
     return VStack([
       HStack([
         VStack([
@@ -40,7 +43,7 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
           order.vendor!.name.text.medium.xl.make().py8().pOnly(bottom: Vx.dp4),
         ]).expand(),
         Visibility(
-          visible: order.canChatVendor && AppUISettings.canCallVendor,
+          visible: !isTattoo && order.canChatVendor && AppUISettings.canCallVendor,
           child: CustomButton(
             icon: Icons.phone,
             iconColor: Colors.white,
@@ -50,7 +53,7 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
           ).h(50).fittedBox(),
         ),
         Visibility(
-          visible: order.canChatVendor && AppUISettings.canVendorChat,
+          visible: !isTattoo && order.canChatVendor && AppUISettings.canVendorChat,
           child: CustomButton(
             icon: Icons.chat,
             iconColor: Colors.white,

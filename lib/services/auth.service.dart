@@ -143,5 +143,6 @@ class AuthServices {
       }
     }
     await FirebaseAuth.instance.signOut();
+    currentUser = null;
   }
 }
