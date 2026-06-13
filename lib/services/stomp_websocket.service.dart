@@ -1,5 +1,7 @@
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
+import 'package:fuodz/constants/api.dart';
+
 class StompWebsocketService {
   static final StompWebsocketService _instance =
       StompWebsocketService._internal();
@@ -13,8 +15,15 @@ class StompWebsocketService {
   StompClient? stompClient;
 
   // Change this to your spring boot server url
-  final String socketUrl =
-      "wss://api.mybalifriendz.co:8080/ws"; // Adjust port/path as needed
+  final String socketUrl = (() {
+    try {
+      final uri = Uri.parse(Api.baseUrl);
+      final scheme = uri.scheme == 'https' ? 'wss' : 'ws';
+      return uri.replace(scheme: scheme, path: '/ws').toString();
+    } catch (e) {
+      return "wss://api.mybalifriendz.co/ws";
+    }
+  })();
 
   void connect({
     required Function(StompFrame) onConnect,

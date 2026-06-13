@@ -116,19 +116,6 @@ class _OrderChatPageState extends State<OrderChatPage> {
 
     StompWebsocketService().send('/app/chat.send', jsonEncode(body));
     messageController.clear();
-    
-    // Optimistic UI update
-    if (mounted) {
-      setState(() {
-        messages.add({
-          "sender_id": currentUserId,
-          "message": text,
-          "attachments": attachmentUrl != null ? [attachmentUrl] : [],
-          "timestamp": DateTime.now().millisecondsSinceEpoch,
-        });
-      });
-      _scrollToBottom();
-    }
   }
 
   Future<void> _pickImage() async {
