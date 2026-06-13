@@ -64,11 +64,18 @@ class _OrderChatPageState extends State<OrderChatPage> {
       if (token != null) {
         dio.options.headers["Authorization"] = "Bearer $token";
       }
-      final response = await dio.get("${Api.baseUrl}/chat/history/${widget.orderCode}/${widget.chatType}");
+      final url = "${Api.baseUrl}/chat/history/${widget.orderCode}/${widget.chatType}";
+      print("Fetching chat history from: $url");
+      final response = await dio.get(url);
+      
+      print("History response status: ${response.statusCode}");
+      print("History response data: ${response.data}");
+      
       if (response.statusCode == 200 && response.data != null) {
         if (mounted) {
           setState(() {
-            messages = List<Map<String, dynamic>>.from(response.data["data"] ?? []);
+            final rawData = response.data["data"] as List<dynamic>? ?? [];
+            messages = rawData.map((e) => Map<String, dynamic>.from(e as Map)).toList();
           });
           _scrollToBottom();
         }
