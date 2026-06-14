@@ -65,7 +65,7 @@ class ScheduleOrderView extends StatelessWidget {
         ].contains(vendor.vendorType.slug.toLowerCase()) &&
         !isTattoo;
     final bool isFood = vendor.isFoodOrBeverage && !isTattoo;
-    
+
     return Visibility(
       visible:
           vendor.allowScheduleOrder ||
@@ -73,34 +73,34 @@ class ScheduleOrderView extends StatelessWidget {
           isTattoo ||
           vendor.isFoodOrBeverage,
       child: VStack([
-              VStack([
-                isFood
-                    ? "Reservation".tr().text.lg.semiBold.make()
-                    : "Schedule Order".tr().text.lg.semiBold.make(),
-                UiSpacer.verticalSpace(space: 10),
-                HStack([
-                  Checkbox(
-                    value: isScheduled,
-                    onChanged: onToggleScheduled,
-                    activeColor: AppColor.primaryColor,
-                  ).pOnly(right: 10),
-                  (isFood
-                          ? "I want to make a reservation for a future date/time."
-                          : "I want to schedule this order for a future date/time.")
-                      .tr()
-                      .text
-                      .color(const Color(0xff808080))
-                      .make()
-                      .expand(),
-                ]).onInkTap(() => onToggleScheduled(!isScheduled)),
-              ]).wFull(context),
+            VStack([
+              isFood
+                  ? "Reservation".tr().text.lg.semiBold.make()
+                  : "Schedule Order".tr().text.lg.semiBold.make(),
+              UiSpacer.verticalSpace(space: 10),
+              HStack([
+                Checkbox(
+                  value: isScheduled,
+                  onChanged: onToggleScheduled,
+                  activeColor: AppColor.primaryColor,
+                ).pOnly(right: 10),
+                (isFood
+                        ? "I want to make a reservation for a future date/time."
+                        : "I want to schedule this order for a future date/time.")
+                    .tr()
+                    .text
+                    .color(const Color(0xff808080))
+                    .make()
+                    .expand(),
+              ]).onInkTap(() => onToggleScheduled(!isScheduled)),
+            ]).wFull(context),
             Visibility(
               visible: isScheduled,
               child: VStack([
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isFood || vendor.deliverySlots.isEmpty)
+                isFood
                     ? CustomTextFormField(
                       isReadOnly: true,
                       hintText: selectedDate ?? "mm/dd/yyyy",
@@ -188,7 +188,7 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isFood || availableTimeSlots.isEmpty)
+                isFood
                     ? CustomTextFormField(
                       isReadOnly: true,
                       hintText:
@@ -275,6 +275,15 @@ class ScheduleOrderView extends StatelessWidget {
                             }
                           },
                         )),
+                if (!isFood && vendor.deliverySlots.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: "This vendor hasn't published available days yet."
+                        .text
+                        .size(12)
+                        .color(Colors.grey)
+                        .make(),
+                  ),
                 if (isFood && guestCountController != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
