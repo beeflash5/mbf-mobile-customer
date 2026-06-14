@@ -10,7 +10,7 @@ class OrderRequest extends ApiService {
     Map<String, dynamic>? params,
   }) async {
     final apiResult = await get(
-      "${Api.webBaseUrl}/api/proxy/orders",
+      Api.orders,
       queryParameters: {"page": page, ...(params != null ? params : {})},
     );
 
@@ -21,13 +21,20 @@ class OrderRequest extends ApiService {
 
     if (apiResponse.allGood) {
       List<Order> orders = [];
-      List<dynamic> jsonArray =
-          (apiResponse.body is List) ? apiResponse.body : apiResponse.data;
+      List<dynamic> jsonArray = [];
+      if (apiResponse.body is List) {
+        jsonArray = List<dynamic>.from(apiResponse.body);
+      } else if (apiResponse.body is Map && apiResponse.body['data'] is List) {
+        jsonArray = List<dynamic>.from(apiResponse.body['data']);
+      } else if (apiResponse.data is List) {
+        jsonArray = List<dynamic>.from(apiResponse.data);
+      }
+
       for (var jsonObject in jsonArray) {
         try {
           orders.add(Order.fromJson(jsonObject));
         } catch (e) {
-          print(e);
+          print("Error parsing order: $e");
         }
       }
 

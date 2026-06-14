@@ -159,6 +159,19 @@ class Order {
   String? confirmation_note;
   int? confirmation_customer;
 
+  static DateTime _parseDateTime(dynamic value) {
+    if (value == null) return DateTime.now();
+    final str = value.toString();
+    if (str.endsWith("Z") || 
+        str.contains("+") || 
+        (str.lastIndexOf("-") > 10)) {
+      return DateTime.tryParse(str)?.toLocal() ?? DateTime.now();
+    }
+    return (DateTime.tryParse(str.contains("T") ? "${str}Z" : "${str.replaceFirst(' ', 'T')}Z") ?? 
+            DateTime.tryParse(str) ?? 
+            DateTime.now()).toLocal();
+  }
+
   factory Order.fromJson(dynamic json) {
     //parse fees
     dynamic fees = json["fees"];
@@ -191,55 +204,49 @@ class Order {
       subTotal:
           json["sub_total"] == null
               ? null
-              : double.parse(json["sub_total"].toString()),
+              : double.tryParse(json["sub_total"].toString()),
       discount:
           json["discount"] == null
               ? null
-              : double.parse(json["discount"].toString()),
+              : double.tryParse(json["discount"].toString()),
       deliveryFee:
           json["delivery_fee"] == null
               ? null
-              : double.parse(json["delivery_fee"].toString()),
+              : double.tryParse(json["delivery_fee"].toString()),
       comission:
           json["comission"] == null
               ? null
-              : double.parse(json["comission"].toString()),
+              : double.tryParse(json["comission"].toString()),
 
-      tax: json["tax"] == null ? null : double.parse(json["tax"].toString()),
+      tax: json["tax"] == null ? null : double.tryParse(json["tax"].toString()),
       taxRate:
           json["tax_rate"] == null
               ? null
-              : double.parse(json["tax_rate"].toString()),
-      tip: json["tip"] == null ? null : double.parse(json["tip"].toString()),
+              : double.tryParse(json["tax_rate"].toString()),
+      tip: json["tip"] == null ? null : double.tryParse(json["tip"].toString()),
       total:
-          json["total"] == null ? null : double.parse(json["total"].toString()),
+          json["total"] == null ? null : double.tryParse(json["total"].toString()),
       deliveryAddressId:
           json["delivery_address_id"] == null
               ? null
-              : int.parse(json["delivery_address_id"].toString()),
+              : int.tryParse(json["delivery_address_id"].toString()),
       //
       paymentMethodId:
           json["payment_method_id"] == null
               ? null
-              : int.parse(json["payment_method_id"].toString()),
+              : int.tryParse(json["payment_method_id"].toString()),
       vendorId:
           json["vendor_id"] == null
               ? null
-              : int.parse(json["vendor_id"].toString()),
+              : int.tryParse(json["vendor_id"].toString()),
       userId:
-          json["user_id"] == null ? 0 : int.parse(json["user_id"].toString()),
+          json["user_id"] == null ? 0 : int.tryParse(json["user_id"].toString()) ?? 0,
       driverId:
           json["driver_id"] == null
               ? null
-              : int.parse(json["driver_id"].toString()),
-      createdAt:
-          json["created_at"] == null
-              ? DateTime.now()
-              : DateTime.parse(json["created_at"]),
-      updatedAt:
-          json["updated_at"] == null
-              ? DateTime.now()
-              : DateTime.parse(json["updated_at"]),
+              : int.tryParse(json["driver_id"].toString()),
+      createdAt: _parseDateTime(json["created_at"]),
+      updatedAt: _parseDateTime(json["updated_at"]),
       formattedDate:
           json["formatted_date"] == null ? null : json["formatted_date"],
       paymentLink: json["payment_link"] == null ? "" : json["payment_link"],
@@ -313,7 +320,7 @@ class Order {
                 json["attachments"].map((x) => OrderAttachment.fromJson(x)),
               ),
       fees:
-          json["fees"] == null
+          (fees == null || fees is! List)
               ? []
               : List<OrderFee>.from(
                 (fees as List).map((x) => OrderFee.fromJson(x)),
@@ -326,35 +333,35 @@ class Order {
           json["tatto_type_select"] != null ? json["tatto_type_select"] : null,
       attach: json["attach"] != null ? json["attach"] : null,
 
-      dp: json["dp"] == null ? null : double.parse(json["dp"].toString()),
-      sisa: json["sisa"] == null ? null : double.parse(json["sisa"].toString()),
+      dp: json["dp"] == null ? null : double.tryParse(json["dp"].toString()),
+      sisa: json["sisa"] == null ? null : double.tryParse(json["sisa"].toString()),
       dp_status:
           json["dp_status"] == null
               ? 0
-              : int.parse(json["dp_status"].toString()),
+              : int.tryParse(json["dp_status"].toString()) ?? 0,
       sisa_status:
           json["sisa_status"] == null
               ? 0
-              : int.parse(json["sisa_status"].toString()),
+              : int.tryParse(json["sisa_status"].toString()) ?? 0,
 
       reser_guest:
           json["reser_guest"] == null
               ? 0
-              : int.parse(json["reser_guest"].toString()),
+              : int.tryParse(json["reser_guest"].toString()) ?? 0,
       reser_table:
           json["reser_table"] == null
               ? 0
-              : int.parse(json["reser_table"].toString()),
+              : int.tryParse(json["reser_table"].toString()) ?? 0,
       checkin_status: json["checkin_status"] ?? false,
       can_reschedule: json["can_reschedule"] ?? false,
       check_in:
-          json["check_in"] == null ? 0 : int.parse(json["check_in"].toString()),
+          json["check_in"] == null ? 0 : int.tryParse(json["check_in"].toString()) ?? 0,
       confirmation_note:
           json["confirmation_note"] == null ? null : json["confirmation_note"],
       confirmation_customer:
           json["confirmation_customer"] == null
               ? null
-              : int.parse(json["confirmation_customer"].toString()),
+              : int.tryParse(json["confirmation_customer"].toString()),
     );
   }
 
