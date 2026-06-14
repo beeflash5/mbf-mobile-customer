@@ -89,14 +89,16 @@ class ProductDetailsPage extends ConsumerWidget {
                 child:
                     VStack([
                           ProductDetailsHeader(product: detail),
-                          UiSpacer.divider(height: 1, thickness: 2).py12(),
-                          WebViewer(
-                            url: detail.description_url,
-                            height: 50,
-                            isScrollable: false,
-                            showProgressBar: true,
-                            enableJavaScript: true,
-                          ),
+                          if (detail.description.trim().isNotEmpty) ...[
+                            UiSpacer.divider(height: 1, thickness: 2).py12(),
+                            WebViewer(
+                              url: detail.description_url,
+                              height: 50,
+                              isScrollable: false,
+                              showProgressBar: true,
+                              enableJavaScript: true,
+                            ),
+                          ],
                           UiSpacer.divider(height: 1, thickness: 2).py12(),
                           Visibility(
                             visible: detail.optionGroups.isNotEmpty,
