@@ -10,7 +10,7 @@ class OrderRequest extends ApiService {
     Map<String, dynamic>? params,
   }) async {
     final apiResult = await get(
-      Api.orders,
+      "${Api.webBaseUrl}/api/proxy/orders",
       queryParameters: {"page": page, ...(params != null ? params : {})},
     );
 

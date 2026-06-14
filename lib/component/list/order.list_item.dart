@@ -30,6 +30,7 @@ class OrderListItem extends StatelessWidget {
             VStack([
               //
               HStack([
+                "#${order.code}".text.lg.semiBold.make().expand(),
                 "${AppStrings.currencySymbol} ${order.total}"
                     .currencyFormat()
                     .text
@@ -70,8 +71,8 @@ class OrderListItem extends StatelessWidget {
                 ).expand(),
                 VxTextBuilder(
                   Jiffy.parseFromDateTime(
-                    order.createdAt,
-                  ).format(pattern: 'dd E, MMM y'),
+                    order.createdAt.toLocal(),
+                  ).format(pattern: 'dd MMM yyyy, HH:mm'),
                 ).sm.make(),
                 //EEEE dd MMM yyyy
               ]),

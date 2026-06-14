@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/app_images.dart';
 import 'package:fuodz/utils/app_strings.dart';
@@ -33,6 +34,15 @@ class TaxiOrderListItem extends StatelessWidget {
     return VStack([
           //
           VStack([
+            HStack([
+              "#${order.code} ".text.lg.semiBold.make(),
+              VxTextBuilder(
+                Jiffy.parseFromDateTime(
+                  order.createdAt.toLocal(),
+                ).format(pattern: 'dd MMM yyyy, HH:mm'),
+              ).sm.align(TextAlign.right).make().expand(),
+            ]),
+            UiSpacer.verticalSpace(),
             //
             HStack([
               Image.asset(AppImages.pickupLocation).wh(12, 12),
