@@ -99,17 +99,18 @@ class ProductDetailsPage extends ConsumerWidget {
                               enableJavaScript: true,
                             ),
                           ],
-                          UiSpacer.divider(height: 1, thickness: 2).py12(),
                           Visibility(
                             visible: detail.optionGroups.isNotEmpty,
-                            child: LoadingIndicator(
-                              loading: asyncState.isLoading,
-                              child: VStack([
-                                ProductOptionsHeader(
-                                  description:
-                                      "Select options to add them to the product/service"
-                                          .tr(),
-                                ),
+                            child: VStack([
+                              UiSpacer.divider(height: 1, thickness: 2).py12(),
+                              LoadingIndicator(
+                                loading: asyncState.isLoading,
+                                child: VStack([
+                                  ProductOptionsHeader(
+                                    description:
+                                        "Select options to add them to the product/service"
+                                            .tr(),
+                                  ),
                                 VStack(
                                   detail.optionGroups
                                       .map(
