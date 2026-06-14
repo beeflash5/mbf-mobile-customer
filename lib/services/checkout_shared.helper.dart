@@ -28,10 +28,19 @@ class CheckoutSharedHelpers {
     Vendor vendor, {
     Map<String, String>? params,
   }) async {
-    return _vendorRequest.vendorDetails(
+    final v = await _vendorRequest.vendorDetails(
       vendor.id,
       params: params ?? const {"type": "brief"},
     );
+    
+    // Preserve essential original data that the API might drop
+    v.vendorType = vendor.vendorType;
+    v.vendorTypeId = vendor.vendorTypeId;
+    v.can_dinein = vendor.can_dinein;
+    v.qty_tables = vendor.qty_tables;
+    v.deliverySlots = vendor.deliverySlots;
+    
+    return v;
   }
 
   static Future<DeliveryAddress?> preselectedDeliveryAddress({

@@ -157,10 +157,6 @@ class CheckoutController
         state.vendor!,
         params: {"type": "full"},
       );
-      // Ensure we preserve the original data if the API doesn't return them here
-      v.deliverySlots = state.vendor!.deliverySlots;
-      v.vendorType = state.vendor!.vendorType;
-      v.vendorTypeId = state.vendor!.vendorTypeId;
       state = state.copyWith(vendor: v);
     } catch (e) {
       // ignore: avoid_print
@@ -351,6 +347,7 @@ class CheckoutController
 
   void selectTableSelecte(String selected) {
     state = state.copyWith(tableSelected: selected);
+    _updateTotalOrderSummary();
   }
 
   Future<DeliveryAddress?> pickDeliveryAddress(BuildContext context) async {

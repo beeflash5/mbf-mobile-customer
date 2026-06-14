@@ -283,10 +283,6 @@ class ServiceBookingSummaryController
         state.vendor!,
         params: {"type": "full"}, // Ask for full details
       );
-      // The /api/vendors/{id} endpoint does not return 'slots'.
-      // They are only returned inside the vendor object from /api/services/{id}.
-      // Therefore, we must preserve the original deliverySlots.
-      fullVendor.deliverySlots = originalSlots;
 
       state = state.copyWith(vendor: fullVendor);
     } catch (e) {
