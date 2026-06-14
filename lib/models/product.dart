@@ -176,10 +176,17 @@ class Product {
       vendorId: int.parse(json["vendor_id"].toString()),
       categoryId: json["category_id"],
       photo: json["photo"] ?? "",
-      vendor:
-          json["vendor"] == null
-              ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
-              : Vendor.fromJson(json["vendor"]),
+      vendor: json["vendor"] == null
+          ? Vendor.fromJson({
+              "id": json["vendor_id"] ?? 0,
+              "vendor_type_id": json["vendor_type_id"] ?? 0,
+            })
+          : Vendor.fromJson({
+              ...json["vendor"],
+              if (json["vendor"]["vendor_type_id"] == null &&
+                  json["vendor_type_id"] != null)
+                "vendor_type_id": json["vendor_type_id"]
+            }),
       optionGroups: productOptions,
       digitalFiles:
           json["digital_files"] == null
