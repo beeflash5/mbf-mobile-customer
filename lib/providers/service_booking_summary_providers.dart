@@ -278,10 +278,16 @@ class ServiceBookingSummaryController
   Future<void> _fetchVendorDetails() async {
     if (state.vendor == null) return;
     try {
+      final originalSlots = state.vendor!.deliverySlots;
       final fullVendor = await CheckoutSharedHelpers.fetchVendorDetails(
         state.vendor!,
-        params: {"type": "full"}, // Ask for full details to get 'slots'
+        params: {"type": "full"}, // Ask for full details
       );
+      // The /api/vendors/{id} endpoint does not return 'slots'.
+      // They are only returned inside the vendor object from /api/services/{id}.
+      // Therefore, we must preserve the original deliverySlots.
+      fullVendor.deliverySlots = originalSlots;
+      
       state = state.copyWith(vendor: fullVendor);
     } catch (e) {
       debugPrint("ServiceBooking fetchVendorDetails error: $e");
