@@ -33,11 +33,14 @@ class CheckoutSharedHelpers {
       params: params ?? const {"type": "brief"},
     );
     
-    // Preserve essential original data that the API might drop
-    v.vendorType = vendor.vendorType;
-    v.vendorTypeId = vendor.vendorTypeId;
-    v.can_dinein = vendor.can_dinein;
-    v.qty_tables = vendor.qty_tables;
+    // Preserve essential original data only if the API dropped it
+    if (v.vendorType.id == 0 || v.vendorType.slug.isEmpty) {
+      v.vendorType = vendor.vendorType;
+    }
+    if (v.vendorTypeId == null || v.vendorTypeId == 0) {
+      v.vendorTypeId = vendor.vendorTypeId;
+    }
+    // deliverySlots are never returned by /api/vendors/{id}, so always copy them from the original object.
     v.deliverySlots = vendor.deliverySlots;
     
     return v;
