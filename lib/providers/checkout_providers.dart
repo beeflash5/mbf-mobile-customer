@@ -340,7 +340,13 @@ class CheckoutController
     final co = state.checkout;
     co.deliverySlotDate = dateStr;
     co.deliverySlotTime = "";
-    final times = state.vendor?.deliverySlots[index].times ?? [];
+    final times =
+        state.vendor != null &&
+                state.vendor!.deliverySlots.isNotEmpty &&
+                index >= 0 &&
+                index < state.vendor!.deliverySlots.length
+            ? state.vendor!.deliverySlots[index].times
+            : <String>[];
     state = state.copyWith(checkout: co, availableTimeSlots: times);
     _fetchTableAvailability();
   }

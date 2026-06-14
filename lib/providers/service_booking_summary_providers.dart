@@ -503,12 +503,12 @@ class ServiceBookingSummaryController
     final co = state.checkout;
     co.deliverySlotDate = dateStr;
     co.deliverySlotTime = "";
-
-    List<String> times = [];
-    final slots = state.vendor?.deliverySlots ?? [];
-    if (index >= 0 && index < slots.length) {
-      times = slots[index].times;
-    }
+    final times =
+        state.vendor != null &&
+                index >= 0 &&
+                index < (state.vendor!.deliverySlots.length)
+            ? state.vendor!.deliverySlots[index].times
+            : <String>[];
 
     state = state.copyWith(checkout: co, availableTimeSlots: times);
     _fetchTimeUse(dateStr);
