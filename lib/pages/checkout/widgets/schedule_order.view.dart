@@ -100,7 +100,7 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                isFood
+                (isFood || vendor.deliverySlots.isEmpty)
                     ? CustomTextFormField(
                       isReadOnly: true,
                       hintText: selectedDate ?? "mm/dd/yyyy",
@@ -188,7 +188,7 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                isFood
+                (isFood || availableTimeSlots.isEmpty)
                     ? CustomTextFormField(
                       isReadOnly: true,
                       hintText:
@@ -275,15 +275,7 @@ class ScheduleOrderView extends StatelessWidget {
                             }
                           },
                         )),
-                if (!isFood && vendor.deliverySlots.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child:
-                        "This vendor hasn't published available days yet.".text
-                            .size(12)
-                            .color(Colors.grey)
-                            .make(),
-                  ),
+
                 if (isFood && guestCountController != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
