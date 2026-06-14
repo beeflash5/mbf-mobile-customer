@@ -278,11 +278,11 @@ class ScheduleOrderView extends StatelessWidget {
                 if (!isFood && vendor.deliverySlots.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: "This vendor hasn't published available days yet."
-                        .text
-                        .size(12)
-                        .color(Colors.grey)
-                        .make(),
+                    child:
+                        "This vendor hasn't published available days yet.".text
+                            .size(12)
+                            .color(Colors.grey)
+                            .make(),
                   ),
                 if (isFood && guestCountController != null)
                   Column(

@@ -280,6 +280,7 @@ class ServiceBookingSummaryController
     try {
       final fullVendor = await CheckoutSharedHelpers.fetchVendorDetails(
         state.vendor!,
+        params: {"type": "full"}, // Ask for full details to get 'slots'
       );
       state = state.copyWith(vendor: fullVendor);
     } catch (e) {
