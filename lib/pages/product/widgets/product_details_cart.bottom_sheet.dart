@@ -174,14 +174,18 @@ class _ProductDetailsCartBottomSheetState
                 CustomButton(
                   loading: _busy,
                   color: AppColor.primaryColorDark,
-                  child:
-                      "Buy Now".tr().text.white.medium.make().centered().p12(),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: "Buy Now".tr().text.white.medium.make(),
+                  ).centered().p12(),
                   onPressed: _buyNow,
                 ).expand(),
                 CustomButton(
                   loading: _busy,
-                  child:
-                      "Add to cart".tr().text.white.medium.make().centered().p12(),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: "Add to cart".tr().text.white.medium.make(),
+                  ).centered().p12(),
                   onPressed: _addToCart,
                 ).expand(),
               ], spacing: 20),
