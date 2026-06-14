@@ -24,6 +24,8 @@ class OrderSummary extends StatelessWidget {
     this.mCurrencySymbol,
     this.customWidget,
     this.allowConvert = false,
+    this.dp,
+    this.sisa,
     Key? key,
   }) : super(key: key);
 
@@ -39,6 +41,9 @@ class OrderSummary extends StatelessWidget {
   final List<Fee> fees;
   final Widget? customWidget;
   final bool allowConvert;
+  final double? dp;
+  final double? sisa;
+
   @override
   Widget build(BuildContext context) {
     final currencySymbol =
@@ -155,6 +160,24 @@ class OrderSummary extends StatelessWidget {
         ),
         amountStyle: totalStyle,
       ),
+      if (dp != null && sisa != null) ...[
+        DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
+        AmountTile(
+          "Down Payment (${(AppStrings.down_payment % 1 == 0) ? AppStrings.down_payment.toInt().toString() : AppStrings.down_payment.toString()}%)"
+              .tr(),
+          "$currencySymbol ${dp!.convertIf(allowConvert)}".currencyFormat(
+            currencySymbol,
+          ),
+          amountStyle: summaryStyle.copyWith(fontWeight: FontWeight.w600),
+        ).py2(),
+        AmountTile(
+          "Balance".tr(),
+          "$currencySymbol ${sisa!.convertIf(allowConvert)}".currencyFormat(
+            currencySymbol,
+          ),
+          amountStyle: summaryStyle,
+        ).py2(),
+      ],
     ]);
   }
 }

@@ -304,15 +304,10 @@ class CheckoutController
 
   void togglePickupStatus(bool? value) {
     final isPickup = value ?? false;
-    final bool allowSchedule =
-        state.vendor?.allowScheduleOrder == true ||
-        state.vendor?.isFoodOrBeverage == true;
-    final isScheduled = value == true ? false : allowSchedule;
     final co = state.checkout;
     co.deliveryAddress = isPickup ? null : state.deliveryAddress;
     state = state.copyWith(
       isPickup: isPickup,
-      isScheduled: isScheduled,
       checkout: co,
     );
     _updateTotalOrderSummary();
@@ -329,7 +324,6 @@ class CheckoutController
     co.deliverySlotTime = "";
     state = state.copyWith(
       isScheduled: isScheduled,
-      isPickup: value == true ? false : true,
       checkout: co,
     );
     await Jiffy.setLocale(translator.activeLocale.languageCode);
