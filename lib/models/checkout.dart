@@ -31,7 +31,7 @@ class CheckOut {
   List<Fee> fees = [];
   double totalFee;
   int? reser_guest;
-  int? reser_table;
+  String? reser_table;
   double? dp;
   double? sisa;
 

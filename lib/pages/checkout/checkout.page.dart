@@ -81,11 +81,36 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             tableSelected: state.tableSelected,
             guestCountController: controller.guestCountTEC,
             onSelectTable: controller.selectTableSelecte,
+            isFoodOverride: state.isFoodOrder,
           ),
-        CustomTextFormField(
+
+        if (state.hasAgeRestricted)
+          VStack([
+            "Batas Usia (Age Limit)".tr().text.lg.bold.color(Vx.red800).make(),
+            UiSpacer.verticalSpace(space: 10),
+            HStack([
+              Checkbox(
+                value: state.ageConfirmed,
+                onChanged: controller.toggleAgeConfirmed,
+                activeColor: Vx.red600,
+              ).pOnly(right: 10),
+              VStack([
+                "I confirm that I am old enough to purchase the products in this order.".tr().text.sm.color(Vx.red700).make(),
+                "(Saya mengonfirmasi bahwa saya sudah cukup umur untuk membeli produk ini.)".tr().text.xs.color(Vx.red700).make(),
+              ]).expand(),
+            ]).onInkTap(() => controller.toggleAgeConfirmed(!state.ageConfirmed)),
+          ])
+          .p12()
+          .box
+          .roundedSM
+          .color(Vx.red50)
+          .border(color: Vx.red200)
+          .make()
+          .pOnly(bottom: Vx.dp20),        CustomTextFormField(
           labelText: "Note".tr(),
           textEditingController: controller.noteTEC,
         ).pOnly(bottom: Vx.dp20),
+        /* 
         Visibility(
           visible: !state.isPickup && state.tableSelected == null,
           child: CustomTextFormField(
@@ -96,6 +121,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             onFieldSubmitted: (_) => controller.updateTotalOrderSummary(),
           ).pOnly(bottom: Vx.dp20),
         ),
+        */
         Visibility(
           visible: state.canSelectPaymentOption,
           child: PaymentMethodsView(
@@ -124,6 +150,19 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             fees: vendor.fees,
             mCurrencySymbol: AppStrings.currentCurrencySymbol,
             allowConvert: true,
+            // Show DP breakdown for food reservations (matching Next.js)
+            dp:
+                (state.isFoodOrder &&
+                        state.isScheduled &&
+                        (state.checkout.dp ?? 0) > 0)
+                    ? state.checkout.dp
+                    : null,
+            sisa:
+                (state.isFoodOrder &&
+                        state.isScheduled &&
+                        (state.checkout.sisa ?? 0) > 0)
+                    ? state.checkout.sisa
+                    : null,
           ),
         if (state.checkout.deliveryAddress != null)
           CheckoutDriverCashDeliveryNoticeView(state.checkout.deliveryAddress!),

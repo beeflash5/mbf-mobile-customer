@@ -142,12 +142,14 @@ class MultipleCheckoutController
   final CheckoutRequest _checkoutRequest = CheckoutRequest();
   final TextEditingController noteTEC = TextEditingController();
   final TextEditingController driverTipTEC = TextEditingController();
+  final TextEditingController guestCountTEC = TextEditingController();
 
   @override
   MultipleCheckoutState build(CheckOut arg) {
     ref.onDispose(() {
       noteTEC.dispose();
       driverTipTEC.dispose();
+      guestCountTEC.dispose();
     });
     Vendor? primaryVendor;
     if (CartServices.productsInCart.isNotEmpty) {
@@ -375,12 +377,21 @@ class MultipleCheckoutController
 
   void togglePickupStatus(bool? value) {
     final isPickup = value ?? false;
-    final isScheduled = value == true ? false : true;
+    bool isScheduled = value == true ? false : true;
     final co = state.checkout;
     co.deliveryAddress = isPickup ? null : state.deliveryAddress;
+    
+    String? tableSelected = state.tableSelected;
+    if (isPickup) {
+      tableSelected = null;
+      co.reser_table = null;
+      co.reser_guest = null;
+    }
+
     state = state.copyWith(
       isPickup: isPickup,
       isScheduled: isScheduled,
+      tableSelected: tableSelected,
       checkout: co,
     );
     _updateTotalOrderSummary();
@@ -459,6 +470,26 @@ class MultipleCheckoutController
       );
       return;
     }
+    
+    final vendor = state.vendor;
+    if (vendor != null && vendor.can_dinein == true && state.isScheduled) {
+      final guestCount = int.tryParse(guestCountTEC.text) ?? 0;
+      if (guestCount < 3) {
+        AlertService.error(
+          title: "Reservation".tr(),
+          text: "Dine-in reservations require at least 3 guests.".tr(),
+        );
+        return;
+      }
+      if (state.tableSelected == null || state.tableSelected!.isEmpty) {
+        AlertService.error(
+          title: "Reservation".tr(),
+          text: "Please select a table for your reservation.".tr(),
+        );
+        return;
+      }
+    }
+
     state = state.copyWith(isBusy: true);
     try {
       final vendorsOrderData = <Map<String, dynamic>>[];
@@ -467,6 +498,13 @@ class MultipleCheckoutController
       }
       final co = state.checkout;
       co.total = co.totalWithTip;
+      co.reser_guest = state.isScheduled == true
+          ? (guestCountTEC.text.isEmpty
+              ? null
+              : int.tryParse(guestCountTEC.text))
+          : null;
+      co.reser_table = state.isScheduled == true ? state.tableSelected : null;
+      
       final apiResponse = await _checkoutRequest.newMultipleVendorOrder(
         co,
         tip: driverTipTEC.text,

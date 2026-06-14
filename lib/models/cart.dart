@@ -66,6 +66,15 @@ class Cart {
 
   //to toCheckout
   Map toCheckout() {
+    double computedOptionsPrice = optionsPrice ?? 0.0;
+    if (computedOptionsPrice == 0.0 && options != null) {
+      computedOptionsPrice = options!.fold(0.0, (sum, opt) => sum + opt.price);
+    }
+    double computedProductPrice = productPrice ?? 0.0;
+    if (computedProductPrice == 0.0 && product != null) {
+      computedProductPrice = product!.sellPrice;
+    }
+
     return {
       "selected_qty": selectedQty,
       "price": price,
@@ -77,9 +86,9 @@ class Cart {
       "options_ids": optionsIds == null ? null : optionsIds,
       "options_flatten": optionsSentence,
       //options_price
-      "options_price": optionsPrice,
+      "options_price": computedOptionsPrice,
       // product_price
-      "product_price": productPrice,
+      "product_price": computedProductPrice,
     };
   }
 

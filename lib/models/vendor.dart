@@ -336,7 +336,7 @@ class Vendor {
               : int.tryParse(json["qty_tables"].toString()) ?? 0,
       can_dinein: json["can_dinein"] == null
           ? null
-          : (json["can_dinein"].toString() == "1" || json["can_dinein"] == true),
+          : (json["can_dinein"].toString() == "1" || json["can_dinein"].toString() == "true" || json["can_dinein"] == true),
     );
 
     //check if distance is null, then call utils to calculate distance
@@ -415,11 +415,15 @@ class Vendor {
   bool get isParcelType => ["parcel", "package"].contains(vendorType.slug);
   bool get isFoodOrBeverage {
     final slug = vendorType.slug.toLowerCase();
+    final slugUrl = (vendorType.slugUrl ?? "").toLowerCase();
     return (can_dinein == true) ||
         vendorTypeId == 2 ||
         ["food", "beverage", "beverages", "food-beverage"].contains(slug) ||
+        ["food", "food-beverage"].contains(slugUrl) ||
         slug.contains("food") ||
-        slug.contains("beverage");
+        slugUrl.contains("food") ||
+        slug.contains("beverage") ||
+        slugUrl.contains("beverage");
   }
 
   //

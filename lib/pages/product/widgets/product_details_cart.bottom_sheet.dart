@@ -91,6 +91,8 @@ class _ProductDetailsCartBottomSheetState
       skip: true,
     );
 
+    await ref.read(cartControllerProvider.notifier).reload();
+
     // Navigate to checkout directly
     if (mounted) {
       setState(() => _busy = false);

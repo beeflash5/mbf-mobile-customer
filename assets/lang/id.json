@@ -735,5 +735,13 @@
   "Other reason": "Alasan lain",
   "Please complete the steps below to place an order": "Selesaikan langkah di bawah untuk membuat pesanan",
   "Contact Permission Request": "Permintaan Izin Kontak",
-  "requires your contact/phone book permission to select order recipient info from": "membutuhkan izin kontak untuk memilih info penerima pesanan"
+  "requires your contact/phone book permission to select order recipient info from": "membutuhkan izin kontak untuk memilih info penerima pesanan",
+  "Reservation": "Reservasi",
+  "I want to make a reservation for a future date/time.": "Saya ingin membuat reservasi untuk tanggal/waktu mendatang.",
+  "Number of Guests": "Jumlah Tamu",
+  "Enter the number of people for your reservation": "Masukkan jumlah orang untuk reservasi Anda",
+  "Select your preferred table for reservation": "Pilih meja yang Anda inginkan untuk reservasi",
+  "Dine-in": "Dine-in",
+  "Dine-in reservations require at least 3 guests.": "Reservasi dine-in membutuhkan minimal 3 tamu.",
+  "The selected table id field is required.": "Kolom pilihan meja wajib diisi."
 }

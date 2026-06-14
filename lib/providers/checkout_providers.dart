@@ -41,6 +41,7 @@ class CheckoutState {
     this.loadingTime = false,
     this.loadingTables = false,
     this.canSelectPaymentOption = true,
+    this.ageConfirmed = false,
   });
 
   final CheckOut checkout;
@@ -61,6 +62,34 @@ class CheckoutState {
   final bool loadingTime;
   final bool loadingTables;
   final bool canSelectPaymentOption;
+  final bool ageConfirmed;
+
+  /// Whether this checkout is for a Food & Beverage vendor.
+  /// Checks the vendor flags first, then falls back to the cart items so that
+  /// even a partially-hydrated vendor (loaded from cart cache) returns the
+  /// correct answer.
+  bool get isFoodOrder {
+    if (vendor?.isFoodOrBeverage == true) return true;
+    if (vendor?.can_dinein == true) return true;
+    // Fallback: read from the first cart item's embedded vendor
+    final items = checkout.cartItems;
+    if (items != null && items.isNotEmpty) {
+      final v = items.first.product?.vendor;
+      if (v != null) {
+        if (v.isFoodOrBeverage) return true;
+        if (v.can_dinein == true) return true;
+      }
+    }
+    return false;
+  }
+
+  bool get hasAgeRestricted {
+    final items = checkout.cartItems;
+    if (items != null && items.isNotEmpty) {
+      return items.any((i) => i.product?.ageRestricted == true);
+    }
+    return false;
+  }
 
   CheckoutState copyWith({
     CheckOut? checkout,
@@ -81,6 +110,7 @@ class CheckoutState {
     bool? loadingTime,
     bool? loadingTables,
     bool? canSelectPaymentOption,
+    bool? ageConfirmed,
   }) {
     return CheckoutState(
       checkout: checkout ?? this.checkout,
@@ -110,8 +140,8 @@ class CheckoutState {
       isBusy: isBusy ?? this.isBusy,
       loadingTime: loadingTime ?? this.loadingTime,
       loadingTables: loadingTables ?? this.loadingTables,
-      canSelectPaymentOption:
-          canSelectPaymentOption ?? this.canSelectPaymentOption,
+      canSelectPaymentOption: canSelectPaymentOption ?? this.canSelectPaymentOption,
+      ageConfirmed: ageConfirmed ?? this.ageConfirmed,
     );
   }
 
@@ -134,7 +164,11 @@ class CheckoutController
     });
     Vendor? primary;
     if (CartServices.productsInCart.isNotEmpty) {
-      primary = CartServices.productsInCart[0].product?.vendor;
+      final prod = CartServices.productsInCart[0].product;
+      primary = prod?.vendor;
+      if (primary != null && primary.vendorTypeId == 0 && prod?.vendor_type_id != null) {
+        primary.vendorTypeId = int.tryParse(prod!.vendor_type_id.toString()) ?? 0;
+      }
     }
     return CheckoutState(checkout: arg, vendor: primary);
   }
@@ -143,8 +177,12 @@ class CheckoutController
     await _fetchVendorDetails();
     _setVendorRequirement();
     await Future.wait([_prefetchDeliveryAddress(), _fetchPaymentOptions()]);
-    await _updateTotalOrderSummary();
-    if (state.vendor != null && state.vendor!.can_dinein == false) {
+    _updateTotalOrderSummary();
+    // Matching Next.js: food → fetch tables; service → fetch date/time slots
+    if (state.isFoodOrder) {
+      await _fetchTableAvailability();
+    } else if (state.vendor?.allowScheduleOrder == true ||
+        state.vendor?.can_dinein == false) {
       await _fetchDateUse();
     }
   }
@@ -168,14 +206,16 @@ class CheckoutController
   void _setVendorRequirement() {
     final v = state.vendor;
     if (v == null) return;
+    print(
+      '[CHECKOUT] vendor=${v.id}, isFoodOrder=${state.isFoodOrder}, isFoodOrBeverage=${v.isFoodOrBeverage}, can_dinein=${v.can_dinein}, vendorTypeId=${v.vendorTypeId}, slug=${v.vendorType.slug}',
+    );
     if (v.allowOnlyDelivery) {
       state = state.copyWith(isPickup: false);
     } else if (v.allowOnlyPickup) {
       state = state.copyWith(isPickup: true);
     }
-
-    // Auto-schedule F&B if not pickup
-    if (v.isFoodOrBeverage && !state.isPickup) {
+    // Mirror Next.js: food & not pickup → reservation auto-open
+    if (state.isFoodOrder && !state.isPickup) {
       state = state.copyWith(isScheduled: true);
       state.checkout.isScheduled = true;
     }
@@ -264,35 +304,86 @@ class CheckoutController
     state = state.copyWith(loadingTables: false);
   }
 
-  Future<void> updateTotalOrderSummary() => _updateTotalOrderSummary();
+  void updateTotalOrderSummary() => _updateTotalOrderSummary();
 
-  Future<void> _updateTotalOrderSummary() async {
+  /// Calculate order totals locally from cart items + vendor data.
+  /// Matches Next.js CheckoutView logic exactly — no API call.
+  void _updateTotalOrderSummary() {
     if (state.vendor == null) return;
-    state = state.copyWith(isBusy: true);
     try {
-      final updated = await CheckoutSharedHelpers.recalcOrderSummary(
-        current: state.checkout,
-        vendor: state.vendor!,
-        isPickup: state.isPickup,
-        deliveryAddressOutOfRange: state.deliveryAddressOutOfRange,
-        tip: driverTipTEC.text,
-        deliveryAddress: state.deliveryAddress,
-      );
-      if (state.vendor?.isFoodOrBeverage == true && state.isScheduled) {
-        final total = updated.total;
-        final dp =
-            (double.tryParse(AppStrings.down_payment.toString())! / 100) *
-            total;
-        updated.dp = dp;
-        updated.sisa = total - dp;
+      final items = state.checkout.cartItems ?? CartServices.productsInCart;
+      final vendor = state.vendor!;
+
+      // Subtotal: sum of (unit price × qty) for every cart item
+      double subTotal = 0;
+      for (final item in items) {
+        final price = item.price ?? item.product?.sellPrice ?? 0;
+        subTotal += price * (item.selectedQty ?? 1);
       }
+
+      // Tax
+      final taxRate = double.tryParse(vendor.tax) ?? 0;
+      final taxAmount = subTotal * (taxRate / 100);
+
+      // Delivery fee: 0 when pickup, vendor.deliveryFee otherwise
+      final deliveryFee = state.isPickup ? 0.0 : vendor.deliveryFee;
+
+      // Discount from coupon (preserved from existing state)
+      final discount = state.checkout.discount;
+
+      // Total
+      final total =
+          (subTotal - discount).clamp(0, double.maxFinite) +
+          taxAmount +
+          deliveryFee;
+
+      // DP for food reservations (matching Next.js)
+      double dp = 0;
+      double sisa = 0;
+      if (state.isFoodOrder && state.isScheduled) {
+        final dpPercent =
+            double.tryParse(AppStrings.down_payment.toString()) ?? 0;
+        if (dpPercent > 0) {
+          dp = (dpPercent / 100) * total;
+          sisa = total - dp;
+        }
+      }
+
+      print(
+        '[CHECKOUT] Local calc: subTotal=$subTotal, tax=$taxAmount, df=$deliveryFee, total=$total, dp=$dp',
+      );
+
+      final updated =
+          CheckOut(
+              subTotal: subTotal,
+              discount: discount,
+              deliveryFee: deliveryFee,
+              tax: taxAmount,
+              tax_rate: taxRate,
+              total: total,
+              totalWithTip: total,
+              fees: state.checkout.fees,
+              token: state.checkout.token,
+              cartItems: state.checkout.cartItems,
+              coupon: state.checkout.coupon,
+              deliveryAddress: state.checkout.deliveryAddress,
+              paymentMethod: state.checkout.paymentMethod,
+              isPickup: state.checkout.isPickup,
+              isScheduled: state.checkout.isScheduled,
+              deliverySlotDate: state.checkout.deliverySlotDate,
+              deliverySlotTime: state.checkout.deliverySlotTime,
+              pickupDate: state.checkout.pickupDate,
+              pickupTime: state.checkout.pickupTime,
+              dp: dp,
+              sisa: sisa,
+            )
+            ..reser_guest = state.checkout.reser_guest
+            ..reser_table = state.checkout.reser_table;
+
       state = state.copyWith(checkout: updated);
     } catch (e) {
-      // ignore: avoid_print
-      print("Checkout updateTotalOrderSummary error: $e");
-      ToastService.toastError("$e");
+      print('[CHECKOUT] _updateTotalOrderSummary error: $e');
     }
-    state = state.copyWith(isBusy: false);
     _updatePaymentOptionSelection();
   }
 
@@ -300,8 +391,27 @@ class CheckoutController
     final isPickup = value ?? false;
     final co = state.checkout;
     co.deliveryAddress = isPickup ? null : state.deliveryAddress;
+
+    bool isScheduled = state.isScheduled;
+    String? tableSelected = state.tableSelected;
+
+    if (isPickup) {
+      isScheduled = false;
+      co.isScheduled = false;
+      tableSelected = null;
+      co.reser_table = null;
+      co.reser_guest = null;
+    } else {
+      if (state.isFoodOrder) {
+        isScheduled = true;
+        co.isScheduled = true;
+      }
+    }
+
     state = state.copyWith(
       isPickup: isPickup,
+      isScheduled: isScheduled,
+      tableSelected: tableSelected,
       checkout: co,
     );
     _updateTotalOrderSummary();
@@ -316,10 +426,7 @@ class CheckoutController
     co.deliverySlotDate = "";
     co.pickupTime = null;
     co.deliverySlotTime = "";
-    state = state.copyWith(
-      isScheduled: isScheduled,
-      checkout: co,
-    );
+    state = state.copyWith(isScheduled: isScheduled, checkout: co);
     await Jiffy.setLocale(translator.activeLocale.languageCode);
     _updateTotalOrderSummary();
   }
@@ -378,6 +485,14 @@ class CheckoutController
     co.paymentMethod = pm;
     state = state.copyWith(selectedPaymentMethod: pm, checkout: co);
     if (callTotal) _updateTotalOrderSummary();
+  }
+
+  void togglePaymentTermsAgreed(bool? value) {
+    state = state.copyWith(paymentTermsAgreed: value ?? false);
+  }
+
+  void toggleAgeConfirmed(bool? value) {
+    state = state.copyWith(ageConfirmed: value ?? false);
   }
 
   void setPaymentTermsAgreed(bool value) {
@@ -446,6 +561,21 @@ class CheckoutController
                 .tr(),
       );
       return;
+    } else if (state.hasAgeRestricted && !state.ageConfirmed) {
+      AlertService.error(
+        title: "Age Limit".tr(),
+        text: "You must be old enough to purchase this product. (Customer harus cukup umur untuk membeli produk ini)".tr(),
+      );
+      return;
+    } else if (!state.isPickup &&
+        state.checkout.deliveryAddress == null &&
+        state.deliveryAddress == null &&
+        !(state.vendor?.can_dinein == true && state.isScheduled)) {
+      AlertService.error(
+        title: "Delivery Address".tr(),
+        text: "Please add or select a delivery address.".tr(),
+      );
+      return;
     } else if (state.selectedPaymentMethod == null) {
       AlertService.error(
         title: "Payment Methods".tr(),
@@ -454,22 +584,18 @@ class CheckoutController
       return;
     } else if (!ignore && !_verifyVendorOrderAmountCheck()) {
       return;
-    } else if (state.vendor?.isFoodOrBeverage == true &&
-        !state.isPickup &&
+    } else if (state.isScheduled &&
+        state.vendor?.can_dinein == true &&
         (guestCountTEC.text.isEmpty ||
-            (int.tryParse(guestCountTEC.text) ?? 0) <
-                (state.vendor?.can_dinein == true ? 3 : 1))) {
+            (int.tryParse(guestCountTEC.text) ?? 0) < 3)) {
       AlertService.error(
         title: "Reservation".tr(),
-        text:
-            "Minimum ${state.vendor?.can_dinein == true ? 3 : 1} guests required"
-                .tr(),
+        text: "Dine-in reservations require at least 3 guests.".tr(),
       );
       return;
-    } else if (state.vendor?.isFoodOrBeverage == true &&
-        !state.isPickup &&
-        state.tableSelected == null &&
-        state.vendor?.can_dinein == true) {
+    } else if (state.isScheduled &&
+        state.vendor?.can_dinein == true &&
+        state.tableSelected == null) {
       AlertService.error(
         title: "Dine-in".tr(),
         text: "The selected table id field is required.".tr(),
@@ -492,13 +618,16 @@ class CheckoutController
       }
 
       co.reser_guest =
-          guestCountTEC.text.isEmptyOrNull
-              ? null
-              : int.tryParse(guestCountTEC.text);
-      co.reser_table =
-          state.tableSelected != null
-              ? int.tryParse(state.tableSelected!)
+          state.isScheduled == true
+              ? (guestCountTEC.text.isEmpty
+                  ? null
+                  : int.tryParse(guestCountTEC.text))
               : null;
+      co.reser_table = co.isScheduled == true ? state.tableSelected : null;
+      if (co.isScheduled != true) {
+        co.dp = null;
+        co.sisa = null;
+      }
       final apiResponse = await _checkoutRequest.newOrder(
         co,
         tip: driverTipTEC.text,

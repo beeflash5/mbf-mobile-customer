@@ -76,7 +76,9 @@ class _MultipleOrderCheckoutPageState
             loadingTables: state.loadingTables,
             tables: state.tables,
             tableSelected: state.tableSelected,
+            guestCountController: controller.guestCountTEC,
             onSelectTable: controller.selectTableSelecte,
+            isFoodOverride: state.vendor?.isFoodOrBeverage == true,
           ),
         if (vendor != null)
           OrderDeliveryAddressPickerView(

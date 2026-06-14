@@ -23,12 +23,14 @@ class VendorType {
     required this.logo,
     required this.website_header,
     required this.hasBanners,
+    this.slugUrl,
   });
 
   int id;
   String name;
   String description;
   String slug;
+  String? slugUrl;
   String color;
   int isActive;
   String logo;
@@ -40,6 +42,7 @@ class VendorType {
     name: (json["name"] ?? "").toString().parseLocalized(),
     description: (json["description"] ?? "").toString().parseLocalized(),
     slug: json["slug"] ?? "",
+    slugUrl: json["slug_url"],
     color:
         json["color"] == null
             ? colorEnv("primaryColor")
@@ -89,6 +92,7 @@ class VendorType {
     "name": name,
     "description": description,
     "slug": slug,
+    "slug_url": slugUrl,
     "is_active": isActive,
     "logo": logo,
     "website_header": website_header,

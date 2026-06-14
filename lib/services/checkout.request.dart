@@ -43,8 +43,12 @@ class CheckoutRequest extends ApiService {
       "tip": tip,
       "note": note,
       "coupon_code": checkout.coupon?.code ?? "",
+      "pickup_date": checkout.deliverySlotDate,
+      "pickup_time": checkout.deliverySlotTime,
       "schedule_date": checkout.deliverySlotDate,
       "schedule_time": checkout.deliverySlotTime,
+      "is_scheduled": checkout.isScheduled == true ? 1 : 0,
+      "type": checkout.isPickup == true ? "pickup" : "delivery",
       "products": checkout.cartItems?.map((e) => e.toCheckout()).toList(),
       "vendor_id":
           (checkout.cartItems?.isNotEmpty ?? false)
@@ -92,6 +96,8 @@ class CheckoutRequest extends ApiService {
       "delivery_fee": checkout.deliveryFee,
       "tax": checkout.tax,
       "total": checkout.total,
+      "guest_count": checkout.reser_guest,
+      "table": checkout.reser_table,
     };
 
     log("Multiple Vendor Order Payload: ${jsonEncode(orderPayload)}");

@@ -31,6 +31,8 @@ class ScheduleOrderView extends StatelessWidget {
     this.tableSelected,
     this.guestCountController,
     this.onSelectTable,
+    // Explicit override – caller knows better than vendor.isFoodOrBeverage
+    this.isFoodOverride,
   });
 
   final Vendor vendor;
@@ -49,6 +51,7 @@ class ScheduleOrderView extends StatelessWidget {
   final String? tableSelected;
   final TextEditingController? guestCountController;
   final ValueChanged<String>? onSelectTable;
+  final bool? isFoodOverride;
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +67,13 @@ class ScheduleOrderView extends StatelessWidget {
           "accommodation",
         ].contains(vendor.vendorType.slug.toLowerCase()) &&
         !isTattoo;
-    final bool isFood = vendor.isFoodOrBeverage && !isTattoo;
+    // Use explicit override from caller if provided, otherwise compute locally
+    final bool isFood =
+        (isFoodOverride ?? vendor.isFoodOrBeverage) && !isTattoo;
 
     return Visibility(
       visible:
+          (isFoodOverride == true) ||
           vendor.allowScheduleOrder ||
           isServiceBooking ||
           isTattoo ||
@@ -100,7 +106,9 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isFood || vendor.deliverySlots.isEmpty)
+                (isFood ||
+                        (!(isTattoo || isServiceBooking) &&
+                            vendor.deliverySlots.isEmpty))
                     ? CustomTextFormField(
                       isReadOnly: true,
                       hintText: selectedDate ?? "mm/dd/yyyy",
@@ -188,7 +196,9 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isFood || availableTimeSlots.isEmpty)
+                (isFood ||
+                        (!(isTattoo || isServiceBooking) &&
+                            availableTimeSlots.isEmpty))
                     ? CustomTextFormField(
                       isReadOnly: true,
                       hintText:
@@ -276,7 +286,10 @@ class ScheduleOrderView extends StatelessWidget {
                           },
                         )),
 
-                if (isFood && guestCountController != null)
+                if ((isFood || vendor.can_dinein == true) &&
+                    !isServiceBooking &&
+                    !isTattoo &&
+                    guestCountController != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

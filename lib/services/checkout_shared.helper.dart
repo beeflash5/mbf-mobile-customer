@@ -12,6 +12,7 @@ import 'package:fuodz/services/checkout.request.dart';
 import 'package:fuodz/services/delivery_address.request.dart';
 import 'package:fuodz/services/payment_method.request.dart';
 import 'package:fuodz/services/vendor.request.dart';
+import 'package:fuodz/services/vendor_type.request.dart';
 import 'package:fuodz/utils/extensions/context.dart';
 
 /// Stateless helpers extracted from the old CheckoutBaseViewModel so Riverpod
@@ -32,17 +33,36 @@ class CheckoutSharedHelpers {
       vendor.id,
       params: params ?? const {"type": "brief"},
     );
-    
+
     // Preserve essential original data only if the API dropped it
     if (v.vendorType.id == 0 || v.vendorType.slug.isEmpty) {
       v.vendorType = vendor.vendorType;
     }
-    if (v.vendorTypeId == null || v.vendorTypeId == 0) {
+
+    if (v.vendorTypeId == 0) {
       v.vendorTypeId = vendor.vendorTypeId;
+    }
+
+    // Resolve missing vendor type slug from global list, mimicking Next.js
+    if (v.vendorType.slug.isEmpty && v.vendorTypeId > 0) {
+      try {
+        final types = await VendorTypeRequest().index();
+        final matched = types.firstWhere(
+          (t) => t.id == v.vendorTypeId,
+          orElse: () => v.vendorType,
+        );
+        if (matched.slug.isNotEmpty) {
+          v.vendorType = matched;
+        }
+      } catch (e) {
+        // ignore
+      }
     }
     // deliverySlots are never returned by /api/vendors/{id}, so always copy them from the original object.
     v.deliverySlots = vendor.deliverySlots;
-    
+    v.can_dinein ??= vendor.can_dinein;
+    v.qty_tables ??= vendor.qty_tables;
+
     return v;
   }
 
@@ -95,7 +115,10 @@ class CheckoutSharedHelpers {
       deliverySlotDate,
       null,
     );
-    final List<int> taken = (response.body as List).map((e) => int.tryParse(e.toString()) ?? 0).toList();
+    final List<int> taken =
+        (response.body as List)
+            .map((e) => int.tryParse(e.toString()) ?? 0)
+            .toList();
     return [
       for (int i = 1; i <= qtyTables; i++)
         {"name": "$i", "available": !taken.contains(i)},
@@ -128,26 +151,81 @@ class CheckoutSharedHelpers {
       "pickup": isPickup ? 1 : 0,
       "delievryAddressOutOfRange": deliveryAddressOutOfRange ? 1 : 0,
       "tip": tip,
-      "delivery_address_id": deliveryAddress?.id ?? "null",
+      "delivery_address_id": deliveryAddress?.id,
       "latlng": "${deliveryAddress?.latitude},${deliveryAddress?.longitude}",
       "coupon_code": current.coupon?.code ?? "",
       "vendor_id": vendor.id,
       "products":
-          CartServices.productsInCart.map((Cart e) => e.toCheckout()).toList(),
+          (current.cartItems ?? CartServices.productsInCart)
+              .map((Cart e) => e.toCheckout())
+              .toList(),
+      "is_scheduled": current.isScheduled == true ? 1 : 0,
+      "pickup_date": current.deliverySlotDate,
+      "pickup_time": current.deliverySlotTime,
+      "schedule_date": current.deliverySlotDate,
+      "schedule_time": current.deliverySlotTime,
+      "type": isPickup ? "pickup" : "delivery",
+      "guest_count": current.reser_guest,
+      "table": current.reser_table,
+      "dp": current.dp,
+      "sisa": current.sisa,
     };
     final mCheckout = await _checkoutRequest.orderSummary(payload);
-    current.copyWith(
-      subTotal: mCheckout.subTotal,
-      discount: mCheckout.discount,
-      deliveryFee: mCheckout.deliveryFee,
-      tax: mCheckout.tax,
-      tax_rate: mCheckout.tax_rate,
-      total: mCheckout.total,
-      totalWithTip: mCheckout.totalWithTip,
-      token: mCheckout.token,
-      fees: mCheckout.fees,
+
+    // If the backend returns total=0 but the local cart already has a
+    // positive total (e.g. F&B dine-in without a delivery address), trust
+    // the local cart calculation for price fields and only take fees/token
+    // from the API response.
+    final bool apiReturnedZero =
+        mCheckout.subTotal == 0 && mCheckout.total == 0;
+    final bool localHasValue = current.subTotal > 0 || current.total > 0;
+
+    print(
+      '[CHECKOUT] apiReturnedZero=$apiReturnedZero, localHasValue=$localHasValue, api.subTotal=${mCheckout.subTotal}, api.total=${mCheckout.total}',
     );
-    return current;
+
+    final fresh =
+        CheckOut(
+            // If API returned 0 but local has value, fall back to local prices
+            subTotal:
+                apiReturnedZero && localHasValue
+                    ? current.subTotal
+                    : mCheckout.subTotal,
+            discount:
+                apiReturnedZero && localHasValue
+                    ? current.discount
+                    : mCheckout.discount,
+            deliveryDiscount: mCheckout.deliveryDiscount,
+            deliveryFee: mCheckout.deliveryFee,
+            tax: mCheckout.tax,
+            tax_rate: mCheckout.tax_rate,
+            total:
+                apiReturnedZero && localHasValue
+                    ? current.total
+                    : mCheckout.total,
+            totalWithTip:
+                apiReturnedZero && localHasValue
+                    ? current.totalWithTip
+                    : mCheckout.totalWithTip,
+            token: mCheckout.token,
+            fees: mCheckout.fees,
+            // Preserve checkout session data from current
+            cartItems: current.cartItems,
+            coupon: current.coupon,
+            deliveryAddress: current.deliveryAddress,
+            paymentMethod: current.paymentMethod,
+            isPickup: current.isPickup,
+            isScheduled: current.isScheduled,
+            deliverySlotDate: current.deliverySlotDate,
+            deliverySlotTime: current.deliverySlotTime,
+            pickupDate: current.pickupDate,
+            pickupTime: current.pickupTime,
+            dp: current.dp,
+            sisa: current.sisa,
+          )
+          ..reser_guest = current.reser_guest
+          ..reser_table = current.reser_table;
+    return fresh;
   }
 
   /// Picks the cash payment method if the checkout total is zero — used when

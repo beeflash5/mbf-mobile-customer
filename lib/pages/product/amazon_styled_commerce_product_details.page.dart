@@ -93,6 +93,8 @@ class _AmazonStyledCommerceProductDetailsPageState
     final ok = await _addToCart(skip: true);
     if (!ok || !mounted) return;
 
+    await ref.read(cartControllerProvider.notifier).reload();
+
     bool canOpenCheckout = true;
     if (!AuthServices.authenticated()) {
       final result = await context.pushRoute<bool>(AppRoutes.loginRoute);

@@ -68,6 +68,8 @@ class _CommerceProductDetailsCartBottomSheetState
     if (!added || !mounted) return;
     Navigator.of(context).pop();
 
+    await ref.read(cartControllerProvider.notifier).reload();
+
     bool canOpenCheckout = true;
     if (!AuthServices.authenticated()) {
       final result = await context.pushRoute<bool>(AppRoutes.loginRoute);
