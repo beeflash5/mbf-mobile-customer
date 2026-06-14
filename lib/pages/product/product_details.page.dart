@@ -111,20 +111,20 @@ class ProductDetailsPage extends ConsumerWidget {
                                         "Select options to add them to the product/service"
                                             .tr(),
                                   ),
-                                VStack(
-                                  detail.optionGroups
-                                      .map(
-                                        (OptionGroup g) => ProductOptionGroup(
-                                          optionGroup: g,
-                                          product: detail,
-                                        ).pOnly(bottom: Vx.dp12),
-                                      )
-                                      .toList(),
-                                ),
-                              ]),
-                            ),
-                    ])
-                    )],
+                                  VStack(
+                                    detail.optionGroups
+                                        .map(
+                                          (OptionGroup g) => ProductOptionGroup(
+                                            optionGroup: g,
+                                            product: detail,
+                                          ).pOnly(bottom: Vx.dp12),
+                                        )
+                                        .toList(),
+                                  ),
+                                ]),
+                              ),
+                            ]),
+                          ),
                           OutlinedButton(
                             onPressed:
                                 () => context.pushWidget(
