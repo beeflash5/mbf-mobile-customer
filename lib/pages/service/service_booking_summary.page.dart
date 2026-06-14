@@ -240,148 +240,6 @@ class _ServiceBookingSummaryPageState
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- Schedule Date & Time (always required for tattoo) ---
-                      Text(
-                        "Schedule",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "Do you want to schedule this order?",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                final picked = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now().add(
-                                    const Duration(days: 1),
-                                  ),
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().add(
-                                    const Duration(days: 365),
-                                  ),
-                                );
-                                if (picked != null) {
-                                  final dateStr =
-                                      picked.toIso8601String().substring(0, 10);
-                                  controller.setTattooScheduleDate(dateStr);
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.calendar_today,
-                                      size: 16,
-                                      color: Colors.grey.shade500,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        state.checkout.deliverySlotDate
-                                                .isNotEmpty
-                                            ? state.checkout.deliverySlotDate
-                                            : "Schedule Date",
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color:
-                                              state.checkout.deliverySlotDate
-                                                      .isNotEmpty
-                                                  ? Colors.black87
-                                                  : Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                final picked = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.now(),
-                                );
-                                if (picked != null) {
-                                  final h = picked.hour
-                                      .toString()
-                                      .padLeft(2, '0');
-                                  final m = picked.minute
-                                      .toString()
-                                      .padLeft(2, '0');
-                                  controller.setTattooScheduleTime(
-                                    '$h:$m:00',
-                                  );
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.access_time,
-                                      size: 16,
-                                      color: Colors.grey.shade500,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        state.checkout.deliverySlotTime
-                                                .isNotEmpty
-                                            ? state.checkout.deliverySlotTime
-                                            : "Schedule Time",
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color:
-                                              state.checkout.deliverySlotTime
-                                                      .isNotEmpty
-                                                  ? Colors.black87
-                                                  : Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
                       // --- Tattoo Type ---
                       DropdownButtonFormField<String>(
                         value: state.selectTattoType,
@@ -455,8 +313,8 @@ class _ServiceBookingSummaryPageState
                 ),
                 UiSpacer.verticalSpace(),
 
-                // ScheduleOrderView shown for non-tattoo services only
-                if (vendor != null && state.vendorTypeId != 13)
+                // ScheduleOrderView shown for all services
+                if (vendor != null)
                   ScheduleOrderView(
                     vendor: vendor,
                     isScheduled: state.isScheduled,

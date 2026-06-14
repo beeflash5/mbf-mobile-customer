@@ -266,8 +266,6 @@ class ServiceBookingSummaryController
       guests: guests,
       guidSelected: guidSelected,
       vendorTypeId: vendorTypeId,
-      // Tattoo always requires a schedule — pre-enable it
-      isScheduled: (vendorTypeId == 13) ? true : state.isScheduled,
     );
     await Future.wait([
       _fetchVendorDetails(),
@@ -531,25 +529,6 @@ class ServiceBookingSummaryController
     state = state.copyWith(checkout: co);
   }
 
-  /// For tattoo: set schedule date directly (no slot lookup needed).
-  void setTattooScheduleDate(String dateStr) {
-    final co = state.checkout;
-    co.deliverySlotDate = dateStr;
-    co.pickupDate = dateStr;
-    co.isScheduled = true;
-    co.deliverySlotTime = "";
-    co.pickupTime = null;
-    state = state.copyWith(checkout: co, isScheduled: true);
-  }
-
-  /// For tattoo: set schedule time directly.
-  void setTattooScheduleTime(String timeStr) {
-    final co = state.checkout;
-    co.deliverySlotTime = timeStr;
-    co.pickupTime = timeStr;
-    state = state.copyWith(checkout: co);
-  }
-
   void selectTableSelecte(String selected) {
     state = state.copyWith(tableSelected: selected);
   }
@@ -642,25 +621,7 @@ class ServiceBookingSummaryController
   Future<void> placeOrder(BuildContext context, {bool ignore = false}) async {
     final service = state.service;
     service.selectedQty = state.durationQty;
-    final isTattoo = state.vendorTypeId == 13;
-    if (isTattoo) {
-      // Tattoo always needs a schedule date and time
-      if (state.checkout.deliverySlotDate.isEmptyOrNull) {
-        AlertService.error(
-          title: "Schedule Date".tr(),
-          text: "Please select your desired schedule date".tr(),
-        );
-        return;
-      }
-      if (state.checkout.deliverySlotTime.isEmptyOrNull) {
-        AlertService.error(
-          title: "Schedule Time".tr(),
-          text: "Please select your desired schedule time".tr(),
-        );
-        return;
-      }
-    } else if (state.isScheduled &&
-        state.checkout.deliverySlotDate.isEmptyOrNull) {
+    if (state.isScheduled && state.checkout.deliverySlotDate.isEmptyOrNull) {
       AlertService.error(
         title: "Schedule Date".tr(),
         text: "Please select your desire order date".tr(),
@@ -674,6 +635,7 @@ class ServiceBookingSummaryController
       );
       return;
     }
+    final isTattoo = state.vendor?.vendorType.slug.toLowerCase() == "tattoo";
     if (!state.isPickup &&
         service.location &&
         !isTattoo &&
