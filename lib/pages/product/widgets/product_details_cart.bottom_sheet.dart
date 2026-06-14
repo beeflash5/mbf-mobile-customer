@@ -156,6 +156,21 @@ class _ProductDetailsCartBottomSheetState
               ]),
             if (liveProduct.hasStock)
               HStack([
+                "Total".tr().text.xl.medium.make().expand(),
+                CurrencyHStack([
+                  currencySymbol.text.color(AppColor.primaryColor).lg.make(),
+                  total.convertCurrency
+                      .currencyValueFormat()
+                      .text
+                      .color(AppColor.primaryColor)
+                      .letterSpacing(1.5)
+                      .xl
+                      .semiBold
+                      .make(),
+                ]),
+              ]).py12(),
+            if (liveProduct.hasStock)
+              HStack([
                 CustomButton(
                   loading: _busy,
                   color: AppColor.primaryColorDark,
@@ -166,27 +181,10 @@ class _ProductDetailsCartBottomSheetState
                 CustomButton(
                   loading: _busy,
                   child:
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: HStack([
-                          "Add to cart".tr().text.white.medium.make(),
-                          15.widthBox,
-                          CurrencyHStack([
-                            currencySymbol.text.white.lg.make(),
-                            total.convertCurrency
-                                .currencyValueFormat()
-                                .text
-                                .white
-                                .letterSpacing(1.5)
-                                .xl
-                                .semiBold
-                                .make(),
-                          ]),
-                        ]),
-                      ).p12(),
+                      "Add to cart".tr().text.white.medium.make().centered().p12(),
                   onPressed: _addToCart,
                 ).expand(),
-              ], spacing: 20).py12(),
+              ], spacing: 20),
             if (!liveProduct.hasStock)
               "No stock"
                   .tr()
