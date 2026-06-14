@@ -159,10 +159,8 @@ class CheckoutController
       );
       // Ensure we preserve the original data if the API doesn't return them here
       v.deliverySlots = state.vendor!.deliverySlots;
-      if (v.vendorType.id == 0 || v.vendorType.slug.isEmpty) {
-        v.vendorType = state.vendor!.vendorType;
-        v.vendorTypeId = state.vendor!.vendorTypeId;
-      }
+      v.vendorType = state.vendor!.vendorType;
+      v.vendorTypeId = state.vendor!.vendorTypeId;
       state = state.copyWith(vendor: v);
     } catch (e) {
       // ignore: avoid_print
