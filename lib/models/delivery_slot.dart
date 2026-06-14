@@ -15,13 +15,18 @@ class DeliverySlot {
   DateTime date;
   List<String> times;
 
-  factory DeliverySlot.fromJson(Map<String, dynamic> json) => DeliverySlot(
-    date: DateTime.parse(json["date"]),
-    times:
-        json["times"] == null
-            ? []
-            : List<String>.from(json["times"].map((x) => x)),
-  );
+  factory DeliverySlot.fromJson(dynamic json) {
+    if (json is String) {
+      return DeliverySlot(date: DateTime.parse(json), times: []);
+    }
+    return DeliverySlot(
+      date: DateTime.parse(json["date"]),
+      times:
+          json["times"] == null
+              ? []
+              : List<String>.from((json["times"] as List).map((x) => x.toString())),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "date": date.toIso8601String(),
