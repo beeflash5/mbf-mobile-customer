@@ -235,6 +235,26 @@ class _ServiceBookingSummaryPageState
                       ],
                     ),
                   ),
+                // For tattoo, ScheduleOrderView appears before Tattoo Type
+                if (vendor != null && state.vendorTypeId == 13)
+                  ScheduleOrderView(
+                    vendor: vendor,
+                    isScheduled: state.isScheduled,
+                    onToggleScheduled: controller.toggleScheduledOrder,
+                    selectedDate: state.checkout.deliverySlotDate,
+                    selectedTime: state.checkout.deliverySlotTime,
+                    availableTimeSlots: state.availableTimeSlots,
+                    dateFull: state.dateFull,
+                    timeFull: state.timeFull,
+                    onSelectDate: controller.changeSelectedDeliveryDate,
+                    onSelectTime: controller.changeSelectedDeliveryTime,
+                    loadingTime: state.loadingTime,
+                    loadingTables: state.loadingTables,
+                    tables: state.tables,
+                    tableSelected: state.tableSelected,
+                    guestCountController: controller.guestCountTEC,
+                    onSelectTable: controller.selectTableSelecte,
+                  ),
 
                 if (state.vendorTypeId == 13)
                   Column(
@@ -275,6 +295,12 @@ class _ServiceBookingSummaryPageState
                         textEditingController: controller.tattooSizeTEC,
                       ),
                       const SizedBox(height: 10),
+                      const SizedBox(height: 10),
+                      CustomTextFormField(
+                        labelText: "Note".tr(),
+                        textEditingController: controller.noteTEC,
+                      ),
+                      const SizedBox(height: 14),
                       VStack([
                         "Please upload references of designs or themes you are interested in"
                             .text
@@ -307,32 +333,33 @@ class _ServiceBookingSummaryPageState
                     ],
                   ),
 
-                CustomTextFormField(
-                  labelText: "Note".tr(),
-                  textEditingController: controller.noteTEC,
-                ),
-                UiSpacer.verticalSpace(),
-
-                // ScheduleOrderView shown for all services
-                if (vendor != null)
-                  ScheduleOrderView(
-                    vendor: vendor,
-                    isScheduled: state.isScheduled,
-                    onToggleScheduled: controller.toggleScheduledOrder,
-                    selectedDate: state.checkout.deliverySlotDate,
-                    selectedTime: state.checkout.deliverySlotTime,
-                    availableTimeSlots: state.availableTimeSlots,
-                    dateFull: state.dateFull,
-                    timeFull: state.timeFull,
-                    onSelectDate: controller.changeSelectedDeliveryDate,
-                    onSelectTime: controller.changeSelectedDeliveryTime,
-                    loadingTime: state.loadingTime,
-                    loadingTables: state.loadingTables,
-                    tables: state.tables,
-                    tableSelected: state.tableSelected,
-                    guestCountController: controller.guestCountTEC,
-                    onSelectTable: controller.selectTableSelecte,
+                // For non-tattoo, Note and ScheduleOrderView appear at the bottom
+                if (state.vendorTypeId != 13) ...[
+                  CustomTextFormField(
+                    labelText: "Note".tr(),
+                    textEditingController: controller.noteTEC,
                   ),
+                  UiSpacer.verticalSpace(),
+                  if (vendor != null)
+                    ScheduleOrderView(
+                      vendor: vendor,
+                      isScheduled: state.isScheduled,
+                      onToggleScheduled: controller.toggleScheduledOrder,
+                      selectedDate: state.checkout.deliverySlotDate,
+                      selectedTime: state.checkout.deliverySlotTime,
+                      availableTimeSlots: state.availableTimeSlots,
+                      dateFull: state.dateFull,
+                      timeFull: state.timeFull,
+                      onSelectDate: controller.changeSelectedDeliveryDate,
+                      onSelectTime: controller.changeSelectedDeliveryTime,
+                      loadingTime: state.loadingTime,
+                      loadingTables: state.loadingTables,
+                      tables: state.tables,
+                      tableSelected: state.tableSelected,
+                      guestCountController: controller.guestCountTEC,
+                      onSelectTable: controller.selectTableSelecte,
+                    ),
+                ],
 
                 if (service.duration != "fixed")
                   Container(
