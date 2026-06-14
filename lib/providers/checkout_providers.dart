@@ -153,7 +153,12 @@ class CheckoutController
     if (state.vendor == null) return;
     state = state.copyWith(isBusy: true);
     try {
-      final v = await CheckoutSharedHelpers.fetchVendorDetails(state.vendor!);
+      final v = await CheckoutSharedHelpers.fetchVendorDetails(
+        state.vendor!,
+        params: {"type": "full"},
+      );
+      // Ensure we preserve the original deliverySlots if the API doesn't return them here
+      v.deliverySlots = state.vendor!.deliverySlots;
       state = state.copyWith(vendor: v);
     } catch (e) {
       // ignore: avoid_print

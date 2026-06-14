@@ -123,7 +123,8 @@ class ProductDetailsPage extends ConsumerWidget {
                                 ),
                               ]),
                             ),
-                          ),
+                    ])
+                    )],
                           OutlinedButton(
                             onPressed:
                                 () => context.pushWidget(

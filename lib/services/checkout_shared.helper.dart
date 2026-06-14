@@ -83,7 +83,7 @@ class CheckoutSharedHelpers {
       deliverySlotDate,
       null,
     );
-    final List<int> taken = List<int>.from(response.body);
+    final List<int> taken = (response.body as List).map((e) => int.tryParse(e.toString()) ?? 0).toList();
     return [
       for (int i = 1; i <= qtyTables; i++)
         {"name": "$i", "available": !taken.contains(i)},
