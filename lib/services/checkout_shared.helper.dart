@@ -120,9 +120,8 @@ class CheckoutSharedHelpers {
       "latlng": "${deliveryAddress?.latitude},${deliveryAddress?.longitude}",
       "coupon_code": current.coupon?.code ?? "",
       "vendor_id": vendor.id,
-      "products": CartServices.productsInCart
-          .map((Cart e) => e.toCheckout())
-          .toList(),
+      "products":
+          CartServices.productsInCart.map((Cart e) => e.toCheckout()).toList(),
     };
     final mCheckout = await _checkoutRequest.orderSummary(payload);
     current.copyWith(

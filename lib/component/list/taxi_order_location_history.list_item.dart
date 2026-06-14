@@ -15,19 +15,10 @@ class TaxiOrderHistoryListItem extends StatelessWidget {
   final Function(TaxiOrderLocationHistory) onPressed;
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        Icon(
-          Icons.location_on,
-          size: 24,
-          color: Colors.grey.shade600,
-        ),
-        VStack(
-          [
-            "${taxiOrderLocationHistory.address}"
-                .text
-                .semiBold
-                .lg
+    return HStack([
+          Icon(Icons.location_on, size: 24, color: Colors.grey.shade600),
+          VStack([
+            "${taxiOrderLocationHistory.address}".text.semiBold.lg
                 .maxLines(1)
                 .ellipsis
                 .make(),
@@ -38,21 +29,17 @@ class TaxiOrderHistoryListItem extends StatelessWidget {
                 .ellipsis
                 .sm
                 .make(),
-          ],
-        ).px12().expand(),
-        Icon(
-          Utils.isArabic
-              ? Icons.chevron_left
-              : Icons.chevron_right,
-          size: 18,
-          color: Colors.grey.shade300,
-        ),
-      ],
-      crossAlignment: CrossAxisAlignment.center,
-    ).py8().onInkTap(
-      () {
-        onPressed(taxiOrderLocationHistory);
-      },
-    ).material(color: context.theme.colorScheme.surface);
+          ]).px12().expand(),
+          Icon(
+            Utils.isArabic ? Icons.chevron_left : Icons.chevron_right,
+            size: 18,
+            color: Colors.grey.shade300,
+          ),
+        ], crossAlignment: CrossAxisAlignment.center)
+        .py8()
+        .onInkTap(() {
+          onPressed(taxiOrderLocationHistory);
+        })
+        .material(color: context.theme.colorScheme.surface);
   }
 }

@@ -40,47 +40,46 @@ class _PageCartActionState extends State<PageCartAction> {
     return !AppUISettings.showCart
         ? UiSpacer.emptySpace()
         : StreamBuilder(
-            stream: CartServices.cartItemsCountStream.stream,
-            initialData: 0,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              Color? textColor = widget.textColor;
-              if (textColor == null) {
-                textColor = AppColor.primaryColor;
-                textColor = Utils.textColorByColor(textColor);
-              }
-              return Icon(
-                Icons.shopping_bag,
-                color: textColor,
-                size: widget.iconSize,
-              )
-                  .p(widget.padding)
-                  .badge(
-                    count: snapshot.data,
-                    size: widget.badgeSize,
-                    // color: widget.color ?? AppColor.primaryColor,
-                    color: AppColor.primaryColor,
-                    textStyle: context.textTheme.bodyLarge?.copyWith(
-                      fontSize: widget.fontSize,
-                      color: textColor,
-                    ),
-                  )
-                  .centered()
-                  .box
-                  .p3
-                  // .make()
-                  .color(context.primaryColor)
-                  .roundedFull
-                  .make()
-                  .onInkTap(
-                () async {
+          stream: CartServices.cartItemsCountStream.stream,
+          initialData: 0,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            Color? textColor = widget.textColor;
+            if (textColor == null) {
+              textColor = AppColor.primaryColor;
+              textColor = Utils.textColorByColor(textColor);
+            }
+            return Icon(
+                  Icons.shopping_bag,
+                  color: textColor,
+                  size: widget.iconSize,
+                )
+                .p(widget.padding)
+                .badge(
+                  count: snapshot.data,
+                  size: widget.badgeSize,
+                  // color: widget.color ?? AppColor.primaryColor,
+                  color: AppColor.primaryColor,
+                  textStyle: context.textTheme.bodyLarge?.copyWith(
+                    fontSize: widget.fontSize,
+                    color: textColor,
+                  ),
+                )
+                .centered()
+                .box
+                .p3
+                // .make()
+                .color(context.primaryColor)
+                .roundedFull
+                .make()
+                .onInkTap(() async {
                   //
                   context.pushRoute('/cart');
-                },
-              ).pOnly(
-                right: Utils.isArabic ? 0 : widget.padding,
-                left: Utils.isArabic ? widget.padding : 0,
-              );
-            },
-          );
+                })
+                .pOnly(
+                  right: Utils.isArabic ? 0 : widget.padding,
+                  left: Utils.isArabic ? widget.padding : 0,
+                );
+          },
+        );
   }
 }

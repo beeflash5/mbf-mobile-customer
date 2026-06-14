@@ -72,6 +72,11 @@ class NavigationService {
         homeView = PharmacyPage(vendorType);
         break;
       case "service":
+      case "accommodation":
+      case "accommodations":
+      case "tour":
+      case "tours":
+      case "tattoo":
         // if (vendorType.name == 'Booking') {
         homeView = ServicesBookingPage(vendorType);
         // } else {
@@ -165,10 +170,7 @@ class NavigationService {
     final ctx = AppService().navigatorKey.currentContext;
     if (ctx == null) return;
     if (category.hasSubcategories) {
-      GoRouter.of(ctx).push(
-        '/categories/${category.id}/sub',
-        extra: category,
-      );
+      GoRouter.of(ctx).push('/categories/${category.id}/sub', extra: category);
     } else {
       final search = Search(
         vendorType: category.vendorType,
@@ -185,9 +187,8 @@ class NavigationService {
   static void openServiceDetails(Service service) {
     final ctx = AppService().navigatorKey.currentContext;
     if (ctx == null) return;
-    GoRouter.of(ctx).push(
-      '${AppRoutes.serviceDetails}/${service.id}',
-      extra: service,
-    );
+    GoRouter.of(
+      ctx,
+    ).push('${AppRoutes.serviceDetails}/${service.id}', extra: service);
   }
 }

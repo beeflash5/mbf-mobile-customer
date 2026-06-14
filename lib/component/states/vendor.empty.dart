@@ -4,11 +4,8 @@ import 'package:fuodz/component/states/empty.state.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class EmptyVendor extends StatelessWidget {
-  const EmptyVendor({
-    this.showDescription = true,
-    this.description,
-    Key? key,
-  }) : super(key: key);
+  const EmptyVendor({this.showDescription = true, this.description, Key? key})
+    : super(key: key);
 
   final bool showDescription;
   final String? description;
@@ -17,10 +14,12 @@ class EmptyVendor extends StatelessWidget {
     return EmptyState(
       imageUrl: AppImages.vendor,
       title: "No Vendor Found".tr(),
-      description: showDescription
-          ? description ??
-              "There seems to be no vendor around your selected location".tr()
-          : "",
+      description:
+          showDescription
+              ? description ??
+                  "There seems to be no vendor around your selected location"
+                      .tr()
+              : "",
     );
   }
 }

@@ -52,8 +52,7 @@ dynamic env(String key) {
 
 Future<bool> saveAppEnv(String jsonString) async {
   LocalStorageService._appEnvCache = null;
-  return LocalStorageService._prefs!
-      .setString('appRemoteSettings', jsonString);
+  return LocalStorageService._prefs!.setString('appRemoteSettings', jsonString);
 }
 
 /// Baca blob warna per-tenant. Di-cache seperti [env].

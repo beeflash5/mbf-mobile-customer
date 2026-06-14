@@ -20,8 +20,7 @@ class SearchCustomTabbar extends StatelessWidget {
     final bgColor =
         active ? AppColor.primaryColor : context.theme.colorScheme.surface;
     return show
-        ? '$title'
-            .text
+        ? '$title'.text
             .color(Utils.textColorByColor(bgColor))
             .make()
             .px(10)

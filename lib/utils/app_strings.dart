@@ -93,14 +93,18 @@ class AppStrings {
     if (envMap('ui')["categorySize"] == null) {
       return 40.00;
     }
-    return double.parse((envMap('ui')['categorySize']["w"] ?? 40.00).toString());
+    return double.parse(
+      (envMap('ui')['categorySize']["w"] ?? 40.00).toString(),
+    );
   }
 
   static double get categoryImageHeight {
     if (envMap('ui')["categorySize"] == null) {
       return 40.00;
     }
-    return double.parse((envMap('ui')['categorySize']["h"] ?? 40.00).toString());
+    return double.parse(
+      (envMap('ui')['categorySize']["h"] ?? 40.00).toString(),
+    );
   }
 
   static double get categoryTextSize {

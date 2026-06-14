@@ -39,7 +39,8 @@ class RegisterState {
     this.phase = const RegisterIdle(),
     this.isBusy = false,
   }) : selectedCountry =
-            selectedCountry ?? Country.parse(PhoneUtilService.countryCode ?? 'us');
+           selectedCountry ??
+           Country.parse(PhoneUtilService.countryCode ?? 'us');
 
   final Country selectedCountry;
   final bool agreed;
@@ -51,13 +52,12 @@ class RegisterState {
     bool? agreed,
     RegisterPhase? phase,
     bool? isBusy,
-  }) =>
-      RegisterState(
-        selectedCountry: selectedCountry ?? this.selectedCountry,
-        agreed: agreed ?? this.agreed,
-        phase: phase ?? this.phase,
-        isBusy: isBusy ?? this.isBusy,
-      );
+  }) => RegisterState(
+    selectedCountry: selectedCountry ?? this.selectedCountry,
+    agreed: agreed ?? this.agreed,
+    phase: phase ?? this.phase,
+    isBusy: isBusy ?? this.isBusy,
+  );
 }
 
 class RegisterController extends Notifier<RegisterState> {
@@ -114,17 +114,18 @@ class RegisterController extends Notifier<RegisterState> {
         }
       },
       verificationFailed: (e) {
-        final msg = (e.code == 'invalid-phone-number')
-            ? 'Invalid Phone Number'
-            : (e.message ?? 'Failed');
+        final msg =
+            (e.code == 'invalid-phone-number')
+                ? 'Invalid Phone Number'
+                : (e.message ?? 'Failed');
         if (!completer.isCompleted) completer.complete(RegisterFailure(msg));
       },
       codeSent: (verificationId, _) {
         _firebaseVerificationId = verificationId;
         if (!completer.isCompleted) {
-          completer.complete(RegisterAwaitingOtp(
-            firebaseVerificationId: verificationId,
-          ));
+          completer.complete(
+            RegisterAwaitingOtp(firebaseVerificationId: verificationId),
+          );
         }
       },
       codeAutoRetrievalTimeout: (_) {},
@@ -137,9 +138,7 @@ class RegisterController extends Notifier<RegisterState> {
   Future<RegisterPhase> _processCustomOTPVerification(String email) async {
     state = state.copyWith(isBusy: true);
     try {
-      await ref
-          .read(_authRequestProvider)
-          .sendOTP(_accountPhoneNumber!, email);
+      await ref.read(_authRequestProvider).sendOTP(_accountPhoneNumber!, email);
       final result = const RegisterAwaitingOtp();
       state = state.copyWith(isBusy: false, phase: result);
       return result;
@@ -207,9 +206,7 @@ class RegisterController extends Notifier<RegisterState> {
       final response = await ref
           .read(_authRequestProvider)
           .sendOTP(_accountPhoneNumber!, email);
-      return RegisterAwaitingOtp(
-        firebaseVerificationId: response.message,
-      );
+      return RegisterAwaitingOtp(firebaseVerificationId: response.message);
     } catch (e) {
       return RegisterFailure('$e');
     }
@@ -223,16 +220,20 @@ class RegisterController extends Notifier<RegisterState> {
   }) async {
     state = state.copyWith(isBusy: true);
     try {
-      final response = await ref.read(_authRequestProvider).registerRequest(
-        name: name,
-        email: email,
-        phone: _accountPhoneNumber!,
-        countryCode: state.selectedCountry.countryCode,
-        password: password,
-        code: referralCode,
-      );
+      final response = await ref
+          .read(_authRequestProvider)
+          .registerRequest(
+            name: name,
+            email: email,
+            phone: _accountPhoneNumber!,
+            countryCode: state.selectedCountry.countryCode,
+            password: password,
+            code: referralCode,
+          );
       if (response.hasError()) {
-        final result = RegisterFailure(response.message ?? 'Registration Failed');
+        final result = RegisterFailure(
+          response.message ?? 'Registration Failed',
+        );
         state = state.copyWith(isBusy: false, phase: result);
         return result;
       }
@@ -255,6 +256,4 @@ class RegisterController extends Notifier<RegisterState> {
 }
 
 final registerControllerProvider =
-    NotifierProvider<RegisterController, RegisterState>(
-  RegisterController.new,
-);
+    NotifierProvider<RegisterController, RegisterState>(RegisterController.new);

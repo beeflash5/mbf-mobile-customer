@@ -31,18 +31,22 @@ class CartHelper {
       return;
     }
 
-    final cart = Cart()
-      ..price = product.showDiscount ? product.discountPrice : product.price
-      ..product = product
-      ..selectedQty = qty
-      ..options = product.selectedOptions ?? []
-      ..optionsIds =
-          (product.selectedOptions ?? []).map((e) => e.id).toList();
+    final cart =
+        Cart()
+          ..price = product.showDiscount ? product.discountPrice : product.price
+          ..product = product
+          ..selectedQty = qty
+          ..options = product.selectedOptions ?? []
+          ..optionsIds =
+              (product.selectedOptions ?? []).map((e) => e.id).toList();
     product.selectedQty = qty;
 
     try {
-      final canAdd =
-          await CartUIServices.handleCartEntry(context, cart, product);
+      final canAdd = await CartUIServices.handleCartEntry(
+        context,
+        cart,
+        product,
+      );
       if (canAdd || force) {
         final inCart = CartServices.productsInCart;
         final idx = inCart.indexWhere((e) => e.product?.id == product.id);
@@ -94,15 +98,19 @@ class CartHelper {
     bool force = false,
     bool skip = false,
   }) async {
-    final cart = Cart()
-      ..price = subTotal
-      ..product = product
-      ..selectedQty = product.selectedQty
-      ..options = selectedOptions
-      ..optionsIds = selectedOptionsIDs;
+    final cart =
+        Cart()
+          ..price = subTotal
+          ..product = product
+          ..selectedQty = product.selectedQty
+          ..options = selectedOptions
+          ..optionsIds = selectedOptionsIDs;
     try {
-      final canAdd =
-          await CartUIServices.handleCartEntry(context, cart, product);
+      final canAdd = await CartUIServices.handleCartEntry(
+        context,
+        cart,
+        product,
+      );
       if (canAdd || force) {
         await CartServices.addToCart(cart);
         if (!skip && context.mounted) {

@@ -24,8 +24,7 @@ class SimilarCommerceProducts extends ConsumerWidget {
       byLocation: false,
       isHome: false,
     );
-    final asyncProducts =
-        ref.watch(productsListingControllerProvider(args));
+    final asyncProducts = ref.watch(productsListingControllerProvider(args));
     final products = asyncProducts.valueOrNull ?? const <Product>[];
 
     return VStack([
@@ -46,9 +45,10 @@ class SimilarCommerceProducts extends ConsumerWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         isLoading: asyncProducts.isLoading,
-        items: products
-            .map((p) => CommerceProductListItem(p, height: 90))
-            .toList(),
+        items:
+            products
+                .map((p) => CommerceProductListItem(p, height: 90))
+                .toList(),
       ),
     ]);
   }

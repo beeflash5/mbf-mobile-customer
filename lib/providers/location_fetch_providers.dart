@@ -27,14 +27,11 @@ class LocationFetchState {
     bool? showManuallySelection,
     bool? showRequestPermission,
     bool? isBusy,
-  }) =>
-      LocationFetchState(
-        showManuallySelection:
-            showManuallySelection ?? this.showManuallySelection,
-        showRequestPermission:
-            showRequestPermission ?? this.showRequestPermission,
-        isBusy: isBusy ?? this.isBusy,
-      );
+  }) => LocationFetchState(
+    showManuallySelection: showManuallySelection ?? this.showManuallySelection,
+    showRequestPermission: showRequestPermission ?? this.showRequestPermission,
+    isBusy: isBusy ?? this.isBusy,
+  );
 }
 
 class LocationFetchController extends Notifier<LocationFetchState> {
@@ -77,8 +74,7 @@ class LocationFetchController extends Notifier<LocationFetchState> {
       if (address != null) {
         LocationService.currenctAddressSubject.sink.add(address);
       }
-      final cur =
-          LocationService.deliveryaddress ?? DeliveryAddress();
+      final cur = LocationService.deliveryaddress ?? DeliveryAddress();
       cur.address = address?.addressLine;
       cur.latitude = address?.coordinates?.latitude;
       cur.longitude = address?.coordinates?.longitude;
@@ -163,8 +159,9 @@ class LocationFetchController extends Notifier<LocationFetchState> {
           deliveryAddress.latitude!,
           deliveryAddress.longitude!,
         );
-        final addresses =
-            await GeocoderService().findAddressesFromCoordinates(coords);
+        final addresses = await GeocoderService().findAddressesFromCoordinates(
+          coords,
+        );
         if (addresses.isNotEmpty) {
           deliveryAddress.city = addresses.first.locality;
           LocationService.deliveryaddress = deliveryAddress;
@@ -192,5 +189,5 @@ class LocationFetchController extends Notifier<LocationFetchState> {
 
 final locationFetchControllerProvider =
     NotifierProvider<LocationFetchController, LocationFetchState>(
-  LocationFetchController.new,
-);
+      LocationFetchController.new,
+    );

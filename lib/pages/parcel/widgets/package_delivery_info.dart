@@ -22,33 +22,29 @@ class PackageDeliveryInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
       key: controller.deliveryInfoFormKey,
-      child: VStack(
-        [
-          VStack(
-            [
-              "Delivery Info".tr().text.xl.medium.make().py20(),
-              Visibility(
-                visible: !AppStrings.enableParcelMultipleStops,
-                child: SingleParcelDeliveryStopsView(
-                  state: state,
-                  controller: controller,
-                ),
-              ),
-              Visibility(
-                visible: AppStrings.enableParcelMultipleStops,
-                child: ParcelDeliveryStopsView(
-                  state: state,
-                  controller: controller,
-                ),
-              ),
-            ],
-          ).scrollVertical().expand(),
-          FormStepController(
-            onPreviousPressed: () => controller.nextForm(0),
-            onNextPressed: controller.validateDeliveryInfo,
+      child: VStack([
+        VStack([
+          "Delivery Info".tr().text.xl.medium.make().py20(),
+          Visibility(
+            visible: !AppStrings.enableParcelMultipleStops,
+            child: SingleParcelDeliveryStopsView(
+              state: state,
+              controller: controller,
+            ),
           ),
-        ],
-      ),
+          Visibility(
+            visible: AppStrings.enableParcelMultipleStops,
+            child: ParcelDeliveryStopsView(
+              state: state,
+              controller: controller,
+            ),
+          ),
+        ]).scrollVertical().expand(),
+        FormStepController(
+          onPreviousPressed: () => controller.nextForm(0),
+          onNextPressed: controller.validateDeliveryInfo,
+        ),
+      ]),
     );
   }
 }

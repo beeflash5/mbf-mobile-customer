@@ -68,9 +68,9 @@ class _TaxiTripMapPreviewState extends State<TaxiTripMapPreview> {
   }
 
   Future<void> setGoogleMapStyle(gMapController) async {
-    String value = await DefaultAssetBundle.of(context).loadString(
-      'assets/json/google_map_style.json',
-    );
+    String value = await DefaultAssetBundle.of(
+      context,
+    ).loadString('assets/json/google_map_style.json');
     //
     gMapController?.setMapStyle(value);
   }

@@ -10,21 +10,14 @@ import 'package:fuodz/services/local_storage.service.dart';
 import 'package:fuodz/services/setup.service.dart';
 
 class HomeState {
-  const HomeState({
-    this.currentIndex = 0,
-    this.totalCartItems = 0,
-  });
+  const HomeState({this.currentIndex = 0, this.totalCartItems = 0});
   final int currentIndex;
   final int totalCartItems;
 
-  HomeState copyWith({
-    int? currentIndex,
-    int? totalCartItems,
-  }) =>
-      HomeState(
-        currentIndex: currentIndex ?? this.currentIndex,
-        totalCartItems: totalCartItems ?? this.totalCartItems,
-      );
+  HomeState copyWith({int? currentIndex, int? totalCartItems}) => HomeState(
+    currentIndex: currentIndex ?? this.currentIndex,
+    totalCartItems: totalCartItems ?? this.totalCartItems,
+  );
 }
 
 class HomeController extends Notifier<HomeState> {
@@ -50,10 +43,10 @@ class HomeController extends Notifier<HomeState> {
     _cartCountSub = LocalStorageService.rxPrefs
         ?.getIntStream(CartServices.totalItemKey)
         .listen((total) {
-      if (total != null) {
-        state = state.copyWith(totalCartItems: total);
-      }
-    });
+          if (total != null) {
+            state = state.copyWith(totalCartItems: total);
+          }
+        });
 
     _pageIndexSub?.cancel();
     _pageIndexSub = AppService().homePageIndex.stream.listen(onTabChange);
@@ -77,5 +70,6 @@ class HomeController extends Notifier<HomeState> {
   }
 }
 
-final homeControllerProvider =
-    NotifierProvider<HomeController, HomeState>(HomeController.new);
+final homeControllerProvider = NotifierProvider<HomeController, HomeState>(
+  HomeController.new,
+);

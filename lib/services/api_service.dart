@@ -83,8 +83,11 @@ class ApiService {
     Options? options,
   }) async {
     try {
-      return await dio.get(url,
-          queryParameters: queryParameters, options: options);
+      return await dio.get(
+        url,
+        queryParameters: queryParameters,
+        options: options,
+      );
     } on DioException catch (e) {
       return _formatDioException(e);
     }
@@ -107,7 +110,9 @@ class ApiService {
     try {
       return await dio.post(
         url,
-        data: formData ?? (body is FormData ? body : FormData.fromMap(body ?? {})),
+        data:
+            formData ??
+            (body is FormData ? body : FormData.fromMap(body ?? {})),
         options: options,
       );
     } on DioException catch (e) {
@@ -124,7 +129,9 @@ class ApiService {
     try {
       return await dio.put(
         url,
-        data: formData ?? (body is FormData ? body : FormData.fromMap(body ?? {})),
+        data:
+            formData ??
+            (body is FormData ? body : FormData.fromMap(body ?? {})),
         options: options,
       );
     } on DioException catch (e) {
@@ -188,18 +195,21 @@ class ApiService {
         message = 'Permintaan dibatalkan.';
         break;
       case DioExceptionType.badResponse:
-        message = ex.response?.data is Map
-            ? (ex.response?.data['message']?.toString() ?? 'Terjadi kesalahan.')
-            : 'Terjadi kesalahan pada server.';
+        message =
+            ex.response?.data is Map
+                ? (ex.response?.data['message']?.toString() ??
+                    'Terjadi kesalahan.')
+                : 'Terjadi kesalahan pada server.';
         break;
       case DioExceptionType.unknown:
         message = 'Terjadi kesalahan. Coba lagi.';
         break;
     }
 
-    response.data = ex.response?.data is Map
-        ? {...(ex.response!.data as Map), 'message': message}
-        : {'message': message};
+    response.data =
+        ex.response?.data is Map
+            ? {...(ex.response!.data as Map), 'message': message}
+            : {'message': message};
     return response;
   }
 }

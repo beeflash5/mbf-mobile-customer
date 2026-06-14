@@ -18,8 +18,9 @@ class AccountDeleteFailure extends AccountDeleteResult {
   final String message;
 }
 
-final accountDeleteAuthRequestProvider =
-    Provider<AuthRequest>((_) => AuthRequest());
+final accountDeleteAuthRequestProvider = Provider<AuthRequest>(
+  (_) => AuthRequest(),
+);
 
 /// Controller delete-account. Page memanggil `delete(password)`,
 /// menangkap [AccountDeleteResult] untuk navigasi/alert.
@@ -48,5 +49,5 @@ class AccountDeleteController extends AsyncNotifier<void> {
 
 final accountDeleteControllerProvider =
     AsyncNotifierProvider<AccountDeleteController, void>(
-  AccountDeleteController.new,
-);
+      AccountDeleteController.new,
+    );

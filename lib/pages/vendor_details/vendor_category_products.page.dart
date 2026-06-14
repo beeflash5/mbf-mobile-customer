@@ -59,10 +59,12 @@ class _VendorCategoryProductsPageState
   @override
   Widget build(BuildContext context) {
     final args = (category: widget.category, vendor: widget.vendor);
-    final asyncState =
-        ref.watch(vendorCategoryProductsControllerProvider(args));
-    final notifier =
-        ref.read(vendorCategoryProductsControllerProvider(args).notifier);
+    final asyncState = ref.watch(
+      vendorCategoryProductsControllerProvider(args),
+    );
+    final notifier = ref.read(
+      vendorCategoryProductsControllerProvider(args).notifier,
+    );
     final s = asyncState.valueOrNull;
 
     asyncState.whenData((_) {
@@ -93,41 +95,46 @@ class _VendorCategoryProductsPageState
                 indicatorColor: Colors.white,
                 indicatorWeight: 2,
                 controller: _tabController,
-                tabs: widget.category.subcategories
-                    .map((sub) => Tab(text: sub.name))
-                    .toList(),
+                tabs:
+                    widget.category.subcategories
+                        .map((sub) => Tab(text: sub.name))
+                        .toList(),
               ),
             ),
           ];
         },
         body: TabBarView(
           controller: _tabController,
-          children: widget.category.subcategories.map((sub) {
-            final products = s?.productsBySubcategory[sub.id] ?? const [];
-            final loading = asyncState.isLoading && products.isEmpty;
-            return CustomListView(
-              noScrollPhysics: false,
-              refreshController: _refreshControllers[sub.id],
-              canPullUp: true,
-              canRefresh: true,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              dataSet: products,
-              isLoading: loading,
-              onLoading: () => notifier.loadMore(sub.id),
-              onRefresh: () => notifier.refreshSubcategory(sub.id),
-              itemBuilder: (context, index) {
-                final product = products[index];
-                return HorizontalProductListItem(
-                  product,
-                  onPressed: (p) => context.pushWidget(ProductDetailsPage(product: p)),
-                  qtyUpdated: (p, q) =>
-                      CartHelper.addToCartDirectly(context, p, q),
+          children:
+              widget.category.subcategories.map((sub) {
+                final products = s?.productsBySubcategory[sub.id] ?? const [];
+                final loading = asyncState.isLoading && products.isEmpty;
+                return CustomListView(
+                  noScrollPhysics: false,
+                  refreshController: _refreshControllers[sub.id],
+                  canPullUp: true,
+                  canRefresh: true,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  dataSet: products,
+                  isLoading: loading,
+                  onLoading: () => notifier.loadMore(sub.id),
+                  onRefresh: () => notifier.refreshSubcategory(sub.id),
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return HorizontalProductListItem(
+                      product,
+                      onPressed:
+                          (p) => context.pushWidget(
+                            ProductDetailsPage(product: p),
+                          ),
+                      qtyUpdated:
+                          (p, q) => CartHelper.addToCartDirectly(context, p, q),
+                    );
+                  },
+                  separatorBuilder:
+                      (context, index) => UiSpacer.verticalSpace(space: 5),
                 );
-              },
-              separatorBuilder: (context, index) =>
-                  UiSpacer.verticalSpace(space: 5),
-            );
-          }).toList(),
+              }).toList(),
         ),
       ),
     );

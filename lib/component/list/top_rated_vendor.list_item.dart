@@ -15,21 +15,20 @@ class TopRatedVendorListItem extends StatelessWidget {
   final Function(Vendor) onPressed;
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //
-        Hero(
-          tag: vendor.heroTag ?? vendor.id,
-          child: CustomImage(
-            imageUrl: vendor.logo,
-            height: 60,
-            width: 60,
-          ).box.roundedSM.clip(Clip.antiAlias).make(),
-        ).centered(),
+    return VStack([
+          //
+          Hero(
+            tag: vendor.heroTag ?? vendor.id,
+            child:
+                CustomImage(
+                  imageUrl: vendor.logo,
+                  height: 60,
+                  width: 60,
+                ).box.roundedSM.clip(Clip.antiAlias).make(),
+          ).centered(),
 
-        //
-        VStack(
-          [
+          //
+          VStack([
             //name
             vendor.name.text.lg.center.medium
                 .maxLines(1)
@@ -44,14 +43,10 @@ class TopRatedVendorListItem extends StatelessWidget {
               selectionColor: AppColor.ratingColor,
               size: 14,
             ).centered(),
-          ],
-        ).p4().centered(),
-      ],
-    )
+          ]).p4().centered(),
+        ])
         .centered()
-        .onInkTap(
-          () => this.onPressed(this.vendor),
-        )
+        .onInkTap(() => this.onPressed(this.vendor))
         .wOneThird(context)
         .card
         .make()

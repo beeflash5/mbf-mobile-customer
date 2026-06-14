@@ -33,22 +33,22 @@ class FlashSaleItemsState {
   }
 }
 
-final flashSaleRequestProvider =
-    Provider<FlashSaleRequest>((_) => FlashSaleRequest());
+final flashSaleRequestProvider = Provider<FlashSaleRequest>(
+  (_) => FlashSaleRequest(),
+);
 
 /// Controller paginated produk per flash-sale (id), pakai `.family`.
 /// Async build = halaman 1.
-class FlashSaleItemsController extends FamilyAsyncNotifier<
-    FlashSaleItemsState, int> {
+class FlashSaleItemsController
+    extends FamilyAsyncNotifier<FlashSaleItemsState, int> {
   late int _flashSaleId;
 
   @override
   Future<FlashSaleItemsState> build(int arg) async {
     _flashSaleId = arg;
-    final items = await ref.read(flashSaleRequestProvider).getProdcuts(
-      queryParams: {'flash_sale_id': arg},
-      page: 1,
-    );
+    final items = await ref
+        .read(flashSaleRequestProvider)
+        .getProdcuts(queryParams: {'flash_sale_id': arg}, page: 1);
     return FlashSaleItemsState(
       items: items,
       page: 1,
@@ -59,10 +59,9 @@ class FlashSaleItemsController extends FamilyAsyncNotifier<
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final items = await ref.read(flashSaleRequestProvider).getProdcuts(
-        queryParams: {'flash_sale_id': _flashSaleId},
-        page: 1,
-      );
+      final items = await ref
+          .read(flashSaleRequestProvider)
+          .getProdcuts(queryParams: {'flash_sale_id': _flashSaleId}, page: 1);
       return FlashSaleItemsState(
         items: items,
         page: 1,
@@ -79,10 +78,12 @@ class FlashSaleItemsController extends FamilyAsyncNotifier<
     state = AsyncData(current.copyWith(isLoadingMore: true));
     try {
       final nextPage = current.page + 1;
-      final more = await ref.read(flashSaleRequestProvider).getProdcuts(
-        queryParams: {'flash_sale_id': _flashSaleId},
-        page: nextPage,
-      );
+      final more = await ref
+          .read(flashSaleRequestProvider)
+          .getProdcuts(
+            queryParams: {'flash_sale_id': _flashSaleId},
+            page: nextPage,
+          );
       state = AsyncData(
         current.copyWith(
           items: [...current.items, ...more],
@@ -98,9 +99,11 @@ class FlashSaleItemsController extends FamilyAsyncNotifier<
   }
 }
 
-final flashSaleItemsControllerProvider =
-    AsyncNotifierProvider.family<FlashSaleItemsController,
-        FlashSaleItemsState, int>(FlashSaleItemsController.new);
+final flashSaleItemsControllerProvider = AsyncNotifierProvider.family<
+  FlashSaleItemsController,
+  FlashSaleItemsState,
+  int
+>(FlashSaleItemsController.new);
 
 // =============================================================================
 // HOME FLASH SALES (list per vendor-type, each with its items)
@@ -108,21 +111,19 @@ final flashSaleItemsControllerProvider =
 
 /// List flash sales untuk home widget, sudah diisi item-nya.
 /// Family arg = vendorTypeId (0 = no filter).
-final homeFlashSalesProvider =
-    FutureProvider.family<List<FlashSale>, int>((ref, vendorTypeId) async {
+final homeFlashSalesProvider = FutureProvider.family<List<FlashSale>, int>((
+  ref,
+  vendorTypeId,
+) async {
   final req = ref.read(flashSaleRequestProvider);
   final sales = await req.getFlashSales(
-    queryParams: vendorTypeId == 0
-        ? null
-        : {'vendor_type_id': vendorTypeId},
+    queryParams: vendorTypeId == 0 ? null : {'vendor_type_id': vendorTypeId},
   );
   // Fetch items per flash sale in parallel.
   await Future.wait(
     sales.map((fs) async {
       try {
-        fs.items = await req.getProdcuts(
-          queryParams: {'flash_sale_id': fs.id},
-        );
+        fs.items = await req.getProdcuts(queryParams: {'flash_sale_id': fs.id});
       } catch (_) {
         fs.items = [];
       }

@@ -71,102 +71,107 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
     super.build(context);
     final state = ref.watch(profileControllerProvider).valueOrNull;
     return BasePage(
-      body: VStack([
-        "Settings".tr().text.xl2.semiBold.make(),
-        "Profile & App Settings".tr().text.lg.light.make(),
-        const ProfileCard().py12(),
-        VStack([
-          MenuItem(
-            title: "Currency".tr(),
-            divider: false,
-            prefix: Icon(HugeIcons.strokeRoundedMoneyExchange01),
-            suffix: AppCurrencySystemService()
-                .currentCurrencySymbol
-                .text
-                .make(),
-            onPressed: () =>
-                AppCurrencySystemService().initAppCurrencyChange(),
-          ),
-          MenuItem(
-            title: "Language".tr(),
-            divider: false,
-            prefix: Icon(HugeIcons.strokeRoundedGlobal),
-            onPressed: _changeLanguage,
-          ),
-          MenuItem(
-            title: "Theme".tr(),
-            suffix: Text(
-              AdaptiveTheme.of(context).mode.name.tr().capitalized,
-            ),
-            prefix: Icon(HugeIcons.strokeRoundedReload),
-            onPressed: () => AdaptiveTheme.of(context).toggleThemeMode(),
-          ),
-          20.heightBox,
-          MenuItem(
-            title: "Wishlist".tr(),
-            prefix: const Icon(Icons.favorite_outline),
-            onPressed: () => context.pushRoute(AppRoutes.favouritesRoute),
-          ),
-          MenuItem(
-            title: "Notifications".tr(),
-            prefix: Icon(HugeIcons.strokeRoundedNotification01),
-            onPressed: () => context.pushRoute(AppRoutes.notificationsRoute),
-          ),
-          MenuItem(
-            title: "Rate & Review".tr(),
-            onPressed: _openReviewApp,
-            prefix: Icon(HugeIcons.strokeRoundedStar),
-          ),
-          MenuItem(
-            title: "FAQ".tr(),
-            onPressed: () => context.pushRoute('/faq'),
-            prefix: Icon(HugeIcons.strokeRoundedQuestion),
-          ),
-          MenuItem(
-            title: "Privacy Policy".tr(),
-            onPressed: () =>
-                PaymentHelper.openWebpageLink(context, Api.privacyPolicy),
-            prefix: Icon(HugeIcons.strokeRoundedBook02),
-          ),
-          MenuItem(
-            title: "Terms & Conditions".tr(),
-            onPressed: () =>
-                PaymentHelper.openWebpageLink(context, Api.terms),
-            prefix: Icon(HugeIcons.strokeRoundedShield01),
-          ),
-          MenuItem(
-            title: "Refund Policy".tr(),
-            onPressed: () =>
-                PaymentHelper.openWebpageLink(context, Api.refundTerms),
-            prefix: Icon(HugeIcons.strokeRoundedReturnRequest),
-          ),
-          MenuItem(
-            title: "Cancellation Policy".tr(),
-            onPressed: () =>
-                PaymentHelper.openWebpageLink(context, Api.cancelTerms),
-            prefix: Icon(HugeIcons.strokeRoundedCancel01),
-          ),
-          MenuItem(
-            title: "Delivery/Shipping Policy".tr(),
-            onPressed: () =>
-                PaymentHelper.openWebpageLink(context, Api.shippingTerms),
-            prefix: Icon(HugeIcons.strokeRoundedShoppingBag01),
-          ),
-          MenuItem(
-            title: "Contact Us".tr(),
-            onPressed: _openContactUs,
-            prefix: Icon(HugeIcons.strokeRoundedMail01),
-          ),
-        ]),
-        (state?.appVersionInfo ?? '')
-            .text
-            .sm
-            .medium
-            .gray400
-            .makeCentered()
-            .py20(),
-        UiSpacer.verticalSpace(space: context.percentHeight * 10),
-      ]).p20().scrollVertical(),
+      body:
+          VStack([
+            "Settings".tr().text.xl2.semiBold.make(),
+            "Profile & App Settings".tr().text.lg.light.make(),
+            const ProfileCard().py12(),
+            VStack([
+              MenuItem(
+                title: "Currency".tr(),
+                divider: false,
+                prefix: Icon(HugeIcons.strokeRoundedMoneyExchange01),
+                suffix:
+                    AppCurrencySystemService().currentCurrencySymbol.text
+                        .make(),
+                onPressed:
+                    () => AppCurrencySystemService().initAppCurrencyChange(),
+              ),
+              MenuItem(
+                title: "Language".tr(),
+                divider: false,
+                prefix: Icon(HugeIcons.strokeRoundedGlobal),
+                onPressed: _changeLanguage,
+              ),
+              MenuItem(
+                title: "Theme".tr(),
+                suffix: Text(
+                  AdaptiveTheme.of(context).mode.name.tr().capitalized,
+                ),
+                prefix: Icon(HugeIcons.strokeRoundedReload),
+                onPressed: () => AdaptiveTheme.of(context).toggleThemeMode(),
+              ),
+              20.heightBox,
+              MenuItem(
+                title: "Wishlist".tr(),
+                prefix: const Icon(Icons.favorite_outline),
+                onPressed: () => context.pushRoute(AppRoutes.favouritesRoute),
+              ),
+              MenuItem(
+                title: "Notifications".tr(),
+                prefix: Icon(HugeIcons.strokeRoundedNotification01),
+                onPressed:
+                    () => context.pushRoute(AppRoutes.notificationsRoute),
+              ),
+              MenuItem(
+                title: "Rate & Review".tr(),
+                onPressed: _openReviewApp,
+                prefix: Icon(HugeIcons.strokeRoundedStar),
+              ),
+              MenuItem(
+                title: "FAQ".tr(),
+                onPressed: () => context.pushRoute('/faq'),
+                prefix: Icon(HugeIcons.strokeRoundedQuestion),
+              ),
+              MenuItem(
+                title: "Privacy Policy".tr(),
+                onPressed:
+                    () => PaymentHelper.openWebpageLink(
+                      context,
+                      Api.privacyPolicy,
+                    ),
+                prefix: Icon(HugeIcons.strokeRoundedBook02),
+              ),
+              MenuItem(
+                title: "Terms & Conditions".tr(),
+                onPressed:
+                    () => PaymentHelper.openWebpageLink(context, Api.terms),
+                prefix: Icon(HugeIcons.strokeRoundedShield01),
+              ),
+              MenuItem(
+                title: "Refund Policy".tr(),
+                onPressed:
+                    () =>
+                        PaymentHelper.openWebpageLink(context, Api.refundTerms),
+                prefix: Icon(HugeIcons.strokeRoundedReturnRequest),
+              ),
+              MenuItem(
+                title: "Cancellation Policy".tr(),
+                onPressed:
+                    () =>
+                        PaymentHelper.openWebpageLink(context, Api.cancelTerms),
+                prefix: Icon(HugeIcons.strokeRoundedCancel01),
+              ),
+              MenuItem(
+                title: "Delivery/Shipping Policy".tr(),
+                onPressed:
+                    () => PaymentHelper.openWebpageLink(
+                      context,
+                      Api.shippingTerms,
+                    ),
+                prefix: Icon(HugeIcons.strokeRoundedShoppingBag01),
+              ),
+              MenuItem(
+                title: "Contact Us".tr(),
+                onPressed: _openContactUs,
+                prefix: Icon(HugeIcons.strokeRoundedMail01),
+              ),
+            ]),
+            (state?.appVersionInfo ?? '').text.sm.medium.gray400
+                .makeCentered()
+                .py20(),
+            UiSpacer.verticalSpace(space: context.percentHeight * 10),
+          ]).p20().scrollVertical(),
     );
   }
 

@@ -51,7 +51,10 @@ class ProductDetailsHeader extends StatelessWidget {
             ),
             "(${product.reviewsCount})".text.size(Sizes.fontSizeSmall).make(),
           ], spacing: 5).onTap(() {
-            context.pushRoute('/products/${product.id}/reviews', extra: product);
+            context.pushRoute(
+              '/products/${product.id}/reviews',
+              extra: product,
+            );
           }),
           //vendor name
           CustomVisibilty(

@@ -32,9 +32,9 @@ class TaxiOrderLocationHistory {
       );
 
   Map<String, dynamic> toJson() => {
-        "latitude": latitude,
-        "longitude": longitude,
-        "address": address,
-        "name": name,
-      };
+    "latitude": latitude,
+    "longitude": longitude,
+    "address": address,
+    "name": name,
+  };
 }

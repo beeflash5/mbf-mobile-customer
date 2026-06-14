@@ -38,12 +38,13 @@ class _PostProductReviewPageState extends ConsumerState<PostProductReviewPage> {
   Future<void> _submit() async {
     setState(() => _submitting = true);
     final args = (product: widget.orderProduct.product!, summary: false);
-    final result =
-        await ref.read(productReviewControllerProvider(args).notifier).submitReview(
-              rating: _rating,
-              review: _reviewTEC.text,
-              orderId: widget.orderProduct.orderId,
-            );
+    final result = await ref
+        .read(productReviewControllerProvider(args).notifier)
+        .submitReview(
+          rating: _rating,
+          review: _reviewTEC.text,
+          orderId: widget.orderProduct.orderId,
+        );
     if (!mounted) return;
     setState(() => _submitting = false);
     switch (result) {
@@ -67,51 +68,42 @@ class _PostProductReviewPageState extends ConsumerState<PostProductReviewPage> {
       showAppBar: true,
       title: "Product Review".tr(),
       showLeadingAction: true,
-      body: VStack([
-        HStack([
-          CustomImage(
-            imageUrl: product.photo,
-            width: 40,
-            height: 40,
+      body: VStack(
+        [
+          HStack([
+            CustomImage(imageUrl: product.photo, width: 40, height: 40),
+            UiSpacer.hSpace(12),
+            product.name.text.maxLines(3).ellipsis.semiBold.lg.make().expand(),
+          ]).p12(),
+          UiSpacer.divider().py8(),
+          VxRating(
+            value: _rating,
+            size: 42,
+            selectionColor: AppColor.ratingColor,
+            normalColor: Vx.gray400,
+            maxRating: 5.0,
+            stepInt: true,
+            onRatingUpdate: (v) => setState(() => _rating = double.parse(v)),
           ),
-          UiSpacer.hSpace(12),
-          product.name.text
-              .maxLines(3)
-              .ellipsis
-              .semiBold
-              .lg
-              .make()
-              .expand(),
-        ]).p12(),
-        UiSpacer.divider().py8(),
-        VxRating(
-          value: _rating,
-          size: 42,
-          selectionColor: AppColor.ratingColor,
-          normalColor: Vx.gray400,
-          maxRating: 5.0,
-          stepInt: true,
-          onRatingUpdate: (v) => setState(() => _rating = double.parse(v)),
-        ),
-        UiSpacer.vSpace(),
-        "Enter review below:".tr().text.make().py4().wFull(context),
-        UiSpacer.vSpace(5),
-        CustomTextFormField(
-          minLines: 3,
-          maxLines: 5,
-          hintText: "Review".tr(),
-          textEditingController: _reviewTEC,
-          keyboardType: TextInputType.multiline,
-        ),
-        UiSpacer.vSpace(),
-        CustomButton(
-          title: "Submit".tr(),
-          loading: _submitting,
-          onPressed: _submit,
-        ),
-      ], crossAlignment: CrossAxisAlignment.center).scrollVertical(
-        padding: const EdgeInsets.all(20),
-      ),
+          UiSpacer.vSpace(),
+          "Enter review below:".tr().text.make().py4().wFull(context),
+          UiSpacer.vSpace(5),
+          CustomTextFormField(
+            minLines: 3,
+            maxLines: 5,
+            hintText: "Review".tr(),
+            textEditingController: _reviewTEC,
+            keyboardType: TextInputType.multiline,
+          ),
+          UiSpacer.vSpace(),
+          CustomButton(
+            title: "Submit".tr(),
+            loading: _submitting,
+            onPressed: _submit,
+          ),
+        ],
+        crossAlignment: CrossAxisAlignment.center,
+      ).scrollVertical(padding: const EdgeInsets.all(20)),
     );
   }
 }

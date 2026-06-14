@@ -18,17 +18,15 @@ class BannerListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: this.imageUrl,
-      fit: BoxFit.cover,
-      width: double.infinity,
-    )
+          imageUrl: this.imageUrl,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        )
         .onInkTap(this.onPressed != null ? () => this.onPressed!() : null)
         .box
         .withRounded(value: radius)
         .clip(Clip.antiAlias)
-        .margin(
-          EdgeInsets.symmetric(horizontal: noMargin ? 0.00 : 5.0),
-        )
+        .margin(EdgeInsets.symmetric(horizontal: noMargin ? 0.00 : 5.0))
         .make();
   }
 }

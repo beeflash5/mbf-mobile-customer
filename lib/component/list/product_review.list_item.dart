@@ -17,53 +17,40 @@ class ProductReviewListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return HStack(
       [
-        CustomImage(
-          imageUrl: productReview.user.photo,
-          width: 35,
-          height: 35,
-        ),
+        CustomImage(imageUrl: productReview.user.photo, width: 35, height: 35),
         UiSpacer.hSpace(10),
-        VStack(
-          [
-            VStack(
-              [
-                productReview.user.name.text.make(),
+        VStack([
+          VStack([
+            productReview.user.name.text.make(),
 
-                ///rating
-                HStack(
-                  [
-                    VxRating(
-                      size: 16,
-                      maxRating: 5.0,
-                      value: productReview.rating.toDouble(),
-                      isSelectable: false,
-                      onRatingUpdate: (value) {},
-                      selectionColor: AppColor.ratingColor,
-                    ),
-                    //
-                    Spacer(),
-                    //date
-                    "Reviewed on %s"
-                        .tr()
-                        .fill([
-                          DateFormat("MMM d, yyyy")
-                              .format(productReview.createdAt)
-                        ])
-                        .text
-                        .sm
-                        .gray500
-                        .make(),
-                  ],
-                ),
-              ],
-            ),
+            ///rating
+            HStack([
+              VxRating(
+                size: 16,
+                maxRating: 5.0,
+                value: productReview.rating.toDouble(),
+                isSelectable: false,
+                onRatingUpdate: (value) {},
+                selectionColor: AppColor.ratingColor,
+              ),
+              //
+              Spacer(),
+              //date
+              "Reviewed on %s"
+                  .tr()
+                  .fill([
+                    DateFormat("MMM d, yyyy").format(productReview.createdAt),
+                  ])
+                  .text
+                  .sm
+                  .gray500
+                  .make(),
+            ]),
+          ]),
 
-            //review
-            if (productReview.review.isNotBlank)
-              productReview.review.text.make(),
-          ],
-          spacing: 5,
-        ).expand(),
+          //review
+          if (productReview.review.isNotBlank) productReview.review.text.make(),
+        ], spacing: 5).expand(),
       ],
       crossAlignment: CrossAxisAlignment.start,
       alignment: MainAxisAlignment.start,

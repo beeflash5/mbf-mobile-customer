@@ -79,15 +79,19 @@ class AppUISettings extends AppStrings {
     if (AppStrings.env('ui') == null || AppStrings.env('ui')["call"] == null) {
       return true;
     }
-    return [1, "1"]
-        .contains(AppStrings.env('ui')['call']["canCustomerVendorCall"]);
+    return [
+      1,
+      "1",
+    ].contains(AppStrings.env('ui')['call']["canCustomerVendorCall"]);
   }
 
   static bool get canCallDriver {
     if (AppStrings.env('ui') == null || AppStrings.env('ui')["call"] == null) {
       return true;
     }
-    return [1, "1"]
-        .contains(AppStrings.env('ui')['call']["canCustomerDriverCall"]);
+    return [
+      1,
+      "1",
+    ].contains(AppStrings.env('ui')['call']["canCustomerDriverCall"]);
   }
 }

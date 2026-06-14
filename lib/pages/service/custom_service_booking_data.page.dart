@@ -26,12 +26,12 @@ class ServicesBookingPage extends ConsumerStatefulWidget {
       _ServicesBookingPageState();
 }
 
-class _ServicesBookingPageState
-    extends ConsumerState<ServicesBookingPage> {
+class _ServicesBookingPageState extends ConsumerState<ServicesBookingPage> {
   @override
   Widget build(BuildContext context) {
-    final asyncHome =
-        ref.watch(serviceHomeControllerProvider(widget.vendorType.id));
+    final asyncHome = ref.watch(
+      serviceHomeControllerProvider(widget.vendorType.id),
+    );
     final state = asyncHome.valueOrNull;
     final featured = state?.featuredProviders ?? const [];
     final trending = state?.trendingServices ?? const [];
@@ -43,9 +43,10 @@ class _ServicesBookingPageState
           SliverAppBar(
             floating: false,
             pinned: true,
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white,
+            backgroundColor:
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black
+                    : Colors.white,
             elevation: 0,
             leading: IconButton(
               icon: Icon(
@@ -54,24 +55,26 @@ class _ServicesBookingPageState
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            title: widget.vendorType.name.text
-                .size(16)
-                .color(Colors.black)
-                .bold
-                .make(),
+            title:
+                widget.vendorType.name.text
+                    .size(16)
+                    .color(Colors.black)
+                    .bold
+                    .make(),
           ),
           const SliverToBoxAdapter(
             child: SizedBox(height: Sizes.paddingSizeDefault),
           ),
           SliverToBoxAdapter(
             child: InkWell(
-              onTap: () => NavigationService.openServiceSearch(
-                context,
-                vendorType: widget.vendorType,
-                showVendors: true,
-                showServices: true,
-                byLocation: false,
-              ),
+              onTap:
+                  () => NavigationService.openServiceSearch(
+                    context,
+                    vendorType: widget.vendorType,
+                    showVendors: true,
+                    showServices: true,
+                    byLocation: false,
+                  ),
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 padding: const EdgeInsets.all(10),
@@ -84,8 +87,7 @@ class _ServicesBookingPageState
                   children: [
                     const Icon(Icons.search, color: Color(0xff879092)),
                     const SizedBox(width: 10),
-                    "Search experiences, services, or places"
-                        .text
+                    "Search experiences, services, or places".text
                         .color(const Color(0xff879092))
                         .make(),
                   ],
@@ -127,19 +129,18 @@ class _ServicesBookingPageState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             "Recommended for You".text.bold.xl.make(),
-                            "See All"
-                                .text
-                                .lg
+                            "See All".text.lg
                                 .color(const Color(0xFF1B8A9E))
                                 .make()
-                                .onTap(() =>
-                                    NavigationService.openServiceSearch(
-                                      context,
-                                      vendorType: widget.vendorType,
-                                      showVendors: false,
-                                      showServices: true,
-                                      byLocation: false,
-                                    )),
+                                .onTap(
+                                  () => NavigationService.openServiceSearch(
+                                    context,
+                                    vendorType: widget.vendorType,
+                                    showVendors: false,
+                                    showServices: true,
+                                    byLocation: false,
+                                  ),
+                                ),
                           ],
                         ),
                         const SizedBox(height: 4),
@@ -160,7 +161,8 @@ class _ServicesBookingPageState
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemBuilder: (context, index) {
                         final service = trending[index];
-                        void open(s) => context.pushWidget(ServiceDetailsPage(s));
+                        void open(s) =>
+                            context.pushWidget(ServiceDetailsPage(s));
                         if (widget.vendorType.id == 13) {
                           return HomeServicesListItemTatto(
                             height: 360,
@@ -200,28 +202,31 @@ class _ServicesBookingPageState
                         .text
                         .make(),
                     Column(
-                      children: featured
-                          .map(
-                            (provider) => CardVendor(
-                              vendor: provider,
-                              onPressed: (val) =>
-                                  NavigationService.openVendorDetailsPage(
-                                provider,
-                                context: context,
-                              ),
-                            ),
-                          )
-                          .toList(),
+                      children:
+                          featured
+                              .map(
+                                (provider) => CardVendor(
+                                  vendor: provider,
+                                  onPressed:
+                                      (val) =>
+                                          NavigationService.openVendorDetailsPage(
+                                            provider,
+                                            context: context,
+                                          ),
+                                ),
+                              )
+                              .toList(),
                     ),
                     CustomButtonLight(
                       title: "View All".tr(),
-                      onPressed: () => NavigationService.openServiceSearch(
-                        context,
-                        vendorType: widget.vendorType,
-                        showVendors: true,
-                        showServices: false,
-                        byLocation: false,
-                      ),
+                      onPressed:
+                          () => NavigationService.openServiceSearch(
+                            context,
+                            vendorType: widget.vendorType,
+                            showVendors: true,
+                            showServices: false,
+                            byLocation: false,
+                          ),
                     ),
                   ],
                 ),

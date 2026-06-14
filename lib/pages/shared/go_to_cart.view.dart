@@ -13,41 +13,41 @@ class GoToCartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
-        initialData: CartServices.productsInCart.length,
-        stream: CartServices.cartItemsCountStream.stream,
-        builder: (context, snapshot) {
-          return Visibility(
-            visible: snapshot.hasData && snapshot.data! > 0,
-            child: HStack(
-              [
-                //
-                "You have %s in your cart"
-                    .tr()
-                    .fill([snapshot.data])
-                    .text
-                    .white
-                    .make()
-                    .expand(),
-                //
-                CustomButton(
-                  title: "View Cart".tr(),
-                  height: 30,
-                  color: AppColor.accentColor,
-                  elevation: 1,
-                  onPressed: () {
-                    context.pushRoute('/cart');
-                  },
-                ),
-                //
-              ],
-            )
-                .p20()
-                .safeArea(top: false)
-                .box
-                .color(AppColor.primaryColor)
-                .topRounded()
-                .make(),
-          );
-        });
+      initialData: CartServices.productsInCart.length,
+      stream: CartServices.cartItemsCountStream.stream,
+      builder: (context, snapshot) {
+        return Visibility(
+          visible: snapshot.hasData && snapshot.data! > 0,
+          child:
+              HStack([
+                    //
+                    "You have %s in your cart"
+                        .tr()
+                        .fill([snapshot.data])
+                        .text
+                        .white
+                        .make()
+                        .expand(),
+                    //
+                    CustomButton(
+                      title: "View Cart".tr(),
+                      height: 30,
+                      color: AppColor.accentColor,
+                      elevation: 1,
+                      onPressed: () {
+                        context.pushRoute('/cart');
+                      },
+                    ),
+                    //
+                  ])
+                  .p20()
+                  .safeArea(top: false)
+                  .box
+                  .color(AppColor.primaryColor)
+                  .topRounded()
+                  .make(),
+        );
+      },
+    );
   }
 }

@@ -8,10 +8,12 @@ import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/favourite.request.dart';
 import 'package:fuodz/services/product.request.dart';
 
-final _productRequestProvider =
-    Provider<ProductRequest>((_) => ProductRequest());
-final _favouriteRequestProvider =
-    Provider<FavouriteRequest>((_) => FavouriteRequest());
+final _productRequestProvider = Provider<ProductRequest>(
+  (_) => ProductRequest(),
+);
+final _favouriteRequestProvider = Provider<FavouriteRequest>(
+  (_) => FavouriteRequest(),
+);
 
 sealed class AddToCartResult {
   const AddToCartResult();
@@ -63,21 +65,19 @@ class ProductDetailsState {
   final double subTotal;
   final double total;
 
-  List<int> get selectedOptionIds =>
-      selectedOptions.map((e) => e.id).toList();
+  List<int> get selectedOptionIds => selectedOptions.map((e) => e.id).toList();
 
   ProductDetailsState copyWith({
     Product? product,
     List<Option>? selectedOptions,
     double? subTotal,
     double? total,
-  }) =>
-      ProductDetailsState(
-        product: product ?? this.product,
-        selectedOptions: selectedOptions ?? this.selectedOptions,
-        subTotal: subTotal ?? this.subTotal,
-        total: total ?? this.total,
-      );
+  }) => ProductDetailsState(
+    product: product ?? this.product,
+    selectedOptions: selectedOptions ?? this.selectedOptions,
+    subTotal: subTotal ?? this.subTotal,
+    total: total ?? this.total,
+  );
 }
 
 class ProductDetailsController
@@ -85,7 +85,9 @@ class ProductDetailsController
   @override
   Future<ProductDetailsState> build(Product arg) async {
     final oldTag = arg.heroTag;
-    final detail = await ref.read(_productRequestProvider).productDetails(arg.id);
+    final detail = await ref
+        .read(_productRequestProvider)
+        .productDetails(arg.id);
     detail.heroTag = oldTag;
     if (detail.selectedQty < 1) detail.selectedQty = 1;
     return _recalculate(ProductDetailsState(product: detail));
@@ -98,9 +100,10 @@ class ProductDetailsController
     for (final o in s.selectedOptions) {
       options += o.price;
     }
-    final sub = (p.plusOption == 1 || s.selectedOptions.isEmpty)
-        ? price + options
-        : options;
+    final sub =
+        (p.plusOption == 1 || s.selectedOptions.isEmpty)
+            ? price + options
+            : options;
     return s.copyWith(subTotal: sub, total: sub * p.selectedQty);
   }
 
@@ -132,8 +135,7 @@ class ProductDetailsController
         if (found != null) selected.remove(found);
       }
       if (group.maxOptions != null && group.maxOptions! > 0) {
-        final count =
-            selected.where((e) => e.optionGroupId == group.id).length;
+        final count = selected.where((e) => e.optionGroupId == group.id).length;
         if (count >= group.maxOptions!) {
           return "You can only select ${group.maxOptions} options for ${group.name}";
         }
@@ -148,8 +150,9 @@ class ProductDetailsController
     final cur = state.valueOrNull;
     if (cur == null) return null;
     for (final group in cur.product.optionGroups) {
-      final hasSelection = cur.selectedOptions
-          .any((o) => o.optionGroupId == group.id);
+      final hasSelection = cur.selectedOptions.any(
+        (o) => o.optionGroupId == group.id,
+      );
       if (group.required == 1 && !hasSelection) {
         return "You are required to select at least one option of ${group.name}";
       }
@@ -207,6 +210,7 @@ class ProductDetailsController
 }
 
 final productDetailsControllerProvider = AsyncNotifierProvider.family<
-    ProductDetailsController, ProductDetailsState, Product>(
-  ProductDetailsController.new,
-);
+  ProductDetailsController,
+  ProductDetailsState,
+  Product
+>(ProductDetailsController.new);

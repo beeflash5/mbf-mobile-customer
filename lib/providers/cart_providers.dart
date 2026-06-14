@@ -57,17 +57,16 @@ class CartState {
     bool? canApplyCoupon,
     String? couponError,
     bool clearCouponError = false,
-  }) =>
-      CartState(
-        cartItems: cartItems ?? this.cartItems,
-        totalCartItems: totalCartItems ?? this.totalCartItems,
-        subTotalPrice: subTotalPrice ?? this.subTotalPrice,
-        discountCartPrice: discountCartPrice ?? this.discountCartPrice,
-        totalCartPrice: totalCartPrice ?? this.totalCartPrice,
-        coupon: clearCoupon ? null : (coupon ?? this.coupon),
-        canApplyCoupon: canApplyCoupon ?? this.canApplyCoupon,
-        couponError: clearCouponError ? null : (couponError ?? this.couponError),
-      );
+  }) => CartState(
+    cartItems: cartItems ?? this.cartItems,
+    totalCartItems: totalCartItems ?? this.totalCartItems,
+    subTotalPrice: subTotalPrice ?? this.subTotalPrice,
+    discountCartPrice: discountCartPrice ?? this.discountCartPrice,
+    totalCartPrice: totalCartPrice ?? this.totalCartPrice,
+    coupon: clearCoupon ? null : (coupon ?? this.coupon),
+    canApplyCoupon: canApplyCoupon ?? this.canApplyCoupon,
+    couponError: clearCouponError ? null : (couponError ?? this.couponError),
+  );
 
   /// Compose a CheckOut object representing this cart state.
   CheckOut toCheckout() {
@@ -112,7 +111,8 @@ class CartController extends Notifier<CartState> {
         skipCalculation = false;
       } else if (foundVendor?.vendorType.id == coupon?.vendorTypeId) {
         skipCalculation = false;
-      } else if (cartItem.product?.vendor.vendorTypeId == coupon?.vendorTypeId) {
+      } else if (cartItem.product?.vendor.vendorTypeId ==
+          coupon?.vendorTypeId) {
         skipCalculation = false;
       } else {
         skipCalculation = true;
@@ -157,7 +157,9 @@ class CartController extends Notifier<CartState> {
   }
 
   Future<void> reload() async {
-    state = _recalculate(state.copyWith(cartItems: CartServices.productsInCart));
+    state = _recalculate(
+      state.copyWith(cartItems: CartServices.productsInCart),
+    );
   }
 
   Future<void> deleteCartItem(int index) async {
@@ -180,8 +182,11 @@ class CartController extends Notifier<CartState> {
     final addedQty = qty > cart.selectedQty!;
     if (addedQty) {
       final qtyDiff = qty - cart.selectedQty!;
-      final canAdd =
-          await CartUIServices.cartItemQtyUpdated(context, qtyDiff, cart);
+      final canAdd = await CartUIServices.cartItemQtyUpdated(
+        context,
+        qtyDiff,
+        cart,
+      );
       if (!canAdd) return;
     }
     state.cartItems[index].selectedQty = qty;
@@ -215,5 +220,6 @@ class CartController extends Notifier<CartState> {
   }
 }
 
-final cartControllerProvider =
-    NotifierProvider<CartController, CartState>(CartController.new);
+final cartControllerProvider = NotifierProvider<CartController, CartState>(
+  CartController.new,
+);

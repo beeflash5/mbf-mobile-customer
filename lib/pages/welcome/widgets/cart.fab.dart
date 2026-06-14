@@ -28,10 +28,13 @@ class CartHomeFab extends StatelessWidget {
             color: Utils.textColorByPrimaryColor(),
           );
           if (snapshot.hasData && snapshot.data > 0) {
-            return child.p(Sizes.paddingSizeExtraSmall).badge(
-                  position: Utils.isArabic
-                      ? VxBadgePosition.leftTop
-                      : VxBadgePosition.rightTop,
+            return child
+                .p(Sizes.paddingSizeExtraSmall)
+                .badge(
+                  position:
+                      Utils.isArabic
+                          ? VxBadgePosition.leftTop
+                          : VxBadgePosition.rightTop,
                   count: snapshot.data,
                   color: Colors.white,
                   textStyle: context.textTheme.bodyLarge?.copyWith(

@@ -16,13 +16,15 @@ class CommerceSellerTile extends StatelessWidget {
     return HStack([
       "Seller:".text.make().expand(flex: 2),
       UiSpacer.smHorizontalSpace(),
-      "${product.vendor.name}"
-          .text
-          .underline
+      "${product.vendor.name}".text.underline
           .color(AppColor.primaryColor)
           .make()
-          .onInkTap(() =>
-              context.pushRoute('/vendors/${product.vendor.id}', extra: product.vendor))
+          .onInkTap(
+            () => context.pushRoute(
+              '/vendors/${product.vendor.id}',
+              extra: product.vendor,
+            ),
+          )
           .expand(flex: 4),
     ]).py12().px20();
   }

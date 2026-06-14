@@ -15,49 +15,47 @@ class AddressListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HStack(
-      [
-        //
-        Icon(
-          Icons.location_on,
-          color: Colors.white,
-          size: 16,
-        ).box.p4.roundedFull.color(Colors.grey.shade400).make(),
-        UiSpacer.hSpace(10),
-        //
-        VStack(
           [
-            "${address.featureName}"
-                .text
-                .maxLines(2)
-                .ellipsis
-                .minFontSize(13)
-                .maxFontSize(13)
-                .semiBold
-                .lg
-                .make(),
-            //address line
-            if (address.addressLine != address.featureName) 3.heightBox,
-            //address
-            if (address.addressLine != address.featureName)
-              "${address.addressLine}"
-                  .text
+            //
+            Icon(
+              Icons.location_on,
+              color: Colors.white,
+              size: 16,
+            ).box.p4.roundedFull.color(Colors.grey.shade400).make(),
+            UiSpacer.hSpace(10),
+            //
+            VStack([
+              "${address.featureName}".text
                   .maxLines(2)
                   .ellipsis
-                  .thin
-                  .light
-                  .sm
-                  .color(
-                      context.isDarkMode ? Colors.white : Colors.grey.shade700)
+                  .minFontSize(13)
+                  .maxFontSize(13)
+                  .semiBold
+                  .lg
                   .make(),
+              //address line
+              if (address.addressLine != address.featureName) 3.heightBox,
+              //address
+              if (address.addressLine != address.featureName)
+                "${address.addressLine}".text
+                    .maxLines(2)
+                    .ellipsis
+                    .thin
+                    .light
+                    .sm
+                    .color(
+                      context.isDarkMode ? Colors.white : Colors.grey.shade700,
+                    )
+                    .make(),
+            ]).expand(),
           ],
-        ).expand(),
-      ],
-      crossAlignment: CrossAxisAlignment.center,
-      alignment: MainAxisAlignment.center,
-    ).p12().onInkTap(
-      () {
-        onAddressSelected(address);
-      },
-    ).material(color: Colors.transparent);
+          crossAlignment: CrossAxisAlignment.center,
+          alignment: MainAxisAlignment.center,
+        )
+        .p12()
+        .onInkTap(() {
+          onAddressSelected(address);
+        })
+        .material(color: Colors.transparent);
   }
 }

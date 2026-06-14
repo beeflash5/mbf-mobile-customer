@@ -64,34 +64,35 @@ class _GroceryPageState extends ConsumerState<GroceryPage>
           enablePullUp: false,
           controller: _refreshController,
           onRefresh: _reload,
-          child: VStack([
-            Banners(widget.vendorType, viewportFraction: 0.98).px20(),
-            GroceryCategories(widget.vendorType),
-            SectionCouponsView(
-              widget.vendorType,
-              title: "Coupons".tr(),
-              scrollDirection: Axis.horizontal,
-              itemWidth: context.percentWidth * 70,
-              height: 90,
-              itemsPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-            ),
-            FlashSaleView(widget.vendorType),
-            GroceryProductsSectionView(
-              "Today Picks".tr() + " 🔥",
-              widget.vendorType,
-              showGrid: true,
-              type: ProductFetchDataType.RANDOM,
-              onSeeAllPressed: () =>
-                  ProductSearchHelper.openProductsSeeAllPage(
-                title: "Today Picks".tr() + " 🔥",
-                vendorType: widget.vendorType,
-                type: ProductFetchDataType.RANDOM,
-              ),
-            ),
-            NearByVendors(widget.vendorType),
-            GroceryCategoryProducts(widget.vendorType, length: 6),
-            ViewAllVendorsView(vendorType: widget.vendorType),
-          ], spacing: 12).scrollVertical(),
+          child:
+              VStack([
+                Banners(widget.vendorType, viewportFraction: 0.98).px20(),
+                GroceryCategories(widget.vendorType),
+                SectionCouponsView(
+                  widget.vendorType,
+                  title: "Coupons".tr(),
+                  scrollDirection: Axis.horizontal,
+                  itemWidth: context.percentWidth * 70,
+                  height: 90,
+                  itemsPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                ),
+                FlashSaleView(widget.vendorType),
+                GroceryProductsSectionView(
+                  "Today Picks".tr() + " 🔥",
+                  widget.vendorType,
+                  showGrid: true,
+                  type: ProductFetchDataType.RANDOM,
+                  onSeeAllPressed:
+                      () => ProductSearchHelper.openProductsSeeAllPage(
+                        title: "Today Picks".tr() + " 🔥",
+                        vendorType: widget.vendorType,
+                        type: ProductFetchDataType.RANDOM,
+                      ),
+                ),
+                NearByVendors(widget.vendorType),
+                GroceryCategoryProducts(widget.vendorType, length: 6),
+                ViewAllVendorsView(vendorType: widget.vendorType),
+              ], spacing: 12).scrollVertical(),
         ).expand(),
       ]),
     );

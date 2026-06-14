@@ -23,8 +23,9 @@ class CartUIServices extends CartServices {
       //check the already added product qty
       if (canAddToCart) {
         int freeQty = 0;
-        bool thereIsFreeQty =
-            await CartServices.cartItemQtyAvailable(cart.product!);
+        bool thereIsFreeQty = await CartServices.cartItemQtyAvailable(
+          cart.product!,
+        );
         if (thereIsFreeQty) {
           freeQty = await CartServices.productQtyAllowed(cart.product!);
           thereIsFreeQty = freeQty >= cart.selectedQty!;

@@ -43,13 +43,8 @@ class SectionVendorsViewMain extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final args = (
-      vendorTypeId: vendorType.id,
-      type: type,
-      byLocation: true,
-    );
-    final asyncVendors =
-        ref.watch(sectionVendorsControllerProvider(args));
+    final args = (vendorTypeId: vendorType.id, type: type, byLocation: true);
+    final asyncVendors = ref.watch(sectionVendorsControllerProvider(args));
     final vendors = asyncVendors.valueOrNull ?? const <Vendor>[];
 
     final Widget listView = CustomListView(
@@ -66,8 +61,7 @@ class SectionVendorsViewMain extends ConsumerWidget {
         ).w(itemWidth ?? (context.percentWidth * 50));
       },
       emptyWidget: EmptyVendor(),
-      separatorBuilder:
-          separator != null ? (ctx, index) => separator! : null,
+      separatorBuilder: separator != null ? (ctx, index) => separator! : null,
     );
 
     return CustomVisibilty(

@@ -20,17 +20,18 @@ class SearchTypeTag extends StatelessWidget {
   final Function()? onPressed;
   @override
   Widget build(BuildContext context) {
-    return "$title"
-        .text
+    return "$title".text
         .color(selected ? Colors.white : context.textTheme.bodyLarge!.color)
         .make()
         .py4()
         .px12()
         .onInkTap(onPressed)
         .material(
-            color: selected
-                ? AppColor.primaryColor
-                : context.theme.colorScheme.surface)
+          color:
+              selected
+                  ? AppColor.primaryColor
+                  : context.theme.colorScheme.surface,
+        )
         .box
         .roundedLg
         .outerShadowSm

@@ -70,10 +70,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         context.goRoute(AppRoutes.homeRoute);
         break;
       case RegisterFailure(:final message):
-        AlertService.error(
-          title: 'Registration Failed'.tr(),
-          text: message,
-        );
+        AlertService.error(title: 'Registration Failed'.tr(), text: message);
         break;
       case RegisterIdle():
         break;
@@ -132,11 +129,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           }
           await _handleResult(result);
         },
-        onResendCode: AppStrings.isCustomOtp
-            ? () => ref
-                .read(registerControllerProvider.notifier)
-                .resendCustomOTP(_emailTEC.text)
-            : () {},
+        onResendCode:
+            AppStrings.isCustomOtp
+                ? () => ref
+                    .read(registerControllerProvider.notifier)
+                    .resendCustomOTP(_emailTEC.text)
+                : () {},
       ),
     );
   }
@@ -146,110 +144,114 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     final state = ref.watch(registerControllerProvider);
     final notifier = ref.read(registerControllerProvider.notifier);
     return BasePage(
-      body: VStack([
-          ImageLogin(),
+      body:
           VStack([
-            "Register Now!".tr().text.lg.semiBold.make().centered(),
-            "Register now to start your journey!".tr().text.make().centered(),
-            Form(
-              key: _formKey,
-              child: VStack([
-                CustomTextFormField(
-                  labelText: "Name".tr(),
-                  textEditingController: _nameTEC,
-                  validator: FormValidator.validateName,
-                ).py12(),
-                CustomTextFormField(
-                  labelText: "Email".tr(),
-                  keyboardType: TextInputType.emailAddress,
-                  textEditingController: _emailTEC,
-                  validator: FormValidator.validateEmail,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(' ')),
-                  ],
-                ).py12(),
-                HStack([
+            ImageLogin(),
+            VStack([
+              "Register Now!".tr().text.lg.semiBold.make().centered(),
+              "Register now to start your journey!".tr().text.make().centered(),
+              Form(
+                key: _formKey,
+                child: VStack([
                   CustomTextFormField(
-                    prefixIcon: HStack([
-                      Flag.fromString(
-                        state.selectedCountry.countryCode,
-                        width: 20,
-                        height: 20,
-                      ),
-                      UiSpacer.horizontalSpace(space: 5),
-                      ("+" + state.selectedCountry.phoneCode).text.make(),
-                    ]).px8().onInkTap(() => showCountryPicker(
-                          context: context,
-                          showPhoneCode: true,
-                          onSelect: notifier.setCountry,
-                        )),
-                    labelText: "Phone".tr(),
-                    hintText: "",
-                    keyboardType: TextInputType.phone,
-                    textEditingController: _phoneTEC,
-                    validator: FormValidator.validatePhone,
+                    labelText: "Name".tr(),
+                    textEditingController: _nameTEC,
+                    validator: FormValidator.validateName,
+                  ).py12(),
+                  CustomTextFormField(
+                    labelText: "Email".tr(),
+                    keyboardType: TextInputType.emailAddress,
+                    textEditingController: _emailTEC,
+                    validator: FormValidator.validateEmail,
                     inputFormatters: [
                       FilteringTextInputFormatter.deny(RegExp(' ')),
                     ],
-                  ).expand(),
-                ]).py12(),
-                CustomTextFormField(
-                  labelText: "Password".tr(),
-                  obscureText: true,
-                  textEditingController: _passwordTEC,
-                  validator: FormValidator.validatePassword,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(' ')),
-                  ],
-                ).py12(),
-                AppStrings.enableReferSystem
-                    ? CustomTextFormField(
+                  ).py12(),
+                  HStack([
+                    CustomTextFormField(
+                      prefixIcon: HStack([
+                        Flag.fromString(
+                          state.selectedCountry.countryCode,
+                          width: 20,
+                          height: 20,
+                        ),
+                        UiSpacer.horizontalSpace(space: 5),
+                        ("+" + state.selectedCountry.phoneCode).text.make(),
+                      ]).px8().onInkTap(
+                        () => showCountryPicker(
+                          context: context,
+                          showPhoneCode: true,
+                          onSelect: notifier.setCountry,
+                        ),
+                      ),
+                      labelText: "Phone".tr(),
+                      hintText: "",
+                      keyboardType: TextInputType.phone,
+                      textEditingController: _phoneTEC,
+                      validator: FormValidator.validatePhone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(' ')),
+                      ],
+                    ).expand(),
+                  ]).py12(),
+                  CustomTextFormField(
+                    labelText: "Password".tr(),
+                    obscureText: true,
+                    textEditingController: _passwordTEC,
+                    validator: FormValidator.validatePassword,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(' ')),
+                    ],
+                  ).py12(),
+                  AppStrings.enableReferSystem
+                      ? CustomTextFormField(
                         labelText: "Referral Code(optional)".tr(),
                         textEditingController: _referralTEC,
                       ).py12()
-                    : UiSpacer.emptySpace(),
-                HStack([
-                  Checkbox(
-                    value: state.agreed,
-                    onChanged: (value) => notifier.setAgreed(value ?? false),
-                  ),
-                  "I agree with".tr().text.make(),
-                  UiSpacer.horizontalSpace(space: 2),
-                  "Terms & Conditions"
-                      .tr()
-                      .text
-                      .color(AppColor.primaryColor)
-                      .bold
-                      .underline
-                      .make()
-                      .onInkTap(() =>
-                          PaymentHelper.openWebpageLink(context, Api.terms))
-                      .expand(),
-                ]),
-                CustomButton(
-                  title: "Create Account".tr(),
-                  loading: state.isBusy,
-                  onPressed: _processRegister,
-                ).centered().py12(),
-                "Already have an account?"
-                    .richText
-                    .color(const Color(0xff808080))
-                    .withTextSpanChildren([
-                      " ".textSpan.make(),
-                      "Login"
-                          .tr()
-                          .textSpan
-                          .semiBold
-                          .color(Colors.black)
-                          .underline
-                          .make(),
-                    ])
-                    .makeCentered()
-                    .onInkTap(() => Navigator.of(context).pop()),
-              ], crossAlignment: CrossAxisAlignment.end),
-            ).py20(),
-          ]).wFull(context).p20(),
-        ]).scrollVertical(),
+                      : UiSpacer.emptySpace(),
+                  HStack([
+                    Checkbox(
+                      value: state.agreed,
+                      onChanged: (value) => notifier.setAgreed(value ?? false),
+                    ),
+                    "I agree with".tr().text.make(),
+                    UiSpacer.horizontalSpace(space: 2),
+                    "Terms & Conditions"
+                        .tr()
+                        .text
+                        .color(AppColor.primaryColor)
+                        .bold
+                        .underline
+                        .make()
+                        .onInkTap(
+                          () =>
+                              PaymentHelper.openWebpageLink(context, Api.terms),
+                        )
+                        .expand(),
+                  ]),
+                  CustomButton(
+                    title: "Create Account".tr(),
+                    loading: state.isBusy,
+                    onPressed: _processRegister,
+                  ).centered().py12(),
+                  "Already have an account?".richText
+                      .color(const Color(0xff808080))
+                      .withTextSpanChildren([
+                        " ".textSpan.make(),
+                        "Login"
+                            .tr()
+                            .textSpan
+                            .semiBold
+                            .color(Colors.black)
+                            .underline
+                            .make(),
+                      ])
+                      .makeCentered()
+                      .onInkTap(() => Navigator.of(context).pop()),
+                ], crossAlignment: CrossAxisAlignment.end),
+              ).py20(),
+            ]).wFull(context).p20(),
+          ]).scrollVertical(),
     );
   }
 }

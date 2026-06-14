@@ -149,19 +149,20 @@ class Vendor {
     Vendor vendor = Vendor(
       id: json["id"] ?? 0,
       vendorTypeId: json["vendor_type_id"] ?? 0,
-      vendorType: json["vendor_type"] == null
-          ? VendorType(
-              id: 0,
-              name: "",
-              description: "",
-              slug: "",
-              color: "#000000",
-              isActive: 0,
-              logo: "",
-              website_header: "",
-              hasBanners: false,
-            )
-          : VendorType.fromJson(json["vendor_type"]),
+      vendorType:
+          json["vendor_type"] == null
+              ? VendorType(
+                id: 0,
+                name: "",
+                description: "",
+                slug: "",
+                color: "#000000",
+                isActive: 0,
+                logo: "",
+                website_header: "",
+                hasBanners: false,
+              )
+              : VendorType.fromJson(json["vendor_type"]),
       name: (json["name"] ?? "").toString().parseLocalized(),
       description:
           json["description"] == null
@@ -212,12 +213,14 @@ class Vendor {
           json["is_active"] == null
               ? 0
               : int.parse(json["is_active"].toString()),
-      createdAt: json["created_at"] == null
-          ? DateTime.now()
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? DateTime.now()
-          : DateTime.parse(json["updated_at"]),
+      createdAt:
+          json["created_at"] == null
+              ? DateTime.now()
+              : DateTime.parse(json["created_at"]),
+      updatedAt:
+          json["updated_at"] == null
+              ? DateTime.now()
+              : DateTime.parse(json["updated_at"]),
       formattedDate:
           json["formatted_date"] == null ? "" : json["formatted_date"],
       logo: json["logo"] ?? "",
@@ -399,10 +402,23 @@ class Vendor {
   //
   bool get allowOnlyDelivery => delivery == 1 && pickup == 0;
   bool get allowOnlyPickup => delivery == 0 && pickup == 1;
-  bool get isServiceType => ["service", "tour", "tattoo", "booking", "bookings"].contains(vendorType.slug.toLowerCase());
+  bool get isServiceType => [
+    "service",
+    "tour",
+    "tattoo",
+    "booking",
+    "bookings",
+  ].contains(vendorType.slug.toLowerCase());
   bool get isPharmacyType => vendorType.slug == "pharmacy";
   bool get isParcelType => ["parcel", "package"].contains(vendorType.slug);
-  bool get isFoodOrBeverage => vendorTypeId == 2 || ["food", "beverage", "beverages"].contains(vendorType.slug.toLowerCase());
+  bool get isFoodOrBeverage {
+    final slug = vendorType.slug.toLowerCase();
+    return (can_dinein == true) ||
+        vendorTypeId == 2 ||
+        ["food", "beverage", "beverages", "food-beverage"].contains(slug) ||
+        slug.contains("food") ||
+        slug.contains("beverage");
+  }
 
   //
   bool canServiceLocation(DeliveryAddress deliveryaddress) {

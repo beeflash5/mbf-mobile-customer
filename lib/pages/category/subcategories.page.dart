@@ -33,8 +33,9 @@ class _SubcategoriesPageState extends ConsumerState<SubcategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncSubcats =
-        ref.watch(subcategoriesControllerProvider(widget.category.id));
+    final asyncSubcats = ref.watch(
+      subcategoriesControllerProvider(widget.category.id),
+    );
     final items = asyncSubcats.valueOrNull ?? const [];
 
     asyncSubcats.whenData((_) {
@@ -57,8 +58,9 @@ class _SubcategoriesPageState extends ConsumerState<SubcategoriesPage> {
         refreshController: _refreshController,
         onRefresh: () async {
           ref.invalidate(subcategoriesControllerProvider(widget.category.id));
-          await ref
-              .read(subcategoriesControllerProvider(widget.category.id).future);
+          await ref.read(
+            subcategoriesControllerProvider(widget.category.id).future,
+          );
         },
         padding: const EdgeInsets.all(12),
         emptyWidget: EmptySubcategoriesView(),

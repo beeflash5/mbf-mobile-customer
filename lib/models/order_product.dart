@@ -32,41 +32,41 @@ class OrderProduct {
   bool reviewed;
 
   factory OrderProduct.fromJson(Map<String, dynamic> json) => OrderProduct(
-        id: json["id"] == null ? null : json["id"],
-        reviewed: json["reviewed"] ?? false,
-        quantity: json["quantity"] == null
-            ? 1
-            : int.parse(json["quantity"].toString()),
-        price: double.parse(json["price"].toString()),
-        options: json["options"] == null ? null : json["options"],
-        productPrice: double.tryParse(json["product_price"].toString()) ?? null,
-        optionsPrice: double.tryParse(json["options_price"].toString()) ?? null,
-        orderId: int.parse(json["order_id"].toString()),
-        productId: int.parse(json["product_id"].toString()),
-        createdAt: json["created_at"] == null
+    id: json["id"] == null ? null : json["id"],
+    reviewed: json["reviewed"] ?? false,
+    quantity:
+        json["quantity"] == null ? 1 : int.parse(json["quantity"].toString()),
+    price: double.parse(json["price"].toString()),
+    options: json["options"] == null ? null : json["options"],
+    productPrice: double.tryParse(json["product_price"].toString()) ?? null,
+    optionsPrice: double.tryParse(json["options_price"].toString()) ?? null,
+    orderId: int.parse(json["order_id"].toString()),
+    productId: int.parse(json["product_id"].toString()),
+    createdAt:
+        json["created_at"] == null
             ? DateTime.now()
             : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
+    updatedAt:
+        json["updated_at"] == null
             ? DateTime.now()
             : DateTime.parse(json["updated_at"]),
-        formattedDate: json["formatted_date"] ?? "",
-        product:
-            json["product"] == null ? null : Product.fromJson(json["product"]),
-      );
+    formattedDate: json["formatted_date"] ?? "",
+    product: json["product"] == null ? null : Product.fromJson(json["product"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "reviewed": reviewed,
-        "quantity": quantity,
-        "price": price,
-        "options": options,
-        "product_price": productPrice,
-        "options_price": optionsPrice,
-        "order_id": orderId,
-        "product_id": productId,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "formatted_date": formattedDate,
-        "product": product == null ? null : product?.toJson(),
-      };
+    "id": id,
+    "reviewed": reviewed,
+    "quantity": quantity,
+    "price": price,
+    "options": options,
+    "product_price": productPrice,
+    "options_price": optionsPrice,
+    "order_id": orderId,
+    "product_id": productId,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "formatted_date": formattedDate,
+    "product": product == null ? null : product?.toJson(),
+  };
 }

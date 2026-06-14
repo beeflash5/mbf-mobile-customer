@@ -22,29 +22,21 @@ class OrderDetailsRecipentInfoView extends StatelessWidget {
     final hasRecipient =
         order.recipientName != null && order.recipientName!.isNotBlank;
     if (!hasRecipient) return UiSpacer.emptySpace();
-    return VStack(
-      [
-        HStack(
-          [
-            VStack(
-              [
-                "Recipient Name".tr().text.gray500.medium.sm.make(),
-                order.recipientName!.text.medium.xl
-                    .make()
-                    .pOnly(bottom: Vx.dp20),
-              ],
-            ).expand(),
-            CustomButton(
-              icon: Icons.phone,
-              iconColor: Colors.white,
-              title: "",
-              color: AppColor.primaryColor,
-              shapeRadius: Vx.dp24,
-              onPressed: onCallRecipient,
-            ).wh(Vx.dp64, Vx.dp40).p12(),
-          ],
-        ),
-      ],
-    );
+    return VStack([
+      HStack([
+        VStack([
+          "Recipient Name".tr().text.gray500.medium.sm.make(),
+          order.recipientName!.text.medium.xl.make().pOnly(bottom: Vx.dp20),
+        ]).expand(),
+        CustomButton(
+          icon: Icons.phone,
+          iconColor: Colors.white,
+          title: "",
+          color: AppColor.primaryColor,
+          shapeRadius: Vx.dp24,
+          onPressed: onCallRecipient,
+        ).wh(Vx.dp64, Vx.dp40).p12(),
+      ]),
+    ]);
   }
 }

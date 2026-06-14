@@ -25,108 +25,94 @@ class _AppLanguageSelectorState extends State<AppLanguageSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: VStack(
-          [
+        child: VStack([
+          //
+          HStack([
+            //close icon
+            Icon(Icons.close, color: context.primaryColor).onInkTap(() {
+              context.pop();
+            }),
             //
-            HStack(
-              [
-                //close icon
-                Icon(
-                  Icons.close,
-                  color: context.primaryColor,
-                ).onInkTap(() {
-                  context.pop();
-                }),
-                //
-                "Select your preferred language"
-                    .tr()
-                    .text
-                    .xl
-                    .semiBold
-                    .make()
-                    .expand(),
-              ],
-              spacing: 20,
-            ).py20().px12(),
-            UiSpacer.divider(
-              thickness: 0.2,
-              height: 2,
-            ),
-
-            "You can change language later from the settings menu"
+            "Select your preferred language"
                 .tr()
                 .text
+                .xl
+                .semiBold
                 .make()
-                .px12()
-                .py(10),
+                .expand(),
+          ], spacing: 20).py20().px12(),
+          UiSpacer.divider(thickness: 0.2, height: 2),
 
-            //
-            //
-            CustomGridView(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              padding: EdgeInsets.all(12),
-              dataSet: AppLanguages.codes,
-              itemBuilder: (ctx, index) {
-                Widget widget = VStack(
-                  [
-                    //
-                    Flag.fromString(
-                      AppLanguages.flags[index],
-                      height: 40,
-                      width: 40,
-                    ),
-                    UiSpacer.verticalSpace(space: 5),
-                    //
-                    AppLanguages.names[index].tr().text.lg.make(),
-                  ],
-                  crossAlignment: CrossAxisAlignment.center,
-                  alignment: MainAxisAlignment.center,
-                ).card.roundedSM.color(context.canvasColor).make().onTap(() {
-                  setState(() {
-                    selectedLanguage = AppLanguages.codes[index];
-                  });
+          "You can change language later from the settings menu"
+              .tr()
+              .text
+              .make()
+              .px12()
+              .py(10),
+
+          //
+          //
+          CustomGridView(
+            crossAxisCount: 3,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            padding: EdgeInsets.all(12),
+            dataSet: AppLanguages.codes,
+            itemBuilder: (ctx, index) {
+              Widget widget = VStack(
+                [
                   //
-                  _onSelected(
-                    context,
-                    AppLanguages.codes[index],
-                    complete: false,
-                  );
+                  Flag.fromString(
+                    AppLanguages.flags[index],
+                    height: 40,
+                    width: 40,
+                  ),
+                  UiSpacer.verticalSpace(space: 5),
+                  //
+                  AppLanguages.names[index].tr().text.lg.make(),
+                ],
+                crossAlignment: CrossAxisAlignment.center,
+                alignment: MainAxisAlignment.center,
+              ).card.roundedSM.color(context.canvasColor).make().onTap(() {
+                setState(() {
+                  selectedLanguage = AppLanguages.codes[index];
                 });
-                //add badge
-                bool isSelected = selectedLanguage == AppLanguages.codes[index];
-                if (isSelected) {
-                  widget = Stack(
-                    children: [
-                      widget.wFull(context).hFull(context),
-                      //check icon, top right
-                      Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 30,
-                      ).positioned(
-                        top: 0,
-                        right: 0,
-                      ),
-                    ],
-                  );
-                }
-
                 //
-                return widget;
-              },
-            ).expand(),
+                _onSelected(
+                  context,
+                  AppLanguages.codes[index],
+                  complete: false,
+                );
+              });
+              //add badge
+              bool isSelected = selectedLanguage == AppLanguages.codes[index];
+              if (isSelected) {
+                widget = Stack(
+                  children: [
+                    widget.wFull(context).hFull(context),
+                    //check icon, top right
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 30,
+                    ).positioned(top: 0, right: 0),
+                  ],
+                );
+              }
 
-            //add confirm button
-            CustomButton(
-              title: "Save".tr(),
-              onPressed: () {
-                _onSelected(context, selectedLanguage);
-              },
-            ).p12(),
-          ],
-        ),
+              //
+              return widget;
+            },
+          ).expand(),
+
+          //add confirm button
+          CustomButton(
+            title: "Save".tr(),
+            onPressed: () {
+              _onSelected(context, selectedLanguage);
+            },
+          ).p12(),
+        ]),
       ),
     );
   }

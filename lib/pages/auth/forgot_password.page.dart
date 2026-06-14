@@ -15,8 +15,7 @@ class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  ConsumerState<ForgotPasswordPage> createState() =>
-      _ForgotPasswordPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
@@ -51,10 +50,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
         );
       }
     } catch (e) {
-      AlertService.error(
-        title: 'Forgot Password'.tr(),
-        text: e.toString(),
-      );
+      AlertService.error(title: 'Forgot Password'.tr(), text: e.toString());
     } finally {
       if (mounted) setState(() => isBusy = false);
     }
@@ -68,31 +64,32 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
       body: SafeArea(
         top: true,
         bottom: false,
-        child: VStack([
-          Image.asset(AppImages.forgotPasswordImage)
-              .hOneForth(context)
-              .centered(),
-          VStack([
-            "Forgot Password".tr().text.xl2.semiBold.make(),
-            Form(
-              key: _formKey,
-              child: VStack([
-                CustomTextFormField(
-                  labelText: "Email".tr(),
-                  hintText: "Enter your email".tr(),
-                  keyboardType: TextInputType.emailAddress,
-                  textEditingController: _emailTEC,
-                  validator: FormValidator.validateEmail,
-                ).py12(),
-                CustomButton(
-                  title: "Send Link".tr(),
-                  loading: isBusy,
-                  onPressed: _process,
-                ).h(Vx.dp48).centered().py12(),
-              ], crossAlignment: CrossAxisAlignment.end),
-            ).py20(),
-          ]).wFull(context).p20(),
-        ]).scrollVertical(),
+        child:
+            VStack([
+              Image.asset(
+                AppImages.forgotPasswordImage,
+              ).hOneForth(context).centered(),
+              VStack([
+                "Forgot Password".tr().text.xl2.semiBold.make(),
+                Form(
+                  key: _formKey,
+                  child: VStack([
+                    CustomTextFormField(
+                      labelText: "Email".tr(),
+                      hintText: "Enter your email".tr(),
+                      keyboardType: TextInputType.emailAddress,
+                      textEditingController: _emailTEC,
+                      validator: FormValidator.validateEmail,
+                    ).py12(),
+                    CustomButton(
+                      title: "Send Link".tr(),
+                      loading: isBusy,
+                      onPressed: _process,
+                    ).h(Vx.dp48).centered().py12(),
+                  ], crossAlignment: CrossAxisAlignment.end),
+                ).py20(),
+              ]).wFull(context).p20(),
+            ]).scrollVertical(),
       ),
     );
   }

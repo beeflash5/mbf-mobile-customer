@@ -63,13 +63,15 @@ class OrderDetailsState {
   }) {
     return OrderDetailsState(
       order: order ?? this.order,
-      vendorTypeId: identical(vendorTypeId, _sentinel)
-          ? this.vendorTypeId
-          : vendorTypeId as int?,
+      vendorTypeId:
+          identical(vendorTypeId, _sentinel)
+              ? this.vendorTypeId
+              : vendorTypeId as int?,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       isBusy: isBusy ?? this.isBusy,
       orderBusy: orderBusy ?? this.orderBusy,
       checkInBusy: checkInBusy ?? this.checkInBusy,
@@ -98,13 +100,15 @@ class OrderDetailsController
     int? vendorTypeId;
     final order = state.order;
     if (order.isSerice) {
-      vendorTypeId = order.orderService?.service?.vendor_type_id ??
+      vendorTypeId =
+          order.orderService?.service?.vendor_type_id ??
           order.vendor?.vendorTypeId;
     } else {
-      vendorTypeId = (order.orderProducts?.isNotEmpty ?? false)
-          ? order.orderProducts!.first.product?.vendor_type_id ??
-              order.vendor?.vendorTypeId
-          : order.vendor?.vendorTypeId;
+      vendorTypeId =
+          (order.orderProducts?.isNotEmpty ?? false)
+              ? order.orderProducts!.first.product?.vendor_type_id ??
+                  order.vendor?.vendorTypeId
+              : order.vendor?.vendorTypeId;
     }
     state = state.copyWith(vendorTypeId: vendorTypeId);
     await Future.wait([
@@ -229,8 +233,9 @@ class OrderDetailsController
   Future<void> checkIn() async {
     state = state.copyWith(checkInBusy: true);
     try {
-      final ApiResponse apiResponse =
-          await _orderRequest.checkIn(id: state.order.id);
+      final ApiResponse apiResponse = await _orderRequest.checkIn(
+        id: state.order.id,
+      );
       AlertService.dynamic(
         type: apiResponse.allGood ? AlertType.success : AlertType.error,
         title: "Check-in".tr(),
@@ -246,10 +251,12 @@ class OrderDetailsController
 
   void _handleWebsocketOrderEvent() {
     if (AppStrings.useWebsocketAssignment) {
-      OrderDetailsWebsocketService()
-          .connectToOrderChannel("${state.order.id}", (data) {
-        fetchOrderDetails();
-      });
+      OrderDetailsWebsocketService().connectToOrderChannel(
+        "${state.order.id}",
+        (data) {
+          fetchOrderDetails();
+        },
+      );
     }
   }
 
@@ -364,20 +371,18 @@ class OrderDetailsController
       builder: (ctx) {
         return Dialog(
           backgroundColor: ctx.backgroundColor,
-          child: VStack([
-            QrImageView(
-              data: state.order.verificationCode,
-              version: QrVersions.auto,
-              size: ctx.percentWidth * 40,
-            ).box.makeCentered(),
-            "${state.order.verificationCode}"
-                .text
-                .medium
-                .xl2
-                .makeCentered()
-                .py4(),
-            "Verification Code".tr().text.light.sm.makeCentered().py8(),
-          ]).p20(),
+          child:
+              VStack([
+                QrImageView(
+                  data: state.order.verificationCode,
+                  version: QrVersions.auto,
+                  size: ctx.percentWidth * 40,
+                ).box.makeCentered(),
+                "${state.order.verificationCode}".text.medium.xl2
+                    .makeCentered()
+                    .py4(),
+                "Verification Code".tr().text.light.sm.makeCentered().py8(),
+              ]).p20(),
         );
       },
     );
@@ -402,11 +407,11 @@ class OrderDetailsController
       isScrollControlled: true,
       builder: (sheetCtx) {
         return PaymentMethodsView(
-          paymentMethods: state.paymentMethods,
-          selectedPaymentMethod: state.selectedPaymentMethod,
-          isLoading: state.paymentStatusBusy,
-          onSelected: (pm) => _changeSelectedPaymentMethod(sheetCtx, pm),
-        )
+              paymentMethods: state.paymentMethods,
+              selectedPaymentMethod: state.selectedPaymentMethod,
+              isLoading: state.paymentStatusBusy,
+              onSelected: (pm) => _changeSelectedPaymentMethod(sheetCtx, pm),
+            )
             .p20()
             .scrollVertical()
             .box
@@ -424,15 +429,17 @@ class OrderDetailsController
     sheetCtx.pop();
     state = state.copyWith(paymentStatusBusy: true);
     try {
-      final ApiResponse apiResponse =
-          await _orderRequest.updateOrderPaymentMethod(
-        id: state.order.id,
-        paymentMethodId: paymentMethod?.id,
-        status: "pending",
-      );
+      final ApiResponse apiResponse = await _orderRequest
+          .updateOrderPaymentMethod(
+            id: state.order.id,
+            paymentMethodId: paymentMethod?.id,
+            status: "pending",
+          );
       final newOrder = Order.fromJson(apiResponse.body["order"]);
-      state =
-          state.copyWith(order: newOrder, selectedPaymentMethod: paymentMethod);
+      state = state.copyWith(
+        order: newOrder,
+        selectedPaymentMethod: paymentMethod,
+      );
       if (!["wallet", "cash"].contains(paymentMethod?.slug)) {
         if (paymentMethod?.slug == "offline") {
           await PaymentHelper.openExternalWebpageLink(newOrder.paymentLink);
@@ -452,5 +459,5 @@ class OrderDetailsController
 
 final orderDetailsControllerProvider = NotifierProvider.autoDispose
     .family<OrderDetailsController, OrderDetailsState, Order>(
-  OrderDetailsController.new,
-);
+      OrderDetailsController.new,
+    );

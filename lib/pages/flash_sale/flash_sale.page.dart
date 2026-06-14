@@ -14,8 +14,7 @@ class FlashSaleItemsPage extends ConsumerStatefulWidget {
   final FlashSale flashSale;
 
   @override
-  ConsumerState<FlashSaleItemsPage> createState() =>
-      _FlashSaleItemsPageState();
+  ConsumerState<FlashSaleItemsPage> createState() => _FlashSaleItemsPageState();
 }
 
 class _FlashSaleItemsPageState extends ConsumerState<FlashSaleItemsPage> {
@@ -30,10 +29,10 @@ class _FlashSaleItemsPageState extends ConsumerState<FlashSaleItemsPage> {
   @override
   Widget build(BuildContext context) {
     final flashSaleId = widget.flashSale.id ?? 0;
-    final asyncState =
-        ref.watch(flashSaleItemsControllerProvider(flashSaleId));
-    final notifier =
-        ref.read(flashSaleItemsControllerProvider(flashSaleId).notifier);
+    final asyncState = ref.watch(flashSaleItemsControllerProvider(flashSaleId));
+    final notifier = ref.read(
+      flashSaleItemsControllerProvider(flashSaleId).notifier,
+    );
 
     // selesaikan RefreshController saat data baru sampai
     asyncState.whenData((s) {

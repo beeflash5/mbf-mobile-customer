@@ -13,20 +13,14 @@ class CustomFormBuilderValidator {
   }
 
   //
-  static String? email(
-    String value, {
-    String? errorTitle,
-  }) {
+  static String? email(String value, {String? errorTitle}) {
     if (value.isEmpty || !EmailUtils.isEmail(value)) {
       return errorTitle ?? 'Invalid email address'.tr();
     }
     return null;
   }
 
-  static String? numeric(
-    String value, {
-    String? errorTitle,
-  }) {
+  static String? numeric(String value, {String? errorTitle}) {
     return inspection(
       value,
       "numeric",

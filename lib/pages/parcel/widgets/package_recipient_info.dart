@@ -24,9 +24,10 @@ class PackageRecipientInfo extends StatelessWidget {
       key: controller.recipientInfoFormKey,
       child: VStack([
         CustomListView(
-          dataSet: !AppStrings.enableParcelMultipleStops
-              ? [0, 1]
-              : controller.recipientNamesTEC,
+          dataSet:
+              !AppStrings.enableParcelMultipleStops
+                  ? [0, 1]
+                  : controller.recipientNamesTEC,
           itemBuilder: (context, index) {
             DeliveryAddress stop;
             if (index == 0) {
@@ -34,8 +35,11 @@ class PackageRecipientInfo extends StatelessWidget {
             } else if (!AppStrings.enableParcelMultipleStops) {
               stop = state.packageCheckout.dropoffLocation!;
             } else {
-              stop = state
-                  .packageCheckout.stopsLocation![index - 1].deliveryAddress!;
+              stop =
+                  state
+                      .packageCheckout
+                      .stopsLocation![index - 1]
+                      .deliveryAddress!;
             }
             return PackageStopRecipientView(
               stop,

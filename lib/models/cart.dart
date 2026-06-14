@@ -37,29 +37,32 @@ class Cart {
       optionsPrice: double.tryParse(json["options_price"].toString()) ?? 0.0,
       productPrice: double.tryParse(json["product_price"].toString()) ?? 0.0,
       product: Product.fromJson(json["product"]),
-      options: json["options"] == null
-          ? null
-          : List<Option>.from(
-              json["options"].map((x) => Option.fromJson(x)),
-            ),
-      optionsIds: json["options_ids"] == null
-          ? null
-          : List<int>.from(json["options_ids"]),
+      options:
+          json["options"] == null
+              ? null
+              : List<Option>.from(
+                json["options"].map((x) => Option.fromJson(x)),
+              ),
+      optionsIds:
+          json["options_ids"] == null
+              ? null
+              : List<int>.from(json["options_ids"]),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "selected_qty": selectedQty,
-        "price": price,
-        "options_price": optionsPrice,
-        "product_price": productPrice,
-        "product": product?.toJson(),
-        "options": options == null
+    "selected_qty": selectedQty,
+    "price": price,
+    "options_price": optionsPrice,
+    "product_price": productPrice,
+    "product": product?.toJson(),
+    "options":
+        options == null
             ? null
             : List<dynamic>.from(options!.map((x) => x.toJson())),
-        "options_ids": optionsIds == null ? null : optionsIds,
-        "options_flatten": optionsSentence,
-      };
+    "options_ids": optionsIds == null ? null : optionsIds,
+    "options_flatten": optionsSentence,
+  };
 
   //to toCheckout
   Map toCheckout() {
@@ -67,9 +70,10 @@ class Cart {
       "selected_qty": selectedQty,
       "price": price,
       "product": product?.toCheckout(),
-      "options": options == null
-          ? null
-          : List<dynamic>.from(options!.map((x) => x.toJson())),
+      "options":
+          options == null
+              ? null
+              : List<dynamic>.from(options!.map((x) => x.toJson())),
       "options_ids": optionsIds == null ? null : optionsIds,
       "options_flatten": optionsSentence,
       //options_price

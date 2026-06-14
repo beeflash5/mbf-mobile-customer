@@ -12,28 +12,24 @@ class VendorInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        CustomImage(
-          imageUrl: vendor.logo,
-          width: 25,
-          height: 25,
-        ).box.roundedFull.clip(Clip.antiAlias).make(),
-        UiSpacer.hSpace(10),
-        VStack(
-          [
-            "${vendor.name}".text.sm.maxLines(1).ellipsis.make(),
-            VxRating(
-              maxRating: 5,
-              value: vendor.rating.toDouble(),
-              size: 10,
-              isSelectable: false,
-              onRatingUpdate: (value) {},
-              selectionColor: AppColor.ratingColor,
-            ),
-          ],
-        ).expand(),
-      ],
-    );
+    return HStack([
+      CustomImage(
+        imageUrl: vendor.logo,
+        width: 25,
+        height: 25,
+      ).box.roundedFull.clip(Clip.antiAlias).make(),
+      UiSpacer.hSpace(10),
+      VStack([
+        "${vendor.name}".text.sm.maxLines(1).ellipsis.make(),
+        VxRating(
+          maxRating: 5,
+          value: vendor.rating.toDouble(),
+          size: 10,
+          isSelectable: false,
+          onRatingUpdate: (value) {},
+          selectionColor: AppColor.ratingColor,
+        ),
+      ]).expand(),
+    ]);
   }
 }

@@ -35,10 +35,7 @@ class EmptyState extends StatelessWidget {
           //
           (imageUrl != null && imageUrl.isNotEmptyAndNotNull)
               ? Image.asset(imageUrl!)
-                  .wh(
-                    context.percentWidth * 30,
-                    context.percentWidth * 30,
-                  )
+                  .wh(context.percentWidth * 30, context.percentWidth * 30)
                   .box
                   .makeCentered()
                   .wFull(context)
@@ -53,10 +50,10 @@ class EmptyState extends StatelessWidget {
           //
           (auth && showImage)
               ? Image.asset(
-                  AppImages.auth,
-                  width: context.percentWidth * 25,
-                  height: context.percentWidth * 25,
-                ).box.makeCentered().py12().wFull(context)
+                AppImages.auth,
+                width: context.percentWidth * 25,
+                height: context.percentWidth * 25,
+              ).box.makeCentered().py12().wFull(context)
               : SizedBox.shrink(),
           //
           auth
@@ -69,22 +66,22 @@ class EmptyState extends StatelessWidget {
                   .makeCentered()
                   .py12()
               : description.isNotEmpty
-                  ? description.text.sm.light.center.makeCentered()
-                  : SizedBox.shrink(),
+              ? description.text.sm.light.center.makeCentered()
+              : SizedBox.shrink(),
 
           //
           auth
               ? CustomButton(
-                  title: "Login / Register".tr(),
-                  onPressed: actionPressed,
-                  elevation: 4,
-                ).wTwoThird(context).centered()
+                title: "Login / Register".tr(),
+                onPressed: actionPressed,
+                elevation: 4,
+              ).wTwoThird(context).centered()
               : showAction
-                  ? CustomButton(
-                      title: actionText.tr(),
-                      onPressed: actionPressed,
-                    ).centered().py12()
-                  : SizedBox.shrink(),
+              ? CustomButton(
+                title: actionText.tr(),
+                onPressed: actionPressed,
+              ).centered().py12()
+              : SizedBox.shrink(),
         ],
         crossAlignment: CrossAxisAlignment.center,
         alignment: MainAxisAlignment.center,

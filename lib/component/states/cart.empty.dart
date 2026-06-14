@@ -13,10 +13,7 @@ class EmptyCart extends StatelessWidget {
       [
         //
         Image.asset(AppImages.emptyCart)
-            .wh(
-              context.percentWidth * 50,
-              context.percentWidth * 50,
-            )
+            .wh(context.percentWidth * 50, context.percentWidth * 50)
             .box
             .makeCentered()
             .wFull(context),

@@ -43,8 +43,9 @@ class SectionCouponsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final couponsAsync =
-        ref.watch(couponsByVendorTypeProvider(vendorType?.id ?? 0));
+    final couponsAsync = ref.watch(
+      couponsByVendorTypeProvider(vendorType?.id ?? 0),
+    );
     final coupons = couponsAsync.valueOrNull ?? const [];
     final isBusy = couponsAsync.isLoading;
 
@@ -61,8 +62,7 @@ class SectionCouponsView extends ConsumerWidget {
           onPressed: (c) => context.pushRoute('/coupons/${c.id}', extra: c),
         ).w(itemWidth ?? (context.percentWidth * 50));
       },
-      separatorBuilder:
-          separator != null ? (ctx, index) => separator! : null,
+      separatorBuilder: separator != null ? (ctx, index) => separator! : null,
     );
 
     if (coupons.isEmpty && !isBusy) return UiSpacer.emptySpace();

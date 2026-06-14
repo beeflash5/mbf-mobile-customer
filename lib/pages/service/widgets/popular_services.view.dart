@@ -28,8 +28,9 @@ class _PopularServicesViewState extends ConsumerState<PopularServicesView> {
   @override
   Widget build(BuildContext context) {
     final vendorTypeId = widget.vendorType.id;
-    final asyncServices =
-        ref.watch(popularServicesControllerProvider(vendorTypeId));
+    final asyncServices = ref.watch(
+      popularServicesControllerProvider(vendorTypeId),
+    );
     final services = asyncServices.valueOrNull ?? const [];
     final isLoading = asyncServices.isLoading;
 
@@ -37,47 +38,48 @@ class _PopularServicesViewState extends ConsumerState<PopularServicesView> {
 
     return VStack([
       HStack([
-        ("Popular".tr() + " ${widget.vendorType.name}")
-            .text
-            .xl
-            .bold
+        ("Popular".tr() + " ${widget.vendorType.name}").text.xl.bold
             .make()
             .expand(),
         CustomTextButton(
           title: "See all".tr(),
-          onPressed: () => NavigationService.openServiceSearch(
-            context,
-            byLocation: AppStrings.enableFatchByLocation,
-            vendorType: widget.vendorType,
-            showServices: true,
-            showVendors: false,
-          ),
+          onPressed:
+              () => NavigationService.openServiceSearch(
+                context,
+                byLocation: AppStrings.enableFatchByLocation,
+                vendorType: widget.vendorType,
+                showServices: true,
+                showVendors: false,
+              ),
         ),
       ], spacing: 20).px12(),
-      Builder(builder: (context) {
-        const double spacing = 20;
-        final double eachWidth = (context.screenWidth - (spacing * 2)) / 2;
-        final List<Widget> children = services.map((service) {
-          return ServiceGridViewItem(
-            service: service,
-            onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
-          ).w(eachWidth);
-        }).toList();
-        children.insert(0, 0.widthBox);
-        children.add(0.widthBox);
-        return Scrollbar(
-          thumbVisibility: false,
-          trackVisibility: false,
-          interactive: true,
-          child: HStack(
-            children,
-            spacing: spacing,
-            axisSize: MainAxisSize.min,
-            alignment: MainAxisAlignment.start,
-            crossAlignment: CrossAxisAlignment.start,
-          ).scrollHorizontal(physics: const BouncingScrollPhysics()),
-        );
-      }),
+      Builder(
+        builder: (context) {
+          const double spacing = 20;
+          final double eachWidth = (context.screenWidth - (spacing * 2)) / 2;
+          final List<Widget> children =
+              services.map((service) {
+                return ServiceGridViewItem(
+                  service: service,
+                  onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
+                ).w(eachWidth);
+              }).toList();
+          children.insert(0, 0.widthBox);
+          children.add(0.widthBox);
+          return Scrollbar(
+            thumbVisibility: false,
+            trackVisibility: false,
+            interactive: true,
+            child: HStack(
+              children,
+              spacing: spacing,
+              axisSize: MainAxisSize.min,
+              alignment: MainAxisAlignment.start,
+              crossAlignment: CrossAxisAlignment.start,
+            ).scrollHorizontal(physics: const BouncingScrollPhysics()),
+          );
+        },
+      ),
     ]);
   }
 }

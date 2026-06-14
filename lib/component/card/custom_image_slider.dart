@@ -38,23 +38,22 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: VStack(
-        [
-          CarouselSlider(
-            options: CarouselOptions(
-              viewportFraction: widget.viewportFraction,
-              autoPlay: widget.autoplay,
-              initialPage: 1,
-              height: (widget.height ?? AppStrings.bannerHeight),
-              disableCenter: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  currentIndex = index;
-                });
-              },
-            ),
-            items: widget.images.map(
-              (image) {
+      child: VStack([
+        CarouselSlider(
+          options: CarouselOptions(
+            viewportFraction: widget.viewportFraction,
+            autoPlay: widget.autoplay,
+            initialPage: 1,
+            height: (widget.height ?? AppStrings.bannerHeight),
+            disableCenter: true,
+            onPageChanged: (index, reason) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
+          ),
+          items:
+              widget.images.map((image) {
                 if (image is Widget) {
                   return image;
                 } else {
@@ -66,26 +65,25 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
                     canZoom: widget.canZoom,
                   );
                 }
-              },
-            ).toList(),
-          ),
-          //indicators
-          CustomVisibilty(
-            visible: widget.images.length <= 10 || widget.showIndicators,
-            child: AnimatedSmoothIndicator(
-              activeIndex: currentIndex,
-              count: widget.images.length,
-              textDirection:
-                  Utils.isArabic ? TextDirection.rtl : TextDirection.ltr,
-              effect: ExpandingDotsEffect(
-                dotHeight: 6,
-                dotWidth: 10,
-                activeDotColor: context.primaryColor,
-              ),
-            ).centered().py8(),
-          ),
-        ],
-      ),
+              }).toList(),
+        ),
+        //indicators
+        CustomVisibilty(
+          visible: widget.images.length <= 10 || widget.showIndicators,
+          child:
+              AnimatedSmoothIndicator(
+                activeIndex: currentIndex,
+                count: widget.images.length,
+                textDirection:
+                    Utils.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                effect: ExpandingDotsEffect(
+                  dotHeight: 6,
+                  dotWidth: 10,
+                  activeDotColor: context.primaryColor,
+                ),
+              ).centered().py8(),
+        ),
+      ]),
     );
   }
 }

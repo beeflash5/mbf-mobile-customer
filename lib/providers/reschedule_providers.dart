@@ -4,8 +4,7 @@ import 'package:fuodz/models/order.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/vendor.request.dart';
 
-final _vendorRequestProvider =
-    Provider<VendorRequest>((_) => VendorRequest());
+final _vendorRequestProvider = Provider<VendorRequest>((_) => VendorRequest());
 
 sealed class RescheduleResult {
   const RescheduleResult();
@@ -48,30 +47,27 @@ class RescheduleState {
     String? deliverySlotTime,
     String? tableSelected,
     bool? loadingTables,
-  }) =>
-      RescheduleState(
-        vendor: vendor ?? this.vendor,
-        tables: tables ?? this.tables,
-        availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
-        deliverySlotDate: deliverySlotDate ?? this.deliverySlotDate,
-        deliverySlotTime: deliverySlotTime ?? this.deliverySlotTime,
-        tableSelected: tableSelected ?? this.tableSelected,
-        loadingTables: loadingTables ?? this.loadingTables,
-      );
+  }) => RescheduleState(
+    vendor: vendor ?? this.vendor,
+    tables: tables ?? this.tables,
+    availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
+    deliverySlotDate: deliverySlotDate ?? this.deliverySlotDate,
+    deliverySlotTime: deliverySlotTime ?? this.deliverySlotTime,
+    tableSelected: tableSelected ?? this.tableSelected,
+    loadingTables: loadingTables ?? this.loadingTables,
+  );
 }
 
 /// Family arg = Order being rescheduled.
-class RescheduleController
-    extends FamilyAsyncNotifier<RescheduleState, Order> {
+class RescheduleController extends FamilyAsyncNotifier<RescheduleState, Order> {
   late Order _order;
 
   @override
   Future<RescheduleState> build(Order arg) async {
     _order = arg;
-    final vendor = await ref.read(_vendorRequestProvider).vendorDetails(
-      arg.vendorId!,
-      params: {'type': 'brief'},
-    );
+    final vendor = await ref
+        .read(_vendorRequestProvider)
+        .vendorDetails(arg.vendorId!, params: {'type': 'brief'});
     return RescheduleState(vendor: vendor);
   }
 
@@ -79,11 +75,13 @@ class RescheduleController
     final cur = state.valueOrNull;
     if (cur == null || cur.vendor == null) return;
     final times = cur.vendor!.deliverySlots[index].times;
-    state = AsyncData(cur.copyWith(
-      deliverySlotDate: date,
-      availableTimeSlots: times,
-      loadingTables: true,
-    ));
+    state = AsyncData(
+      cur.copyWith(
+        deliverySlotDate: date,
+        availableTimeSlots: times,
+        loadingTables: true,
+      ),
+    );
     await _loadTables(date);
   }
 
@@ -111,10 +109,7 @@ class RescheduleController
       for (int i = 1; i <= (cur.vendor!.qty_tables ?? 0); i++) {
         tables.add({'name': '$i', 'available': !occupied.contains(i)});
       }
-      state = AsyncData(cur.copyWith(
-        tables: tables,
-        loadingTables: false,
-      ));
+      state = AsyncData(cur.copyWith(tables: tables, loadingTables: false));
     } catch (e) {
       state = AsyncData(cur.copyWith(loadingTables: false));
     }
@@ -125,12 +120,14 @@ class RescheduleController
     if (cur == null) return const RescheduleFailure('No state');
     state = const AsyncLoading();
     try {
-      final res = await ref.read(_vendorRequestProvider).vendorReschulde(
-        schedule_date: cur.deliverySlotDate!,
-        schedule_time: cur.deliverySlotTime!,
-        selected_table_id: cur.tableSelected!,
-        order_id: _order.id,
-      );
+      final res = await ref
+          .read(_vendorRequestProvider)
+          .vendorReschulde(
+            schedule_date: cur.deliverySlotDate!,
+            schedule_time: cur.deliverySlotTime!,
+            selected_table_id: cur.tableSelected!,
+            order_id: _order.id,
+          );
       state = AsyncData(cur);
       return res.allGood
           ? RescheduleSuccess(res.message ?? '')
@@ -142,7 +139,7 @@ class RescheduleController
   }
 }
 
-final rescheduleControllerProvider = AsyncNotifierProvider.family<
-    RescheduleController, RescheduleState, Order>(
-  RescheduleController.new,
-);
+final rescheduleControllerProvider =
+    AsyncNotifierProvider.family<RescheduleController, RescheduleState, Order>(
+      RescheduleController.new,
+    );

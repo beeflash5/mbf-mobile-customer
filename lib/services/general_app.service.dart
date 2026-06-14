@@ -6,7 +6,7 @@ import 'package:fuodz/services/firebase.service.dart';
 class GeneralAppService {
   //
 
-//Hnadle background message
+  //Hnadle background message
   @pragma('vm:entry-point')
   static Future<void> onBackgroundMessageHandler(RemoteMessage message) async {
     //if it has not data then it is a normal notification, so ignore it

@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-
 Guide GuideFromJson(String str) => Guide.fromJson(json.decode(str));
 
 String GuideToJson(Guide data) => json.encode(data.toJson());

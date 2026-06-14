@@ -41,12 +41,13 @@ class MyMasonryGrid extends StatelessWidget {
     }
     List<Widget> children = [];
     for (int i = 0; i < sublists.length; i++) {
-      Widget indexColumn = VStack(
-        sublists[i],
-        crossAlignment: CrossAxisAlignment.start,
-        alignment: MainAxisAlignment.start,
-        spacing: mainAxisSpacing,
-      ).expand();
+      Widget indexColumn =
+          VStack(
+            sublists[i],
+            crossAlignment: CrossAxisAlignment.start,
+            alignment: MainAxisAlignment.start,
+            spacing: mainAxisSpacing,
+          ).expand();
       children.add(indexColumn);
     }
 
@@ -86,5 +87,6 @@ class MyMasonryGrid extends StatelessWidget {
       spacing: crossAxisSpacing,
     );
   }
+
   //
 }

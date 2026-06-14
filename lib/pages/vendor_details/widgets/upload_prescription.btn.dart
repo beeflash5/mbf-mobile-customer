@@ -23,11 +23,12 @@ class UploadPrescriptionFab extends StatelessWidget {
     return FloatingActionButton.extended(
       onPressed: () => context.pushWidget(PharmacyUploadPrescription(vendor)),
       backgroundColor: AppColor.primaryColor,
-      label: "Upload Prescription"
-          .tr()
-          .text
-          .color(Utils.textColorByPrimaryColor())
-          .make(),
+      label:
+          "Upload Prescription"
+              .tr()
+              .text
+              .color(Utils.textColorByPrimaryColor())
+              .make(),
       icon: Icon(
         Icons.medication,
         color: Utils.textColorByPrimaryColor(),

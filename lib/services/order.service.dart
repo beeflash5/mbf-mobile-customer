@@ -15,7 +15,9 @@ class OrderService {
   }) async {
     if ((order.paymentMethod?.slug ?? "offline") != "offline") {
       if (context == null) {
-        throw StateError("openOrderPayment needs a BuildContext for in-app webview");
+        throw StateError(
+          "openOrderPayment needs a BuildContext for in-app webview",
+        );
       }
       return PaymentHelper.openWebpageLink(context, order.paymentLink);
     }

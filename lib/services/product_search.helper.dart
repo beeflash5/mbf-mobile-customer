@@ -37,10 +37,7 @@ class ProductSearchHelper {
   }) async {
     final context = AppService().navigatorKey.currentContext;
     context!.push(
-      (context) => ServiceSearchPage(
-        vendorType: vendorType,
-        byLocation: false,
-      ),
+      (context) => ServiceSearchPage(vendorType: vendorType, byLocation: false),
     );
   }
 }

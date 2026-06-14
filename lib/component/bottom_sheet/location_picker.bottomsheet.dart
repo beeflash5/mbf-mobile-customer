@@ -250,19 +250,26 @@ class _LocationPickerSheetState extends ConsumerState<_LocationPickerSheet> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () async {
-                      final result = await LocationPickerHelper.newPlacePicker(context);
+                      final result = await LocationPickerHelper.newPlacePicker(
+                        context,
+                      );
                       if (result == null) return;
                       if (result is PickResult) {
                         String? locality;
                         String? adminArea;
                         String? countryName;
-                        if (result.addressComponents != null && result.addressComponents!.isNotEmpty) {
+                        if (result.addressComponents != null &&
+                            result.addressComponents!.isNotEmpty) {
                           for (final c in result.addressComponents!) {
-                            if (c.types.contains('locality')) locality = c.longName;
-                            if (c.types.contains('administrative_area_level_1')) {
+                            if (c.types.contains('locality'))
+                              locality = c.longName;
+                            if (c.types.contains(
+                              'administrative_area_level_1',
+                            )) {
                               adminArea = c.longName;
                             }
-                            if (c.types.contains('country')) countryName = c.longName;
+                            if (c.types.contains('country'))
+                              countryName = c.longName;
                           }
                         }
                         final address = Address(

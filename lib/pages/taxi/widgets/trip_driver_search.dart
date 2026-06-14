@@ -18,8 +18,9 @@ class TripDriverSearch extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     return Positioned(
       bottom: Vx.dp20,
       left: Vx.dp20,
@@ -28,27 +29,30 @@ class TripDriverSearch extends ConsumerWidget {
         onChange: (size) {
           taxiController.updateGoogleMapPadding(height: size.height);
         },
-        child: VStack(
-          [
-            "Searching for a driver. Please wait...".tr().text.makeCentered(),
-            const BusyIndicator().centered().py12(),
-            Visibility(
-              visible: taxiState.onGoingOrderTrip?.canCancelTaxi ?? false,
-              child: CustomTextButton(
-                title: "Cancel Booking".tr(),
-                titleColor: AppColor.getStausColor("failed"),
-                loading: taxiState.tripBusy,
-                onPressed: taxiController.cancelTrip,
-              ).centered(),
-            ),
-          ],
-        )
-            .p20()
-            .box
-            .color(context.theme.colorScheme.surface)
-            .roundedSM
-            .outerShadow2Xl
-            .make(),
+        child:
+            VStack([
+                  "Searching for a driver. Please wait..."
+                      .tr()
+                      .text
+                      .makeCentered(),
+                  const BusyIndicator().centered().py12(),
+                  Visibility(
+                    visible: taxiState.onGoingOrderTrip?.canCancelTaxi ?? false,
+                    child:
+                        CustomTextButton(
+                          title: "Cancel Booking".tr(),
+                          titleColor: AppColor.getStausColor("failed"),
+                          loading: taxiState.tripBusy,
+                          onPressed: taxiController.cancelTrip,
+                        ).centered(),
+                  ),
+                ])
+                .p20()
+                .box
+                .color(context.theme.colorScheme.surface)
+                .roundedSM
+                .outerShadow2Xl
+                .make(),
       ),
     );
   }

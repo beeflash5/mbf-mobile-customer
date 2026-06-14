@@ -19,16 +19,17 @@ import 'package:fuodz/services/wallet.request.dart';
 
 import 'package:fuodz/services/payment_method.request.dart';
 
-final _vendorTypeRequestProvider =
-    Provider<VendorTypeRequest>((_) => VendorTypeRequest());
-final _orderRequestProvider =
-    Provider<OrderRequest>((_) => OrderRequest());
-final _walletRequestProvider =
-    Provider<WalletRequest>((_) => WalletRequest());
-final _categoryRequestProvider =
-    Provider<CategoryRequest>((_) => CategoryRequest());
-final _paymentMethodRequestProvider =
-    Provider<PaymentMethodRequest>((_) => PaymentMethodRequest());
+final _vendorTypeRequestProvider = Provider<VendorTypeRequest>(
+  (_) => VendorTypeRequest(),
+);
+final _orderRequestProvider = Provider<OrderRequest>((_) => OrderRequest());
+final _walletRequestProvider = Provider<WalletRequest>((_) => WalletRequest());
+final _categoryRequestProvider = Provider<CategoryRequest>(
+  (_) => CategoryRequest(),
+);
+final _paymentMethodRequestProvider = Provider<PaymentMethodRequest>(
+  (_) => PaymentMethodRequest(),
+);
 
 class WelcomeState {
   const WelcomeState({
@@ -59,17 +60,16 @@ class WelcomeState {
     List<Blog>? blogs,
     Wallet? wallet,
     User? currentUser,
-  }) =>
-      WelcomeState(
-        vendorTypes: vendorTypes ?? this.vendorTypes,
-        flashSales: flashSales ?? this.flashSales,
-        bestSelling: bestSelling ?? this.bestSelling,
-        topRated: topRated ?? this.topRated,
-        orders: orders ?? this.orders,
-        blogs: blogs ?? this.blogs,
-        wallet: wallet ?? this.wallet,
-        currentUser: currentUser ?? this.currentUser,
-      );
+  }) => WelcomeState(
+    vendorTypes: vendorTypes ?? this.vendorTypes,
+    flashSales: flashSales ?? this.flashSales,
+    bestSelling: bestSelling ?? this.bestSelling,
+    topRated: topRated ?? this.topRated,
+    orders: orders ?? this.orders,
+    blogs: blogs ?? this.blogs,
+    wallet: wallet ?? this.wallet,
+    currentUser: currentUser ?? this.currentUser,
+  );
 }
 
 sealed class WalletTopupResult {
@@ -118,11 +118,9 @@ class WelcomeController extends AsyncNotifier<WelcomeState> {
       currentUser = await AuthServices.getCurrentUser(force: true);
     }
 
-    final vendorTypes =
-        await ref.read(_vendorTypeRequestProvider).index();
+    final vendorTypes = await ref.read(_vendorTypeRequestProvider).index();
     final topRated = await ref.read(_categoryRequestProvider).topService();
-    final bestSelling =
-        await ref.read(_categoryRequestProvider).bestService();
+    final bestSelling = await ref.read(_categoryRequestProvider).bestService();
     _blogPage = 1;
     _blogHasMore = true;
     final blogs = await _loadBlogs(1, 2);
@@ -179,11 +177,17 @@ class WelcomeController extends AsyncNotifier<WelcomeState> {
     try {
       int? paymentMethodId;
       try {
-        final paymentMethods = await ref.read(_paymentMethodRequestProvider).getPaymentOptions();
-        final activeMethods = paymentMethods.where((m) => m.isActive == 1 && m.isCash == 0).toList();
+        final paymentMethods =
+            await ref.read(_paymentMethodRequestProvider).getPaymentOptions();
+        final activeMethods =
+            paymentMethods
+                .where((m) => m.isActive == 1 && m.isCash == 0)
+                .toList();
         if (activeMethods.isNotEmpty) {
           final topupMethod = activeMethods.firstWhere(
-            (m) => m.slug.toLowerCase().contains('xendit') || m.slug.toLowerCase().contains('midtrans'),
+            (m) =>
+                m.slug.toLowerCase().contains('xendit') ||
+                m.slug.toLowerCase().contains('midtrans'),
             orElse: () => activeMethods.first,
           );
           paymentMethodId = topupMethod.id;
@@ -192,8 +196,9 @@ class WelcomeController extends AsyncNotifier<WelcomeState> {
         print("Error fetching payment methods for topup: $e");
       }
 
-      final link =
-          await ref.read(_walletRequestProvider).walletTopup(amount, paymentMethodId: paymentMethodId);
+      final link = await ref
+          .read(_walletRequestProvider)
+          .walletTopup(amount, paymentMethodId: paymentMethodId);
       return WalletTopupSuccess(link);
     } catch (e) {
       return WalletTopupFailure('$e');
@@ -212,5 +217,5 @@ class WelcomeController extends AsyncNotifier<WelcomeState> {
 
 final welcomeControllerProvider =
     AsyncNotifierProvider<WelcomeController, WelcomeState>(
-  WelcomeController.new,
-);
+      WelcomeController.new,
+    );

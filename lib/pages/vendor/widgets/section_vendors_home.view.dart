@@ -62,8 +62,7 @@ class SectionVendorsHomeView extends ConsumerWidget {
       type: type,
       byLocation: byLocation,
     );
-    final asyncVendors =
-        ref.watch(sectionVendorsControllerProvider(args));
+    final asyncVendors = ref.watch(sectionVendorsControllerProvider(args));
     final vendors = asyncVendors.valueOrNull ?? const <Vendor>[];
 
     final Widget listView = CustomListView(
@@ -72,32 +71,32 @@ class SectionVendorsHomeView extends ConsumerWidget {
       dataSet: vendors,
       isLoading: asyncVendors.isLoading,
       noScrollPhysics: scrollDirection != Axis.horizontal,
-      itemBuilder: itemBuilder != null
-          ? (ctx, index) => itemBuilder!(ctx, index, vendors[index])
-          : (context, index) {
-              final vendor = vendors[index];
-              if (viewType != null && viewType == HorizontalVendorListItem) {
-                return HorizontalVendorListItem(
-                  vendor,
-                  onPressed: (v) => _openVendor(context, v),
-                );
-              } else if (vendor.vendorType.isFood) {
-                return FittedBox(
-                  child: FoodVendorListItem(
+      itemBuilder:
+          itemBuilder != null
+              ? (ctx, index) => itemBuilder!(ctx, index, vendors[index])
+              : (context, index) {
+                final vendor = vendors[index];
+                if (viewType != null && viewType == HorizontalVendorListItem) {
+                  return HorizontalVendorListItem(
+                    vendor,
+                    onPressed: (v) => _openVendor(context, v),
+                  );
+                } else if (vendor.vendorType.isFood) {
+                  return FittedBox(
+                    child: FoodVendorListItem(
+                      vendor: vendor,
+                      onPressed: (v) => _openVendor(context, v),
+                    ).w(itemWidth ?? (context.percentWidth * 50)),
+                  );
+                } else {
+                  return VendorHomeListItem(
                     vendor: vendor,
                     onPressed: (v) => _openVendor(context, v),
-                  ).w(itemWidth ?? (context.percentWidth * 50)),
-                );
-              } else {
-                return VendorHomeListItem(
-                  vendor: vendor,
-                  onPressed: (v) => _openVendor(context, v),
-                ).w(260);
-              }
-            },
+                  ).w(260);
+                }
+              },
       emptyWidget: EmptyVendor(),
-      separatorBuilder:
-          separator != null ? (ctx, index) => separator! : null,
+      separatorBuilder: separator != null ? (ctx, index) => separator! : null,
     );
 
     return CustomVisibilty(
@@ -113,8 +112,8 @@ class SectionVendorsHomeView extends ConsumerWidget {
                 title.text.xl.semiBold.make().expand(),
                 if (onSeeAllPressed != null)
                   "See more".tr().text.sm.make().onInkTap(
-                        () => onSeeAllPressed!(),
-                      ),
+                    () => onSeeAllPressed!(),
+                  ),
               ], spacing: 10).wFull(context),
             ),
           ),

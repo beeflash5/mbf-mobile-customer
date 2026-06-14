@@ -87,49 +87,57 @@ class VehicleType {
       minFare: json["min_fare"].toString().toDoubleOrNull() ?? 0,
       total: json["total"].toString().toDoubleOrNull() ?? 0,
       tax: json["tax"].toString().toDoubleOrNull() ?? 0,
-      isActive: json["is_active"] == null ? 0 : int.parse(json["is_active"].toString()),
-      createdAt: json["created_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
-      updatedAt: json["updated_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
+      isActive:
+          json["is_active"] == null
+              ? 0
+              : int.parse(json["is_active"].toString()),
+      createdAt:
+          json["created_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["created_at"].toString()) ??
+                  DateTime.now(),
+      updatedAt:
+          json["updated_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["updated_at"].toString()) ??
+                  DateTime.now(),
       formattedDate: json["formatted_date"] ?? "",
       photo: json["photo"] ?? "",
       encrypted: json["encrypted"],
       currency:
           json["currency"] != null ? Currency.fromJSON(json["currency"]) : null,
       //new fields
-      surgeRate: json["surge_rate"] != null
-          ? (json["surge_rate"].toString().toDoubleOrNull())
-          : null,
+      surgeRate:
+          json["surge_rate"] != null
+              ? (json["surge_rate"].toString().toDoubleOrNull())
+              : null,
       icon: json["icon"],
       iconBase64: json["icon_base64"],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "slug": slug,
-        "base_fare": baseFare,
-        "distance_fare": distanceFare,
-        "time_fare": timeFare,
-        "min_fare": minFare,
-        "total": total,
-        "tax": tax,
-        "is_active": isActive,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "formatted_date": formattedDate,
-        "photo": photo,
-        "encrypted": encrypted,
-        "currency": currency != null ? currency?.toJson() : null,
-        //new fields
-        "surge_rate": surgeRate,
-        "icon": icon,
-        "icon_base64": iconBase64,
-      };
+    "id": id,
+    "name": name,
+    "slug": slug,
+    "base_fare": baseFare,
+    "distance_fare": distanceFare,
+    "time_fare": timeFare,
+    "min_fare": minFare,
+    "total": total,
+    "tax": tax,
+    "is_active": isActive,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "formatted_date": formattedDate,
+    "photo": photo,
+    "encrypted": encrypted,
+    "currency": currency != null ? currency?.toJson() : null,
+    //new fields
+    "surge_rate": surgeRate,
+    "icon": icon,
+    "icon_base64": iconBase64,
+  };
 
   //
   bool get hasSurge {

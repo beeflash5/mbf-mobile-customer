@@ -93,12 +93,13 @@ class _OrdersPageState extends ConsumerState<OrdersPage>
               return OrderListItem(
                 order: order,
                 orderPressed: () => _openOrderDetails(order),
-                onPayPressed: () => PaymentHelper.openOrderPayment(
-                  context,
-                  order.paymentLink,
-                  offline:
-                      (order.paymentMethod?.slug ?? 'offline') == 'offline',
-                ),
+                onPayPressed:
+                    () => PaymentHelper.openOrderPayment(
+                      context,
+                      order.paymentLink,
+                      offline:
+                          (order.paymentMethod?.slug ?? 'offline') == 'offline',
+                    ),
               );
             },
           ).expand(),

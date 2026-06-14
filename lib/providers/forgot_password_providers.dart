@@ -43,7 +43,8 @@ class ForgotPasswordState {
     this.phase = const ForgotIdle(),
     this.isBusy = false,
   }) : selectedCountry =
-            selectedCountry ?? Country.parse(PhoneUtilService.countryCode ?? 'us');
+           selectedCountry ??
+           Country.parse(PhoneUtilService.countryCode ?? 'us');
 
   final Country selectedCountry;
   final ForgotPasswordPhase phase;
@@ -53,12 +54,11 @@ class ForgotPasswordState {
     Country? selectedCountry,
     ForgotPasswordPhase? phase,
     bool? isBusy,
-  }) =>
-      ForgotPasswordState(
-        selectedCountry: selectedCountry ?? this.selectedCountry,
-        phase: phase ?? this.phase,
-        isBusy: isBusy ?? this.isBusy,
-      );
+  }) => ForgotPasswordState(
+    selectedCountry: selectedCountry ?? this.selectedCountry,
+    phase: phase ?? this.phase,
+    isBusy: isBusy ?? this.isBusy,
+  );
 }
 
 class ForgotPasswordController extends Notifier<ForgotPasswordState> {
@@ -105,8 +105,8 @@ class ForgotPasswordController extends Notifier<ForgotPasswordState> {
       phoneNumber: _accountPhoneNumber,
       verificationCompleted: (credential) async {
         try {
-          final userCredential =
-              await FirebaseAuth.instance.signInWithCredential(credential);
+          final userCredential = await FirebaseAuth.instance
+              .signInWithCredential(credential);
           _firebaseToken = await userCredential.user?.getIdToken();
           _firebaseVerificationId = credential.verificationId;
           if (!completer.isCompleted) {
@@ -117,18 +117,18 @@ class ForgotPasswordController extends Notifier<ForgotPasswordState> {
         }
       },
       verificationFailed: (e) {
-        final msg = (e.code == 'invalid-phone-number')
-            ? 'Invalid Phone Number'
-            : (e.message ?? 'Error');
+        final msg =
+            (e.code == 'invalid-phone-number')
+                ? 'Invalid Phone Number'
+                : (e.message ?? 'Error');
         if (!completer.isCompleted) completer.complete(ForgotFailure(msg));
       },
       codeSent: (verificationId, _) {
         _firebaseVerificationId = verificationId;
         if (!completer.isCompleted) {
-          completer.complete(ForgotAwaitingOtp(
-            phone: _accountPhoneNumber,
-            email: _accountEmail,
-          ));
+          completer.complete(
+            ForgotAwaitingOtp(phone: _accountPhoneNumber, email: _accountEmail),
+          );
         }
       },
       codeAutoRetrievalTimeout: (_) {},
@@ -164,8 +164,9 @@ class ForgotPasswordController extends Notifier<ForgotPasswordState> {
         verificationId: _firebaseVerificationId!,
         smsCode: smsCode,
       );
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
       _firebaseToken = await userCredential.user?.getIdToken();
       const result = ForgotAwaitingPassword();
       state = state.copyWith(isBusy: false, phase: result);
@@ -199,23 +200,27 @@ class ForgotPasswordController extends Notifier<ForgotPasswordState> {
     required bool isCustomOtp,
   }) async {
     state = state.copyWith(isBusy: true);
-    final response = await ref.read(_authRequestProvider).resetPasswordRequest(
-      phone: _accountPhoneNumber!,
-      password: password,
-      firebaseToken: isCustomOtp ? null : _firebaseToken,
-      customToken: isCustomOtp ? _firebaseToken : null,
-    );
-    final result = response.allGood
-        ? ForgotSuccess(response.message ?? '')
-        : ForgotFailure(response.message ?? 'Failed');
+    final response = await ref
+        .read(_authRequestProvider)
+        .resetPasswordRequest(
+          phone: _accountPhoneNumber!,
+          password: password,
+          firebaseToken: isCustomOtp ? null : _firebaseToken,
+          customToken: isCustomOtp ? _firebaseToken : null,
+        );
+    final result =
+        response.allGood
+            ? ForgotSuccess(response.message ?? '')
+            : ForgotFailure(response.message ?? 'Failed');
     state = state.copyWith(isBusy: false, phase: result);
     return result;
   }
 
   Future<String?> resendCustomOTP() async {
     try {
-      final response =
-          await ref.read(_authRequestProvider).sendOTP(_accountPhoneNumber!, null);
+      final response = await ref
+          .read(_authRequestProvider)
+          .sendOTP(_accountPhoneNumber!, null);
       return response.message;
     } catch (_) {
       return null;
@@ -225,5 +230,5 @@ class ForgotPasswordController extends Notifier<ForgotPasswordState> {
 
 final forgotPasswordControllerProvider =
     NotifierProvider<ForgotPasswordController, ForgotPasswordState>(
-  ForgotPasswordController.new,
-);
+      ForgotPasswordController.new,
+    );

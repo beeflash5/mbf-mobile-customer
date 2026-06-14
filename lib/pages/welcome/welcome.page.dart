@@ -25,8 +25,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage>
     return BasePage(
       body: CustomEasyRefreshView(
         headerView: MaterialHeader(),
-        onRefresh: () =>
-            ref.read(welcomeControllerProvider.notifier).refresh(),
+        onRefresh: () => ref.read(welcomeControllerProvider.notifier).refresh(),
         child: HomeScreenConfig.homeScreen(),
       ),
     );

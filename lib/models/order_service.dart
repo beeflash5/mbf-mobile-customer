@@ -40,12 +40,14 @@ class OrderService {
       hours: json["hours"] == null ? null : int.parse(json["hours"].toString()),
       price:
           json["price"] == null ? null : double.parse(json["price"].toString()),
-      orderId: json["order_id"] == null
-          ? null
-          : int.parse(json["order_id"].toString()),
-      serviceId: json["service_id"] == null
-          ? null
-          : int.parse(json["service_id"].toString()),
+      orderId:
+          json["order_id"] == null
+              ? null
+              : int.parse(json["order_id"].toString()),
+      serviceId:
+          json["service_id"] == null
+              ? null
+              : int.parse(json["service_id"].toString()),
       service:
           json["service"] == null ? null : Service.fromJson(json["service"]),
       options: json["options"] == null ? "" : json["options"],
@@ -55,15 +57,15 @@ class OrderService {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "price": price,
-        "hours": hours,
-        "order_id": orderId,
-        "service_id": serviceId,
-        "service": service?.toJson(),
-        "options": options,
-        //
-        "options_price": optionsPrice,
-        "service_price": servicePrice,
-      };
+    "id": id,
+    "price": price,
+    "hours": hours,
+    "order_id": orderId,
+    "service_id": serviceId,
+    "service": service?.toJson(),
+    "options": options,
+    //
+    "options_price": optionsPrice,
+    "service_price": servicePrice,
+  };
 }

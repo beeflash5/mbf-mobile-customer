@@ -48,11 +48,7 @@ void main() async {
       HttpOverrides.global = _MyHttpOverrides();
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-      runApp(
-        ProviderScope(
-          child: LocalizedApp(child: const _MyApp()),
-        ),
-      );
+      runApp(ProviderScope(child: LocalizedApp(child: const _MyApp())));
     },
     (error, stackTrace) {
       FirebaseCrashlytics.instance.recordError(error, stackTrace);
@@ -125,8 +121,7 @@ ThemeData _appLightTheme() {
         fontWeight: FontWeight.w600,
       ),
     ),
-    bottomSheetTheme:
-        const BottomSheetThemeData(backgroundColor: Colors.white),
+    bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.white),
     dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
     cardTheme: const CardThemeData(color: Colors.white, elevation: 1),
     inputDecorationTheme: InputDecorationTheme(

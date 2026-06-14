@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class LoyaltyPointReportListItem extends StatelessWidget {
   const LoyaltyPointReportListItem(this.loyaltyPointReport, {Key? key})
-      : super(key: key);
+    : super(key: key);
 
   final LoyaltyPointReport loyaltyPointReport;
   @override
@@ -18,79 +18,68 @@ class LoyaltyPointReportListItem extends StatelessWidget {
     final textColor = Utils.textColorByColor(stateColor);
 
     //
-    return HStack(
-      [
-        //icon
-        Icon(
-          loyaltyPointReport.isCredit
-              ? Icons.add
-              : Icons.remove,
-          color: stateColor.withAlpha(255),
-        ).px12(),
-        //credit
-        Visibility(
-          visible: loyaltyPointReport.isCredit,
-          child: VStack(
-            [
-              HStack(
-                [
-                  "${loyaltyPointReport.points}"
-                      .currencyValueFormat()
-                      .text
-                      .color(textColor)
-                      .semiBold
-                      .xl
-                      .make(),
-                  "points"
-                      .tr()
-                      .text
-                      .color(textColor)
-                      .semiBold
-                      .sm
-                      .make()
-                      .expand(),
-                ],
-              ),
-              ("Rewarded points".tr()).text.color(textColor).sm.make(),
-            ],
-          ).expand(),
-        ),
-        //debit
-        Visibility(
-          visible: !loyaltyPointReport.isCredit,
-          child: VStack(
-            [
-              HStack(
-                [
-                  "${loyaltyPointReport.points}"
-                      .text
-                      .color(textColor)
-                      .semiBold
-                      .xl
-                      .make(),
-                  "points"
-                      .tr()
-                      .text
-                      .color(textColor)
-                      .semiBold
-                      .sm
-                      .make()
-                      .expand(),
-                ],
-              ),
-              ("Withdrawn to wallet".tr()).text.color(textColor).sm.make(),
-            ],
-          ).expand(),
-        ),
+    return HStack([
+          //icon
+          Icon(
+            loyaltyPointReport.isCredit ? Icons.add : Icons.remove,
+            color: stateColor.withAlpha(255),
+          ).px12(),
+          //credit
+          Visibility(
+            visible: loyaltyPointReport.isCredit,
+            child:
+                VStack([
+                  HStack([
+                    "${loyaltyPointReport.points}"
+                        .currencyValueFormat()
+                        .text
+                        .color(textColor)
+                        .semiBold
+                        .xl
+                        .make(),
+                    "points"
+                        .tr()
+                        .text
+                        .color(textColor)
+                        .semiBold
+                        .sm
+                        .make()
+                        .expand(),
+                  ]),
+                  ("Rewarded points".tr()).text.color(textColor).sm.make(),
+                ]).expand(),
+          ),
+          //debit
+          Visibility(
+            visible: !loyaltyPointReport.isCredit,
+            child:
+                VStack([
+                  HStack([
+                    "${loyaltyPointReport.points}".text
+                        .color(textColor)
+                        .semiBold
+                        .xl
+                        .make(),
+                    "points"
+                        .tr()
+                        .text
+                        .color(textColor)
+                        .semiBold
+                        .sm
+                        .make()
+                        .expand(),
+                  ]),
+                  ("Withdrawn to wallet".tr()).text.color(textColor).sm.make(),
+                ]).expand(),
+          ),
 
-        //
-        "${DateFormat.MMMd(translator.activeLocale.languageCode).format(loyaltyPointReport.updatedAt)}"
-            .text
-            .color(textColor)
-            .light
-            .make(),
-      ],
-    )
+          //
+          "${DateFormat.MMMd(translator.activeLocale.languageCode).format(loyaltyPointReport.updatedAt)}"
+              .text
+              .color(textColor)
+              .light
+              .make(),
+        ])
         .p8()
         .box
         .outerShadow

@@ -28,59 +28,52 @@ class CategoryServicesView extends StatelessWidget {
     if (hideEmpty && category.services.isEmpty) {
       return SizedBox.shrink();
     }
-    return VStack(
-      [
-        Visibility(
-          visible: showTitle,
-          child: VStack(
-            [
-              HStack(
-                [
-                  "${category.name}".text.xl.bold.make().expand(),
-                  //view more
-                  CustomTextButton(
-                    title: "See all".tr(),
-                    onPressed: () => openSearch(context, category),
-                  ),
-                ],
-              ).px20(),
-              12.heightBox,
-            ],
-          ),
-        ),
-        //row of services
-        Builder(
-          builder: (context) {
-            double spacing = 20;
-            double eachWidth = (context.screenWidth - (spacing * 2)) / 2;
-            List<Widget> children = category.services.map((service) {
-              return ServiceGridViewItem(
-                service: service,
-                onPressed: (service) => serviceSelected(context, service),
-              ).w(eachWidth);
-            }).toList();
-            //append 12px
-            children.insert(0, 0.widthBox);
-            children.add(0.widthBox);
-            //
-            return Scrollbar(
-              thumbVisibility: false,
-              trackVisibility: false,
-              interactive: true,
-              child: HStack(
-                children,
-                spacing: spacing,
-                axisSize: MainAxisSize.min,
-                alignment: MainAxisAlignment.start,
-                crossAlignment: CrossAxisAlignment.start,
-              ).scrollHorizontal(
-                physics: BouncingScrollPhysics(),
-              ),
-            );
-          },
-        ),
-      ],
-    );
+    return VStack([
+      Visibility(
+        visible: showTitle,
+        child: VStack([
+          HStack([
+            "${category.name}".text.xl.bold.make().expand(),
+            //view more
+            CustomTextButton(
+              title: "See all".tr(),
+              onPressed: () => openSearch(context, category),
+            ),
+          ]).px20(),
+          12.heightBox,
+        ]),
+      ),
+      //row of services
+      Builder(
+        builder: (context) {
+          double spacing = 20;
+          double eachWidth = (context.screenWidth - (spacing * 2)) / 2;
+          List<Widget> children =
+              category.services.map((service) {
+                return ServiceGridViewItem(
+                  service: service,
+                  onPressed: (service) => serviceSelected(context, service),
+                ).w(eachWidth);
+              }).toList();
+          //append 12px
+          children.insert(0, 0.widthBox);
+          children.add(0.widthBox);
+          //
+          return Scrollbar(
+            thumbVisibility: false,
+            trackVisibility: false,
+            interactive: true,
+            child: HStack(
+              children,
+              spacing: spacing,
+              axisSize: MainAxisSize.min,
+              alignment: MainAxisAlignment.start,
+              crossAlignment: CrossAxisAlignment.start,
+            ).scrollHorizontal(physics: BouncingScrollPhysics()),
+          );
+        },
+      ),
+    ]);
   }
 
   serviceSelected(BuildContext context, Service service) {

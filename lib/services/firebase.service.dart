@@ -201,57 +201,33 @@ class FirebaseService {
         final hasService = notificationPayloadData!.containsKey("service");
         //
         if (isChat) {
-          //
-          dynamic user = jsonDecode(notificationPayloadData!['user']);
-          dynamic peer = jsonDecode(notificationPayloadData!['peer']);
-          String chatPath = notificationPayloadData!['path'];
-          //
-          Map<String, PeerUser> peers = {
-            '${user['id']}': PeerUser(
-              id: '${user['id']}',
-              name: "${user['name']}",
-              image: "${user['photo']}",
-            ),
-            '${peer['id']}': PeerUser(
-              id: '${peer['id']}',
-              name: "${peer['name']}",
-              image: "${peer['photo']}",
-            ),
-          };
-          //
-          final peerRole = peer["role"];
-          //
-          final chatEntity = ChatEntity(
-            onMessageSent: ChatService.sendChatMessage,
-            mainUser: peers['${user['id']}']!,
-            peers: peers,
-            //don't translate this
-            path: chatPath,
-            title:
-                peer["role"] == null
-                    ? "Chat with".tr() + " ${peer['name']}"
-                    : peerRole == 'vendor'
-                    ? "Chat with vendor".tr()
-                    : "Chat with driver".tr(),
-            supportMedia: AppUISettings.canCustomerChatSupportMedia,
-          );
-          GoRouter.of(AppService().navigatorKey.currentContext!).push(
-            AppRoutes.chatRoute,
-            extra: chatEntity,
-          );
+          String chatPath = notificationPayloadData!['path'] ?? "";
+          final parts = chatPath.split('/');
+          if (parts.length >= 3) {
+            final orderCode = parts[1];
+            final chatType = parts[2];
+            GoRouter.of(AppService().navigatorKey.currentContext!).push(
+              AppRoutes.chatRoute,
+              extra: {
+                'orderCode': orderCode,
+                'chatType': chatType,
+                'receiverId': 0, // Backend will auto-resolve
+              },
+            );
+          }
         }
         //order
         else if (isOrder) {
           try {
             int orderId = int.parse("${notificationPayloadData!['order_id']}");
             Order order = await OrderRequest().getOrderDetails(id: orderId);
-            GoRouter.of(AppService().navigatorKey.currentContext!).push(
-              '${AppRoutes.orderDetailsRoute}/${order.id}',
-              extra: order,
-            );
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).push('${AppRoutes.orderDetailsRoute}/${order.id}', extra: order);
           } catch (error) {
-            GoRouter.of(AppService().navigatorKey.currentContext!)
-                .go(AppRoutes.homeRoute);
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).go(AppRoutes.homeRoute);
             AppService().changeHomePageIndex();
           }
         }
@@ -275,14 +251,14 @@ class FirebaseService {
             }
           }
           try {
-            GoRouter.of(AppService().navigatorKey.currentContext!).push(
-              '${AppRoutes.vendorDetails}/${vendor?.id}',
-              extra: vendor,
-            );
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).push('${AppRoutes.vendorDetails}/${vendor?.id}', extra: vendor);
           } catch (error) {
             ToastService.toastError("Unable to fetch vendor details".tr());
-            GoRouter.of(AppService().navigatorKey.currentContext!)
-                .go(AppRoutes.homeRoute);
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).go(AppRoutes.homeRoute);
           }
 
           //
@@ -308,14 +284,14 @@ class FirebaseService {
             }
           }
           try {
-            GoRouter.of(AppService().navigatorKey.currentContext!).push(
-              '${AppRoutes.product}/${product?.id}',
-              extra: product,
-            );
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).push('${AppRoutes.product}/${product?.id}', extra: product);
           } catch (error) {
             ToastService.toastError("Unable to fetch product details".tr());
-            GoRouter.of(AppService().navigatorKey.currentContext!)
-                .go(AppRoutes.homeRoute);
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).go(AppRoutes.homeRoute);
           }
         }
         //service type of notification
@@ -345,22 +321,21 @@ class FirebaseService {
             );
           } catch (error) {
             ToastService.toastError("Unable to fetch service details".tr());
-            GoRouter.of(AppService().navigatorKey.currentContext!)
-                .go(AppRoutes.homeRoute);
+            GoRouter.of(
+              AppService().navigatorKey.currentContext!,
+            ).go(AppRoutes.homeRoute);
           }
         }
         //regular notifications
         else {
-          GoRouter.of(AppService().navigatorKey.currentContext!).push(
-            AppRoutes.notificationDetailsRoute,
-            extra: notificationModel,
-          );
+          GoRouter.of(
+            AppService().navigatorKey.currentContext!,
+          ).push(AppRoutes.notificationDetailsRoute, extra: notificationModel);
         }
       } else {
-        GoRouter.of(AppService().navigatorKey.currentContext!).push(
-          AppRoutes.notificationDetailsRoute,
-          extra: notificationModel,
-        );
+        GoRouter.of(
+          AppService().navigatorKey.currentContext!,
+        ).push(AppRoutes.notificationDetailsRoute, extra: notificationModel);
       }
     } catch (error) {
       print("Error opening Notification ==> $error");

@@ -8,21 +8,17 @@ class NotificationRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       if (apiResponse.body["data"] != null) {
-        return (apiResponse.body["data"] as List)
-            .asMap()
-            .entries
-            .map((entry) {
-              final val = entry.value;
-              return NotificationModel(
-                index: entry.key,
-                title: val["title"],
-                body: val["body"],
-                image: val["image"],
-                read: val["read"] is bool ? val["read"] : false,
-                timeStamp: val["timeStamp"],
-              );
-            })
-            .toList();
+        return (apiResponse.body["data"] as List).asMap().entries.map((entry) {
+          final val = entry.value;
+          return NotificationModel(
+            index: entry.key,
+            title: val["title"],
+            body: val["body"],
+            image: val["image"],
+            read: val["read"] is bool ? val["read"] : false,
+            timeStamp: val["timeStamp"],
+          );
+        }).toList();
       }
     }
     return [];

@@ -78,45 +78,49 @@ class PackageCheckout {
   //
   factory PackageCheckout.fromJson(Map<String, dynamic> json) {
     return PackageCheckout(
-      distance: json["distance"] == null
-          ? null
-          : double.parse(json["distance"].toString()),
+      distance:
+          json["distance"] == null
+              ? null
+              : double.parse(json["distance"].toString()),
       deliveryFee: double.parse(json["delivery_fee"].toString()),
-      packageTypeFee: json["package_type_fee"] == null
-          ? null
-          : double.parse(json["package_type_fee"].toString()),
-      subTotal: json["sub_total"] == null
-          ? null
-          : double.parse(json["sub_total"].toString()),
+      packageTypeFee:
+          json["package_type_fee"] == null
+              ? null
+              : double.parse(json["package_type_fee"].toString()),
+      subTotal:
+          json["sub_total"] == null
+              ? null
+              : double.parse(json["sub_total"].toString()),
       tax: json["tax"] == null ? null : double.parse(json["tax"].toString()),
-      taxRate: json["tax_rate"] == null
-          ? null
-          : double.parse(json["tax_rate"].toString()),
+      taxRate:
+          json["tax_rate"] == null
+              ? null
+              : double.parse(json["tax_rate"].toString()),
       total:
           json["total"] == null ? null : double.parse(json["total"].toString()),
-      discount: json["discount"] == null
-          ? null
-          : double.parse(json["discount"].toString()),
+      discount:
+          json["discount"] == null
+              ? null
+              : double.parse(json["discount"].toString()),
       token: json["token"],
       //if coupon is not null
       coupon: json["coupon"] != null ? Coupon.fromJson(json["coupon"]) : null,
-      fees: json["vendor_fees"] != null
-          ? (json["vendor_fees"] as List).map((json) {
-              return Fee.fromJson(json);
-            }).toList()
-          : [],
+      fees:
+          json["vendor_fees"] != null
+              ? (json["vendor_fees"] as List).map((json) {
+                return Fee.fromJson(json);
+              }).toList()
+              : [],
 
       //
       allStops:
           ((json["allStops"] ?? json["stops"] ?? []) as List).map((stopJson) {
-        return OrderStop.fromJson(stopJson);
-      }).toList(),
+            return OrderStop.fromJson(stopJson);
+          }).toList(),
     );
   }
 
-  PackageCheckout copyWith({
-    required PackageCheckout packageCheckout,
-  }) {
+  PackageCheckout copyWith({required PackageCheckout packageCheckout}) {
     this.distance = packageCheckout.distance;
     this.deliveryFee = packageCheckout.deliveryFee;
     this.packageTypeFee = packageCheckout.packageTypeFee;
@@ -138,14 +142,14 @@ class PackageCheckout {
   }
 
   Map<String, dynamic> toJson() => {
-        "distance": distance == null ? null : distance,
-        "delivery_fee": deliveryFee,
-        "package_type_fee": packageTypeFee == null ? null : packageTypeFee,
-        "sub_total": subTotal == null ? null : subTotal,
-        "tax": tax == null ? null : tax,
-        "tax_rate": taxRate,
-        "total": total == null ? null : total,
-        "discount": discount,
-        "token": token,
-      };
+    "distance": distance == null ? null : distance,
+    "delivery_fee": deliveryFee,
+    "package_type_fee": packageTypeFee == null ? null : packageTypeFee,
+    "sub_total": subTotal == null ? null : subTotal,
+    "tax": tax == null ? null : tax,
+    "tax_rate": taxRate,
+    "total": total == null ? null : total,
+    "discount": discount,
+    "token": token,
+  };
 }

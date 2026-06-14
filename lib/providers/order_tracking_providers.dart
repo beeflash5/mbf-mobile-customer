@@ -33,17 +33,17 @@ class OrderTrackingState {
     LatLng? pickupLatLng,
     LatLng? destinationLatLng,
     LatLng? driverLatLng,
-  }) =>
-      OrderTrackingState(
-        mapMarkers: mapMarkers ?? this.mapMarkers,
-        polylines: polylines ?? this.polylines,
-        pickupLatLng: pickupLatLng ?? this.pickupLatLng,
-        destinationLatLng: destinationLatLng ?? this.destinationLatLng,
-        driverLatLng: driverLatLng ?? this.driverLatLng,
-      );
+  }) => OrderTrackingState(
+    mapMarkers: mapMarkers ?? this.mapMarkers,
+    polylines: polylines ?? this.polylines,
+    pickupLatLng: pickupLatLng ?? this.pickupLatLng,
+    destinationLatLng: destinationLatLng ?? this.destinationLatLng,
+    driverLatLng: driverLatLng ?? this.driverLatLng,
+  );
 }
 
-class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Order> {
+class OrderTrackingController
+    extends FamilyAsyncNotifier<OrderTrackingState, Order> {
   GoogleMapController? _mapController;
   final PolylinePoints _polylinePoints = PolylinePoints();
   StreamSubscription? _driverLocationSub;
@@ -63,16 +63,19 @@ class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Or
           ? arg.pickupLocation!.longitude!
           : double.parse(arg.vendor!.longitude),
     );
-    markers.add(Marker(
-      markerId: const MarkerId('pickup'),
-      position: pickupLatLng,
-      infoWindow: InfoWindow(
-        title: arg.isPackageDelivery
-            ? arg.pickupLocation?.name
-            : arg.vendor?.name,
+    markers.add(
+      Marker(
+        markerId: const MarkerId('pickup'),
+        position: pickupLatLng,
+        infoWindow: InfoWindow(
+          title:
+              arg.isPackageDelivery
+                  ? arg.pickupLocation?.name
+                  : arg.vendor?.name,
+        ),
+        icon: pickupIcon,
       ),
-      icon: pickupIcon,
-    ));
+    );
 
     final deliveryIcon = await _markerIcon(AppImages.deliveryParcel);
     final destinationLatLng = LatLng(
@@ -83,16 +86,19 @@ class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Or
           ? arg.dropoffLocation!.longitude!
           : arg.deliveryAddress!.longitude!,
     );
-    markers.add(Marker(
-      markerId: const MarkerId('destination'),
-      position: destinationLatLng,
-      infoWindow: InfoWindow(
-        title: arg.isPackageDelivery
-            ? arg.dropoffLocation?.name
-            : arg.deliveryAddress?.name,
+    markers.add(
+      Marker(
+        markerId: const MarkerId('destination'),
+        position: destinationLatLng,
+        infoWindow: InfoWindow(
+          title:
+              arg.isPackageDelivery
+                  ? arg.dropoffLocation?.name
+                  : arg.deliveryAddress?.name,
+        ),
+        icon: deliveryIcon,
       ),
-      icon: deliveryIcon,
-    ));
+    );
 
     final newState = OrderTrackingState(
       mapMarkers: markers,
@@ -117,9 +123,8 @@ class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Or
       travelMode: TravelMode.driving,
     );
     if (result.points.isEmpty) return;
-    final coords = result.points
-        .map((p) => LatLng(p.latitude, p.longitude))
-        .toList();
+    final coords =
+        result.points.map((p) => LatLng(p.latitude, p.longitude)).toList();
     final cur = state.valueOrNull;
     if (cur == null) return;
     const polyId = PolylineId('poly');
@@ -139,37 +144,36 @@ class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Or
         .doc('${order.driverId}')
         .snapshots()
         .listen((event) async {
-      final cur = state.valueOrNull;
-      if (cur == null) return;
-      final driverInfo = event.data();
-      final driverLatLng = LatLng(
-        (driverInfo?['lat'] as num?)?.toDouble() ?? 0.0,
-        (driverInfo?['long'] as num?)?.toDouble() ?? 0.0,
-      );
-      final markers = {...cur.mapMarkers};
-      final existing = markers.firstOrNullWhere(
-        (m) => m.markerId.value.contains('driverLocation'),
-      );
-      Marker marker;
-      if (existing == null) {
-        final icon = await _markerIcon(AppImages.deliveryBoy);
-        marker = Marker(
-          markerId: const MarkerId('driverLocation'),
-          position: driverLatLng,
-          infoWindow: InfoWindow.noText,
-          icon: icon,
-        );
-      } else {
-        markers.remove(existing);
-        marker = existing.copyWith(positionParam: driverLatLng);
-      }
-      markers.add(marker);
-      state = AsyncData(cur.copyWith(
-        mapMarkers: markers,
-        driverLatLng: driverLatLng,
-      ));
-      _zoomToBound();
-    });
+          final cur = state.valueOrNull;
+          if (cur == null) return;
+          final driverInfo = event.data();
+          final driverLatLng = LatLng(
+            (driverInfo?['lat'] as num?)?.toDouble() ?? 0.0,
+            (driverInfo?['long'] as num?)?.toDouble() ?? 0.0,
+          );
+          final markers = {...cur.mapMarkers};
+          final existing = markers.firstOrNullWhere(
+            (m) => m.markerId.value.contains('driverLocation'),
+          );
+          Marker marker;
+          if (existing == null) {
+            final icon = await _markerIcon(AppImages.deliveryBoy);
+            marker = Marker(
+              markerId: const MarkerId('driverLocation'),
+              position: driverLatLng,
+              infoWindow: InfoWindow.noText,
+              icon: icon,
+            );
+          } else {
+            markers.remove(existing);
+            marker = existing.copyWith(positionParam: driverLatLng);
+          }
+          markers.add(marker);
+          state = AsyncData(
+            cur.copyWith(mapMarkers: markers, driverLatLng: driverLatLng),
+          );
+          _zoomToBound();
+        });
   }
 
   void setMapController(GoogleMapController controller) {
@@ -179,11 +183,15 @@ class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Or
 
   void _zoomToBound() {
     final cur = state.valueOrNull;
-    if (cur == null || cur.driverLatLng == null || cur.destinationLatLng == null) {
+    if (cur == null ||
+        cur.driverLatLng == null ||
+        cur.destinationLatLng == null) {
       return;
     }
-    final bound =
-        _boundsFromLatLngList([cur.driverLatLng!, cur.destinationLatLng!]);
+    final bound = _boundsFromLatLngList([
+      cur.driverLatLng!,
+      cur.destinationLatLng!,
+    ]);
     _mapController?.animateCamera(CameraUpdate.newLatLngBounds(bound, 80));
   }
 
@@ -219,6 +227,7 @@ class OrderTrackingController extends FamilyAsyncNotifier<OrderTrackingState, Or
 }
 
 final orderTrackingControllerProvider = AsyncNotifierProvider.family<
-    OrderTrackingController, OrderTrackingState, Order>(
-  OrderTrackingController.new,
-);
+  OrderTrackingController,
+  OrderTrackingState,
+  Order
+>(OrderTrackingController.new);

@@ -23,10 +23,7 @@ class NotificationsPage extends ConsumerWidget {
   ) async {
     await ref.read(notificationsControllerProvider.notifier).markRead(n);
     if (!context.mounted) return;
-    await context.pushRoute(
-      AppRoutes.notificationDetailsRoute,
-      extra: n,
-    );
+    await context.pushRoute(AppRoutes.notificationDetailsRoute, extra: n);
     await ref.read(notificationsControllerProvider.notifier).refresh();
   }
 
@@ -51,29 +48,28 @@ class NotificationsPage extends ConsumerWidget {
           itemBuilder: (context, index) {
             final notification = notifications[index];
             return VStack([
-              '${notification.title}'
-                  .text
-                  .bold
-                  .fontFamily(GoogleFonts.nunito().fontFamily!)
-                  .make(),
-              notification.formattedTimeStamp.text.medium
-                  .color(Colors.grey)
-                  .fontFamily(GoogleFonts.nunito().fontFamily!)
-                  .make()
-                  .pOnly(bottom: 5),
-              '${notification.body}'
-                  .text
-                  .maxLines(1)
-                  .overflow(TextOverflow.ellipsis)
-                  .fontFamily(GoogleFonts.nunito().fontFamily!)
-                  .make(),
-            ])
+                  '${notification.title}'.text.bold
+                      .fontFamily(GoogleFonts.nunito().fontFamily!)
+                      .make(),
+                  notification.formattedTimeStamp.text.medium
+                      .color(Colors.grey)
+                      .fontFamily(GoogleFonts.nunito().fontFamily!)
+                      .make()
+                      .pOnly(bottom: 5),
+                  '${notification.body}'.text
+                      .maxLines(1)
+                      .overflow(TextOverflow.ellipsis)
+                      .fontFamily(GoogleFonts.nunito().fontFamily!)
+                      .make(),
+                ])
                 .px20()
                 .py12()
                 .box
-                .color((notification.read ?? false)
-                    ? Theme.of(context).cardColor
-                    : Theme.of(context).canvasColor)
+                .color(
+                  (notification.read ?? false)
+                      ? Theme.of(context).cardColor
+                      : Theme.of(context).canvasColor,
+                )
                 .make()
                 .onInkTap(() => _open(context, ref, notification));
           },

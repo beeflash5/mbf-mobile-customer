@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-
 AgeBasePrices AgeBasePricesFromJson(String str) =>
     AgeBasePrices.fromJson(json.decode(str));
 
@@ -27,7 +26,10 @@ class AgeBasePrices {
     id: json["id"] ?? 0,
     name: json["name"] ?? "",
     description: json["description"] ?? "",
-    price: json["price"] == null ? 0.0 : (double.tryParse(json["price"].toString()) ?? 0.0),
+    price:
+        json["price"] == null
+            ? 0.0
+            : (double.tryParse(json["price"].toString()) ?? 0.0),
   );
 
   Map<String, dynamic> toJson() => {

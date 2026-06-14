@@ -41,9 +41,8 @@ class _VendorSearchPageState extends ConsumerState<VendorSearchPage> {
     super.initState();
     _search = Search(
       vendorId: widget.vendor.id,
-      vendorType: widget.vendor.vendorType.isService
-          ? widget.vendor.vendorType
-          : null,
+      vendorType:
+          widget.vendor.vendorType.isService ? widget.vendor.vendorType : null,
       type: widget.vendor.vendorType.isService ? 'service' : 'product',
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -84,15 +83,17 @@ class _VendorSearchPageState extends ConsumerState<VendorSearchPage> {
               notifier.setKeyword(keyword);
               notifier.startSearch();
             },
-            onFilterPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => SearchFilterBottomSheet(
-                search: state?.search ?? _search,
-                onSubmitted: notifier.updateSearch,
-              ),
-            ),
+            onFilterPressed:
+                () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder:
+                      (_) => SearchFilterBottomSheet(
+                        search: state?.search ?? _search,
+                        onSubmitted: notifier.updateSearch,
+                      ),
+                ),
           ),
           isLoading ? BusyIndicator().centered() : UiSpacer.emptySpace(),
           CustomListView(
@@ -108,9 +109,10 @@ class _VendorSearchPageState extends ConsumerState<VendorSearchPage> {
               if (r is Product) {
                 return HorizontalProductListItem(
                   r,
-                  onPressed: (p) => context.pushWidget(ProductDetailsPage(product: p)),
-                  qtyUpdated: (p, q) =>
-                      CartHelper.addToCartDirectly(context, p, q),
+                  onPressed:
+                      (p) => context.pushWidget(ProductDetailsPage(product: p)),
+                  qtyUpdated:
+                      (p, q) => CartHelper.addToCartDirectly(context, p, q),
                 );
               }
               return GridViewServiceListItem(
@@ -118,8 +120,8 @@ class _VendorSearchPageState extends ConsumerState<VendorSearchPage> {
                 onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
               );
             },
-            separatorBuilder: (context, index) =>
-                UiSpacer.verticalSpace(space: 0),
+            separatorBuilder:
+                (context, index) => UiSpacer.verticalSpace(space: 0),
             emptyWidget: EmptySearch(),
           ).py12().expand(),
         ]).pOnly(top: Vx.dp16, left: Vx.dp16, right: Vx.dp16),

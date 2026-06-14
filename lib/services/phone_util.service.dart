@@ -15,7 +15,7 @@ class PhoneUtilService {
     try {
       // Clear cached data to force fresh detection
       await clearCachedCountry();
-      
+
       await getUserCountry();
       _isInitialized = true;
       print(

@@ -44,7 +44,8 @@ class _VendorSearchResultViewState
       if (_refreshController.isLoading) _refreshController.loadComplete();
     });
 
-    void openVendor(vendor) => context.pushWidget(VendorDetailsPage(vendor: vendor));
+    void openVendor(vendor) =>
+        context.pushWidget(VendorDetailsPage(vendor: vendor));
 
     if (layout == null || layout == 'grid') {
       return CustomMasonryGridView(
@@ -59,9 +60,10 @@ class _VendorSearchResultViewState
         crossAxisSpacing: 10,
         isLoading: isLoading,
         emptyWidget: EmptySearch(type: 'vendor'),
-        items: vendors
-            .map((v) => CardVendor(vendor: v, onPressed: openVendor))
-            .toList(),
+        items:
+            vendors
+                .map((v) => CardVendor(vendor: v, onPressed: openVendor))
+                .toList(),
       );
     }
     return CustomListView(

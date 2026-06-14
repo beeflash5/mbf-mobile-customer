@@ -28,15 +28,14 @@ class OpsMapState {
     Marker? centerMarker,
     bool? isBusy,
     bool clearSelectedAddress = false,
-  }) =>
-      OpsMapState(
-        selectedAddress:
-            clearSelectedAddress ? null : (selectedAddress ?? this.selectedAddress),
-        googleMapPadding: googleMapPadding ?? this.googleMapPadding,
-        gMarkers: gMarkers ?? this.gMarkers,
-        centerMarker: centerMarker ?? this.centerMarker,
-        isBusy: isBusy ?? this.isBusy,
-      );
+  }) => OpsMapState(
+    selectedAddress:
+        clearSelectedAddress ? null : (selectedAddress ?? this.selectedAddress),
+    googleMapPadding: googleMapPadding ?? this.googleMapPadding,
+    gMarkers: gMarkers ?? this.gMarkers,
+    centerMarker: centerMarker ?? this.centerMarker,
+    isBusy: isBusy ?? this.isBusy,
+  );
 }
 
 class OpsMapController extends Notifier<OpsMapState> {
@@ -65,7 +64,10 @@ class OpsMapController extends Notifier<OpsMapState> {
     return _geocoderService.fecthPlaceDetails(address);
   }
 
-  Future<void> addressSelected(Address address, {bool moveCamera = true}) async {
+  Future<void> addressSelected(
+    Address address, {
+    bool moveCamera = true,
+  }) async {
     state = state.copyWith(isBusy: true);
     Address selected = address;
     if (address.gMapPlaceId != null) {
@@ -73,8 +75,11 @@ class OpsMapController extends Notifier<OpsMapState> {
     }
     if (moveCamera) {
       final lat =
-          address.coordinates?.latitude ?? selected.coordinates?.latitude ?? 0.0;
-      final lng = address.coordinates?.longitude ??
+          address.coordinates?.latitude ??
+          selected.coordinates?.latitude ??
+          0.0;
+      final lng =
+          address.coordinates?.longitude ??
           selected.coordinates?.longitude ??
           0.0;
       _gMapController?.moveCamera(
@@ -93,13 +98,14 @@ class OpsMapController extends Notifier<OpsMapState> {
   }
 
   void mapCameraMove(CameraPosition position) {
-    final marker = state.centerMarker == null
-        ? Marker(
-            markerId: _centerMarkerId,
-            position: position.target,
-            draggable: true,
-          )
-        : state.centerMarker!.copyWith(positionParam: position.target);
+    final marker =
+        state.centerMarker == null
+            ? Marker(
+              markerId: _centerMarkerId,
+              position: position.target,
+              draggable: true,
+            )
+            : state.centerMarker!.copyWith(positionParam: position.target);
     state = state.copyWith(
       centerMarker: marker,
       gMarkers: {...state.gMarkers, _centerMarkerId: marker},

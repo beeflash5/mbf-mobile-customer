@@ -23,22 +23,22 @@ class CommerceProductOptionGroup extends StatelessWidget {
       "${optionGroup.name}".text.lg.semiBold.make(),
       Visibility(
         visible: optionGroup.maxOptions != null,
-        child: ("Max Selection: ".tr() + "${optionGroup.maxOptions}")
-            .text
-            .sm
-            .make(),
+        child:
+            ("Max Selection: ".tr() + "${optionGroup.maxOptions}").text.sm
+                .make(),
       ),
       UiSpacer.vSpace(6),
       Wrap(
-        children: optionGroup.options
-            .map(
-              (e) => CommerceOptionListItem(
-                option: e,
-                optionGroup: optionGroup,
-                product: product,
-              ),
-            )
-            .toList(),
+        children:
+            optionGroup.options
+                .map(
+                  (e) => CommerceOptionListItem(
+                    option: e,
+                    optionGroup: optionGroup,
+                    product: product,
+                  ),
+                )
+                .toList(),
       ),
     ]).px20().py12();
   }

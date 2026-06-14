@@ -28,54 +28,41 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        "${widget.title}".tr().text.gray500.medium.sm.make(),
-        "${widget.stop.deliveryAddress?.name}".text.xl.medium.make(),
-        "${widget.stop.deliveryAddress?.address}"
-            .text
-            .make()
-            .pOnly(bottom: Vx.dp4),
+    return VStack([
+          "${widget.title}".tr().text.gray500.medium.sm.make(),
+          "${widget.stop.deliveryAddress?.name}".text.xl.medium.make(),
+          "${widget.stop.deliveryAddress?.address}".text.make().pOnly(
+            bottom: Vx.dp4,
+          ),
 
-        //
-        HStack(
-          [
+          //
+          HStack([
             "Contact Info".tr().text.gray500.medium.sm.make().expand(),
             //
             Icon(
               isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
               color: AppColor.primaryColor,
             ),
-          ],
-        ).onInkTap(() {
-          setState(() {
-            isOpen = !isOpen;
-          });
-        }),
-        //
-        Visibility(
-          visible: isOpen,
-          child: HStack(
-            [
+          ]).onInkTap(() {
+            setState(() {
+              isOpen = !isOpen;
+            });
+          }),
+          //
+          Visibility(
+            visible: isOpen,
+            child: HStack([
               //
-              VStack(
-                [
-                  "Recipient Name".tr().text.gray500.medium.sm.make(),
-                  "${widget.stop.name}"
-                      .text
-                      .medium
-                      .xl
-                      .make()
-                      .pOnly(bottom: Vx.dp20),
-                  "Note".tr().text.gray500.medium.sm.make(),
-                  "${widget.stop.note}"
-                      .text
-                      .medium
-                      .xl
-                      .make()
-                      .pOnly(bottom: Vx.dp20),
-                ],
-              ).expand(),
+              VStack([
+                "Recipient Name".tr().text.gray500.medium.sm.make(),
+                "${widget.stop.name}".text.medium.xl.make().pOnly(
+                  bottom: Vx.dp20,
+                ),
+                "Note".tr().text.gray500.medium.sm.make(),
+                "${widget.stop.note}".text.medium.xl.make().pOnly(
+                  bottom: Vx.dp20,
+                ),
+              ]).expand(),
               //call
               if ("${widget.stop.phone}".isNotBlank && widget.canCall)
                 CustomButton(
@@ -91,11 +78,9 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
                     }
                   },
                 ).wh(Vx.dp64, Vx.dp40).p12(),
-            ],
+            ]),
           ),
-        ),
-      ],
-    )
+        ])
         .wFull(context)
         .p12()
         .box

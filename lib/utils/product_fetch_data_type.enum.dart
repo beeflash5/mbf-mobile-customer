@@ -1,7 +1,1 @@
-enum ProductFetchDataType {
-  BEST,
-  FLASH,
-  NEW,
-  RANDOM,
-  featured,
-}
+enum ProductFetchDataType { BEST, FLASH, NEW, RANDOM, featured }

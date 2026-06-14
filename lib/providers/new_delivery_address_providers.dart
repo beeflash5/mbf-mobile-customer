@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/services/delivery_address.request.dart';
 
-final _deliveryAddressRequestProvider =
-    Provider<DeliveryAddressRequest>((_) => DeliveryAddressRequest());
+final _deliveryAddressRequestProvider = Provider<DeliveryAddressRequest>(
+  (_) => DeliveryAddressRequest(),
+);
 
 sealed class DeliveryAddressSaveResult {
   const DeliveryAddressSaveResult();
@@ -43,8 +44,8 @@ class NewDeliveryAddressController extends AsyncNotifier<void> {
 
 final newDeliveryAddressControllerProvider =
     AsyncNotifierProvider<NewDeliveryAddressController, void>(
-  NewDeliveryAddressController.new,
-);
+      NewDeliveryAddressController.new,
+    );
 
 class EditDeliveryAddressController extends AsyncNotifier<void> {
   @override
@@ -69,5 +70,5 @@ class EditDeliveryAddressController extends AsyncNotifier<void> {
 
 final editDeliveryAddressControllerProvider =
     AsyncNotifierProvider<EditDeliveryAddressController, void>(
-  EditDeliveryAddressController.new,
-);
+      EditDeliveryAddressController.new,
+    );

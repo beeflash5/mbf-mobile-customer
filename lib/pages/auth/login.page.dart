@@ -36,31 +36,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(loginControllerProvider.notifier).listenAppleCallback(
-        (data) async {
-          final notifier = ref.read(loginControllerProvider.notifier);
-          final idToken = data.idToken;
-          if (idToken == null || idToken.isEmpty) return;
-          final payload = notifier.parseJwt(idToken);
-          final email = payload?['email'];
-          final apiResponse = await notifier.authRequest.loginAppleAndroid(
-            email ?? '',
-            idToken,
-            'apple',
-          );
-          if (apiResponse == null) return;
-          if (apiResponse.hasError()) {
-            AlertService.error(
-              title: 'Login Failed',
-              text: apiResponse.message,
-            );
-            return;
-          }
-          await _handleLoginResult(
-            await notifier.handleDeviceLogin(apiResponse),
-          );
-        },
-      );
+      ref.read(loginControllerProvider.notifier).listenAppleCallback((
+        data,
+      ) async {
+        final notifier = ref.read(loginControllerProvider.notifier);
+        final idToken = data.idToken;
+        if (idToken == null || idToken.isEmpty) return;
+        final payload = notifier.parseJwt(idToken);
+        final email = payload?['email'];
+        final apiResponse = await notifier.authRequest.loginAppleAndroid(
+          email ?? '',
+          idToken,
+          'apple',
+        );
+        if (apiResponse == null) return;
+        if (apiResponse.hasError()) {
+          AlertService.error(title: 'Login Failed', text: apiResponse.message);
+          return;
+        }
+        await _handleLoginResult(await notifier.handleDeviceLogin(apiResponse));
+      });
     });
   }
 
@@ -75,13 +70,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         }
         break;
       case LoginFailure(:final message):
-        AlertService.error(
-          title: 'Login Failed'.tr(),
-          text: message,
-        );
+        AlertService.error(title: 'Login Failed'.tr(), text: message);
         break;
       case LoginNeedsRegister(:final email, :final name, :final phone):
-        context.pushWidget(RegisterPage(email: email, name: name, phone: phone));
+        context.pushWidget(
+          RegisterPage(email: email, name: name, phone: phone),
+        );
         break;
       case LoginAwaitingOtp():
       case LoginIdle():
@@ -111,100 +105,112 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  "You are required to login/register to continue process"
-                      .tr(),
+                  "You are required to login/register to continue process".tr(),
                 ),
               ),
             );
           }
         },
         child: BasePage(
-          body: VStack([
-            ImageLogin(),
+          body:
               VStack([
-                "Login Now!".tr().text.lg.semiBold.make().centered(),
-                "Welcome back. Please enter your details."
-                    .tr()
-                    .text
-                    .make()
-                    .centered(),
-                OTPLoginView(onLoggedIn: _handleLoginResult),
-              ]).wFull(context).px20().pOnly(top: Vx.dp20),
-              "Don’t have an account?"
-                  .richText
-                  .color(const Color(0xff808080))
-                  .withTextSpanChildren([
-                    " ".textSpan.make(),
-                    "Sign Up"
-                        .tr()
-                        .textSpan
-                        .semiBold
-                        .color(Colors.black)
-                        .underline
-                        .make(),
-                  ])
-                  .makeCentered()
-                  .onInkTap(_openRegister),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xff808080)),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(AppImages.google2, width: 24, height: 24),
-                        const SizedBox(width: 10),
-                        "Google".text.make(),
-                      ],
-                    ),
-                  ).onInkTap(() => _socialMediaLoginService.googleLogin(
-                        onApiResponse: _onSocialApiResponse,
-                        onNeedsRegister: ({email, name}) =>
-                            context.pushWidget(RegisterPage(email: email, name: name)),
-                        onError: ToastService.toastError,
-                        onBusy: ref
-                            .read(loginControllerProvider.notifier)
-                            .setBusy,
-                      )).expand(),
-                  const SizedBox(width: 10),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xff808080)),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(AppImages.apple2, width: 24, height: 24),
-                        const SizedBox(width: 10),
-                        "Apple".text.make(),
-                      ],
-                    ),
-                  ).onInkTap(() {
-                    if (Platform.isAndroid) {
-                      _socialMediaLoginService.appleLoginAndroid(
-                        onError: ToastService.toastError,
-                      );
-                    } else {
-                      _socialMediaLoginService.appleLogin(
-                        onApiResponse: _onSocialApiResponse,
-                        onNeedsRegister: ({email, name}) =>
-                            context.pushWidget(RegisterPage(email: email, name: name)),
-                        onError: ToastService.toastError,
-                      );
-                    }
-                  }).expand(),
-                ],
-              ).px20(),
-            ]).scrollVertical(),
+                ImageLogin(),
+                VStack([
+                  "Login Now!".tr().text.lg.semiBold.make().centered(),
+                  "Welcome back. Please enter your details."
+                      .tr()
+                      .text
+                      .make()
+                      .centered(),
+                  OTPLoginView(onLoggedIn: _handleLoginResult),
+                ]).wFull(context).px20().pOnly(top: Vx.dp20),
+                "Don’t have an account?".richText
+                    .color(const Color(0xff808080))
+                    .withTextSpanChildren([
+                      " ".textSpan.make(),
+                      "Sign Up"
+                          .tr()
+                          .textSpan
+                          .semiBold
+                          .color(Colors.black)
+                          .underline
+                          .make(),
+                    ])
+                    .makeCentered()
+                    .onInkTap(_openRegister),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xff808080)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                AppImages.google2,
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              "Google".text.make(),
+                            ],
+                          ),
+                        )
+                        .onInkTap(
+                          () => _socialMediaLoginService.googleLogin(
+                            onApiResponse: _onSocialApiResponse,
+                            onNeedsRegister:
+                                ({email, name}) => context.pushWidget(
+                                  RegisterPage(email: email, name: name),
+                                ),
+                            onError: ToastService.toastError,
+                            onBusy:
+                                ref
+                                    .read(loginControllerProvider.notifier)
+                                    .setBusy,
+                          ),
+                        )
+                        .expand(),
+                    const SizedBox(width: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xff808080)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(AppImages.apple2, width: 24, height: 24),
+                          const SizedBox(width: 10),
+                          "Apple".text.make(),
+                        ],
+                      ),
+                    ).onInkTap(() {
+                      if (Platform.isAndroid) {
+                        _socialMediaLoginService.appleLoginAndroid(
+                          onError: ToastService.toastError,
+                        );
+                      } else {
+                        _socialMediaLoginService.appleLogin(
+                          onApiResponse: _onSocialApiResponse,
+                          onNeedsRegister:
+                              ({email, name}) => context.pushWidget(
+                                RegisterPage(email: email, name: name),
+                              ),
+                          onError: ToastService.toastError,
+                        );
+                      }
+                    }).expand(),
+                  ],
+                ).px20(),
+              ]).scrollVertical(),
         ),
       ),
     );

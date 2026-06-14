@@ -40,7 +40,9 @@ class _OPSMapPageState extends ConsumerState<OPSMapPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(opsMapControllerProvider.notifier).mapCameraMove(
+      ref
+          .read(opsMapControllerProvider.notifier)
+          .mapCameraMove(
             CameraPosition(
               target: widget.initialPosition ?? const LatLng(0.0, 0.0),
               zoom: widget.initialZoom,
@@ -75,18 +77,17 @@ class _OPSMapPageState extends ConsumerState<OPSMapPage> {
                 return TextFormField(
                   controller: controller,
                   focusNode: focusNode,
-                  decoration: InputDecoration(
-                    hintText: 'Search address'.tr(),
-                  ),
+                  decoration: InputDecoration(hintText: 'Search address'.tr()),
                 );
               },
               debounceDuration: const Duration(milliseconds: 900),
-              suggestionsCallback: (keyword) =>
-                  notifier.fetchPlaces(keyword),
-              itemBuilder: (context, suggestion) => ListTile(
-                title: "${suggestion.featureName}".text.base.semiBold.make(),
-                subtitle: "${suggestion.addressLine}".text.sm.make(),
-              ),
+              suggestionsCallback: (keyword) => notifier.fetchPlaces(keyword),
+              itemBuilder:
+                  (context, suggestion) => ListTile(
+                    title:
+                        "${suggestion.featureName}".text.base.semiBold.make(),
+                    subtitle: "${suggestion.addressLine}".text.sm.make(),
+                  ),
               onSelected: (address) {
                 _searchTEC.clear();
                 notifier.addressSelected(address);
@@ -124,36 +125,35 @@ class _OPSMapPageState extends ConsumerState<OPSMapPage> {
                   visible: state.selectedAddress != null,
                   child: MeasureSize(
                     onChange: notifier.updateMapPadding,
-                    child: VStack([
-                      "${state.selectedAddress?.featureName}"
-                          .text
-                          .semiBold
-                          .center
-                          .xl
-                          .maxLines(3)
-                          .overflow(TextOverflow.ellipsis)
-                          .make(),
-                      UiSpacer.verticalSpace(space: 5),
-                      "${state.selectedAddress?.addressLine}"
-                          .text
-                          .light
-                          .center
-                          .sm
-                          .maxLines(2)
-                          .overflow(TextOverflow.ellipsis)
-                          .make(),
-                      UiSpacer.verticalSpace(),
-                      CustomButton(
-                        title: "Select".tr(),
-                        onPressed: () =>
-                            context.pop(state.selectedAddress),
-                      ),
-                    ])
-                        .box
-                        .shadow2xl
-                        .color(context.theme.colorScheme.surface)
-                        .p20
-                        .make(),
+                    child:
+                        VStack([
+                              "${state.selectedAddress?.featureName}"
+                                  .text
+                                  .semiBold
+                                  .center
+                                  .xl
+                                  .maxLines(3)
+                                  .overflow(TextOverflow.ellipsis)
+                                  .make(),
+                              UiSpacer.verticalSpace(space: 5),
+                              "${state.selectedAddress?.addressLine}"
+                                  .text
+                                  .light
+                                  .center
+                                  .sm
+                                  .maxLines(2)
+                                  .overflow(TextOverflow.ellipsis)
+                                  .make(),
+                              UiSpacer.verticalSpace(),
+                              CustomButton(
+                                title: "Select".tr(),
+                                onPressed:
+                                    () => context.pop(state.selectedAddress),
+                              ),
+                            ]).box.shadow2xl
+                            .color(context.theme.colorScheme.surface)
+                            .p20
+                            .make(),
                   ),
                 ),
               ),

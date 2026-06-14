@@ -18,83 +18,73 @@ class BasicTaxiTripInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VxBox(
-      child: VStack(
-        [
-          //date, code, amount
-          HStack(
-            [
-              VStack(
-                [
-                  "${DateFormat("dd MMM y 'at' H:m a").format(order.createdAt)}"
-                      .text
-                      .medium
-                      .lg
-                      .make(),
-                  order.Taxistatus.tr()
-                      .text
-                      .color(AppColor.getStausColor(order.status))
-                      .medium
-                      .xl
-                      .make(),
-                ],
-              ).expand(),
+      child:
+          VStack([
+            //date, code, amount
+            HStack([
+              VStack([
+                "${DateFormat("dd MMM y 'at' H:m a").format(order.createdAt)}"
+                    .text
+                    .medium
+                    .lg
+                    .make(),
+                order.Taxistatus.tr().text
+                    .color(AppColor.getStausColor(order.status))
+                    .medium
+                    .xl
+                    .make(),
+              ]).expand(),
               //total amount
               VStack(
                 [
                   "#${order.code}".text.light.make(),
-                  CurrencyHStack(
-                    [
-                      "${order.taxiOrder!.currency != null ? order.taxiOrder!.currency!.symbol : AppStrings.currencySymbol}"
-                          .text
-                          .semiBold
-                          .xl
-                          .make(),
-                      "${(order.total ?? 0.00).currencyValueFormat()}"
-                          .text
-                          .semiBold
-                          .xl2
-                          .make()
-                    ],
-                  ),
+                  CurrencyHStack([
+                    "${order.taxiOrder!.currency != null ? order.taxiOrder!.currency!.symbol : AppStrings.currencySymbol}"
+                        .text
+                        .semiBold
+                        .xl
+                        .make(),
+                    "${(order.total ?? 0.00).currencyValueFormat()}"
+                        .text
+                        .semiBold
+                        .xl2
+                        .make(),
+                  ]),
                 ],
                 crossAlignment: CrossAxisAlignment.end,
                 alignment: MainAxisAlignment.end,
               ),
-            ],
-            crossAlignment: CrossAxisAlignment.start,
-          ),
-          //pickup/dropoff
-          Timeline.tileBuilder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            builder: TimelineTileBuilder.connected(
-              itemCount: 2,
-              contentsAlign: ContentsAlign.basic,
-              nodePositionBuilder: (context, index) => 0.00,
-              indicatorBuilder: (context, index) {
-                return DotIndicator(
-                  color: AppColor.primaryColor,
-                  size: 28,
-                  child: Icon(
-                    index == 0
-                        ? Icons.my_location
-                        : Icons.location_on,
-                    size: 20,
-                    color: Utils.textColorByTheme(),
-                  ).p4(),
-                );
-              },
-              connectorBuilder: (context, index, connectorType) {
-                return DashedLineConnector(
-                  color: Colors.grey.shade600,
-                  gap: 5,
-                  space: 5,
-                  indent: 5,
-                );
-              },
-              contentsBuilder: (context, index) {
-                return VStack(
-                  [
+            ], crossAlignment: CrossAxisAlignment.start),
+            //pickup/dropoff
+            Timeline.tileBuilder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              builder: TimelineTileBuilder.connected(
+                itemCount: 2,
+                contentsAlign: ContentsAlign.basic,
+                nodePositionBuilder: (context, index) => 0.00,
+                indicatorBuilder: (context, index) {
+                  return DotIndicator(
+                    color: AppColor.primaryColor,
+                    size: 28,
+                    child:
+                        Icon(
+                          index == 0 ? Icons.my_location : Icons.location_on,
+                          size: 20,
+                          color: Utils.textColorByTheme(),
+                        ).p4(),
+                  );
+                },
+                connectorBuilder: (context, index, connectorType) {
+                  return DashedLineConnector(
+                    color: Colors.grey.shade600,
+                    gap: 5,
+                    space: 5,
+                    indent: 5,
+                  );
+                },
+                contentsBuilder: (context, index) {
+                  return VStack([
                     //if created at is not null
                     Text(
                       index == 0
@@ -112,13 +102,11 @@ class BasicTaxiTripInfoView extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ],
-                ).p(Vx.dp20);
-              },
+                  ]).p(Vx.dp20);
+                },
+              ),
             ),
-          ),
-        ],
-      ).px20().py12(),
+          ]).px20().py12(),
     ).shadowXs.color(context.theme.colorScheme.surface).make();
   }
 }

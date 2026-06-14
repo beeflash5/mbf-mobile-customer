@@ -58,16 +58,17 @@ class _AdsTopState extends ConsumerState<AdsTop> {
             height: widget.height,
             disableCenter: widget.disableCenter,
           ),
-          items: ads
-              .map(
-                (banner) => BannerListItem(
-                  radius: widget.itemRadius ?? 0.0,
-                  imageUrl: banner.imageUrl ?? '',
-                  onPressed: () =>
-                      BannerHelper.bannerSelected(context, banner),
-                ),
-              )
-              .toList(),
+          items:
+              ads
+                  .map(
+                    (banner) => BannerListItem(
+                      radius: widget.itemRadius ?? 0.0,
+                      imageUrl: banner.imageUrl ?? '',
+                      onPressed:
+                          () => BannerHelper.bannerSelected(context, banner),
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

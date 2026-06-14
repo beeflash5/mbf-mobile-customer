@@ -24,8 +24,9 @@ class _CategoriesTabsState extends ConsumerState<CategoriesTabs> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncHome =
-        ref.watch(serviceHomeControllerProvider(widget.vendorType.id));
+    final asyncHome = ref.watch(
+      serviceHomeControllerProvider(widget.vendorType.id),
+    );
     final state = asyncHome.valueOrNull;
     final isLoading = asyncHome.isLoading;
     final categories = state?.serviceByCategories ?? const [];
@@ -99,43 +100,46 @@ class _CategoriesTabsState extends ConsumerState<CategoriesTabs> {
         const SizedBox(height: 16),
         LoadingShimmer(
           loading: category == null || isLoading,
-          child: services.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40),
-                  child: Center(child: Text("No services available")),
-                )
-              : Column(
-                  children: [
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 1.6,
+          child:
+              services.isEmpty
+                  ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40),
+                    child: Center(child: Text("No services available")),
+                  )
+                  : Column(
+                    children: [
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 1,
+                              childAspectRatio: 1.6,
+                            ),
+                        itemCount: services.length,
+                        itemBuilder:
+                            (context, index) =>
+                                ServiceCard(service: services[index]),
                       ),
-                      itemCount: services.length,
-                      itemBuilder: (context, index) =>
-                          ServiceCard(service: services[index]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CustomButtonLight(
-                        title: "View All".tr(),
-                        onPressed: () => NavigationService.openServiceSearch(
-                          context,
-                          category: category,
-                          vendorType: widget.vendorType,
-                          showVendors: false,
-                          showServices: true,
-                          byLocation: false,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: CustomButtonLight(
+                          title: "View All".tr(),
+                          onPressed:
+                              () => NavigationService.openServiceSearch(
+                                context,
+                                category: category,
+                                vendorType: widget.vendorType,
+                                showVendors: false,
+                                showServices: true,
+                                byLocation: false,
+                              ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
         ),
         const SizedBox(height: 20),
       ],

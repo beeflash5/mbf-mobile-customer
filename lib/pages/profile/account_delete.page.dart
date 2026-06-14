@@ -34,10 +34,7 @@ class _AccountDeletePageState extends ConsumerState<AccountDeletePage> {
     if (!mounted) return;
     switch (result) {
       case AccountDeleteSuccess(:final message):
-        await AlertService.success(
-          title: 'Delete Account'.tr(),
-          text: message,
-        );
+        await AlertService.success(title: 'Delete Account'.tr(), text: message);
         if (!mounted) return;
         context.goRoute('/splash');
       case AccountDeleteFailure(:final message):
@@ -89,8 +86,11 @@ class _AccountDeletePageState extends ConsumerState<AccountDeletePage> {
                   hintText: 'Password'.tr(),
                   border: const OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                    (v == null || v.isEmpty) ? 'Password wajib diisi' : null,
+                validator:
+                    (v) =>
+                        (v == null || v.isEmpty)
+                            ? 'Password wajib diisi'
+                            : null,
               ),
               const SizedBox(height: 10),
               CustomButton(

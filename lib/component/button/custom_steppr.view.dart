@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomStepper extends StatefulWidget {
-  CustomStepper({
-    Key? key,
-    this.defaultValue,
-    this.max,
-    required this.onChange,
-  }) : super(key: key);
+  CustomStepper({Key? key, this.defaultValue, this.max, required this.onChange})
+    : super(key: key);
 
   final int? defaultValue;
   final int? max;
@@ -31,37 +27,29 @@ class _CustomStepperState extends State<CustomStepper> {
 
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        //
-        Icon(
-          Icons.remove,
-          size: 16,
-        ).p4().onInkTap(() {
-          if (qty > 0) {
-            setState(() {
-              qty -= 1;
-            });
-            //
-            widget.onChange(qty);
-          }
-        }),
-        //
-        "$qty".text.make().p4().px8().box.roundedSM.gray300.make(),
-        //
-        Icon(
-          Icons.add,
-          size: 16,
-        ).p4().onInkTap(() {
-          if (widget.max != null && widget.max! > qty) {
-            setState(() {
-              qty += 1;
-            });
-            //
-            widget.onChange(qty);
-          }
-        }),
-      ],
-    ).box.border(color: Vx.gray300).rounded.make();
+    return HStack([
+      //
+      Icon(Icons.remove, size: 16).p4().onInkTap(() {
+        if (qty > 0) {
+          setState(() {
+            qty -= 1;
+          });
+          //
+          widget.onChange(qty);
+        }
+      }),
+      //
+      "$qty".text.make().p4().px8().box.roundedSM.gray300.make(),
+      //
+      Icon(Icons.add, size: 16).p4().onInkTap(() {
+        if (widget.max != null && widget.max! > qty) {
+          setState(() {
+            qty += 1;
+          });
+          //
+          widget.onChange(qty);
+        }
+      }),
+    ]).box.border(color: Vx.gray300).rounded.make();
   }
 }

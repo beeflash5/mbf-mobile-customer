@@ -59,8 +59,7 @@ class SectionProductFoodsView extends ConsumerWidget {
       byLocation: byLocation,
       isHome: false,
     );
-    final asyncProducts =
-        ref.watch(productsListingControllerProvider(args));
+    final asyncProducts = ref.watch(productsListingControllerProvider(args));
     final products = asyncProducts.valueOrNull ?? const <Product>[];
     final isLoading = asyncProducts.isLoading;
 
@@ -82,8 +81,7 @@ class SectionProductFoodsView extends ConsumerWidget {
         return itemView;
       },
       emptyWidget: EmptyVendor(),
-      separatorBuilder:
-          separator != null ? (ctx, index) => separator! : null,
+      separatorBuilder: separator != null ? (ctx, index) => separator! : null,
     );
 
     return CustomVisibilty(
@@ -92,8 +90,7 @@ class SectionProductFoodsView extends ConsumerWidget {
         child: VStack([
           const SizedBox(height: 16),
           Padding(
-            padding:
-                titlePadding ?? const EdgeInsets.symmetric(horizontal: 12),
+            padding: titlePadding ?? const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -110,14 +107,14 @@ class SectionProductFoodsView extends ConsumerWidget {
           const SizedBox(height: 10),
           products.isNotEmpty
               ? CustomButtonLight(
-                  title: "View All".tr(),
-                  onPressed: () =>
-                      ProductSearchHelper.openProductsSeeAllPage(
-                    title: "Popular".tr(),
-                    vendorType: vendorType,
-                    type: ProductFetchDataType.BEST,
-                  ),
-                )
+                title: "View All".tr(),
+                onPressed:
+                    () => ProductSearchHelper.openProductsSeeAllPage(
+                      title: "Popular".tr(),
+                      vendorType: vendorType,
+                      type: ProductFetchDataType.BEST,
+                    ),
+              )
               : const SizedBox(),
         ], spacing: spacer ?? 5),
       ),

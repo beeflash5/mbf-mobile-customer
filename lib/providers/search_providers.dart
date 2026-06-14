@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuodz/models/search.dart';
 import 'package:fuodz/services/search.request.dart';
 
-final _searchRequestProvider =
-    Provider<SearchRequest>((_) => SearchRequest());
+final _searchRequestProvider = Provider<SearchRequest>((_) => SearchRequest());
 
 class SearchState {
   const SearchState({
@@ -32,16 +31,15 @@ class SearchState {
     int? page,
     bool? isLoadingMore,
     bool? showGrid,
-  }) =>
-      SearchState(
-        search: search ?? this.search,
-        keyword: keyword ?? this.keyword,
-        selectedTagId: selectedTagId ?? this.selectedTagId,
-        results: results ?? this.results,
-        page: page ?? this.page,
-        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-        showGrid: showGrid ?? this.showGrid,
-      );
+  }) => SearchState(
+    search: search ?? this.search,
+    keyword: keyword ?? this.keyword,
+    selectedTagId: selectedTagId ?? this.selectedTagId,
+    results: results ?? this.results,
+    page: page ?? this.page,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    showGrid: showGrid ?? this.showGrid,
+  );
 }
 
 class SearchController extends FamilyAsyncNotifier<SearchState, Search?> {
@@ -74,10 +72,9 @@ class SearchController extends FamilyAsyncNotifier<SearchState, Search?> {
 
   void updateSearch(Search newSearch) {
     final cur = state.valueOrNull ?? SearchState(search: _initialSearch);
-    state = AsyncData(cur.copyWith(
-      search: newSearch,
-      showGrid: newSearch.layoutType == 'grid',
-    ));
+    state = AsyncData(
+      cur.copyWith(search: newSearch, showGrid: newSearch.layoutType == 'grid'),
+    );
     startSearch();
   }
 
@@ -92,11 +89,9 @@ class SearchController extends FamilyAsyncNotifier<SearchState, Search?> {
     }
     state = await AsyncValue.guard(() async {
       final page = initialLoading ? 1 : (cur.page + 1);
-      final results = await ref.read(_searchRequestProvider).searchRequest(
-        keyword: cur.keyword,
-        search: cur.search!,
-        page: page,
-      );
+      final results = await ref
+          .read(_searchRequestProvider)
+          .searchRequest(keyword: cur.keyword, search: cur.search!, page: page);
       final latestCur = state.valueOrNull ?? cur;
       return latestCur.copyWith(
         results: initialLoading ? results : [...latestCur.results, ...results],
@@ -113,8 +108,10 @@ class SearchController extends FamilyAsyncNotifier<SearchState, Search?> {
   }
 }
 
-final searchControllerProvider = AsyncNotifierProvider.family<
-    SearchController, SearchState, Search?>(SearchController.new);
+final searchControllerProvider =
+    AsyncNotifierProvider.family<SearchController, SearchState, Search?>(
+      SearchController.new,
+    );
 
 class ServiceSearchController
     extends FamilyAsyncNotifier<SearchState, Search?> {
@@ -129,20 +126,26 @@ class ServiceSearchController
     return state.valueOrNull ?? initialState;
   }
 
-  Future<void> _doSearch(SearchState cur, {required bool initialLoading}) async {
+  Future<void> _doSearch(
+    SearchState cur, {
+    required bool initialLoading,
+  }) async {
     if (cur.search == null) return;
     final page = initialLoading ? 1 : (cur.page + 1);
-    final results =
-        await ref.read(_searchRequestProvider).serviceSearchRequest(
-      keyword: cur.keyword,
-      search: cur.search!,
-      page: page,
-    );
+    final results = await ref
+        .read(_searchRequestProvider)
+        .serviceSearchRequest(
+          keyword: cur.keyword,
+          search: cur.search!,
+          page: page,
+        );
     final cur2 = state.valueOrNull ?? cur;
-    state = AsyncData(cur2.copyWith(
-      results: initialLoading ? results : [...cur2.results, ...results],
-      page: page,
-    ));
+    state = AsyncData(
+      cur2.copyWith(
+        results: initialLoading ? results : [...cur2.results, ...results],
+        page: page,
+      ),
+    );
   }
 
   void setKeyword(String value) {
@@ -196,7 +199,7 @@ class ServiceSearchController
   }
 }
 
-final serviceSearchControllerProvider = AsyncNotifierProvider.family<
-    ServiceSearchController, SearchState, Search?>(
-  ServiceSearchController.new,
-);
+final serviceSearchControllerProvider =
+    AsyncNotifierProvider.family<ServiceSearchController, SearchState, Search?>(
+      ServiceSearchController.new,
+    );

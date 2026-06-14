@@ -8,8 +8,7 @@ import 'package:fuodz/services/location.service.dart';
 /// App-wide current delivery address (set via picker or device geolocation).
 /// Listens to LocationService.currenctDeliveryAddressSubject so any update
 /// from other modules (cart, checkout, address picker) flows through here.
-class CurrentDeliveryAddressController
-    extends AsyncNotifier<DeliveryAddress?> {
+class CurrentDeliveryAddressController extends AsyncNotifier<DeliveryAddress?> {
   @override
   Future<DeliveryAddress?> build() async {
     final sub = LocationService.currenctDeliveryAddressSubject.listen((addr) {
@@ -58,5 +57,5 @@ class CurrentDeliveryAddressController
 
 final currentDeliveryAddressControllerProvider =
     AsyncNotifierProvider<CurrentDeliveryAddressController, DeliveryAddress?>(
-  CurrentDeliveryAddressController.new,
-);
+      CurrentDeliveryAddressController.new,
+    );

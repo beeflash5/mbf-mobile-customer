@@ -17,8 +17,7 @@ class WalletTransferFailure extends WalletTransferResult {
   final String message;
 }
 
-final _walletRequestProvider =
-    Provider<WalletRequest>((_) => WalletRequest());
+final _walletRequestProvider = Provider<WalletRequest>((_) => WalletRequest());
 
 /// State controller wallet transfer: selectedUser + busy.
 class WalletTransferController extends AsyncNotifier<User?> {
@@ -29,12 +28,11 @@ class WalletTransferController extends AsyncNotifier<User?> {
 
   Future<List<User>> searchUsers(String keyword) async {
     if (keyword.isEmpty) return [];
-    final res =
-        await ref.read(_walletRequestProvider).getWalletAddress(keyword);
+    final res = await ref
+        .read(_walletRequestProvider)
+        .getWalletAddress(keyword);
     if (!res.allGood) return [];
-    return (res.body['users'] as List)
-        .map((e) => User.fromJson(e))
-        .toList();
+    return (res.body['users'] as List).map((e) => User.fromJson(e)).toList();
   }
 
   Future<WalletTransferResult> submit({
@@ -47,11 +45,9 @@ class WalletTransferController extends AsyncNotifier<User?> {
     }
     state = const AsyncLoading();
     try {
-      final res = await ref.read(_walletRequestProvider).transferWallet(
-            amount,
-            user.walletAddress,
-            password,
-          );
+      final res = await ref
+          .read(_walletRequestProvider)
+          .transferWallet(amount, user.walletAddress, password);
       state = AsyncData(user);
       return res.allGood
           ? WalletTransferSuccess(res.message ?? 'Operation successful')
@@ -65,5 +61,5 @@ class WalletTransferController extends AsyncNotifier<User?> {
 
 final walletTransferControllerProvider =
     AsyncNotifierProvider<WalletTransferController, User?>(
-  WalletTransferController.new,
-);
+      WalletTransferController.new,
+    );

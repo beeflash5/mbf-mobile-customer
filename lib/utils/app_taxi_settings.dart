@@ -14,8 +14,10 @@ class AppTaxiSettings extends AppStrings {
         AppStrings.env('taxi')["requestBookingCode"] == null) {
       return false;
     }
-    return ["both", "before"]
-        .contains(AppStrings.env('taxi')["requestBookingCode"]);
+    return [
+      "both",
+      "before",
+    ].contains(AppStrings.env('taxi')["requestBookingCode"]);
   }
 
   static bool get requiredBookingCodeAfterTrip {
@@ -23,7 +25,9 @@ class AppTaxiSettings extends AppStrings {
         AppStrings.env('taxi')["requestBookingCode"] == null) {
       return false;
     }
-    return ["both", "after"]
-        .contains(AppStrings.env('taxi')["requestBookingCode"]);
+    return [
+      "both",
+      "after",
+    ].contains(AppStrings.env('taxi')["requestBookingCode"]);
   }
 }

@@ -5,8 +5,11 @@ import 'package:fuodz/component/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorTypeHomeListItem extends StatelessWidget {
-  const VendorTypeHomeListItem(this.vendorType, {required this.onPressed, Key? key})
-      : super(key: key);
+  const VendorTypeHomeListItem(
+    this.vendorType, {
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   final VendorType vendorType;
   final void Function()? onPressed;
@@ -18,10 +21,9 @@ class VendorTypeHomeListItem extends StatelessWidget {
       child: SlideAnimation(
         verticalOffset: 50.0,
         child: FadeInAnimation(
-            child: InkWell(
-          onTap: onPressed,
-          child: VStack(
-            [
+          child: InkWell(
+            onTap: onPressed,
+            child: VStack([
               //image + details
               // Visibility(
               //   visible: !AppStrings.showVendorTypeImageOnly,
@@ -60,36 +62,32 @@ class VendorTypeHomeListItem extends StatelessWidget {
               //     boxFit: BoxFit.contain,
               //   ),
               // ),
-
               Center(
-                child: CustomImage(
-                        imageUrl: vendorType.logo,
-                        height: 70,
-                        width: 80,
-                        boxFit: BoxFit.cover
-                        // width: Vx.dp40,
-                        // height: Vx.dp40,
-                        )
-                    .box
-                    .clip(Clip.antiAlias)
-                    .withRounded(value: 10)
-                    .make(),
+                child:
+                    CustomImage(
+                      imageUrl: vendorType.logo,
+                      height: 70,
+                      width: 80,
+                      boxFit: BoxFit.cover,
+                      // width: Vx.dp40,
+                      // height: Vx.dp40,
+                    ).box.clip(Clip.antiAlias).withRounded(value: 10).make(),
               ),
 
-              SizedBox(
-                height: 8,
-              ),
+              SizedBox(height: 8),
 
               Center(
-                  child: vendorType.name.text
-                      .overflow(TextOverflow.ellipsis)
-                      .sm
-                      .bold
-                      .color(Color(0xff868686))
-                      .make()),
-            ],
-          ).centered().pOnly(bottom: Vx.dp8),
-        )),
+                child:
+                    vendorType.name.text
+                        .overflow(TextOverflow.ellipsis)
+                        .sm
+                        .bold
+                        .color(Color(0xff868686))
+                        .make(),
+              ),
+            ]).centered().pOnly(bottom: Vx.dp8),
+          ),
+        ),
       ),
     );
   }

@@ -61,8 +61,9 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(orderDetailsControllerProvider(widget.order));
-    final controller =
-        ref.read(orderDetailsControllerProvider(widget.order).notifier);
+    final controller = ref.read(
+      orderDetailsControllerProvider(widget.order).notifier,
+    );
     final order = state.order;
 
     return Scaffold(
@@ -72,201 +73,221 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
         showLeadingAction: true,
         isLoading: state.isBusy,
         onBackPressed: () => context.pop(order),
-        actions: order.isPackageDelivery
-            ? [
-                const Icon(
-                  Icons.share,
-                  color: Colors.white,
-                ).p8().onInkTap(controller.shareOrderDetails).p8(),
-              ]
-            : [],
-        body: state.isBusy
-            ? const BusyIndicator().centered()
-            : SmartRefresher(
-                controller: _refreshController,
-                onRefresh: () async {
-                  await controller.fetchOrderDetails();
-                  _refreshController.refreshCompleted();
-                },
-                child: Stack(
-                  children: [
-                    Positioned(
-                      child: Stack(
-                        children: [
-                          CustomImage(
-                            imageUrl: order.vendor!.featureImage,
-                            width: double.infinity,
-                            height: 200,
-                            boxFit: BoxFit.contain,
-                          ),
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: GlassContainer(
+        actions:
+            order.isPackageDelivery
+                ? [
+                  const Icon(
+                    Icons.share,
+                    color: Colors.white,
+                  ).p8().onInkTap(controller.shareOrderDetails).p8(),
+                ]
+                : [],
+        body:
+            state.isBusy
+                ? const BusyIndicator().centered()
+                : SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: () async {
+                    await controller.fetchOrderDetails();
+                    _refreshController.refreshCompleted();
+                  },
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        child: Stack(
+                          children: [
+                            CustomImage(
+                              imageUrl: order.vendor!.featureImage,
+                              width: double.infinity,
                               height: 200,
-                              width: context.screenWidth,
-                              color: Colors.black54,
-                              borderGradient: LinearGradient(
-                                colors: [
-                                  Colors.white.withOpacity(0.60),
-                                  Colors.white.withOpacity(0.10),
-                                  AppColor.primaryColor.withOpacity(0.05),
-                                  AppColor.primaryColor.withOpacity(0.6),
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                stops: const [0.0, 0.39, 0.40, 1.0],
+                              boxFit: BoxFit.contain,
+                            ),
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: GlassContainer(
+                                height: 200,
+                                width: context.screenWidth,
+                                color: Colors.black54,
+                                borderGradient: LinearGradient(
+                                  colors: [
+                                    Colors.white.withOpacity(0.60),
+                                    Colors.white.withOpacity(0.10),
+                                    AppColor.primaryColor.withOpacity(0.05),
+                                    AppColor.primaryColor.withOpacity(0.6),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: const [0.0, 0.39, 0.40, 1.0],
+                                ),
+                                blur: 2.0,
+                                borderWidth: 0,
+                                elevation: 0,
+                                isFrostedGlass: true,
+                                shadowColor: Colors.black.withOpacity(0.20),
+                                alignment: Alignment.center,
+                                frostedOpacity: 0.30,
+                                padding: const EdgeInsets.all(8.0),
+                                child: VStack([
+                                  order
+                                      .vendor!
+                                      .name
+                                      .text
+                                      .center
+                                      .white
+                                      .xl3
+                                      .semiBold
+                                      .makeCentered(),
+                                  UiSpacer.verticalSpace(space: 40),
+                                ], alignment: MainAxisAlignment.center),
                               ),
-                              blur: 2.0,
-                              borderWidth: 0,
-                              elevation: 0,
-                              isFrostedGlass: true,
-                              shadowColor: Colors.black.withOpacity(0.20),
-                              alignment: Alignment.center,
-                              frostedOpacity: 0.30,
-                              padding: const EdgeInsets.all(8.0),
-                              child: VStack([
-                                order.vendor!.name.text.center.white.xl3
-                                    .semiBold
-                                    .makeCentered(),
-                                UiSpacer.verticalSpace(space: 40),
-                              ], alignment: MainAxisAlignment.center),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    VStack([
-                      UiSpacer.verticalSpace(space: 160),
                       VStack([
-                        HStack([
-                          CustomImage(
-                            imageUrl: order.vendor!.logo,
-                            width: 50,
-                            height: 50,
-                          ).box.roundedSM.clip(Clip.antiAlias).make(),
-                          UiSpacer.horizontalSpace(),
-                          VStack([
-                            "${order.status.tr().capitalized}"
-                                .text
-                                .semiBold
-                                .xl
-                                .color(AppColor.getStausColor(order.status))
-                                .make(),
-                            "${Jiffy.parseFromDateTime(order.updatedAt).format(pattern: 'MMM dd, yyyy | HH:mm')}"
-                                .text
-                                .light
-                                .lg
-                                .make(),
-                            "#${order.code}"
-                                .text
-                                .xs
-                                .gray400
-                                .light
-                                .make(),
-                          ]).expand(),
-                          Visibility(
-                            visible: !order.isTaxi && !order.isSerice,
-                            child: const Icon(
-                              Icons.qr_code,
-                              size: 28,
-                            ).onInkTap(
-                              () => controller.showVerificationQRCode(context),
-                            ),
-                          ),
-                        ]).p20().wFull(context),
-                        UiSpacer.divider(),
-                        OrderPaymentInfoView(
-                          order: order,
-                          onOpenPaymentMethodSelection: () =>
-                              controller.openPaymentMethodSelection(context),
-                          paymentStatusBusy: state.paymentStatusBusy,
-                        ),
-                        Visibility(
-                          child: VStack([
-                            OrderStatusView(
-                              order: order,
-                              vendorTypeId: state.vendorTypeId,
-                              onCheckIn: controller.checkIn,
-                              onReschedule: () =>
-                                  controller.rescedule(context),
-                              onOpenOrderPayment: () =>
-                                  controller.openOrderPayment(context),
-                              onTrackOrder: () =>
-                                  controller.trackOrder(context),
-                              checkInBusy: state.checkInBusy,
-                              orderBusy: state.orderBusy,
-                            ).p20(),
-                            UiSpacer.divider(),
-                          ]),
-                        ),
-                        if (order.confirmation_note != null)
-                          _actionRequired(
-                            context: context,
-                            order: order,
-                            orderId: order.id.toString(),
-                            message: order.confirmation_note ?? "",
-                            onCancel: () =>
-                                controller.cancelConfirmOrder(context),
-                            onContinue: () => controller.confirmOrder(context),
-                          ),
-                        OrderDetailsItemsView(order: order).p20(),
-                        Visibility(
-                          visible: order.deliveryAddress != null,
-                          child: OrderAddressesView(order: order).p20(),
-                        ),
-                        OrderAttachmentView(order: order),
-                        CustomVisibilty(
-                          visible: !order.isPackageDelivery &&
-                              order.deliveryAddress == null,
-                          child: "".tr().text.italic.light.xl.medium.make(),
-                        ),
-                        "Note".tr().text.semiBold.xl.make().px20(),
-                        "${order.note}".text.light.sm.make().px20(),
-                        UiSpacer.vSpace(5),
-                        UiSpacer.divider(),
-                        UiSpacer.vSpace(),
-                        OrderDetailsVendorInfoView(
-                          order: order,
-                          vendorTypeId: state.vendorTypeId,
-                          onCallVendor: controller.callVendor,
-                          onChatVendor: () => controller.chatVendor(context),
-                          onRateVendor: () => controller.rateVendor(context),
-                        ),
-                        OrderDetailsDriverInfoView(
-                          order: order,
-                          onCallDriver: controller.callDriver,
-                          onChatDriver: () => controller.chatDriver(context),
-                          onRateDriver: () => controller.rateDriver(context),
-                        ),
-                        UiSpacer.divider(),
-                        OrderDetailsSummary(order)
-                            .wFull(context)
-                            .p20()
-                            .pOnly(bottom: context.percentHeight * 10)
-                            .box
+                        UiSpacer.verticalSpace(space: 160),
+                        VStack([
+                              HStack([
+                                CustomImage(
+                                  imageUrl: order.vendor!.logo,
+                                  width: 50,
+                                  height: 50,
+                                ).box.roundedSM.clip(Clip.antiAlias).make(),
+                                UiSpacer.horizontalSpace(),
+                                VStack([
+                                  "${order.status.tr().capitalized}"
+                                      .text
+                                      .semiBold
+                                      .xl
+                                      .color(
+                                        AppColor.getStausColor(order.status),
+                                      )
+                                      .make(),
+                                  "${Jiffy.parseFromDateTime(order.updatedAt).format(pattern: 'MMM dd, yyyy | HH:mm')}"
+                                      .text
+                                      .light
+                                      .lg
+                                      .make(),
+                                  "#${order.code}".text.xs.gray400.light.make(),
+                                ]).expand(),
+                                Visibility(
+                                  visible: !order.isTaxi && !order.isSerice,
+                                  child: const Icon(
+                                    Icons.qr_code,
+                                    size: 28,
+                                  ).onInkTap(
+                                    () => controller.showVerificationQRCode(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                              ]).p20().wFull(context),
+                              UiSpacer.divider(),
+                              OrderPaymentInfoView(
+                                order: order,
+                                onOpenPaymentMethodSelection:
+                                    () => controller.openPaymentMethodSelection(
+                                      context,
+                                    ),
+                                paymentStatusBusy: state.paymentStatusBusy,
+                              ),
+                              Visibility(
+                                child: VStack([
+                                  OrderStatusView(
+                                    order: order,
+                                    vendorTypeId: state.vendorTypeId,
+                                    onCheckIn: controller.checkIn,
+                                    onReschedule:
+                                        () => controller.rescedule(context),
+                                    onOpenOrderPayment:
+                                        () => controller.openOrderPayment(
+                                          context,
+                                        ),
+                                    onTrackOrder:
+                                        () => controller.trackOrder(context),
+                                    checkInBusy: state.checkInBusy,
+                                    orderBusy: state.orderBusy,
+                                  ).p20(),
+                                  UiSpacer.divider(),
+                                ]),
+                              ),
+                              if (order.confirmation_note != null)
+                                _actionRequired(
+                                  context: context,
+                                  order: order,
+                                  orderId: order.id.toString(),
+                                  message: order.confirmation_note ?? "",
+                                  onCancel:
+                                      () => controller.cancelConfirmOrder(
+                                        context,
+                                      ),
+                                  onContinue:
+                                      () => controller.confirmOrder(context),
+                                ),
+                              OrderDetailsItemsView(order: order).p20(),
+                              Visibility(
+                                visible: order.deliveryAddress != null,
+                                child: OrderAddressesView(order: order).p20(),
+                              ),
+                              OrderAttachmentView(order: order),
+                              CustomVisibilty(
+                                visible:
+                                    !order.isPackageDelivery &&
+                                    order.deliveryAddress == null,
+                                child:
+                                    "".tr().text.italic.light.xl.medium.make(),
+                              ),
+                              "Note".tr().text.semiBold.xl.make().px20(),
+                              "${order.note}".text.light.sm.make().px20(),
+                              UiSpacer.vSpace(5),
+                              UiSpacer.divider(),
+                              UiSpacer.vSpace(),
+                              OrderDetailsVendorInfoView(
+                                order: order,
+                                vendorTypeId: state.vendorTypeId,
+                                onCallVendor: controller.callVendor,
+                                onChatVendor:
+                                    () => controller.chatVendor(context),
+                                onRateVendor:
+                                    () => controller.rateVendor(context),
+                              ),
+                              OrderDetailsDriverInfoView(
+                                order: order,
+                                onCallDriver: controller.callDriver,
+                                onChatDriver:
+                                    () => controller.chatDriver(context),
+                                onRateDriver:
+                                    () => controller.rateDriver(context),
+                              ),
+                              UiSpacer.divider(),
+                              OrderDetailsSummary(order)
+                                  .wFull(context)
+                                  .p20()
+                                  .pOnly(bottom: context.percentHeight * 10)
+                                  .box
+                                  .make(),
+                            ]).box
+                            .topRounded(value: 15)
+                            .clip(Clip.antiAlias)
+                            .color(context.theme.colorScheme.surface)
                             .make(),
-                      ])
-                          .box
-                          .topRounded(value: 15)
-                          .clip(Clip.antiAlias)
-                          .color(context.theme.colorScheme.surface)
-                          .make(),
-                      UiSpacer.vSpace(50),
-                    ]).scrollVertical(),
-                  ],
+                        UiSpacer.vSpace(50),
+                      ]).scrollVertical(),
+                    ],
+                  ),
                 ),
-              ),
-        bottomSheet: widget.isOrderTracking
-            ? null
-            : OrderBottomSheet(
-                order: order,
-                onCancel: () => controller.cancelOrder(context),
-                isBusy: state.isBusy,
-                orderBusy: state.orderBusy,
-              ),
+        bottomSheet:
+            widget.isOrderTracking
+                ? null
+                : OrderBottomSheet(
+                  order: order,
+                  onCancel: () => controller.cancelOrder(context),
+                  isBusy: state.isBusy,
+                  orderBusy: state.orderBusy,
+                ),
       ),
     );
   }
@@ -316,12 +337,12 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
         children: [
           Container(
             width: double.infinity,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: headerColor,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,9 +371,10 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                 Text(
                   description,
                   style: TextStyle(
-                    color: status == 2
-                        ? Colors.green
-                        : status == 3
+                    color:
+                        status == 2
+                            ? Colors.green
+                            : status == 3
                             ? Colors.red
                             : Colors.black87,
                   ),

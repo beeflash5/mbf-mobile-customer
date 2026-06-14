@@ -21,41 +21,40 @@ class _ProductImagesGalleryViewState extends State<ProductImagesGalleryView> {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //currently selected image
-        CustomImage(
-          imageUrl: selectedPhoto ?? widget.product.photo,
-          boxFit: BoxFit.contain,
-          height: context.percentHeight * 30,
-          width: double.infinity,
-          canZoom: true,
-        ).box.color(AppColor.faintBgColor).make(),
-        //preview of other items
-        CustomVisibilty(
-          visible: widget.product.photos.length > 1,
-          child: CustomListView(
-            padding: EdgeInsets.symmetric(horizontal: Vx.dp12),
-            scrollDirection: Axis.horizontal,
-            dataSet: widget.product.photos,
-            itemBuilder: (context, index) {
-              final photo = widget.product.photos[index];
-              //
-              return CustomImage(
-                imageUrl: photo,
-                boxFit: BoxFit.contain,
-                height: 70,
-                width: 60,
-                canZoom: true,
-              ).box.color(AppColor.faintBgColor).make().onInkTap(() {
-                setState(() {
-                  selectedPhoto = photo;
+    return VStack([
+      //currently selected image
+      CustomImage(
+        imageUrl: selectedPhoto ?? widget.product.photo,
+        boxFit: BoxFit.contain,
+        height: context.percentHeight * 30,
+        width: double.infinity,
+        canZoom: true,
+      ).box.color(AppColor.faintBgColor).make(),
+      //preview of other items
+      CustomVisibilty(
+        visible: widget.product.photos.length > 1,
+        child:
+            CustomListView(
+              padding: EdgeInsets.symmetric(horizontal: Vx.dp12),
+              scrollDirection: Axis.horizontal,
+              dataSet: widget.product.photos,
+              itemBuilder: (context, index) {
+                final photo = widget.product.photos[index];
+                //
+                return CustomImage(
+                  imageUrl: photo,
+                  boxFit: BoxFit.contain,
+                  height: 70,
+                  width: 60,
+                  canZoom: true,
+                ).box.color(AppColor.faintBgColor).make().onInkTap(() {
+                  setState(() {
+                    selectedPhoto = photo;
+                  });
                 });
-              });
-            },
-          ).h(80).box.color(context.theme.colorScheme.surface).make(),
-        ),
-      ],
-    );
+              },
+            ).h(80).box.color(context.theme.colorScheme.surface).make(),
+      ),
+    ]);
   }
 }

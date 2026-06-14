@@ -4,8 +4,7 @@ import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/search_data.dart';
 import 'package:fuodz/services/search.request.dart';
 
-final _searchRequestProvider =
-    Provider<SearchRequest>((_) => SearchRequest());
+final _searchRequestProvider = Provider<SearchRequest>((_) => SearchRequest());
 
 class SearchFilterState {
   const SearchFilterState({
@@ -29,16 +28,16 @@ class SearchFilterState {
     bool? filterByProducts,
     bool clearAddress = false,
     bool clearRating = false,
-  }) =>
-      SearchFilterState(
-        searchData: searchData ?? this.searchData,
-        selectedDeliveryAddress: clearAddress
+  }) => SearchFilterState(
+    searchData: searchData ?? this.searchData,
+    selectedDeliveryAddress:
+        clearAddress
             ? null
             : (selectedDeliveryAddress ?? this.selectedDeliveryAddress),
-        rating: clearRating ? null : (rating ?? this.rating),
-        selectedTagId: selectedTagId ?? this.selectedTagId,
-        filterByProducts: filterByProducts ?? this.filterByProducts,
-      );
+    rating: clearRating ? null : (rating ?? this.rating),
+    selectedTagId: selectedTagId ?? this.selectedTagId,
+    filterByProducts: filterByProducts ?? this.filterByProducts,
+  );
 }
 
 /// Search filter state keyed by vendorTypeId (0 = no filter).
@@ -72,6 +71,7 @@ class SearchFilterController
 }
 
 final searchFilterControllerProvider = AsyncNotifierProvider.family<
-    SearchFilterController, SearchFilterState, int>(
-  SearchFilterController.new,
-);
+  SearchFilterController,
+  SearchFilterState,
+  int
+>(SearchFilterController.new);

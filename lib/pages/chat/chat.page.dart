@@ -1,4 +1,4 @@
-// 
+//
 // import 'package:firebase_chat/models/chat_entity.dart';
 // import 'package:flutter/material.dart';
 // import 'package:fuodz/component/chat.view.dart';

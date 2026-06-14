@@ -48,9 +48,10 @@ class _NearByVendorsState extends ConsumerState<NearByVendors> {
               color: Colors.white,
             ),
             onPressed: () => setState(() => _selectedType = 1),
-            color: _selectedType == 1
-                ? AppColor.primaryColor
-                : Colors.grey.shade600,
+            color:
+                _selectedType == 1
+                    ? AppColor.primaryColor
+                    : Colors.grey.shade600,
           ).h(32).px8(),
           CustomButton(
             title: "Pickup".tr(),
@@ -58,9 +59,10 @@ class _NearByVendorsState extends ConsumerState<NearByVendors> {
               fontSize: 12,
               color: Colors.white,
             ),
-            color: _selectedType == 2
-                ? AppColor.primaryColor
-                : Colors.grey.shade600,
+            color:
+                _selectedType == 2
+                    ? AppColor.primaryColor
+                    : Colors.grey.shade600,
             onPressed: () => setState(() => _selectedType = 2),
           ).h(32),
         ]).p12(),
@@ -74,7 +76,8 @@ class _NearByVendorsState extends ConsumerState<NearByVendors> {
             return FittedBox(
               child: VendorListItem(
                 vendor: vendor,
-                onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
+                onPressed:
+                    (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
               ),
             );
           },

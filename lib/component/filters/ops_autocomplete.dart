@@ -30,7 +30,8 @@ class OPSAutocompleteTextField extends ConsumerWidget {
         return TextFormField(
           controller: controller,
           focusNode: focusNode,
-          decoration: inputDecoration ??
+          decoration:
+              inputDecoration ??
               InputDecoration(hintText: 'Search address'.tr()),
         );
       },
@@ -38,10 +39,11 @@ class OPSAutocompleteTextField extends ConsumerWidget {
       suggestionsCallback: notifier.fetchPlaces,
       retainOnLoading: false,
       emptyBuilder: (ctx) => "No Address found".tr().text.make().p12(),
-      itemBuilder: (context, suggestion) => ListTile(
-        title: "${suggestion.addressLine}".text.base.semiBold.make(),
-        subtitle: "${suggestion.adminArea}".text.sm.make(),
-      ),
+      itemBuilder:
+          (context, suggestion) => ListTile(
+            title: "${suggestion.addressLine}".text.base.semiBold.make(),
+            subtitle: "${suggestion.adminArea}".text.sm.make(),
+          ),
       onSelected: (address) async {
         final mAddress = await notifier.fetchPlaceDetails(address);
         onselected(mAddress);

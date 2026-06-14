@@ -10,11 +10,7 @@ import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/auth.service.dart';
 
 class ProductFavButton extends ConsumerStatefulWidget {
-  const ProductFavButton({
-    super.key,
-    required this.product,
-    this.color,
-  });
+  const ProductFavButton({super.key, required this.product, this.color});
 
   final Product product;
   final Color? color;
@@ -35,9 +31,10 @@ class _ProductFavButtonState extends ConsumerState<ProductFavButton> {
     final notifier = ref.read(
       productDetailsControllerProvider(widget.product).notifier,
     );
-    final result = widget.product.isFavourite
-        ? await notifier.removeFromFavourite()
-        : await notifier.addToFavourite();
+    final result =
+        widget.product.isFavourite
+            ? await notifier.removeFromFavourite()
+            : await notifier.addToFavourite();
     if (!mounted) return;
     setState(() => _busy = false);
     if (result.ok) {
@@ -51,8 +48,9 @@ class _ProductFavButtonState extends ConsumerState<ProductFavButton> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(productDetailsControllerProvider(widget.product));
+    final asyncState = ref.watch(
+      productDetailsControllerProvider(widget.product),
+    );
     final liveProduct = asyncState.valueOrNull?.product ?? widget.product;
     return CustomOutlineButton(
       loading: _busy,

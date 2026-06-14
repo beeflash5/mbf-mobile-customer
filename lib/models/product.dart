@@ -101,26 +101,33 @@ class Product {
     if (json["variants"] != null) {
       final variantsList = List<dynamic>.from(json["variants"]);
       if (variantsList.isNotEmpty) {
-        final variantOptions = variantsList.map((v) {
-          return Option(
-            id: v["id"] ?? 0,
-            name: v["name"] ?? "",
-            price: v["price"] != null ? double.parse(v["price"].toString()) : 0.0,
-            photo: "",
-            optionGroupId: -1,
-            description: "",
-          );
-        }).toList();
+        final variantOptions =
+            variantsList.map((v) {
+              return Option(
+                id: v["id"] ?? 0,
+                name: v["name"] ?? "",
+                price:
+                    v["price"] != null
+                        ? double.parse(v["price"].toString())
+                        : 0.0,
+                photo: "",
+                optionGroupId: -1,
+                description: "",
+              );
+            }).toList();
 
-        productOptions.insert(0, OptionGroup(
-          id: -1,
-          name: "Variant",
-          multiple: 0,
-          required: 0, // "None" is allowed by default
-          isActive: 1,
-          photo: "",
-          options: variantOptions,
-        ));
+        productOptions.insert(
+          0,
+          OptionGroup(
+            id: -1,
+            name: "Variant",
+            multiple: 0,
+            required: 0, // "None" is allowed by default
+            isActive: 1,
+            photo: "",
+            options: variantOptions,
+          ),
+        );
       }
     }
     return Product(
@@ -133,9 +140,9 @@ class Product {
               : !rawDescription
               ? json["description"]
               : json["description"].toString().replaceAll(
-                 RegExp(r'<[^>]*>'),
-                 '',
-               ),
+                RegExp(r'<[^>]*>'),
+                '',
+              ),
       price: double.parse(json["price"].toString()),
       discountPrice:
           json["discount_price"] == null
@@ -169,9 +176,10 @@ class Product {
       vendorId: int.parse(json["vendor_id"].toString()),
       categoryId: json["category_id"],
       photo: json["photo"] ?? "",
-      vendor: json["vendor"] == null
-          ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
-          : Vendor.fromJson(json["vendor"]),
+      vendor:
+          json["vendor"] == null
+              ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
+              : Vendor.fromJson(json["vendor"]),
       optionGroups: productOptions,
       digitalFiles:
           json["digital_files"] == null
@@ -252,7 +260,9 @@ class Product {
     "reviews_count": reviewsCount,
     "age_restricted": ageRestricted,
     "tags":
-        tags == null ? null : List<dynamic>.from((tags ?? []).map((x) => x.toJson())),
+        tags == null
+            ? null
+            : List<dynamic>.from((tags ?? []).map((x) => x.toJson())),
     "token": token,
     "description_url": description_url,
     "shareable_link": shareable_link,

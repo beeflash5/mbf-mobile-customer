@@ -30,8 +30,8 @@ class ProductReviewStat {
       );
 
   Map<String, dynamic> toJson() => {
-        "count": count,
-        "percentage": percentage,
-        "rate": rate,
-      };
+    "count": count,
+    "percentage": percentage,
+    "rate": rate,
+  };
 }

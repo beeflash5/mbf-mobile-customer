@@ -4,12 +4,12 @@ import 'package:fuodz/models/product.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/favourite.request.dart';
 
-final favouritesRequestProvider =
-    Provider<FavouriteRequest>((_) => FavouriteRequest());
+final favouritesRequestProvider = Provider<FavouriteRequest>(
+  (_) => FavouriteRequest(),
+);
 
 /// Controller list produk favorit.
-class FavouriteProductsController
-    extends AsyncNotifier<List<Product>> {
+class FavouriteProductsController extends AsyncNotifier<List<Product>> {
   @override
   Future<List<Product>> build() async {
     return ref.read(favouritesRequestProvider).favourites();
@@ -37,8 +37,8 @@ class FavouriteProductsController
 
 final favouriteProductsControllerProvider =
     AsyncNotifierProvider<FavouriteProductsController, List<Product>>(
-  FavouriteProductsController.new,
-);
+      FavouriteProductsController.new,
+    );
 
 /// Controller list vendor favorit.
 class FavouriteVendorsController extends AsyncNotifier<List<Vendor>> {
@@ -66,5 +66,5 @@ class FavouriteVendorsController extends AsyncNotifier<List<Vendor>> {
 
 final favouriteVendorsControllerProvider =
     AsyncNotifierProvider<FavouriteVendorsController, List<Vendor>>(
-  FavouriteVendorsController.new,
-);
+      FavouriteVendorsController.new,
+    );

@@ -35,7 +35,7 @@ class _OrderChatPageState extends State<OrderChatPage> {
   int? currentUserId;
   bool isBusy = true;
   bool isUploading = false;
-  
+
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -64,18 +64,22 @@ class _OrderChatPageState extends State<OrderChatPage> {
       if (token != null) {
         dio.options.headers["Authorization"] = "Bearer $token";
       }
-      final url = "${Api.baseUrl}/chat/history/${widget.orderCode}/${widget.chatType}";
+      final url =
+          "${Api.baseUrl}/chat/history/${widget.orderCode}/${widget.chatType}";
       print("Fetching chat history from: $url");
       final response = await dio.get(url);
-      
+
       print("History response status: ${response.statusCode}");
       print("History response data: ${response.data}");
-      
+
       if (response.statusCode == 200 && response.data != null) {
         if (mounted) {
           setState(() {
             final rawData = response.data["data"] as List<dynamic>? ?? [];
-            messages = rawData.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+            messages =
+                rawData
+                    .map((e) => Map<String, dynamic>.from(e as Map))
+                    .toList();
           });
           _scrollToBottom();
         }
@@ -89,20 +93,27 @@ class _OrderChatPageState extends State<OrderChatPage> {
   void _connectWebSocket() {
     StompWebsocketService().connect(
       onConnect: (StompFrame frame) {
-        StompWebsocketService().subscribe('/topic/chat.${widget.orderCode}.${widget.chatType}', (StompFrame frame) {
-          if (frame.body != null) {
-            final Map<String, dynamic> newMessage = Map<String, dynamic>.from(jsonDecode(frame.body!));
-            if (newMessage["attachment"] != null && (newMessage["attachments"] == null || (newMessage["attachments"] as List).isEmpty)) {
-              newMessage["attachments"] = [newMessage["attachment"]];
+        StompWebsocketService().subscribe(
+          '/topic/chat.${widget.orderCode}.${widget.chatType}',
+          (StompFrame frame) {
+            if (frame.body != null) {
+              final Map<String, dynamic> newMessage = Map<String, dynamic>.from(
+                jsonDecode(frame.body!),
+              );
+              if (newMessage["attachment"] != null &&
+                  (newMessage["attachments"] == null ||
+                      (newMessage["attachments"] as List).isEmpty)) {
+                newMessage["attachments"] = [newMessage["attachment"]];
+              }
+              if (mounted) {
+                setState(() {
+                  messages.add(newMessage);
+                });
+                _scrollToBottom();
+              }
             }
-            if (mounted) {
-              setState(() {
-                messages.add(newMessage);
-              });
-              _scrollToBottom();
-            }
-          }
-        });
+          },
+        );
       },
       onWebSocketError: (dynamic error) => print('WS error: $error'),
     );
@@ -144,7 +155,10 @@ class _OrderChatPageState extends State<OrderChatPage> {
       Dio dio = Dio();
       final token = await AuthServices.getAuthBearerToken();
       dio.options.headers["Authorization"] = "Bearer $token";
-      final response = await dio.post("${Api.baseUrl}/chat/upload", data: formData);
+      final response = await dio.post(
+        "${Api.baseUrl}/chat/upload",
+        data: formData,
+      );
       if (response.statusCode == 200 && response.data["success"]) {
         final url = response.data["url"];
         _sendMessage(attachmentUrl: url);
@@ -157,7 +171,7 @@ class _OrderChatPageState extends State<OrderChatPage> {
     }
     if (mounted) setState(() => isUploading = false);
   }
-  
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -187,62 +201,88 @@ class _OrderChatPageState extends State<OrderChatPage> {
       body: Column(
         children: [
           Expanded(
-            child: isBusy
-                ? const CircularProgressIndicator().centered()
-                : ListView.builder(
-                    controller: _scrollController,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final msg = messages[index];
-                      final isMe = msg["sender_id"] == currentUserId;
-                      final attachments = msg["attachments"] as List<dynamic>? ?? [];
-                      
-                      return Align(
-                        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: isMe ? context.theme.primaryColor : Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (msg["message"] != null && msg["message"].toString().isNotEmpty)
-                                Text(
-                                  msg["message"],
-                                  style: TextStyle(color: isMe ? Colors.white : Colors.black),
-                                ),
-                              if (attachments.isNotEmpty)
-                                ...attachments.map((url) => Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: CachedNetworkImage(
-                                    imageUrl: url.toString(),
-                                    width: 150,
-                                    height: 150,
-                                    fit: BoxFit.cover,
+            child:
+                isBusy
+                    ? const CircularProgressIndicator().centered()
+                    : ListView.builder(
+                      controller: _scrollController,
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final msg = messages[index];
+                        final isMe = msg["sender_id"] == currentUserId;
+                        final attachments =
+                            msg["attachments"] as List<dynamic>? ?? [];
+
+                        return Align(
+                          alignment:
+                              isMe
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 10,
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color:
+                                  isMe
+                                      ? context.theme.primaryColor
+                                      : Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (msg["message"] != null &&
+                                    msg["message"].toString().isNotEmpty)
+                                  Text(
+                                    msg["message"],
+                                    style: TextStyle(
+                                      color: isMe ? Colors.white : Colors.black,
+                                    ),
                                   ),
-                                )).toList(),
-                              const SizedBox(height: 5),
-                              Text(
-                                Jiffy.parseFromMillisecondsSinceEpoch(
-                                  msg["timestamp"] != null ? int.tryParse(msg["timestamp"].toString()) ?? DateTime.now().millisecondsSinceEpoch : DateTime.now().millisecondsSinceEpoch
-                                ).format(pattern: "hh:mm a"),
-                                style: TextStyle(
-                                  color: isMe ? Colors.white70 : Colors.black54,
-                                  fontSize: 10,
+                                if (attachments.isNotEmpty)
+                                  ...attachments
+                                      .map(
+                                        (url) => Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 5,
+                                          ),
+                                          child: CachedNetworkImage(
+                                            imageUrl: url.toString(),
+                                            width: 150,
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                const SizedBox(height: 5),
+                                Text(
+                                  Jiffy.parseFromMillisecondsSinceEpoch(
+                                    msg["timestamp"] != null
+                                        ? int.tryParse(
+                                              msg["timestamp"].toString(),
+                                            ) ??
+                                            DateTime.now()
+                                                .millisecondsSinceEpoch
+                                        : DateTime.now().millisecondsSinceEpoch,
+                                  ).format(pattern: "hh:mm a"),
+                                  style: TextStyle(
+                                    color:
+                                        isMe ? Colors.white70 : Colors.black54,
+                                    fontSize: 10,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
+                        );
+                      },
+                    ),
           ),
-          if (isUploading)
-            const LinearProgressIndicator().wFull(context),
+          if (isUploading) const LinearProgressIndicator().wFull(context),
           Container(
             padding: const EdgeInsets.all(10),
             color: context.theme.colorScheme.surface,
@@ -260,7 +300,9 @@ class _OrderChatPageState extends State<OrderChatPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
                     ),
                   ),
                 ),

@@ -35,79 +35,82 @@ class OrderDeliveryAddressPickerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VStack([
-      Visibility(
-        visible: showPickView && !vendor.allowOnlyDelivery,
-        child: HStack([
-          Checkbox(value: isPickup, onChanged: onTogglePickup),
-          VStack([
-            "Pickup Order".tr().text.xl.semiBold.make(),
-            "Please indicate if you would come pickup order at the vendor"
-                .tr()
-                .text
-                .make(),
-          ]).expand(),
-        ], crossAlignment: CrossAxisAlignment.start)
-            .wFull(context)
-            .onInkTap(() => onTogglePickup(!isPickup)),
-      ),
-      Visibility(
-        visible: !isPickup && !vendor.allowOnlyPickup,
-        child: VStack([
           Visibility(
-            visible: showPickView && vendor.pickup == 1,
-            child: const Divider(thickness: 1).py4(),
+            visible: showPickView && !vendor.allowOnlyDelivery,
+            child: HStack(
+              [
+                Checkbox(value: isPickup, onChanged: onTogglePickup),
+                VStack([
+                  "Pickup Order".tr().text.xl.semiBold.make(),
+                  "Please indicate if you would come pickup order at the vendor"
+                      .tr()
+                      .text
+                      .make(),
+                ]).expand(),
+              ],
+              crossAlignment: CrossAxisAlignment.start,
+            ).wFull(context).onInkTap(() => onTogglePickup(!isPickup)),
           ),
-          HStack([
-            VStack([
-              "${!isBooking ? 'Delivery' : 'Booking'} address"
-                  .tr()
-                  .text
-                  .semiBold
-                  .xl
-                  .make(),
-              "Please select %s address/location"
-                  .tr()
-                  .fill(["${!isBooking ? 'delivery' : 'booking'}".tr()])
-                  .text
-                  .make(),
-            ]).expand(),
-            20.widthBox,
-            CustomButton(
-              title: "Select".tr(),
-              onPressed: onPickAddress,
-            ).h(40),
-          ]),
-          DottedBorder(
-            borderType: BorderType.RRect,
-            color: context.accentColor,
-            strokeWidth: 1,
-            strokeCap: StrokeCap.round,
-            radius: const Radius.circular(5),
-            dashPattern: const [3, 6],
-            child: deliveryAddress != null
-                ? DeliveryAddressListItem(
-                    deliveryAddress: deliveryAddress!,
-                    action: false,
-                    border: false,
-                    showDefault: false,
-                  )
-                : EmptyDeliveryAddress(
-                    selection: true,
-                    isBooking: isBooking,
-                  ).py12().opacity(value: 0.60),
-          ).wFull(context).py12().onInkTap(onPickAddress),
           Visibility(
-            visible: deliveryAddressOutOfRange,
-            child: "Delivery address is out of vendor delivery range"
-                .tr()
-                .text
-                .sm
-                .red500
-                .make(),
+            visible: !isPickup && !vendor.allowOnlyPickup,
+            child: VStack([
+              Visibility(
+                visible: showPickView && vendor.pickup == 1,
+                child: const Divider(thickness: 1).py4(),
+              ),
+              HStack([
+                VStack([
+                  "${!isBooking ? 'Delivery' : 'Booking'} address"
+                      .tr()
+                      .text
+                      .semiBold
+                      .xl
+                      .make(),
+                  "Please select %s address/location"
+                      .tr()
+                      .fill(["${!isBooking ? 'delivery' : 'booking'}".tr()])
+                      .text
+                      .make(),
+                ]).expand(),
+                20.widthBox,
+                CustomButton(
+                  title: "Select".tr(),
+                  onPressed: onPickAddress,
+                ).h(40),
+              ]),
+              DottedBorder(
+                borderType: BorderType.RRect,
+                color: context.accentColor,
+                strokeWidth: 1,
+                strokeCap: StrokeCap.round,
+                radius: const Radius.circular(5),
+                dashPattern: const [3, 6],
+                child:
+                    deliveryAddress != null
+                        ? DeliveryAddressListItem(
+                          deliveryAddress: deliveryAddress!,
+                          action: false,
+                          border: false,
+                          showDefault: false,
+                        )
+                        : EmptyDeliveryAddress(
+                          selection: true,
+                          isBooking: isBooking,
+                        ).py12().opacity(value: 0.60),
+              ).wFull(context).py12().onInkTap(onPickAddress),
+              Visibility(
+                visible: deliveryAddressOutOfRange,
+                child:
+                    "Delivery address is out of vendor delivery range"
+                        .tr()
+                        .text
+                        .sm
+                        .red500
+                        .make(),
+              ),
+            ]),
           ),
-        ]),
-      ),
-    ])
+        ])
         .p12()
         .box
         .roundedSM

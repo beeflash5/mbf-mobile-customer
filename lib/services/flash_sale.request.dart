@@ -16,10 +16,7 @@ class FlashSaleRequest extends ApiService {
       "longitude": await LocationService.getFetchByLocationLng(),
     };
 
-    final apiResult = await get(
-      Api.flashSales,
-      queryParameters: params,
-    );
+    final apiResult = await get(Api.flashSales, queryParameters: params);
 
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
@@ -44,19 +41,16 @@ class FlashSaleRequest extends ApiService {
       "longitude": await LocationService.getFetchByLocationLng(),
     };
 
-    final apiResult = await get(
-      Api.flashSales,
-      queryParameters: params,
-    );
+    final apiResult = await get(Api.flashSales, queryParameters: params);
 
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       return List<Product>.from(
-        ((apiResponse.body is List) ? apiResponse.body : apiResponse.data).map(
-          (jsonObject) {
-            return Product.fromJson(jsonObject["item"]);
-          },
-        ),
+        ((apiResponse.body is List) ? apiResponse.body : apiResponse.data).map((
+          jsonObject,
+        ) {
+          return Product.fromJson(jsonObject["item"]);
+        }),
       );
     }
 

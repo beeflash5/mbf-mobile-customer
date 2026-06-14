@@ -48,65 +48,76 @@ class GroceryProductsSectionView extends ConsumerWidget {
       byLocation: false,
       isHome: false,
     );
-    final asyncProducts =
-        ref.watch(productsListingControllerProvider(args));
+    final asyncProducts = ref.watch(productsListingControllerProvider(args));
     final products = asyncProducts.valueOrNull ?? const <Product>[];
     final isLoading = asyncProducts.isLoading;
-    final anyWithOptions = products.any((e) =>
-        e.optionGroups.isNotEmpty && e.optionGroups.first.options.isNotEmpty);
+    final anyWithOptions = products.any(
+      (e) =>
+          e.optionGroups.isNotEmpty && e.optionGroups.first.options.isNotEmpty,
+    );
 
     return CustomVisibilty(
       visible: products.isNotEmpty && !isLoading,
-      child: VStack([
-        HStack([
-          title.text.xl.semiBold.make().expand(),
-          UiSpacer.smHorizontalSpace(),
-          "See all".tr().text.color(context.primaryColor).make().onInkTap(() {
-            if (onSeeAllPressed != null) {
-              onSeeAllPressed!();
-            } else {
-              final search = Search(
-                category: category,
-                vendorType: vendorType,
-                showProductsTag: true,
-              );
-              context.pushRoute(AppRoutes.search, extra: search);
-            }
-          }),
-        ]).p12(),
-        if (!showGrid)
-          CustomListView(
-            isLoading: isLoading,
-            dataSet: products,
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: Vx.dp12),
-            itemBuilder: (context, index) {
-              return GroceryProductListItem(
-                product: products[index],
-                onPressed: (p) => context.pushWidget(ProductDetailsPage(product: p)),
-                qtyUpdated: (p, q) =>
-                    CartHelper.addToCartDirectly(context, p, q),
-              );
-            },
-          ).h(anyWithOptions ? 220 : 180),
-        if (showGrid)
-          CustomMasonryGridView(
-            isLoading: isLoading,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            crossAxisCount: crossAxisCount,
-            items: products
-                .map(
-                  (product) => GroceryProductListItem(
-                    product: product,
-                    onPressed: (p) => context.pushWidget(ProductDetailsPage(product: p)),
-                    qtyUpdated: (p, q) =>
-                        CartHelper.addToCartDirectly(context, p, q),
-                  ),
-                )
-                .toList(),
-          ).px12(),
-      ]).py12(),
+      child:
+          VStack([
+            HStack([
+              title.text.xl.semiBold.make().expand(),
+              UiSpacer.smHorizontalSpace(),
+              "See all".tr().text.color(context.primaryColor).make().onInkTap(
+                () {
+                  if (onSeeAllPressed != null) {
+                    onSeeAllPressed!();
+                  } else {
+                    final search = Search(
+                      category: category,
+                      vendorType: vendorType,
+                      showProductsTag: true,
+                    );
+                    context.pushRoute(AppRoutes.search, extra: search);
+                  }
+                },
+              ),
+            ]).p12(),
+            if (!showGrid)
+              CustomListView(
+                isLoading: isLoading,
+                dataSet: products,
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: Vx.dp12),
+                itemBuilder: (context, index) {
+                  return GroceryProductListItem(
+                    product: products[index],
+                    onPressed:
+                        (p) =>
+                            context.pushWidget(ProductDetailsPage(product: p)),
+                    qtyUpdated:
+                        (p, q) => CartHelper.addToCartDirectly(context, p, q),
+                  );
+                },
+              ).h(anyWithOptions ? 220 : 180),
+            if (showGrid)
+              CustomMasonryGridView(
+                isLoading: isLoading,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: crossAxisCount,
+                items:
+                    products
+                        .map(
+                          (product) => GroceryProductListItem(
+                            product: product,
+                            onPressed:
+                                (p) => context.pushWidget(
+                                  ProductDetailsPage(product: p),
+                                ),
+                            qtyUpdated:
+                                (p, q) =>
+                                    CartHelper.addToCartDirectly(context, p, q),
+                          ),
+                        )
+                        .toList(),
+              ).px12(),
+          ]).py12(),
     );
   }
 }

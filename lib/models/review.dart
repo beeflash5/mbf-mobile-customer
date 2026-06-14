@@ -46,80 +46,85 @@ class Review {
   Vendor? vendor;
   User? user;
 
-factory Review.fromJson(Map<String, dynamic> json) {
-  try {
-    return Review(
-      id: json["id"] ?? 0,
-      rating: json["rating"] ?? 0,
+  factory Review.fromJson(Map<String, dynamic> json) {
+    try {
+      return Review(
+        id: json["id"] ?? 0,
+        rating: json["rating"] ?? 0,
 
-      review: json["review"] ?? '',
+        review: json["review"] ?? '',
 
-      userId: json["user_id"],
-      vendorId: json["vendor_id"],
-      driverId: json["driver_id"],
-      orderId: json["order_id"],
+        userId: json["user_id"],
+        vendorId: json["vendor_id"],
+        driverId: json["driver_id"],
+        orderId: json["order_id"],
 
-      createdAt: json["created_at"] != null
-          ? DateTime.parse(json["created_at"])
-          : DateTime.now(),
+        createdAt:
+            json["created_at"] != null
+                ? DateTime.parse(json["created_at"])
+                : DateTime.now(),
 
-      updatedAt: json["updated_at"] != null
-          ? DateTime.parse(json["updated_at"])
-          : DateTime.now(),
+        updatedAt:
+            json["updated_at"] != null
+                ? DateTime.parse(json["updated_at"])
+                : DateTime.now(),
 
-      deletedAt: json["deleted_at"],
+        deletedAt: json["deleted_at"],
 
-      formattedDate: json["formatted_date"] ?? '',
+        formattedDate: json["formatted_date"] ?? '',
 
-      formattedUpdatedDate:
-          json["formatted_updated_date"] ?? '',
+        formattedUpdatedDate: json["formatted_updated_date"] ?? '',
 
-      photo: json["photo"] ?? '',
+        photo: json["photo"] ?? '',
 
-      vendor:null,//
-      //  json["vendor"] != null
-      //     ? Vendor.fromJson(json["vendor"])
-      //     : null,
+        vendor: null, //
 
-      user: json["user"] != null
-          ? User.fromJson(json["user"])
-          : (json["user_name"] != null
-              ? User(
-                  id: json["user_id"] != null ? int.tryParse(json["user_id"].toString()) ?? 0 : 0,
-                  name: json["user_name"] ?? "",
-                  email: "",
-                  phone: "",
-                  countryCode: "",
-                  photo: json["user_photo"] ?? "",
-                  role: "client",
-                  walletAddress: "",
-                )
-              : null),
-    );
-  } catch (e, s) {
-    print("Review Parse Error ==> $e");
-    print("Stack ==> $s");
-    print("JSON ==> $json");
+        //  json["vendor"] != null
+        //     ? Vendor.fromJson(json["vendor"])
+        //     : null,
+        user:
+            json["user"] != null
+                ? User.fromJson(json["user"])
+                : (json["user_name"] != null
+                    ? User(
+                      id:
+                          json["user_id"] != null
+                              ? int.tryParse(json["user_id"].toString()) ?? 0
+                              : 0,
+                      name: json["user_name"] ?? "",
+                      email: "",
+                      phone: "",
+                      countryCode: "",
+                      photo: json["user_photo"] ?? "",
+                      role: "client",
+                      walletAddress: "",
+                    )
+                    : null),
+      );
+    } catch (e, s) {
+      print("Review Parse Error ==> $e");
+      print("Stack ==> $s");
+      print("JSON ==> $json");
 
-    rethrow;
+      rethrow;
+    }
   }
-}
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "rating": rating,
-        "review": review,
-        "user_id": userId,
-        "vendor_id": vendorId,
-        "driver_id": driverId,
-        "order_id": orderId,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "deleted_at": deletedAt,
-        "formatted_date": formattedDate,
-        "formatted_updated_date": formattedUpdatedDate,
-        "photo": photo,
-        "vendor": vendor?.toJson(),
-        "user": user?.toJson(),
-      };
+    "id": id,
+    "rating": rating,
+    "review": review,
+    "user_id": userId,
+    "vendor_id": vendorId,
+    "driver_id": driverId,
+    "order_id": orderId,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "deleted_at": deletedAt,
+    "formatted_date": formattedDate,
+    "formatted_updated_date": formattedUpdatedDate,
+    "photo": photo,
+    "vendor": vendor?.toJson(),
+    "user": user?.toJson(),
+  };
 }

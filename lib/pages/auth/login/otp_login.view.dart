@@ -35,10 +35,7 @@ class _OTPLoginViewState extends ConsumerState<OTPLoginView> {
     if (!_formKey.currentState!.validate()) return;
     final result = await ref
         .read(loginControllerProvider.notifier)
-        .processEmailLogin(
-          email: _emailTEC.text,
-          password: _passwordTEC.text,
-        );
+        .processEmailLogin(email: _emailTEC.text, password: _passwordTEC.text);
     await widget.onLoggedIn(result);
   }
 

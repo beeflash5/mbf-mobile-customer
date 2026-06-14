@@ -25,25 +25,27 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      body: VStack([
-        Image.asset(AppImages.appLogo)
-            .wh(context.percentWidth * 45, context.percentWidth * 45)
-            .box
-            .clip(Clip.antiAlias)
-            .roundedSM
-            .makeCentered()
-            .py12(),
-        LinearProgressIndicator(
-          minHeight: 2,
-          backgroundColor: Colors.grey.shade300,
-          valueColor: AlwaysStoppedAnimation<Color>(
-            context.theme.primaryColor,
-          ),
-        ).wOneThird(context).centered(),
-      ],
-              crossAlignment: CrossAxisAlignment.center,
-              alignment: MainAxisAlignment.center)
-          .centered(),
+      body:
+          VStack(
+            [
+              Image.asset(AppImages.appLogo)
+                  .wh(context.percentWidth * 45, context.percentWidth * 45)
+                  .box
+                  .clip(Clip.antiAlias)
+                  .roundedSM
+                  .makeCentered()
+                  .py12(),
+              LinearProgressIndicator(
+                minHeight: 2,
+                backgroundColor: Colors.grey.shade300,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  context.theme.primaryColor,
+                ),
+              ).wOneThird(context).centered(),
+            ],
+            crossAlignment: CrossAxisAlignment.center,
+            alignment: MainAxisAlignment.center,
+          ).centered(),
     );
   }
 }

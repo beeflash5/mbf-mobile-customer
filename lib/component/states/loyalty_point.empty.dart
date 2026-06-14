@@ -12,10 +12,7 @@ class EmptyLoyaltyPointReport extends StatelessWidget {
     return VStack(
       [
         //
-        Image.asset(
-          AppImages.emptyLoyaltyPoints,
-          fit: BoxFit.cover,
-        )
+        Image.asset(AppImages.emptyLoyaltyPoints, fit: BoxFit.cover)
             .wh(context.percentWidth * 50, context.percentWidth * 50)
             .box
             .makeCentered()

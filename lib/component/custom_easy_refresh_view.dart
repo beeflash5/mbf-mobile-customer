@@ -44,29 +44,26 @@ class CustomEasyRefreshView extends StatelessWidget {
       refreshOnStart: refreshOnStart,
       onRefresh: () => onRefresh(),
       onLoad: onLoad != null ? () => onLoad!() : null,
-      child: loading
-          ? SingleChildScrollView(
-              child: loadingWidget ?? LoadingShimmer(),
-            )
-          : (listView != null && dataset.isEmpty)
+      child:
+          loading
+              ? SingleChildScrollView(child: loadingWidget ?? LoadingShimmer())
+              : (listView != null && dataset.isEmpty)
               ? (emptyView ?? Container())
               : child != null
-                  ? child
-                  : (listView != null && listView is List)
-                      ? ListView.separated(
-                          shrinkWrap: true,
-                          padding: padding,
-                          itemBuilder: (context, index) {
-                            return listView![index];
-                          },
-                          separatorBuilder: (_, __) {
-                            return separator ?? 0.heightBox;
-                          },
-                          itemCount: dataset.length,
-                        )
-                      : SingleChildScrollView(
-                          child: Container(),
-                        ),
+              ? child
+              : (listView != null && listView is List)
+              ? ListView.separated(
+                shrinkWrap: true,
+                padding: padding,
+                itemBuilder: (context, index) {
+                  return listView![index];
+                },
+                separatorBuilder: (_, __) {
+                  return separator ?? 0.heightBox;
+                },
+                itemCount: dataset.length,
+              )
+              : SingleChildScrollView(child: Container()),
     );
   }
 }

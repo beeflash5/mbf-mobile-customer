@@ -5,12 +5,8 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:fuodz/utils/app_colors.dart';
 
 class CallButton extends StatelessWidget {
-  const CallButton(
-    this.vendor, {
-    this.phone,
-    this.size,
-    Key? key,
-  }) : super(key: key);
+  const CallButton(this.vendor, {this.phone, this.size, Key? key})
+    : super(key: key);
 
   final Vendor? vendor;
   final double? size;

@@ -21,17 +21,15 @@ class VendorReviewsState {
     int? page,
     bool? canLoadMore,
     bool? isLoadingMore,
-  }) =>
-      VendorReviewsState(
-        reviews: reviews ?? this.reviews,
-        page: page ?? this.page,
-        canLoadMore: canLoadMore ?? this.canLoadMore,
-        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-      );
+  }) => VendorReviewsState(
+    reviews: reviews ?? this.reviews,
+    page: page ?? this.page,
+    canLoadMore: canLoadMore ?? this.canLoadMore,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+  );
 }
 
-final _vendorRequestProvider =
-    Provider<VendorRequest>((_) => VendorRequest());
+final _vendorRequestProvider = Provider<VendorRequest>((_) => VendorRequest());
 
 /// Paginated reviews per vendor (family by vendorId).
 class VendorReviewsController
@@ -76,12 +74,14 @@ class VendorReviewsController
       final more = await ref
           .read(_vendorRequestProvider)
           .getReviews(page: nextPage, vendorId: _vendorId);
-      state = AsyncData(current.copyWith(
-        reviews: [...current.reviews, ...more],
-        page: nextPage,
-        isLoadingMore: false,
-        canLoadMore: more.isNotEmpty,
-      ));
+      state = AsyncData(
+        current.copyWith(
+          reviews: [...current.reviews, ...more],
+          page: nextPage,
+          isLoadingMore: false,
+          canLoadMore: more.isNotEmpty,
+        ),
+      );
     } catch (_) {
       state = AsyncData(current.copyWith(isLoadingMore: false));
       rethrow;
@@ -90,6 +90,7 @@ class VendorReviewsController
 }
 
 final vendorReviewsControllerProvider = AsyncNotifierProvider.family<
-    VendorReviewsController, VendorReviewsState, int>(
-  VendorReviewsController.new,
-);
+  VendorReviewsController,
+  VendorReviewsState,
+  int
+>(VendorReviewsController.new);

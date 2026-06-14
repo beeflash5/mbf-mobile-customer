@@ -28,8 +28,9 @@ class CommerceOptionListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(productDetailsControllerProvider(product));
-    final notifier =
-        ref.read(productDetailsControllerProvider(product).notifier);
+    final notifier = ref.read(
+      productDetailsControllerProvider(product).notifier,
+    );
     final selected =
         state.valueOrNull?.selectedOptionIds.contains(option.id) ?? false;
     return "${option.name}${option.price > 0 ? ' (+${option.price.convertCurrency.currencyValueFormat()})' : ''}"

@@ -72,18 +72,22 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         labelText: widget.labelText,
         hintText: widget.hintText,
         errorText: widget.errorText,
-        enabledBorder: widget.underline
-            ? InputStyles.inputUnderlineEnabledBorder()
-            : InputStyles.inputEnabledBorder(),
-        errorBorder: widget.underline
-            ? InputStyles.inputUnderlineEnabledBorder()
-            : InputStyles.inputEnabledBorder(),
-        focusedErrorBorder: widget.underline
-            ? InputStyles.inputUnderlineFocusBorder()
-            : InputStyles.inputFocusBorder(),
-        focusedBorder: widget.underline
-            ? InputStyles.inputUnderlineFocusBorder()
-            : InputStyles.inputFocusBorder(),
+        enabledBorder:
+            widget.underline
+                ? InputStyles.inputUnderlineEnabledBorder()
+                : InputStyles.inputEnabledBorder(),
+        errorBorder:
+            widget.underline
+                ? InputStyles.inputUnderlineEnabledBorder()
+                : InputStyles.inputEnabledBorder(),
+        focusedErrorBorder:
+            widget.underline
+                ? InputStyles.inputUnderlineFocusBorder()
+                : InputStyles.inputFocusBorder(),
+        focusedBorder:
+            widget.underline
+                ? InputStyles.inputUnderlineFocusBorder()
+                : InputStyles.inputFocusBorder(),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon ?? _getSuffixWidget(),
         labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -123,18 +127,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         height: 30,
         padding: EdgeInsets.all(0),
         child: TextButton(
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.all(0),
-          ),
+          style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
           onPressed: () {
             setState(() {
               makePasswordVisible = !makePasswordVisible;
             });
           },
           child: Icon(
-            (!makePasswordVisible)
-                ? Icons.visibility_off
-                : Icons.visibility,
+            (!makePasswordVisible) ? Icons.visibility_off : Icons.visibility,
             color: Colors.grey,
           ),
         ),

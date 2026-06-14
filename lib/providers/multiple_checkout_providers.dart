@@ -105,24 +105,27 @@ class MultipleCheckoutState {
       taxes: taxes ?? this.taxes,
       vendorFees: vendorFees ?? this.vendorFees,
       subtotals: subtotals ?? this.subtotals,
-      deliveryAddress: identical(deliveryAddress, _sentinel)
-          ? this.deliveryAddress
-          : deliveryAddress as DeliveryAddress?,
+      deliveryAddress:
+          identical(deliveryAddress, _sentinel)
+              ? this.deliveryAddress
+              : deliveryAddress as DeliveryAddress?,
       isPickup: isPickup ?? this.isPickup,
       isScheduled: isScheduled ?? this.isScheduled,
       deliveryAddressOutOfRange:
           deliveryAddressOutOfRange ?? this.deliveryAddressOutOfRange,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
       dateFull: dateFull ?? this.dateFull,
       timeFull: timeFull ?? this.timeFull,
       tables: tables ?? this.tables,
-      tableSelected: identical(tableSelected, _sentinel)
-          ? this.tableSelected
-          : tableSelected as String?,
+      tableSelected:
+          identical(tableSelected, _sentinel)
+              ? this.tableSelected
+              : tableSelected as String?,
       isBusy: isBusy ?? this.isBusy,
       loadingTime: loadingTime ?? this.loadingTime,
       loadingTables: loadingTables ?? this.loadingTables,
@@ -155,10 +158,7 @@ class MultipleCheckoutController
 
   Future<void> initialise() async {
     await _fetchVendorsDetails();
-    await Future.wait([
-      _prefetchDeliveryAddress(),
-      _fetchPaymentOptions(),
-    ]);
+    await Future.wait([_prefetchDeliveryAddress(), _fetchPaymentOptions()]);
     await _updateTotalOrderSummary();
     if (state.vendor != null && state.vendor!.can_dinein == false) {
       await _fetchDateUse();
@@ -166,17 +166,17 @@ class MultipleCheckoutController
   }
 
   Future<void> _fetchVendorsDetails() async {
-    var vendors = CartServices.productsInCart
-        .map((e) => e.product!.vendor)
-        .toList()
-        .toSet()
-        .toList();
+    var vendors =
+        CartServices.productsInCart
+            .map((e) => e.product!.vendor)
+            .toList()
+            .toSet()
+            .toList();
     vendors = vendors.distinctBy((v) => v.id).toList();
     state = state.copyWith(vendors: vendors, isBusy: true);
     try {
       for (var i = 0; i < vendors.length; i++) {
-        vendors[i] =
-            await CheckoutSharedHelpers.fetchVendorDetails(vendors[i]);
+        vendors[i] = await CheckoutSharedHelpers.fetchVendorDetails(vendors[i]);
       }
       Vendor? primary;
       if (vendors.isNotEmpty) primary = vendors.first;
@@ -192,8 +192,8 @@ class MultipleCheckoutController
     try {
       final preselected =
           await CheckoutSharedHelpers.preselectedDeliveryAddress(
-        vendorId: state.vendor?.id,
-      );
+            vendorId: state.vendor?.id,
+          );
       if (preselected == null) return;
       final co = state.checkout;
       co.deliveryAddress = preselected;
@@ -246,8 +246,7 @@ class MultipleCheckoutController
   Future<void> _fetchDateUse() async {
     if (state.vendor == null) return;
     try {
-      final dates =
-          await CheckoutSharedHelpers.fetchDateUse(state.vendor!.id);
+      final dates = await CheckoutSharedHelpers.fetchDateUse(state.vendor!.id);
       state = state.copyWith(dateFull: dates);
     } catch (e) {
       // ignore: avoid_print
@@ -287,15 +286,15 @@ class MultipleCheckoutController
     try {
       for (var index = 0; index < state.vendors.length; index++) {
         final mVendor = state.vendors[index];
-        final vendorCartItems = CartServices.productsInCart
-            .where((e) => e.product!.vendor.id == mVendor.id)
-            .toList();
+        final vendorCartItems =
+            CartServices.productsInCart
+                .where((e) => e.product!.vendor.id == mVendor.id)
+                .toList();
         final vendorProducts =
             vendorCartItems.map((Cart e) => e.toCheckout()).toList();
         final payload = {
           "pickup": state.isPickup ? 1 : 0,
-          "delievryAddressOutOfRange":
-              state.deliveryAddressOutOfRange ? 1 : 0,
+          "delievryAddressOutOfRange": state.deliveryAddressOutOfRange ? 1 : 0,
           "tip": driverTipTEC.text,
           "delivery_address_id": state.deliveryAddress?.id,
           "coupon_code": co.coupon?.code ?? "",
@@ -321,9 +320,8 @@ class MultipleCheckoutController
         }
 
         final vendorDiscount = mCheckout.discount;
-        var vendorTotal = (vendorSubtotal - vendorDiscount) +
-            mCheckout.deliveryFee +
-            calTax;
+        var vendorTotal =
+            (vendorSubtotal - vendorDiscount) + mCheckout.deliveryFee + calTax;
         final feesObjects = mCheckout.fees.map((e) => e.toJson()).toList();
         final totalVendorFees = mCheckout.totalFee;
         vendorTotal += totalVendorFees;
@@ -450,10 +448,7 @@ class MultipleCheckoutController
   void changeSelectedPaymentMethod(PaymentMethod? pm) {
     final co = state.checkout;
     co.paymentMethod = pm;
-    state = state.copyWith(
-      selectedPaymentMethod: pm,
-      checkout: co,
-    );
+    state = state.copyWith(selectedPaymentMethod: pm, checkout: co);
   }
 
   Future<void> placeOrder(BuildContext context) async {
@@ -508,5 +503,5 @@ class MultipleCheckoutController
 
 final multipleCheckoutControllerProvider = NotifierProvider.autoDispose
     .family<MultipleCheckoutController, MultipleCheckoutState, CheckOut>(
-  MultipleCheckoutController.new,
-);
+      MultipleCheckoutController.new,
+    );

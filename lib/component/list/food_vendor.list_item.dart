@@ -23,36 +23,32 @@ class FoodVendorListItem extends StatelessWidget {
   final Function(Vendor) onPressed;
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //
-        Stack(
-          children: [
-            //
-            Hero(
-              tag: vendor.heroTag ?? vendor.id,
-              child: CustomImage(
-                imageUrl: vendor.featureImage,
-                height: 80,
-                width: context.screenWidth,
+    return VStack([
+          //
+          Stack(
+            children: [
+              //
+              Hero(
+                tag: vendor.heroTag ?? vendor.id,
+                child: CustomImage(
+                  imageUrl: vendor.featureImage,
+                  height: 80,
+                  width: context.screenWidth,
+                ),
               ),
-            ),
-            //location routing
-            (!vendor.latitude.isEmptyOrNull && !vendor.longitude.isEmptyOrNull)
-                ? Positioned(
-                    child: RouteButton(
-                      vendor,
-                      size: 12,
-                    ),
+              //location routing
+              (!vendor.latitude.isEmptyOrNull &&
+                      !vendor.longitude.isEmptyOrNull)
+                  ? Positioned(
+                    child: RouteButton(vendor, size: 12),
                     bottom: 5,
                     right: 10,
                   )
-                : UiSpacer.emptySpace(),
+                  : UiSpacer.emptySpace(),
 
-            //
-            Positioned(
-              child: VStack(
-                [
+              //
+              Positioned(
+                child: VStack([
                   TimeTag(
                     "${vendor.prepareTime} ${vendor.prepareTimeUnit}",
                     iconData: Icons.access_time,
@@ -62,105 +58,87 @@ class FoodVendorListItem extends StatelessWidget {
                     "${vendor.deliveryTime} ${vendor.deliveryTimeUnit}",
                     iconData: Icons.directions_bike,
                   ),
-                ],
+                ]),
+                left: 10,
+                bottom: 5,
               ),
-              left: 10,
-              bottom: 5,
-            ),
 
-            //closed
-            Positioned(
-              child: Visibility(
-                visible: !vendor.isOpen,
-                child: VxBox(
-                  child: "Closed".tr().text.lg.white.bold.makeCentered(),
-                )
-                    .color(
-                      AppColor.closeColor.withOpacity(0.6),
-                    )
-                    .make(),
+              //closed
+              Positioned(
+                child: Visibility(
+                  visible: !vendor.isOpen,
+                  child:
+                      VxBox(
+                        child: "Closed".tr().text.lg.white.bold.makeCentered(),
+                      ).color(AppColor.closeColor.withOpacity(0.6)).make(),
+                ),
+                bottom: 0,
+                right: 0,
+                left: 0,
+                top: 0,
               ),
-              bottom: 0,
-              right: 0,
-              left: 0,
-              top: 0,
-            ),
-          ],
-        ),
+            ],
+          ),
 
-        //name
-        vendor.name.text.sm.medium
-            .maxLines(1)
-            .overflow(TextOverflow.ellipsis)
-            .make()
-            .px8()
-            .pOnly(top: Vx.dp8),
-        //
-        //description
-        "${vendor.description}"
-            .text
-            .gray400
-            .minFontSize(9)
-            .size(9)
-            .maxLines(1)
-            .overflow(TextOverflow.ellipsis)
-            .make()
-            .px8(),
-        //words
-        Wrap(
-          spacing: Vx.dp12,
-          children: [
-            //rating
-            HStack(
-              [
-                "${vendor.rating.numCurrency} "
-                    .text
+          //name
+          vendor.name.text.sm.medium
+              .maxLines(1)
+              .overflow(TextOverflow.ellipsis)
+              .make()
+              .px8()
+              .pOnly(top: Vx.dp8),
+          //
+          //description
+          "${vendor.description}".text.gray400
+              .minFontSize(9)
+              .size(9)
+              .maxLines(1)
+              .overflow(TextOverflow.ellipsis)
+              .make()
+              .px8(),
+          //words
+          Wrap(
+            spacing: Vx.dp12,
+            children: [
+              //rating
+              HStack([
+                "${vendor.rating.numCurrency} ".text
                     .minFontSize(6)
                     .size(10)
                     .color(AppColor.ratingColor)
                     .medium
                     .make(),
-                Icon(
-                  Icons.star,
-                  color: AppColor.ratingColor,
-                  size: 10,
-                ),
-              ],
-            ),
+                Icon(Icons.star, color: AppColor.ratingColor, size: 10),
+              ]),
 
-            //
-            //
-            Visibility(
-              visible: vendor.distance != null,
-              child: HStack(
-                [
+              //
+              //
+              Visibility(
+                visible: vendor.distance != null,
+                child: HStack([
                   Icon(
                     Icons.directions,
                     color: AppColor.primaryColor,
                     size: 10,
                   ),
-                  " ${vendor.distance?.numCurrency}km"
-                      .text
+                  " ${vendor.distance?.numCurrency}km".text
                       .minFontSize(6)
                       .size(10)
                       .make(),
-                ],
+                ]),
               ),
-            ),
-          ],
-        ).px8(),
+            ],
+          ).px8(),
 
-//delivery fee && time
-        Wrap(
-          spacing: Vx.dp12,
-          children: [
-            //
-            Visibility(
-              visible: vendor.minOrder != null,
-              child: CurrencyHStack(
-                [
-                  "${AppStrings.currencySymbol}"
-                      .text
+          //delivery fee && time
+          Wrap(
+            spacing: Vx.dp12,
+            children: [
+              //
+              Visibility(
+                visible: vendor.minOrder != null,
+                child: CurrencyHStack([
+                  "${AppStrings.currencySymbol}".text
                       .minFontSize(6)
                       .size(10)
                       .gray600
@@ -170,48 +148,46 @@ class FoodVendorListItem extends StatelessWidget {
                   //
                   Visibility(
                     visible: vendor.minOrder != null,
-                    child: "${vendor.minOrder}"
-                        .text
-                        .minFontSize(6)
-                        .size(10)
-                        .gray600
-                        .medium
-                        .maxLines(1)
-                        .make(),
+                    child:
+                        "${vendor.minOrder}".text
+                            .minFontSize(6)
+                            .size(10)
+                            .gray600
+                            .medium
+                            .maxLines(1)
+                            .make(),
                   ),
                   //
                   Visibility(
                     visible: vendor.minOrder != null && vendor.maxOrder != null,
-                    child: " - "
-                        .text
-                        .minFontSize(6)
-                        .size(10)
-                        .gray600
-                        .medium
-                        .maxLines(1)
-                        .make(),
+                    child:
+                        " - ".text
+                            .minFontSize(6)
+                            .size(10)
+                            .gray600
+                            .medium
+                            .maxLines(1)
+                            .make(),
                   ),
                   //
                   Visibility(
                     visible: vendor.maxOrder != null,
-                    child: "${vendor.maxOrder} "
-                        .text
-                        .minFontSize(6)
-                        .size(10)
-                        .gray600
-                        .medium
-                        .maxLines(1)
-                        .make(),
+                    child:
+                        "${vendor.maxOrder} ".text
+                            .minFontSize(6)
+                            .size(10)
+                            .gray600
+                            .medium
+                            .maxLines(1)
+                            .make(),
                   ),
-                ],
+                ]),
               ),
-            ),
-          ],
-        ).px8(),
+            ],
+          ).px8(),
 
-        //
-        HStack(
-          [
+          //
+          HStack([
             //can deliver
             vendor.delivery == 1
                 ? DeliveryTag().pOnly(right: 10)
@@ -221,14 +197,9 @@ class FoodVendorListItem extends StatelessWidget {
             vendor.pickup == 1
                 ? PickupTag().pOnly(right: 10)
                 : UiSpacer.emptySpace(),
-          ],
-          crossAlignment: CrossAxisAlignment.end,
-        ).p8()
-      ],
-    )
-        .onInkTap(
-          () => this.onPressed(this.vendor),
-        )
+          ], crossAlignment: CrossAxisAlignment.end).p8(),
+        ])
+        .onInkTap(() => this.onPressed(this.vendor))
         .w(175)
         .box
         .outerShadow

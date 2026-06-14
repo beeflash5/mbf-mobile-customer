@@ -11,10 +11,7 @@ String orderAttachmentToJson(OrderAttachment data) =>
     json.encode(data.toJson());
 
 class OrderAttachment {
-  OrderAttachment({
-    this.link,
-    this.collectionName,
-  });
+  OrderAttachment({this.link, this.collectionName});
 
   String? link;
   String? collectionName;
@@ -26,7 +23,7 @@ class OrderAttachment {
       );
 
   Map<String, dynamic> toJson() => {
-        "link": link,
-        "collection_name": collectionName,
-      };
+    "link": link,
+    "collection_name": collectionName,
+  };
 }

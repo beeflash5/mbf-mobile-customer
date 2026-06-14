@@ -1,6 +1,7 @@
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/models/service.dart';
 import 'package:fuodz/models/vendor_type.dart';
+import 'package:fuodz/utils/extensions/string.dart';
 
 class Category {
   int id;
@@ -34,13 +35,10 @@ class Category {
   factory Category.fromJson(dynamic jsonObject) {
     return Category(
       id: jsonObject["id"] ?? 0,
-      name: jsonObject["name"] ?? "",
+      name: (jsonObject["name"] ?? "").toString().parseLocalized(),
       imageUrl: jsonObject["photo"] ?? "",
       photo: jsonObject["photo"] ?? "",
-      color:
-          jsonObject["color"] != null
-              ? jsonObject["color"]
-              : '#000000',
+      color: jsonObject["color"] != null ? jsonObject["color"] : '#000000',
       hasSubcategories:
           jsonObject["has_subcategories"] != null
               ? (jsonObject["has_subcategories"] as bool)

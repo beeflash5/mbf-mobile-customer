@@ -8,56 +8,44 @@ import 'package:fuodz/component/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CouponListItem extends StatelessWidget {
-  const CouponListItem(
-    this.coupon, {
-    this.onPressed,
-    this.radius = 4,
-    Key? key,
-  }) : super(key: key);
+  const CouponListItem(this.coupon, {this.onPressed, this.radius = 4, Key? key})
+    : super(key: key);
 
   final Coupon coupon;
   final double radius;
   final Function? onPressed;
   @override
   Widget build(BuildContext context) {
-    Color fromColor = coupon.color != null
-        ? Vx.hexToColor(coupon.color!)
-        : AppColor.primaryColor;
+    Color fromColor =
+        coupon.color != null
+            ? Vx.hexToColor(coupon.color!)
+            : AppColor.primaryColor;
     if (fromColor == Colors.black) {
       fromColor = AppColor.primaryColor;
     }
     Color toColor = fromColor.withAlpha(150);
-    return HStack(
-      [
-        //
-        Visibility(
-          visible: coupon.photo.isNotDefaultImage,
-          child: HStack(
-            [
+    return HStack([
+          //
+          Visibility(
+            visible: coupon.photo.isNotDefaultImage,
+            child: HStack([
               CustomImage(imageUrl: coupon.photo).wh(60, 60),
               UiSpacer.hSpace(),
-            ],
+            ]),
           ),
-        ),
 
-        //
-        VStack(
-          [
+          //
+          VStack([
             coupon.code.text.xl2.extraBold
                 .color(Utils.textColorByColor(fromColor))
                 .make(),
-            "${coupon.description}"
-                .text
-                .sm
-                .medium
+            "${coupon.description}".text.sm.medium
                 .maxLines(2)
                 .ellipsis
                 .color(Utils.textColorByColor(fromColor))
                 .make(),
-          ],
-        ).expand(),
-      ],
-    )
+          ]).expand(),
+        ])
         .px(20)
         .py(12)
         .box

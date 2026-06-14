@@ -26,44 +26,41 @@ class VehicleTypeListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     final selected = taxiState.selectedVehicleType?.id == vehicleType.id;
-    final symbol = vehicleType.currency != null
-        ? vehicleType.currency!.symbol
-        : AppStrings.currentCurrencySymbol;
+    final symbol =
+        vehicleType.currency != null
+            ? vehicleType.currency!.symbol
+            : AppStrings.currentCurrencySymbol;
 
-    return HStack(
-      [
-        CustomImage(
-          imageUrl: vehicleType.photo,
-          width: 50,
-          height: 70,
-          boxFit: BoxFit.contain,
-        ),
-        UiSpacer.horizontalSpace(space: 10),
-        VStack([
-          vehicleType.name.text
-              .fontWeight(selected ? FontWeight.w600 : FontWeight.w400)
-              .maxLines(1)
-              .overflow(TextOverflow.ellipsis)
-              .make(),
-          CurrencyHStack([
-            symbol.text
+    return HStack([
+          CustomImage(
+            imageUrl: vehicleType.photo,
+            width: 50,
+            height: 70,
+            boxFit: BoxFit.contain,
+          ),
+          UiSpacer.horizontalSpace(space: 10),
+          VStack([
+            vehicleType.name.text
                 .fontWeight(selected ? FontWeight.w600 : FontWeight.w400)
+                .maxLines(1)
+                .overflow(TextOverflow.ellipsis)
                 .make(),
-            "${vehicleType.currency != null ? vehicleType.total : vehicleType.total.convertCurrency}"
-                .currencyValueFormat()
-                .text
-                .fontWeight(selected ? FontWeight.w600 : FontWeight.w400)
-                .make(),
+            CurrencyHStack([
+              symbol.text
+                  .fontWeight(selected ? FontWeight.w600 : FontWeight.w400)
+                  .make(),
+              "${vehicleType.currency != null ? vehicleType.total : vehicleType.total.convertCurrency}"
+                  .currencyValueFormat()
+                  .text
+                  .fontWeight(selected ? FontWeight.w600 : FontWeight.w400)
+                  .make(),
+            ]),
           ]),
-        ]),
-      ],
-      alignment: MainAxisAlignment.center,
-    )
-        .box
-        .p8
+        ], alignment: MainAxisAlignment.center).box.p8
         .color(
           selected
               ? AppColor.primaryColor.withOpacity(0.15)

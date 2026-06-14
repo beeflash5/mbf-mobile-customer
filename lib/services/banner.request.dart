@@ -6,10 +6,7 @@ import 'package:fuodz/services/location.service.dart';
 
 class BannerRequest extends ApiService {
   //
-  Future<List<Banner>> banners({
-    int? vendorTypeId,
-    Map? params,
-  }) async {
+  Future<List<Banner>> banners({int? vendorTypeId, Map? params}) async {
     final apiResult = await get(
       Api.banners,
       queryParameters: {
@@ -30,11 +27,8 @@ class BannerRequest extends ApiService {
       throw apiResponse.message!;
     }
   }
-  Future<List<Banner>> ads({
-    int? vendorTypeId,
-    Map? params,
-  }) async {
 
+  Future<List<Banner>> ads({int? vendorTypeId, Map? params}) async {
     final apiResult = await get(
       Api.ads1,
       queryParameters: {

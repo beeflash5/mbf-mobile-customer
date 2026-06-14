@@ -111,18 +111,16 @@ class FavouritesPage extends ConsumerWidget {
           tabBarProperties: TabBarProperties(
             isScrollable: true,
             alignment: TabBarAlignment.center,
-            padding:
-                EdgeInsets.symmetric(horizontal: Sizes.paddingSizeDefault),
+            padding: EdgeInsets.symmetric(horizontal: Sizes.paddingSizeDefault),
             labelPadding: EdgeInsets.symmetric(
               horizontal: Sizes.paddingSizeLarge,
               vertical: 0,
             ),
             labelColor: themeTextColor,
             unselectedLabelColor: themeTextColor.withOpacity(0.85),
-            labelStyle: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold),
+            labelStyle: Theme.of(
+              context,
+            ).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
             background: Container(color: AppColor.primaryColor),
             indicatorWeight: 4,
             indicator: BoxDecoration(
@@ -131,10 +129,7 @@ class FavouritesPage extends ConsumerWidget {
               ),
             ),
           ),
-          tabs: [
-            Tab(text: 'Proucts'.tr()),
-            Tab(text: 'Vendors'.tr()),
-          ],
+          tabs: [Tab(text: 'Proucts'.tr()), Tab(text: 'Vendors'.tr())],
           views: [
             // PRODUCTS TAB
             CustomListView(
@@ -147,9 +142,10 @@ class FavouritesPage extends ConsumerWidget {
                         .tr(),
               ).p(Sizes.paddingSizeLarge),
               errorWidget: LoadingError(
-                onrefresh: ref
-                    .read(favouriteProductsControllerProvider.notifier)
-                    .refresh,
+                onrefresh:
+                    ref
+                        .read(favouriteProductsControllerProvider.notifier)
+                        .refresh,
               ),
               itemBuilder: (context, index) {
                 final list = productsAsync.valueOrNull ?? const [];
@@ -167,10 +163,24 @@ class FavouritesPage extends ConsumerWidget {
                     Positioned(
                       top: 0,
                       right: 0,
-                      child: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _confirmRemoveProduct(context, ref, product),
-                      ).box.color(context.theme.colorScheme.surface).roundedFull.outerShadow.make().p4(),
+                      child:
+                          IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed:
+                                    () => _confirmRemoveProduct(
+                                      context,
+                                      ref,
+                                      product,
+                                    ),
+                              ).box
+                              .color(context.theme.colorScheme.surface)
+                              .roundedFull
+                              .outerShadow
+                              .make()
+                              .p4(),
                     ),
                   ],
                 );
@@ -188,9 +198,10 @@ class FavouritesPage extends ConsumerWidget {
                         .tr(),
               ).p(Sizes.paddingSizeLarge),
               errorWidget: LoadingError(
-                onrefresh: ref
-                    .read(favouriteVendorsControllerProvider.notifier)
-                    .refresh,
+                onrefresh:
+                    ref
+                        .read(favouriteVendorsControllerProvider.notifier)
+                        .refresh,
               ),
               itemBuilder: (context, index) {
                 final list = vendorsAsync.valueOrNull ?? const [];
@@ -207,10 +218,24 @@ class FavouritesPage extends ConsumerWidget {
                     Positioned(
                       top: 0,
                       right: 0,
-                      child: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _confirmRemoveVendor(context, ref, vendor),
-                      ).box.color(context.theme.colorScheme.surface).roundedFull.outerShadow.make().p4(),
+                      child:
+                          IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed:
+                                    () => _confirmRemoveVendor(
+                                      context,
+                                      ref,
+                                      vendor,
+                                    ),
+                              ).box
+                              .color(context.theme.colorScheme.surface)
+                              .roundedFull
+                              .outerShadow
+                              .make()
+                              .p4(),
                     ),
                   ],
                 ).centered();

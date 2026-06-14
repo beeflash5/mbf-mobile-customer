@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
-import 'package:dartx/dartx.dart' hide IterableFirstOrNull, StringIsNotBlankExtension;
+import 'package:dartx/dartx.dart'
+    hide IterableFirstOrNull, StringIsNotBlankExtension;
 import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -149,61 +150,67 @@ class TaxiState {
     bool? tripBusy,
   }) {
     return TaxiState(
-      checkout: identical(checkout, _sentinel)
-          ? this.checkout
-          : checkout as CheckOut?,
+      checkout:
+          identical(checkout, _sentinel)
+              ? this.checkout
+              : checkout as CheckOut?,
       currentOrderStep: currentOrderStep ?? this.currentOrderStep,
       currentAddressSelectionStep:
           currentAddressSelectionStep ?? this.currentAddressSelectionStep,
       onTrip: onTrip ?? this.onTrip,
-      ignoreMapInteraction:
-          ignoreMapInteraction ?? this.ignoreMapInteraction,
+      ignoreMapInteraction: ignoreMapInteraction ?? this.ignoreMapInteraction,
       mapStyle:
           identical(mapStyle, _sentinel) ? this.mapStyle : mapStyle as String?,
       googleMapPadding: googleMapPadding ?? this.googleMapPadding,
       gMapPolylines: gMapPolylines ?? this.gMapPolylines,
       gMapMarkers: gMapMarkers ?? this.gMapMarkers,
-      pickupLocation: identical(pickupLocation, _sentinel)
-          ? this.pickupLocation
-          : pickupLocation as DeliveryAddress?,
-      dropoffLocation: identical(dropoffLocation, _sentinel)
-          ? this.dropoffLocation
-          : dropoffLocation as DeliveryAddress?,
-      deliveryAddress: identical(deliveryAddress, _sentinel)
-          ? this.deliveryAddress
-          : deliveryAddress as DeliveryAddress?,
-      driverPosition: identical(driverPosition, _sentinel)
-          ? this.driverPosition
-          : driverPosition as LatLng?,
+      pickupLocation:
+          identical(pickupLocation, _sentinel)
+              ? this.pickupLocation
+              : pickupLocation as DeliveryAddress?,
+      dropoffLocation:
+          identical(dropoffLocation, _sentinel)
+              ? this.dropoffLocation
+              : dropoffLocation as DeliveryAddress?,
+      deliveryAddress:
+          identical(deliveryAddress, _sentinel)
+              ? this.deliveryAddress
+              : deliveryAddress as DeliveryAddress?,
+      driverPosition:
+          identical(driverPosition, _sentinel)
+              ? this.driverPosition
+              : driverPosition as LatLng?,
       driverPositionRotation:
           driverPositionRotation ?? this.driverPositionRotation,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       vehicleTypes: vehicleTypes ?? this.vehicleTypes,
-      selectedVehicleType: identical(selectedVehicleType, _sentinel)
-          ? this.selectedVehicleType
-          : selectedVehicleType as VehicleType?,
-      possibleDriverETA: identical(possibleDriverETA, _sentinel)
-          ? this.possibleDriverETA
-          : possibleDriverETA as int?,
-      onGoingOrderTrip: identical(onGoingOrderTrip, _sentinel)
-          ? this.onGoingOrderTrip
-          : onGoingOrderTrip as Order?,
+      selectedVehicleType:
+          identical(selectedVehicleType, _sentinel)
+              ? this.selectedVehicleType
+              : selectedVehicleType as VehicleType?,
+      possibleDriverETA:
+          identical(possibleDriverETA, _sentinel)
+              ? this.possibleDriverETA
+              : possibleDriverETA as int?,
+      onGoingOrderTrip:
+          identical(onGoingOrderTrip, _sentinel)
+              ? this.onGoingOrderTrip
+              : onGoingOrderTrip as Order?,
       newTripRating: newTripRating ?? this.newTripRating,
       canApplyCoupon: canApplyCoupon ?? this.canApplyCoupon,
-      canScheduleTaxiOrder:
-          canScheduleTaxiOrder ?? this.canScheduleTaxiOrder,
+      canScheduleTaxiOrder: canScheduleTaxiOrder ?? this.canScheduleTaxiOrder,
       coupon: identical(coupon, _sentinel) ? this.coupon : coupon as Coupon?,
       subTotal: subTotal ?? this.subTotal,
       total: total ?? this.total,
       tip: tip ?? this.tip,
       isBusy: isBusy ?? this.isBusy,
       couponBusy: couponBusy ?? this.couponBusy,
-      couponError: identical(couponError, _sentinel)
-          ? this.couponError
-          : couponError,
+      couponError:
+          identical(couponError, _sentinel) ? this.couponError : couponError,
       vehicleTypesBusy: vehicleTypesBusy ?? this.vehicleTypesBusy,
       tripBusy: tripBusy ?? this.tripBusy,
     );
@@ -212,14 +219,14 @@ class TaxiState {
   static const _sentinel = Object();
 }
 
-class TaxiController
-    extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
+class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
   final TaxiRequest _taxiRequest = TaxiRequest();
   final CartRequest _cartRequest = CartRequest();
 
   GoogleMapController? googleMapController;
-  CameraPosition mapCameraPosition =
-      const CameraPosition(target: LatLng(0.00, 0.00));
+  CameraPosition mapCameraPosition = const CameraPosition(
+    target: LatLng(0.00, 0.00),
+  );
   BitmapDescriptor? sourceIcon;
   BitmapDescriptor? destinationIcon;
   BitmapDescriptor? driverIcon;
@@ -275,7 +282,10 @@ class TaxiController
     );
   }
 
-  Future<void> onMapCreated(GoogleMapController controller, BuildContext context) async {
+  Future<void> onMapCreated(
+    GoogleMapController controller,
+    BuildContext context,
+  ) async {
     googleMapController = controller;
     await setGoogleMapStyle(context);
     await startUserLocationListener();
@@ -283,8 +293,9 @@ class TaxiController
   }
 
   Future<void> setGoogleMapStyle(BuildContext context) async {
-    final s = await DefaultAssetBundle.of(context)
-        .loadString('assets/json/google_map_style.json');
+    final s = await DefaultAssetBundle.of(
+      context,
+    ).loadString('assets/json/google_map_style.json');
     state = state.copyWith(mapStyle: s);
   }
 
@@ -315,8 +326,9 @@ class TaxiController
 
   Future<void> startUserLocationListener() async {
     await LocationService.prepareLocationListener();
-    _currentLocationListener =
-        LocationService.currenctAddressSubject.listen((currentAddress) {
+    _currentLocationListener = LocationService.currenctAddressSubject.listen((
+      currentAddress,
+    ) {
       if (!state.onTrip) {
         zoomToLocation(
           LatLng(
@@ -492,18 +504,22 @@ class TaxiController
     if (dropoff.latitude == null || dropoff.longitude == null) return;
 
     final markers = <Marker>{};
-    markers.add(Marker(
-      markerId: const MarkerId('sourcePin'),
-      position: LatLng(pickup.latitude!, pickup.longitude!),
-      icon: sourceIcon ?? BitmapDescriptor.defaultMarker,
-      anchor: const Offset(0.5, 0.5),
-    ));
-    markers.add(Marker(
-      markerId: const MarkerId('destPin'),
-      position: LatLng(dropoff.latitude!, dropoff.longitude!),
-      icon: destinationIcon ?? BitmapDescriptor.defaultMarker,
-      anchor: const Offset(0.5, 0.5),
-    ));
+    markers.add(
+      Marker(
+        markerId: const MarkerId('sourcePin'),
+        position: LatLng(pickup.latitude!, pickup.longitude!),
+        icon: sourceIcon ?? BitmapDescriptor.defaultMarker,
+        anchor: const Offset(0.5, 0.5),
+      ),
+    );
+    markers.add(
+      Marker(
+        markerId: const MarkerId('destPin'),
+        position: LatLng(dropoff.latitude!, dropoff.longitude!),
+        icon: destinationIcon ?? BitmapDescriptor.defaultMarker,
+        anchor: const Offset(0.5, 0.5),
+      ),
+    );
 
     final result = await _polylinePoints.getRouteBetweenCoordinates(
       AppStrings.googleMapApiKey,
@@ -520,10 +536,7 @@ class TaxiController
       points: _polylineCoordinates,
       width: 3,
     );
-    state = state.copyWith(
-      gMapMarkers: markers,
-      gMapPolylines: {polyline},
-    );
+    state = state.copyWith(gMapMarkers: markers, gMapPolylines: {polyline});
 
     await updateCameraLocation(
       LatLng(pickup.latitude!, pickup.longitude!),
@@ -580,10 +593,7 @@ class TaxiController
     _polylineCoordinates.clear();
     pickupLocationTEC.clear();
     dropoffLocationTEC.clear();
-    state = state.copyWith(
-      gMapMarkers: {},
-      gMapPolylines: {},
-    );
+    state = state.copyWith(gMapMarkers: {}, gMapPolylines: {});
     _driverLocationStream?.cancel();
     setupCurrentLocationAsPickuplocation();
   }
@@ -657,10 +667,12 @@ class TaxiController
         case "delivered":
           setCurrentStep(1);
           clearMapData();
-          zoomToLocation(LatLng(
-            trip.taxiOrder?.dropoffLatitude.toDoubleOrNull() ?? 0.0,
-            trip.taxiOrder?.dropoffLongitude.toDoubleOrNull() ?? 0.0,
-          ));
+          zoomToLocation(
+            LatLng(
+              trip.taxiOrder?.dropoffLatitude.toDoubleOrNull() ?? 0.0,
+              trip.taxiOrder?.dropoffLongitude.toDoubleOrNull() ?? 0.0,
+            ),
+          );
           stopAllListeners();
           setCurrentStep(6);
           break;
@@ -696,8 +708,9 @@ class TaxiController
       startDriverDetailsListener();
     }
     if (AppStrings.useWebsocketAssignment) {
-      OrderDetailsWebsocketService()
-          .connectToOrderChannel("${trip.id}", (data) async {
+      OrderDetailsWebsocketService().connectToOrderChannel("${trip.id}", (
+        data,
+      ) async {
         final t = state.onGoingOrderTrip;
         final driverId = data["driver_id"];
         if (driverId != null && t?.driverId == null) {
@@ -717,21 +730,21 @@ class TaxiController
           .doc("${trip.code}")
           .snapshots()
           .listen((event) async {
-        final t = state.onGoingOrderTrip;
-        final driverId =
-            event.data() != null ? event.data()!["driver_id"] : null;
-        if (driverId != null && t?.driverId == null) {
-          t?.driverId = event.data()!["driver_id"];
-          t?.driver = event.data()!["driver"];
-        }
-        if (t?.driver == null) await loadDriverDetails();
-        startDriverDetailsListener();
-        if (event.exists) {
-          t?.status = event.data()?["status"] ?? "failed";
-        }
-        state = state.copyWith(onGoingOrderTrip: t);
-        loadTripUIByOrderStatus();
-      });
+            final t = state.onGoingOrderTrip;
+            final driverId =
+                event.data() != null ? event.data()!["driver_id"] : null;
+            if (driverId != null && t?.driverId == null) {
+              t?.driverId = event.data()!["driver_id"];
+              t?.driver = event.data()!["driver"];
+            }
+            if (t?.driver == null) await loadDriverDetails();
+            startDriverDetailsListener();
+            if (event.exists) {
+              t?.status = event.data()?["status"] ?? "failed";
+            }
+            state = state.copyWith(onGoingOrderTrip: t);
+            loadTripUIByOrderStatus();
+          });
     }
   }
 
@@ -776,8 +789,7 @@ class TaxiController
             startZoomFocusDriver();
           }
         },
-        onSubscribedSuccess: () =>
-            OrderRequest().syncDriverLocation(trip.id),
+        onSubscribedSuccess: () => OrderRequest().syncDriverLocation(trip.id),
       );
     } else {
       _driverLocationStream = _firebaseFirestore
@@ -785,17 +797,18 @@ class TaxiController
           .doc("${trip.driverId}")
           .snapshots()
           .listen((event) {
-        if (!event.exists) return;
-        final data = event.data()!;
-        final pos = LatLng(data["lat"], data["long"]);
-        state = state.copyWith(
-          driverPosition: pos,
-          driverPositionRotation:
-              double.parse((data["rotation"] ?? 0).toString()),
-        );
-        updateDriverMarkerPosition();
-        startZoomFocusDriver();
-      });
+            if (!event.exists) return;
+            final data = event.data()!;
+            final pos = LatLng(data["lat"], data["long"]);
+            state = state.copyWith(
+              driverPosition: pos,
+              driverPositionRotation: double.parse(
+                (data["rotation"] ?? 0).toString(),
+              ),
+            );
+            updateDriverMarkerPosition();
+            startZoomFocusDriver();
+          });
     }
   }
 
@@ -811,13 +824,15 @@ class TaxiController
     final markers = Set<Marker>.from(state.gMapMarkers);
     markers.removeWhere((e) => e.markerId.value == "driverMarker");
     if (state.driverPosition != null && driverIcon != null) {
-      markers.add(Marker(
-        markerId: const MarkerId('driverMarker'),
-        position: state.driverPosition!,
-        rotation: state.driverPositionRotation,
-        icon: driverIcon!,
-        anchor: const Offset(0.5, 0.5),
-      ));
+      markers.add(
+        Marker(
+          markerId: const MarkerId('driverMarker'),
+          position: state.driverPosition!,
+          rotation: state.driverPositionRotation,
+          icon: driverIcon!,
+          anchor: const Offset(0.5, 0.5),
+        ),
+      );
     }
     state = state.copyWith(gMapMarkers: markers);
   }
@@ -924,10 +939,7 @@ class TaxiController
       co?.pickupDate = null;
       co?.pickupTime = null;
     }
-    state = state.copyWith(
-      canScheduleTaxiOrder: enabled,
-      checkout: co,
-    );
+    state = state.copyWith(canScheduleTaxiOrder: enabled, checkout: co);
   }
 
   Future<void> applyCoupon() async {
@@ -957,9 +969,7 @@ class TaxiController
     final co = state.checkout;
     if (state.canScheduleTaxiOrder &&
         (co?.pickupDate == null || co?.pickupTime == null)) {
-      ToastService.toastError(
-        "Please select pickup date and pickup time".tr(),
-      );
+      ToastService.toastError("Please select pickup date and pickup time".tr());
       return;
     }
     await checkLocationAvailabilityForStep2();
@@ -1091,7 +1101,7 @@ class TaxiController
   void openTripChat(BuildContext context) {
     final trip = state.onGoingOrderTrip;
     if (trip == null) return;
-    
+
     final extra = {
       'orderCode': trip.code,
       'chatType': 'customerDriver',
@@ -1125,10 +1135,9 @@ class TaxiController
   }
 
   void _updatePaymentOptionSelection() {
-    if (state.selectedPaymentMethod == null && state.paymentMethods.isNotEmpty) {
-      state = state.copyWith(
-        selectedPaymentMethod: state.paymentMethods.first,
-      );
+    if (state.selectedPaymentMethod == null &&
+        state.paymentMethods.isNotEmpty) {
+      state = state.copyWith(selectedPaymentMethod: state.paymentMethods.first);
     }
   }
 
@@ -1138,15 +1147,10 @@ class TaxiController
   }) {
     final co = state.checkout;
     co?.paymentMethod = paymentMethod;
-    state = state.copyWith(
-      selectedPaymentMethod: paymentMethod,
-      checkout: co,
-    );
+    state = state.copyWith(selectedPaymentMethod: paymentMethod, checkout: co);
     if (callTotal) calculateTotalAmount();
   }
 }
 
 final taxiControllerProvider = NotifierProvider.autoDispose
-    .family<TaxiController, TaxiState, VendorType>(
-  TaxiController.new,
-);
+    .family<TaxiController, TaxiState, VendorType>(TaxiController.new);

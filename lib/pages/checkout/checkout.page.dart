@@ -44,8 +44,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(checkoutControllerProvider(widget.checkout));
-    final controller =
-        ref.read(checkoutControllerProvider(widget.checkout).notifier);
+    final controller = ref.read(
+      checkoutControllerProvider(widget.checkout).notifier,
+    );
     final vendor = state.vendor;
     return BasePage(
       showAppBar: true,
@@ -107,12 +108,14 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         if (vendor != null)
           OrderSummary(
             subTotal: state.checkout.subTotal,
-            discount: (state.checkout.coupon?.for_delivery ?? false)
-                ? null
-                : state.checkout.discount,
-            deliveryDiscount: (state.checkout.coupon?.for_delivery ?? false)
-                ? state.checkout.deliveryDiscount
-                : null,
+            discount:
+                (state.checkout.coupon?.for_delivery ?? false)
+                    ? null
+                    : state.checkout.discount,
+            deliveryDiscount:
+                (state.checkout.coupon?.for_delivery ?? false)
+                    ? state.checkout.deliveryDiscount
+                    : null,
             deliveryFee: state.checkout.deliveryFee,
             tax: state.checkout.tax,
             vendorTax:
@@ -148,33 +151,30 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
           ),
         if (state.checkout.deliveryAddress != null)
           CheckoutDriverCashDeliveryNoticeView(state.checkout.deliveryAddress!),
-        HStack(
-          [
-            Checkbox(
-              value: state.paymentTermsAgreed,
-              onChanged: (value) =>
-                  controller.setPaymentTermsAgreed(value ?? false),
-            ),
-            "By proceeding to place order, you agree that you are bound by our"
-                .tr()
-                .richText
-                .withTextSpanChildren([
-                  "  ".textSpan.make(),
-                  "Terms & Conditions"
-                      .tr()
-                      .textSpan
-                      .color(AppColor.primaryColor)
-                      .bold
-                      .underline
-                      .tap(() => controller.openPaymentTerms(context))
-                      .make(),
-                  "  ".textSpan.make(),
-                ])
-                .make()
-                .expand(),
-          ],
-          alignment: MainAxisAlignment.start,
-        ).py(20),
+        HStack([
+          Checkbox(
+            value: state.paymentTermsAgreed,
+            onChanged:
+                (value) => controller.setPaymentTermsAgreed(value ?? false),
+          ),
+          "By proceeding to place order, you agree that you are bound by our"
+              .tr()
+              .richText
+              .withTextSpanChildren([
+                "  ".textSpan.make(),
+                "Terms & Conditions"
+                    .tr()
+                    .textSpan
+                    .color(AppColor.primaryColor)
+                    .bold
+                    .underline
+                    .tap(() => controller.openPaymentTerms(context))
+                    .make(),
+                "  ".textSpan.make(),
+              ])
+              .make()
+              .expand(),
+        ], alignment: MainAxisAlignment.start).py(20),
         if (AppCurrencySystemService().currentCurrencyCode !=
             AppStrings.currencyCode)
           CurrencyConversionNotice(
@@ -185,9 +185,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         CustomButton(
           title: "PLACE ORDER".tr().padRight(14),
           icon: Icons.shopping_basket,
-          onPressed: state.paymentTermsAgreed
-              ? () => controller.placeOrder(context)
-              : null,
+          onPressed:
+              state.paymentTermsAgreed
+                  ? () => controller.placeOrder(context)
+                  : null,
           loading: state.isBusy,
         ).centered().py16(),
       ]).p20().scrollVertical().pOnly(bottom: context.mq.viewInsets.bottom),

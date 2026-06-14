@@ -68,25 +68,22 @@ class _OrderCancellationBottomSheetState
   Widget build(BuildContext context) {
     final isFood = widget.order.vendor?.vendorType.slug == 'food';
     return VStack([
-      'Order Cancellation'.tr().text.semiBold.xl.make(),
-      if (isFood)
-        '${_getRefundStatus(widget.order.createdAt)['label']}'.text.make()
-      else
-        const SizedBox(),
-      const SizedBox(height: 10),
-      'Please state why you want to cancel order'.tr().text.make(),
-      CustomTextFormField(
-        minLines: 6,
-        labelText: 'Reason'.tr(),
-        textEditingController: _reasonCtrl,
-        validator: FormValidator.validateEmpty,
-      ).py12(),
-      const SizedBox(height: 20),
-      CustomButton(
-        title: 'Submit'.tr(),
-        onPressed: _submit,
-      ),
-    ])
+          'Order Cancellation'.tr().text.semiBold.xl.make(),
+          if (isFood)
+            '${_getRefundStatus(widget.order.createdAt)['label']}'.text.make()
+          else
+            const SizedBox(),
+          const SizedBox(height: 10),
+          'Please state why you want to cancel order'.tr().text.make(),
+          CustomTextFormField(
+            minLines: 6,
+            labelText: 'Reason'.tr(),
+            textEditingController: _reasonCtrl,
+            validator: FormValidator.validateEmpty,
+          ).py12(),
+          const SizedBox(height: 20),
+          CustomButton(title: 'Submit'.tr(), onPressed: _submit),
+        ])
         .p20()
         .scrollVertical()
         .pOnly(bottom: MediaQuery.of(context).viewInsets.bottom)

@@ -151,7 +151,6 @@ class VendorRequest extends ApiService {
     throw apiResponse.message!;
   }
 
-
   Future<ApiResponse> vendorGetTimeUse(int vendor_id, String date) async {
     //
     final apiResult = await get(

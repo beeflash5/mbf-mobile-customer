@@ -5,11 +5,7 @@ import 'package:fuodz/services/cart.request.dart';
 
 /// State pencarian/penerapan coupon.
 class ApplyDiscountState {
-  const ApplyDiscountState({
-    this.coupon,
-    this.isBusy = false,
-    this.error,
-  });
+  const ApplyDiscountState({this.coupon, this.isBusy = false, this.error});
 
   final Coupon? coupon;
   final bool isBusy;
@@ -30,8 +26,9 @@ class ApplyDiscountState {
   }
 }
 
-final applyDiscountCartRequestProvider =
-    Provider<CartRequest>((_) => CartRequest());
+final applyDiscountCartRequestProvider = Provider<CartRequest>(
+  (_) => CartRequest(),
+);
 
 class ApplyDiscountController extends Notifier<ApplyDiscountState> {
   @override
@@ -44,14 +41,10 @@ class ApplyDiscountController extends Notifier<ApplyDiscountState> {
   }
 
   /// `vendorTypeId` boleh null bila non-vendor-type context.
-  Future<Coupon?> apply({
-    required String code,
-    int? vendorTypeId,
-  }) async {
+  Future<Coupon?> apply({required String code, int? vendorTypeId}) async {
     state = state.copyWith(isBusy: true, clearError: true);
     try {
-      final fetched =
-          await _cart.fetchCoupon(code, vendorTypeId: vendorTypeId);
+      final fetched = await _cart.fetchCoupon(code, vendorTypeId: vendorTypeId);
       if (fetched.useLeft <= 0) {
         state = state.copyWith(
           isBusy: false,
@@ -68,18 +61,10 @@ class ApplyDiscountController extends Notifier<ApplyDiscountState> {
         );
         return null;
       }
-      state = state.copyWith(
-        coupon: fetched,
-        isBusy: false,
-        clearError: true,
-      );
+      state = state.copyWith(coupon: fetched, isBusy: false, clearError: true);
       return fetched;
     } catch (e) {
-      state = state.copyWith(
-        isBusy: false,
-        error: '$e',
-        clearCoupon: true,
-      );
+      state = state.copyWith(isBusy: false, error: '$e', clearCoupon: true);
       return null;
     }
   }
@@ -87,5 +72,5 @@ class ApplyDiscountController extends Notifier<ApplyDiscountState> {
 
 final applyDiscountControllerProvider =
     NotifierProvider<ApplyDiscountController, ApplyDiscountState>(
-  ApplyDiscountController.new,
-);
+      ApplyDiscountController.new,
+    );

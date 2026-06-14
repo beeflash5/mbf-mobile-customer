@@ -30,17 +30,12 @@ class PaymentHelper {
       );
       return;
     }
-    return context.push(
-      (context) => CustomWebviewPage(selectedUrl: url),
-    );
+    return context.push((context) => CustomWebviewPage(selectedUrl: url));
   }
 
   static Future<dynamic> openExternalWebpageLink(String url) async {
     try {
-      return await launchUrlString(
-        url,
-        mode: LaunchMode.externalApplication,
-      );
+      return await launchUrlString(url, mode: LaunchMode.externalApplication);
     } catch (error) {
       ToastService.toastError('$error');
     }

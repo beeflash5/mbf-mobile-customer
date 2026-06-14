@@ -13,38 +13,33 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ViewAllVendorsView extends StatelessWidget {
-  const ViewAllVendorsView({
-    Key? key,
-    required this.vendorType,
-  }) : super(key: key);
+  const ViewAllVendorsView({Key? key, required this.vendorType})
+    : super(key: key);
   final VendorType vendorType;
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        CustomVisibilty(
-          visible: !AppStrings.enableSingleVendor,
-          child: HStack(
-            [
-              UiSpacer.horizontalSpace(),
-              "View all vendors"
-                  .tr()
-                  .text
-                  .center
-                  .color(Utils.textColorByPrimaryColor())
-                  .size(Sizes.fontSizeDefault)
-                  .make()
-                  .expand(),
-              Icon(
-                Icons.chevron_right,
-                color: Utils.textColorByPrimaryColor(),
-              )
-            ],
-          )
-              .p8()
-              .onInkTap(
-                () {
+    return VStack([
+      CustomVisibilty(
+        visible: !AppStrings.enableSingleVendor,
+        child:
+            HStack([
+                  UiSpacer.horizontalSpace(),
+                  "View all vendors"
+                      .tr()
+                      .text
+                      .center
+                      .color(Utils.textColorByPrimaryColor())
+                      .size(Sizes.fontSizeDefault)
+                      .make()
+                      .expand(),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Utils.textColorByPrimaryColor(),
+                  ),
+                ])
+                .p8()
+                .onInkTap(() {
                   //open search with vendor type
                   context.pushRoute(
                     AppRoutes.search,
@@ -59,39 +54,34 @@ class ViewAllVendorsView extends StatelessWidget {
                       // showType: vendorType.isService ? 5 : 4,
                     ),
                   );
-                },
-              )
-              .box
-              .withRounded(value: Sizes.radiusSmall)
-              .color(AppColor.primaryColor)
-              .make()
-              .p12(),
-        ),
-        CustomVisibilty(
-          visible: AppStrings.enableSingleVendor,
-          child: HStack(
-            [
-              UiSpacer.horizontalSpace(),
-              (!vendorType.isService
-                      ? "View all products".tr()
-                      : "View all services".tr())
-                  .text
-                  .center
-                  .color(Utils.textColorByPrimaryColor())
-                  .size(Sizes.fontSizeDefault)
-                  .make()
-                  .expand(),
-              Icon(
-                Utils.isArabic
-                    ? Icons.chevron_left
-                    : Icons.chevron_right,
-                color: Utils.textColorByPrimaryColor(),
-              )
-            ],
-          )
-              .p8()
-              .onInkTap(
-                () {
+                })
+                .box
+                .withRounded(value: Sizes.radiusSmall)
+                .color(AppColor.primaryColor)
+                .make()
+                .p12(),
+      ),
+      CustomVisibilty(
+        visible: AppStrings.enableSingleVendor,
+        child:
+            HStack([
+                  UiSpacer.horizontalSpace(),
+                  (!vendorType.isService
+                          ? "View all products".tr()
+                          : "View all services".tr())
+                      .text
+                      .center
+                      .color(Utils.textColorByPrimaryColor())
+                      .size(Sizes.fontSizeDefault)
+                      .make()
+                      .expand(),
+                  Icon(
+                    Utils.isArabic ? Icons.chevron_left : Icons.chevron_right,
+                    color: Utils.textColorByPrimaryColor(),
+                  ),
+                ])
+                .p8()
+                .onInkTap(() {
                   //open search with vendor type
                   context.pushRoute(
                     AppRoutes.search,
@@ -105,15 +95,13 @@ class ViewAllVendorsView extends StatelessWidget {
                       // showType: vendorType.isService ? 3 : 2,
                     ),
                   );
-                },
-              )
-              .box
-              .withRounded(value: Sizes.radiusSmall)
-              .color(AppColor.primaryColor)
-              .make()
-              .p12(),
-        )
-      ],
-    );
+                })
+                .box
+                .withRounded(value: Sizes.radiusSmall)
+                .color(AppColor.primaryColor)
+                .make()
+                .p12(),
+      ),
+    ]);
   }
 }

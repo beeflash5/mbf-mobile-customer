@@ -18,10 +18,9 @@ class VendorMore extends StatelessWidget {
       child: SlideAnimation(
         verticalOffset: 50.0,
         child: FadeInAnimation(
-            child: InkWell(
-          onTap: onPressed,
-          child: VStack(
-            [
+          child: InkWell(
+            onTap: onPressed,
+            child: VStack([
               //image + details
               // Visibility(
               //   visible: !AppStrings.showVendorTypeImageOnly,
@@ -69,27 +68,24 @@ class VendorMore extends StatelessWidget {
               //         // width: Vx.dp40,
               //         // height: Vx.dp40,
               //         )
-              Image.asset(AppImages.icon_lainnya)
-                  .box
-                  .clip(Clip.antiAlias)
-                  .withRounded(value: 10)
-                  .make(),
+              Image.asset(
+                AppImages.icon_lainnya,
+              ).box.clip(Clip.antiAlias).withRounded(value: 10).make(),
 
-              SizedBox(
-                height: 8,
-              ),
+              SizedBox(height: 8),
 
               Center(
-                  child: "Lainnya"
-                      .text
-                      .overflow(TextOverflow.ellipsis)
-                      .sm
-                      .bold
-                      .color(Color(0xff868686))
-                      .make()),
-            ],
-          ).centered().pOnly(bottom: Vx.dp8),
-        )),
+                child:
+                    "Lainnya".text
+                        .overflow(TextOverflow.ellipsis)
+                        .sm
+                        .bold
+                        .color(Color(0xff868686))
+                        .make(),
+              ),
+            ]).centered().pOnly(bottom: Vx.dp8),
+          ),
+        ),
       ),
     );
   }

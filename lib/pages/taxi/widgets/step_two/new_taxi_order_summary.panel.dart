@@ -21,8 +21,9 @@ class NewTaxiOrderSummaryPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     final summaryController = ref.read(
       taxiOrderSummaryControllerProvider(vendorType).notifier,
     );
@@ -30,53 +31,51 @@ class NewTaxiOrderSummaryPanel extends ConsumerWidget {
       onChange: (size) {
         taxiController.updateGoogleMapPadding(height: size.height + Vx.dp40);
       },
-      child: VStack(
-        [
-          VStack(
-            [
-              HStack(
-                [
-                  CustomTextButton(
-                    padding: EdgeInsets.zero,
-                    title: "Back".tr(),
-                    onPressed: () => summaryController.closePanel(context),
-                  ).h(24),
-                  UiSpacer.swipeIndicator().px12().expand(),
-                  CustomTextButton(
-                    padding: EdgeInsets.zero,
-                    title: "Cancel".tr(),
-                    titleColor: Colors.red,
-                    onPressed: taxiController.closeOrderSummary,
-                  ).h(24),
-                ],
-              ),
-              UiSpacer.verticalSpace(),
-              TaxiVehicleTypeListView(
-                vendorType: vendorType,
-                min: false,
-              ).expand(),
-              UiSpacer.vSpace(),
-            ],
-          ).safeArea().p20().expand(),
-          VStack(
-            [
-              TaxiDiscountSection(
-                vendorType: vendorType,
-                fullView: true,
-              ).box.p8.make().py8(),
-              NewTaxiOrderPaymentMethodSelectionView(vendorType: vendorType),
-              UiSpacer.vSpace(10),
-              OrderTaxiButton(vendorType: vendorType),
-            ],
-          )
-              .safeArea(top: false)
-              .pSymmetric(h: 20, v: 12)
-              .box
-              .shadow2xl
+      child:
+          VStack([
+                VStack([
+                  HStack([
+                    CustomTextButton(
+                      padding: EdgeInsets.zero,
+                      title: "Back".tr(),
+                      onPressed: () => summaryController.closePanel(context),
+                    ).h(24),
+                    UiSpacer.swipeIndicator().px12().expand(),
+                    CustomTextButton(
+                      padding: EdgeInsets.zero,
+                      title: "Cancel".tr(),
+                      titleColor: Colors.red,
+                      onPressed: taxiController.closeOrderSummary,
+                    ).h(24),
+                  ]),
+                  UiSpacer.verticalSpace(),
+                  TaxiVehicleTypeListView(
+                    vendorType: vendorType,
+                    min: false,
+                  ).expand(),
+                  UiSpacer.vSpace(),
+                ]).safeArea().p20().expand(),
+                VStack([
+                      TaxiDiscountSection(
+                        vendorType: vendorType,
+                        fullView: true,
+                      ).box.p8.make().py8(),
+                      NewTaxiOrderPaymentMethodSelectionView(
+                        vendorType: vendorType,
+                      ),
+                      UiSpacer.vSpace(10),
+                      OrderTaxiButton(vendorType: vendorType),
+                    ])
+                    .safeArea(top: false)
+                    .pSymmetric(h: 20, v: 12)
+                    .box
+                    .shadow2xl
+                    .color(context.theme.colorScheme.surface)
+                    .make(),
+              ]).box
               .color(context.theme.colorScheme.surface)
+              .topRounded(value: 5)
               .make(),
-        ],
-      ).box.color(context.theme.colorScheme.surface).topRounded(value: 5).make(),
     );
   }
 }

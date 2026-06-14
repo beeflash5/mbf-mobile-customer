@@ -26,8 +26,9 @@ class TaxiTripReadyView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     final trip = taxiState.onGoingOrderTrip;
     if (trip == null) return const SizedBox.shrink();
     return SlidingUpPanel(
@@ -39,66 +40,64 @@ class TaxiTripReadyView extends ConsumerWidget {
           onChange: (size) {
             taxiController.updateGoogleMapPadding(height: 320);
           },
-          child: VStack(
-            [
-              UiSpacer.swipeIndicator(),
-              20.heightBox,
-              TaxiDriverInfoView(
-                trip.driver!,
-                order: trip,
-              ),
-              HStack(
-                [
-                  if (AppUISettings.canDriverChat)
-                    Icon(
-                      Icons.message,
-                      size: 24,
-                      color: Utils.textColorByColor(AppColor.primaryColor),
-                    )
-                        .p8()
-                        .box
-                        .color(AppColor.primaryColor)
-                        .roundedFull
-                        .make()
-                        .onInkTap(() => taxiController.openTripChat(context)),
-                  if (AppUISettings.canCallDriver)
-                    CallButton(
-                      null,
-                      phone: trip.driver!.phone,
+          child:
+              VStack([
+                    UiSpacer.swipeIndicator(),
+                    20.heightBox,
+                    TaxiDriverInfoView(trip.driver!, order: trip),
+                    HStack(
+                      [
+                        if (AppUISettings.canDriverChat)
+                          Icon(
+                                Icons.message,
+                                size: 24,
+                                color: Utils.textColorByColor(
+                                  AppColor.primaryColor,
+                                ),
+                              )
+                              .p8()
+                              .box
+                              .color(AppColor.primaryColor)
+                              .roundedFull
+                              .make()
+                              .onInkTap(
+                                () => taxiController.openTripChat(context),
+                              ),
+                        if (AppUISettings.canCallDriver)
+                          CallButton(null, phone: trip.driver!.phone),
+                      ],
+                      crossAlignment: CrossAxisAlignment.center,
+                      alignment: MainAxisAlignment.center,
+                      spacing: 20,
+                    ).wFull(context).py16(),
+                    UiSpacer.divider().py12(),
+                    "Pickup Location".tr().text.sm.light.make(),
+                    "${trip.taxiOrder?.pickupAddress}".text.lg.medium.make(),
+                    UiSpacer.verticalSpace(),
+                    "Dropoff Location".tr().text.sm.light.make(),
+                    "${trip.taxiOrder?.dropoffAddress}".text.lg.medium.make(),
+                    UiSpacer.divider().py12(),
+                    TaxiOrderTripVerificationView(trip),
+                    SafetyView(),
+                    UiSpacer.divider().py12(),
+                    Visibility(
+                      visible: trip.canCancelTaxi,
+                      child:
+                          CustomTextButton(
+                            title: "Cancel Booking".tr(),
+                            titleColor: AppColor.getStausColor("failed"),
+                            loading: taxiState.tripBusy,
+                            onPressed: taxiController.cancelTrip,
+                          ).centered(),
                     ),
-                ],
-                crossAlignment: CrossAxisAlignment.center,
-                alignment: MainAxisAlignment.center,
-                spacing: 20,
-              ).wFull(context).py16(),
-              UiSpacer.divider().py12(),
-              "Pickup Location".tr().text.sm.light.make(),
-              "${trip.taxiOrder?.pickupAddress}".text.lg.medium.make(),
-              UiSpacer.verticalSpace(),
-              "Dropoff Location".tr().text.sm.light.make(),
-              "${trip.taxiOrder?.dropoffAddress}".text.lg.medium.make(),
-              UiSpacer.divider().py12(),
-              TaxiOrderTripVerificationView(trip),
-              SafetyView(),
-              UiSpacer.divider().py12(),
-              Visibility(
-                visible: trip.canCancelTaxi,
-                child: CustomTextButton(
-                  title: "Cancel Booking".tr(),
-                  titleColor: AppColor.getStausColor("failed"),
-                  loading: taxiState.tripBusy,
-                  onPressed: taxiController.cancelTrip,
-                ).centered(),
-              ),
-            ],
-          )
-              .p20()
-              .scrollVertical(controller: sc)
-              .box
-              .color(context.theme.colorScheme.surface)
-              .topRounded(value: Sizes.radiusSmall)
-              .shadow5xl
-              .make(),
+                  ])
+                  .p20()
+                  .scrollVertical(controller: sc)
+                  .box
+                  .color(context.theme.colorScheme.surface)
+                  .topRounded(value: Sizes.radiusSmall)
+                  .shadow5xl
+                  .make(),
         );
       },
     );

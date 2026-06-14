@@ -10,11 +10,7 @@ import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/auth.service.dart';
 
 class VendorFavButton extends ConsumerStatefulWidget {
-  const VendorFavButton({
-    super.key,
-    required this.vendor,
-    this.color,
-  });
+  const VendorFavButton({super.key, required this.vendor, this.color});
 
   final Vendor vendor;
   final Color? color;
@@ -41,7 +37,7 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
     );
     if (!mounted) return;
     setState(() => _busy = false);
-    
+
     if (result != null) {
       // result contains the new isFavourite value
       setState(() {

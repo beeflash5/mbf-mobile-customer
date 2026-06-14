@@ -42,50 +42,44 @@ class _ServiceDiscountSectionState extends State<ServiceDiscountSection> {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        HStack(
-          [
-            "Add Coupon".tr().text.semiBold.xl.make().expand(),
-            widget.toggle
-                ? Icon(
-                    show ? Icons.close : Icons.add,
-                    color: AppColor.primaryColor,
-                  ).onInkTap(() {
-                    setState(() => show = !show);
-                  })
-                : UiSpacer.emptySpace(),
-          ],
-        ),
-        UiSpacer.verticalSpace(space: 10),
-        Visibility(
-          visible: show,
-          child: HStack(
-            [
-              CustomTextFormField(
-                hintText: "Coupon Code".tr(),
-                textEditingController: widget.couponController,
-                errorText: widget.errorText,
-                onChanged: widget.onChanged,
-              ).expand(flex: 2),
-              UiSpacer.horizontalSpace(),
-              Column(
-                children: [
-                  CustomButton(
-                    title: "Apply".tr(),
-                    isFixedHeight: true,
-                    loading: widget.applying,
-                    onPressed: widget.canApply ? widget.onApply : null,
-                  ).h(Vx.dp56),
-                  widget.errorText != null
-                      ? UiSpacer.verticalSpace(space: 12)
-                      : UiSpacer.verticalSpace(space: 1),
-                ],
-              ).expand(),
+    return VStack([
+      HStack([
+        "Add Coupon".tr().text.semiBold.xl.make().expand(),
+        widget.toggle
+            ? Icon(
+              show ? Icons.close : Icons.add,
+              color: AppColor.primaryColor,
+            ).onInkTap(() {
+              setState(() => show = !show);
+            })
+            : UiSpacer.emptySpace(),
+      ]),
+      UiSpacer.verticalSpace(space: 10),
+      Visibility(
+        visible: show,
+        child: HStack([
+          CustomTextFormField(
+            hintText: "Coupon Code".tr(),
+            textEditingController: widget.couponController,
+            errorText: widget.errorText,
+            onChanged: widget.onChanged,
+          ).expand(flex: 2),
+          UiSpacer.horizontalSpace(),
+          Column(
+            children: [
+              CustomButton(
+                title: "Apply".tr(),
+                isFixedHeight: true,
+                loading: widget.applying,
+                onPressed: widget.canApply ? widget.onApply : null,
+              ).h(Vx.dp56),
+              widget.errorText != null
+                  ? UiSpacer.verticalSpace(space: 12)
+                  : UiSpacer.verticalSpace(space: 1),
             ],
-          ),
-        ),
-      ],
-    );
+          ).expand(),
+        ]),
+      ),
+    ]);
   }
 }

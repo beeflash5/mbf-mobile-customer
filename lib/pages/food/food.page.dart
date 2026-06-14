@@ -19,6 +19,7 @@ import 'package:fuodz/utils/extensions/dynamic.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/utils/sizes.dart';
+import 'package:fuodz/pages/flash_sale/widgets/flash_sale.view.dart';
 
 class FoodPage extends ConsumerStatefulWidget {
   const FoodPage(this.vendorType, {super.key});
@@ -126,6 +127,8 @@ class _FoodPageState extends ConsumerState<FoodPage>
                     featured: false,
                     height: 80,
                   ),
+                  const SizedBox(height: 10),
+                  FlashSaleView(widget.vendorType),
                 ],
               ),
             ),

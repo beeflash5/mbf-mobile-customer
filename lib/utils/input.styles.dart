@@ -6,9 +6,7 @@ class InputStyles {
   //get the border for the textform field
   static InputBorder inputEnabledBorder() {
     return OutlineInputBorder(
-      borderSide: BorderSide(
-        color: AppColor.primaryColor,
-      ),
+      borderSide: BorderSide(color: AppColor.primaryColor),
       borderRadius: BorderRadius.circular(Vx.dp4),
     );
   }
@@ -16,21 +14,16 @@ class InputStyles {
   //get the border for the textform field
   static InputBorder inputFocusBorder() {
     return OutlineInputBorder(
-      borderSide: BorderSide(
-        color: AppColor.primaryColorDark,
-      ),
+      borderSide: BorderSide(color: AppColor.primaryColorDark),
       borderRadius: BorderRadius.circular(Vx.dp4),
     );
   }
-
 
   //
   //get the border for the textform field
   static InputBorder inputUnderlineEnabledBorder() {
     return UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: AppColor.primaryColor,
-      ),
+      borderSide: BorderSide(color: AppColor.primaryColor),
       borderRadius: BorderRadius.circular(Vx.dp4),
     );
   }
@@ -38,9 +31,7 @@ class InputStyles {
   //get the border for the textform field
   static InputBorder inputUnderlineFocusBorder() {
     return UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: AppColor.primaryColorDark,
-      ),
+      borderSide: BorderSide(color: AppColor.primaryColorDark),
       borderRadius: BorderRadius.circular(Vx.dp4),
     );
   }

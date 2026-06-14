@@ -26,8 +26,7 @@ class SplashService {
   static Future<void> loadAppSettings(BuildContext context) async {
     final response = await _settingsRequest.appSettings();
     if (response.body['websocket'] != null) {
-      await WebsocketService()
-          .saveWebsocketDetails(response.body['websocket']);
+      await WebsocketService().saveWebsocketDetails(response.body['websocket']);
     }
     final Map<String, dynamic> appGenSettings = response.body['strings'];
     final pkg = await PackageInfo.fromPlatform();

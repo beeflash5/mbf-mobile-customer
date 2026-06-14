@@ -8,10 +8,10 @@ import 'package:fuodz/services/search.request.dart';
 import 'package:fuodz/services/search.service.dart';
 import 'package:fuodz/services/vendor_type.request.dart';
 
-final _searchRequestProvider =
-    Provider<SearchRequest>((_) => SearchRequest());
-final _vendorTypeRequestProvider =
-    Provider<VendorTypeRequest>((_) => VendorTypeRequest());
+final _searchRequestProvider = Provider<SearchRequest>((_) => SearchRequest());
+final _vendorTypeRequestProvider = Provider<VendorTypeRequest>(
+  (_) => VendorTypeRequest(),
+);
 
 class MainSearchState {
   const MainSearchState({
@@ -54,21 +54,20 @@ class MainSearchState {
     int? productsPage,
     int? servicesPage,
     List<String>? searchHistory,
-  }) =>
-      MainSearchState(
-        search: search ?? this.search,
-        keyword: keyword ?? this.keyword,
-        showVendors: showVendors ?? this.showVendors,
-        showProducts: showProducts ?? this.showProducts,
-        showServices: showServices ?? this.showServices,
-        vendors: vendors ?? this.vendors,
-        products: products ?? this.products,
-        services: services ?? this.services,
-        vendorsPage: vendorsPage ?? this.vendorsPage,
-        productsPage: productsPage ?? this.productsPage,
-        servicesPage: servicesPage ?? this.servicesPage,
-        searchHistory: searchHistory ?? this.searchHistory,
-      );
+  }) => MainSearchState(
+    search: search ?? this.search,
+    keyword: keyword ?? this.keyword,
+    showVendors: showVendors ?? this.showVendors,
+    showProducts: showProducts ?? this.showProducts,
+    showServices: showServices ?? this.showServices,
+    vendors: vendors ?? this.vendors,
+    products: products ?? this.products,
+    services: services ?? this.services,
+    vendorsPage: vendorsPage ?? this.vendorsPage,
+    productsPage: productsPage ?? this.productsPage,
+    servicesPage: servicesPage ?? this.servicesPage,
+    searchHistory: searchHistory ?? this.searchHistory,
+  );
 }
 
 class MainSearchController extends AsyncNotifier<MainSearchState> {
@@ -124,21 +123,23 @@ class MainSearchController extends AsyncNotifier<MainSearchState> {
     if (cur == null || cur.search == null) return;
     final page = initial ? 1 : (cur.vendorsPage + 1);
     try {
-      final results = (await ref
+      final results =
+          (await ref
               .read(_searchRequestProvider)
               .searchRequest(
                 keyword: cur.keyword,
                 search: cur.search!,
                 type: 'vendor',
                 page: page,
-              ))
-          .cast<Vendor>();
+              )).cast<Vendor>();
       final cur2 = state.valueOrNull;
       if (cur2 == null) return;
-      state = AsyncData(cur2.copyWith(
-        vendors: initial ? results : [...cur2.vendors, ...results],
-        vendorsPage: page,
-      ));
+      state = AsyncData(
+        cur2.copyWith(
+          vendors: initial ? results : [...cur2.vendors, ...results],
+          vendorsPage: page,
+        ),
+      );
     } catch (_) {}
   }
 
@@ -147,21 +148,23 @@ class MainSearchController extends AsyncNotifier<MainSearchState> {
     if (cur == null || cur.search == null) return;
     final page = initial ? 1 : (cur.productsPage + 1);
     try {
-      final results = (await ref
+      final results =
+          (await ref
               .read(_searchRequestProvider)
               .searchRequest(
                 keyword: cur.keyword,
                 search: cur.search!,
                 type: 'product',
                 page: page,
-              ))
-          .cast<Product>();
+              )).cast<Product>();
       final cur2 = state.valueOrNull;
       if (cur2 == null) return;
-      state = AsyncData(cur2.copyWith(
-        products: initial ? results : [...cur2.products, ...results],
-        productsPage: page,
-      ));
+      state = AsyncData(
+        cur2.copyWith(
+          products: initial ? results : [...cur2.products, ...results],
+          productsPage: page,
+        ),
+      );
     } catch (_) {}
   }
 
@@ -170,21 +173,23 @@ class MainSearchController extends AsyncNotifier<MainSearchState> {
     if (cur == null || cur.search == null) return;
     final page = initial ? 1 : (cur.servicesPage + 1);
     try {
-      final results = (await ref
+      final results =
+          (await ref
               .read(_searchRequestProvider)
               .searchRequest(
                 keyword: cur.keyword,
                 search: cur.search!,
                 type: 'service',
                 page: page,
-              ))
-          .cast<Service>();
+              )).cast<Service>();
       final cur2 = state.valueOrNull;
       if (cur2 == null) return;
-      state = AsyncData(cur2.copyWith(
-        services: initial ? results : [...cur2.services, ...results],
-        servicesPage: page,
-      ));
+      state = AsyncData(
+        cur2.copyWith(
+          services: initial ? results : [...cur2.services, ...results],
+          servicesPage: page,
+        ),
+      );
     } catch (_) {}
   }
 
@@ -204,5 +209,5 @@ class MainSearchController extends AsyncNotifier<MainSearchState> {
 
 final mainSearchControllerProvider =
     AsyncNotifierProvider<MainSearchController, MainSearchState>(
-  MainSearchController.new,
-);
+      MainSearchController.new,
+    );

@@ -36,52 +36,54 @@ class AppButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(borderRadius),
       side: outlined ? BorderSide(color: bg, width: 1.2) : BorderSide.none,
     );
-    final pad = padding ??
-        const EdgeInsets.symmetric(vertical: 14, horizontal: 16);
+    final pad =
+        padding ?? const EdgeInsets.symmetric(vertical: 14, horizontal: 16);
 
-    final child = loading
-        ? SizedBox(
-            height: 18,
-            width: 18,
-            child: CircularProgressIndicator(strokeWidth: 2, color: fg),
-          )
-        : Row(
-            mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, color: fg, size: 18),
-                const SizedBox(width: 8),
+    final child =
+        loading
+            ? SizedBox(
+              height: 18,
+              width: 18,
+              child: CircularProgressIndicator(strokeWidth: 2, color: fg),
+            )
+            : Row(
+              mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: fg, size: 18),
+                  const SizedBox(width: 8),
+                ],
+                Text(
+                  label,
+                  style: TextStyle(color: fg, fontWeight: FontWeight.w600),
+                ),
               ],
-              Text(
-                label,
-                style: TextStyle(color: fg, fontWeight: FontWeight.w600),
-              ),
-            ],
-          );
+            );
 
-    final btn = outlined
-        ? OutlinedButton(
-            onPressed: loading ? null : onPressed,
-            style: OutlinedButton.styleFrom(
-              foregroundColor: fg,
-              padding: pad,
-              shape: shape,
-              side: BorderSide(color: bg, width: 1.2),
-            ),
-            child: child,
-          )
-        : ElevatedButton(
-            onPressed: loading ? null : onPressed,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: bg,
-              foregroundColor: fg,
-              padding: pad,
-              shape: shape,
-              elevation: 0,
-            ),
-            child: child,
-          );
+    final btn =
+        outlined
+            ? OutlinedButton(
+              onPressed: loading ? null : onPressed,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: fg,
+                padding: pad,
+                shape: shape,
+                side: BorderSide(color: bg, width: 1.2),
+              ),
+              child: child,
+            )
+            : ElevatedButton(
+              onPressed: loading ? null : onPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: bg,
+                foregroundColor: fg,
+                padding: pad,
+                shape: shape,
+                elevation: 0,
+              ),
+              child: child,
+            );
 
     return fullWidth ? SizedBox(width: double.infinity, child: btn) : btn;
   }

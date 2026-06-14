@@ -19,25 +19,21 @@ class ImagePickerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VxBox(
-      child: image == null
-          ? "Select Image".tr().text.makeCentered()
-          : VStack(
-              [
-                //
-                Image.file(
-                  image!,
-                ).wFull(context).h(Vx.dp64 * 3),
+          child:
+              image == null
+                  ? "Select Image".tr().text.makeCentered()
+                  : VStack([
+                    //
+                    Image.file(image!).wFull(context).h(Vx.dp64 * 3),
 
-                //
-                CustomButton(
-                  title: "Remove".tr(),
-                  color: Colors.red,
-                  onPressed: onRemovePressed,
-                ),
-              ],
-            ),
-    )
-        .p12
+                    //
+                    CustomButton(
+                      title: "Remove".tr(),
+                      color: Colors.red,
+                      onPressed: onRemovePressed,
+                    ),
+                  ]),
+        ).p12
         .color(context.theme.colorScheme.surface)
         .shadowMd
         .border(color: context.theme.highlightColor)

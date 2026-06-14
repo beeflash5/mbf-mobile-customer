@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuodz/utils/app_routes.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -12,9 +13,16 @@ import 'package:fuodz/providers/product_details_providers.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/cart.helper.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
+import 'package:fuodz/utils/app_strings.dart';
+import 'package:fuodz/providers/cart_providers.dart';
+import 'package:fuodz/services/cart.service.dart';
+import 'package:fuodz/services/auth.service.dart';
 
 class CommerceProductDetailsCartBottomSheet extends ConsumerStatefulWidget {
-  const CommerceProductDetailsCartBottomSheet({super.key, required this.product});
+  const CommerceProductDetailsCartBottomSheet({
+    super.key,
+    required this.product,
+  });
 
   final Product product;
 
@@ -37,9 +45,8 @@ class _CommerceProductDetailsCartBottomSheetState
       return false;
     }
     setState(() => _busy = true);
-    final s = ref
-        .read(productDetailsControllerProvider(widget.product))
-        .valueOrNull;
+    final s =
+        ref.read(productDetailsControllerProvider(widget.product)).valueOrNull;
     if (s == null) {
       setState(() => _busy = false);
       return false;
@@ -60,44 +67,65 @@ class _CommerceProductDetailsCartBottomSheetState
     final added = await _addToCartFlow(skip: true);
     if (!added || !mounted) return;
     Navigator.of(context).pop();
-    context.pushWidget(CartPage());
+
+    bool canOpenCheckout = true;
+    if (!AuthServices.authenticated()) {
+      final result = await context.pushRoute<bool>(AppRoutes.loginRoute);
+      if (result == null || result == false) canOpenCheckout = false;
+    }
+    if (!canOpenCheckout || !context.mounted) return;
+
+    final cartState = ref.read(cartControllerProvider);
+    final checkOut = cartState.toCheckout();
+
+    dynamic result;
+    if (AppStrings.enableMultipleVendorOrder &&
+        CartServices.isMultipleOrder()) {
+      result = await context.pushRoute('/checkout/multiple', extra: checkOut);
+    } else {
+      result = await context.pushRoute('/checkout', extra: checkOut);
+    }
+
+    if (result == true) {
+      await ref.read(cartControllerProvider.notifier).clearCart();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(productDetailsControllerProvider(widget.product));
-    final liveProduct =
-        asyncState.valueOrNull?.product ?? widget.product;
+    final asyncState = ref.watch(
+      productDetailsControllerProvider(widget.product),
+    );
+    final liveProduct = asyncState.valueOrNull?.product ?? widget.product;
     return VStack([
-      Visibility(
-        visible: liveProduct.hasStock,
-        child: HStack([
-          AddToCartButton(
-            loading: _busy,
-            onPressed: () => _addToCartFlow(),
-          ).expand(),
-          UiSpacer.smHorizontalSpace(),
-          BuyNowButton(loading: _busy, onPressed: _buyNow).expand(),
-        ]).p12(),
-      ),
-      Visibility(
-        visible: !liveProduct.hasStock,
-        child: "No stock"
-            .tr()
-            .text
-            .white
-            .makeCentered()
-            .p8()
-            .box
-            .red500
-            .roundedSM
-            .make()
-            .p8()
-            .wFull(context),
-      ),
-    ])
-        .box
+          Visibility(
+            visible: liveProduct.hasStock,
+            child:
+                HStack([
+                  AddToCartButton(
+                    loading: _busy,
+                    onPressed: () => _addToCartFlow(),
+                  ).expand(),
+                  UiSpacer.smHorizontalSpace(),
+                  BuyNowButton(loading: _busy, onPressed: _buyNow).expand(),
+                ]).p12(),
+          ),
+          Visibility(
+            visible: !liveProduct.hasStock,
+            child: "No stock"
+                .tr()
+                .text
+                .white
+                .makeCentered()
+                .p8()
+                .box
+                .red500
+                .roundedSM
+                .make()
+                .p8()
+                .wFull(context),
+          ),
+        ]).box
         .color(context.theme.colorScheme.surface)
         .shadowXl
         .make()

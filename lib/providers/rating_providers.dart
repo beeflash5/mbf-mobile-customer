@@ -16,8 +16,7 @@ class RatingFailure extends RatingResult {
   final String message;
 }
 
-final _vendorRequestProvider =
-    Provider<VendorRequest>((_) => VendorRequest());
+final _vendorRequestProvider = Provider<VendorRequest>((_) => VendorRequest());
 
 class DriverRatingController extends AsyncNotifier<void> {
   @override
@@ -31,7 +30,9 @@ class DriverRatingController extends AsyncNotifier<void> {
   }) async {
     state = const AsyncLoading();
     try {
-      final res = await ref.read(_vendorRequestProvider).rateDriver(
+      final res = await ref
+          .read(_vendorRequestProvider)
+          .rateDriver(
             rating: rating,
             review: review,
             orderId: orderId,
@@ -50,8 +51,8 @@ class DriverRatingController extends AsyncNotifier<void> {
 
 final driverRatingControllerProvider =
     AsyncNotifierProvider<DriverRatingController, void>(
-  DriverRatingController.new,
-);
+      DriverRatingController.new,
+    );
 
 class VendorRatingController extends AsyncNotifier<void> {
   @override
@@ -65,7 +66,9 @@ class VendorRatingController extends AsyncNotifier<void> {
   }) async {
     state = const AsyncLoading();
     try {
-      final res = await ref.read(_vendorRequestProvider).rateVendor(
+      final res = await ref
+          .read(_vendorRequestProvider)
+          .rateVendor(
             rating: rating,
             review: review,
             orderId: orderId,
@@ -84,5 +87,5 @@ class VendorRatingController extends AsyncNotifier<void> {
 
 final vendorRatingControllerProvider =
     AsyncNotifierProvider<VendorRatingController, void>(
-  VendorRatingController.new,
-);
+      VendorRatingController.new,
+    );

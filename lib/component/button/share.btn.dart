@@ -36,10 +36,7 @@ class ShareButton extends StatelessWidget {
     }
     return CustomOutlineButton(
       color: Colors.transparent,
-      child: Icon(
-        Icons.share,
-        color: AppColor.primaryColorDark,
-      ),
+      child: Icon(Icons.share, color: AppColor.primaryColorDark),
       onPressed: _onTap,
     ).p2().box.color(Utils.textColorByTheme()).roundedFull.make();
   }

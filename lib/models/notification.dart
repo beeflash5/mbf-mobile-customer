@@ -19,18 +19,19 @@ class NotificationModel {
 
   String get formattedTimeStamp {
     final notificationDateTime = DateTime.fromMillisecondsSinceEpoch(
-        this.timeStamp ?? DateTime.now().millisecondsSinceEpoch);
-    final formmartedDate = DateFormat("EEE dd, MMM yyyy").format(
-      notificationDateTime,
+      this.timeStamp ?? DateTime.now().millisecondsSinceEpoch,
     );
+    final formmartedDate = DateFormat(
+      "EEE dd, MMM yyyy",
+    ).format(notificationDateTime);
     return "$formmartedDate";
   }
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'body': body,
-        "image": image,
-        'timeStamp': timeStamp,
-        'read': read,
-      };
+    'title': title,
+    'body': body,
+    "image": image,
+    'timeStamp': timeStamp,
+    'read': read,
+  };
 }

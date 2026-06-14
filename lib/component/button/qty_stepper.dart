@@ -62,41 +62,33 @@ class _QtyStepperState extends State<QtyStepper> {
       children: [
         IconButton(
           onPressed: _decrement,
-          icon: Icon(
-            Icons.remove,
-            color: iconColor,
-            size: widget.valueSize,
-          ),
+          icon: Icon(Icons.remove, color: iconColor, size: widget.valueSize),
           color: buttonColor,
         ),
         SizedBox(width: 8),
         widget.disableInput
             ? Text(
-                '$_value',
-                style: TextStyle(fontSize: widget.valueSize ?? 16),
-              )
+              '$_value',
+              style: TextStyle(fontSize: widget.valueSize ?? 16),
+            )
             : TextFormField(
-                initialValue: '$_value',
-                onChanged: (value) {
-                  setState(() {
-                    _value = int.parse(value);
-                    widget.onChange(_value);
-                  });
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                ),
+              initialValue: '$_value',
+              onChanged: (value) {
+                setState(() {
+                  _value = int.parse(value);
+                  widget.onChange(_value);
+                });
+              },
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12),
               ),
+            ),
         SizedBox(width: 8),
         IconButton(
           onPressed: _increment,
-          icon: Icon(
-            Icons.add,
-            color: iconColor,
-            size: widget.valueSize,
-          ),
+          icon: Icon(Icons.add, color: iconColor, size: widget.valueSize),
           color: buttonColor,
         ),
       ],

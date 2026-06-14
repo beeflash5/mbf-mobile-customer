@@ -49,21 +49,21 @@ class OrderStatusView extends StatelessWidget {
         ]).expand(),
         vendorTypeId == 13
             ? VStack([
-                "Cash Payment".tr().text.gray500.medium.sm.make(),
-                "(After Service)".text
-                    .color(AppColor.getStausColor(order.paymentStatus))
-                    .medium
-                    .xl
-                    .make(),
-              ]).expand()
+              "Cash Payment".tr().text.gray500.medium.sm.make(),
+              "(After Service)".text
+                  .color(AppColor.getStausColor(order.paymentStatus))
+                  .medium
+                  .xl
+                  .make(),
+            ]).expand()
             : VStack([
-                "Payment Status".tr().text.gray500.medium.sm.make(),
-                "${order.paymentStatus.tr().capitalized}".text
-                    .color(AppColor.getStausColor(order.paymentStatus))
-                    .medium
-                    .xl
-                    .make(),
-              ]).expand(),
+              "Payment Status".tr().text.gray500.medium.sm.make(),
+              "${order.paymentStatus.tr().capitalized}".text
+                  .color(AppColor.getStausColor(order.paymentStatus))
+                  .medium
+                  .xl
+                  .make(),
+            ]).expand(),
       ]).pOnly(bottom: Vx.dp20),
       CustomVisibilty(
         visible: order.isPackageDelivery,
@@ -78,7 +78,8 @@ class OrderStatusView extends StatelessWidget {
           UiSpacer.verticalSpace(),
         ]),
       ),
-      if (order.pickupDate.isNotNullOrEmpty && order.pickupTime.isNotNullOrEmpty)
+      if (order.pickupDate.isNotNullOrEmpty &&
+          order.pickupTime.isNotNullOrEmpty)
         HStack([
           VStack([
             "Scheduled Date".tr().text.gray500.medium.sm.make(),
@@ -92,8 +93,7 @@ class OrderStatusView extends StatelessWidget {
           ]).expand(),
           VStack([
             "Scheduled Time".tr().text.gray500.medium.sm.make(),
-            "${Jiffy.parse(order.pickupTime!).format(pattern: "hh:mm a")}"
-                .text
+            "${Jiffy.parse(order.pickupTime!).format(pattern: "hh:mm a")}".text
                 .color(AppColor.getStausColor(order.status))
                 .medium
                 .xl
@@ -128,8 +128,12 @@ class OrderStatusView extends StatelessWidget {
         ])
       else
         UiSpacer.emptySpace(),
-      if (['scheduled', 'pending', 'preparing', 'ready']
-              .contains(order.status) &&
+      if ([
+            'scheduled',
+            'pending',
+            'preparing',
+            'ready',
+          ].contains(order.status) &&
           order.dp_status == 1 &&
           order.vendor?.vendorType.slug == 'food')
         Column(
@@ -163,8 +167,10 @@ class OrderStatusView extends StatelessWidget {
                     children: const [
                       Icon(Icons.check_circle, color: Colors.green),
                       SizedBox(width: 8),
-                      Text('Check-in Success',
-                          style: TextStyle(color: Colors.green)),
+                      Text(
+                        'Check-in Success',
+                        style: TextStyle(color: Colors.green),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -230,52 +236,54 @@ class OrderStatusView extends StatelessWidget {
                   final orderStatus = order.totalStatuses[index];
                   return (orderStatus.passed ?? true)
                       ? DotIndicator(
-                          color: AppColor.primaryColor,
-                          size: 24,
-                          child: const Icon(
-                            Icons.check,
-                            size: 12,
-                            color: Colors.white,
-                          ),
-                        )
+                        color: AppColor.primaryColor,
+                        size: 24,
+                        child: const Icon(
+                          Icons.check,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                      )
                       : OutlinedDotIndicator(
-                          color: AppColor.primaryColor,
-                          size: 24,
-                        );
+                        color: AppColor.primaryColor,
+                        size: 24,
+                      );
                 },
-                connectorBuilder: (context, index, connectorType) =>
-                    SolidLineConnector(color: AppColor.primaryColor),
-                contentsBuilder: (context, index) => VStack([
-                  Text(
-                    '${order.totalStatuses[index].name}'.tr().capitalized,
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontSize: Vx.dp16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    "${order.totalStatuses[index].createdAt != null ? Jiffy.parseFromDateTime(order.totalStatuses[index].createdAt!).format(pattern: "dd MMM, yyy 'at' hh:mm a") : ''}",
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      fontSize: Vx.dp16,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  if (order.totalStatuses[index].createdAt != null &&
-                      "${order.totalStatuses[index].name}" == "enroute" &&
-                      order.status == "enroute" &&
-                      AppStrings.enableOrderTracking &&
-                      (order.dropoffLocation != null ||
-                          order.deliveryAddress != null) &&
-                      order.driverId != null)
-                    CustomButton(
-                      title: "Track Order".tr(),
-                      icon: Icons.map,
-                      onPressed: onTrackOrder,
-                      loading: orderBusy,
-                    ).p20()
-                  else
-                    UiSpacer.emptySpace(),
-                ]).p(Vx.dp20),
+                connectorBuilder:
+                    (context, index, connectorType) =>
+                        SolidLineConnector(color: AppColor.primaryColor),
+                contentsBuilder:
+                    (context, index) => VStack([
+                      Text(
+                        '${order.totalStatuses[index].name}'.tr().capitalized,
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontSize: Vx.dp16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "${order.totalStatuses[index].createdAt != null ? Jiffy.parseFromDateTime(order.totalStatuses[index].createdAt!).format(pattern: "dd MMM, yyy 'at' hh:mm a") : ''}",
+                        style: context.textTheme.bodyLarge!.copyWith(
+                          fontSize: Vx.dp16,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      if (order.totalStatuses[index].createdAt != null &&
+                          "${order.totalStatuses[index].name}" == "enroute" &&
+                          order.status == "enroute" &&
+                          AppStrings.enableOrderTracking &&
+                          (order.dropoffLocation != null ||
+                              order.deliveryAddress != null) &&
+                          order.driverId != null)
+                        CustomButton(
+                          title: "Track Order".tr(),
+                          icon: Icons.map,
+                          onPressed: onTrackOrder,
+                          loading: orderBusy,
+                        ).p20()
+                      else
+                        UiSpacer.emptySpace(),
+                    ]).p(Vx.dp20),
                 itemCount: order.totalStatuses.length,
               ),
             ),

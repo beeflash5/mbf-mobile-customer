@@ -35,26 +35,29 @@ class ServiceOption {
   });
 
   factory ServiceOption.fromJson(Map<String, dynamic> json) => ServiceOption(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"] ?? "",
-        price: json["price"] == null ? 0 : (json["price"].toString().toDouble() ?? 0.0),
-        serviceOptionGroupId: json["service_option_group_id"],
-        vendorId: json["vendor_id"],
-        formattedDate: json["formatted_date"],
-        formattedUpdatedDate: json["formatted_updated_date"],
-        photo: json["photo"],
-      );
+    id: json["id"],
+    name: json["name"],
+    description: json["description"] ?? "",
+    price:
+        json["price"] == null
+            ? 0
+            : (json["price"].toString().toDouble() ?? 0.0),
+    serviceOptionGroupId: json["service_option_group_id"],
+    vendorId: json["vendor_id"],
+    formattedDate: json["formatted_date"],
+    formattedUpdatedDate: json["formatted_updated_date"],
+    photo: json["photo"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "price": price,
-        "service_option_group_id": serviceOptionGroupId,
-        "vendor_id": vendorId,
-        "formatted_date": formattedDate,
-        "formatted_updated_date": formattedUpdatedDate,
-        "photo": photo,
-      };
+    "id": id,
+    "name": name,
+    "description": description,
+    "price": price,
+    "service_option_group_id": serviceOptionGroupId,
+    "vendor_id": vendorId,
+    "formatted_date": formattedDate,
+    "formatted_updated_date": formattedUpdatedDate,
+    "photo": photo,
+  };
 }

@@ -71,20 +71,28 @@ class TaxiOrder {
     }
     return TaxiOrder(
       id: json["id"] == null ? 0 : int.parse(json["id"].toString()),
-      orderId: json["order_id"] == null ? 0 : int.parse(json["order_id"].toString()),
-      vehicleTypeId: json["vehicle_type_id"] == null ? 0 : int.parse(json["vehicle_type_id"].toString()),
+      orderId:
+          json["order_id"] == null ? 0 : int.parse(json["order_id"].toString()),
+      vehicleTypeId:
+          json["vehicle_type_id"] == null
+              ? 0
+              : int.parse(json["vehicle_type_id"].toString()),
       pickupLatitude: json["pickup_latitude"] ?? "0.0",
       pickupLongitude: json["pickup_longitude"] ?? "0.0",
       pickupAddress: json["pickup_address"] ?? "",
       dropoffLatitude: json["dropoff_latitude"] ?? "0.0",
       dropoffLongitude: json["dropoff_longitude"] ?? "0.0",
       dropoffAddress: json["dropoff_address"] ?? "",
-      createdAt: json["created_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
-      updatedAt: json["updated_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
+      createdAt:
+          json["created_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["created_at"].toString()) ??
+                  DateTime.now(),
+      updatedAt:
+          json["updated_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["updated_at"].toString()) ??
+                  DateTime.now(),
       currency:
           json['currency'] != null ? Currency.fromJSON(json['currency']) : null,
       //Breakdown
@@ -98,35 +106,35 @@ class TaxiOrder {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "order_id": orderId,
-        "vehicle_type_id": vehicleTypeId,
-        "pickup_latitude": pickupLatitude,
-        "pickup_longitude": pickupLongitude,
-        "pickup_address": pickupAddress,
-        "dropoff_latitude": dropoffLatitude,
-        "dropoff_longitude": dropoffLongitude,
-        "dropoff_address": dropoffAddress,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "currency": currency?.toJson(),
-        //Breakdown
-        "base_fare": base_fare,
-        "distance_fare": distance_fare,
-        "time_fare": time_fare,
-        "trip_distance": trip_distance,
-        "trip_time": trip_time,
-        "vehicle_type": vehicleType.toJson(),
-      };
+    "id": id,
+    "order_id": orderId,
+    "vehicle_type_id": vehicleTypeId,
+    "pickup_latitude": pickupLatitude,
+    "pickup_longitude": pickupLongitude,
+    "pickup_address": pickupAddress,
+    "dropoff_latitude": dropoffLatitude,
+    "dropoff_longitude": dropoffLongitude,
+    "dropoff_address": dropoffAddress,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+    "currency": currency?.toJson(),
+    //Breakdown
+    "base_fare": base_fare,
+    "distance_fare": distance_fare,
+    "time_fare": time_fare,
+    "trip_distance": trip_distance,
+    "trip_time": trip_time,
+    "vehicle_type": vehicleType.toJson(),
+  };
 
   LatLng get pickupLatLng => LatLng(
-        double.parse(pickupLatitude.toString()),
-        double.parse(pickupLongitude.toString()),
-      );
+    double.parse(pickupLatitude.toString()),
+    double.parse(pickupLongitude.toString()),
+  );
   LatLng get dropoffLatLng => LatLng(
-        double.parse(dropoffLatitude.toString()),
-        double.parse(dropoffLongitude.toString()),
-      );
+    double.parse(dropoffLatitude.toString()),
+    double.parse(dropoffLongitude.toString()),
+  );
 
   //
   String get currencySymbol {

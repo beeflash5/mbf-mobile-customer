@@ -4,8 +4,9 @@ import 'package:fuodz/models/package_type_pricing.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/package.request.dart';
 
-final _packageRequestProvider =
-    Provider<PackageRequest>((_) => PackageRequest());
+final _packageRequestProvider = Provider<PackageRequest>(
+  (_) => PackageRequest(),
+);
 
 class ParcelVendorState {
   const ParcelVendorState({
@@ -24,13 +25,12 @@ class ParcelVendorState {
     List<String>? countries,
     List<String>? states,
     List<String>? cities,
-  }) =>
-      ParcelVendorState(
-        pricings: pricings ?? this.pricings,
-        countries: countries ?? this.countries,
-        states: states ?? this.states,
-        cities: cities ?? this.cities,
-      );
+  }) => ParcelVendorState(
+    pricings: pricings ?? this.pricings,
+    countries: countries ?? this.countries,
+    states: states ?? this.states,
+    cities: cities ?? this.cities,
+  );
 }
 
 class ParcelVendorDetailsController
@@ -52,6 +52,7 @@ class ParcelVendorDetailsController
 }
 
 final parcelVendorDetailsControllerProvider = AsyncNotifierProvider.family<
-    ParcelVendorDetailsController, ParcelVendorState, Vendor>(
-  ParcelVendorDetailsController.new,
-);
+  ParcelVendorDetailsController,
+  ParcelVendorState,
+  Vendor
+>(ParcelVendorDetailsController.new);

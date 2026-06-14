@@ -5,8 +5,7 @@ import 'package:fuodz/services/notification.service.dart';
 
 /// Controller list notifikasi (lokal). Pakai `AsyncNotifier` agar UI dapat
 /// state loading otomatis dan bisa di-refresh.
-class NotificationsController
-    extends AsyncNotifier<List<NotificationModel>> {
+class NotificationsController extends AsyncNotifier<List<NotificationModel>> {
   @override
   Future<List<NotificationModel>> build() async {
     return NotificationService.getNotifications();
@@ -27,5 +26,5 @@ class NotificationsController
 
 final notificationsControllerProvider =
     AsyncNotifierProvider<NotificationsController, List<NotificationModel>>(
-  NotificationsController.new,
-);
+      NotificationsController.new,
+    );

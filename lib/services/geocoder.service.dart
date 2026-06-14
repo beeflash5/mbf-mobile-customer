@@ -14,7 +14,7 @@ export 'package:fuodz/models/address.dart';
 export 'package:fuodz/models/coordinates.dart';
 
 class GeocoderService extends ApiService {
-//
+  //
   /// Factory method that reuse same instance automatically
   factory GeocoderService() => Singleton.lazy(() => GeocoderService._());
 
@@ -128,7 +128,7 @@ class GeocoderService extends ApiService {
     address = address.replaceAll(" ", "+");
     // String url =
     //     "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$address;key=$apiKey;location=$myLatLng;region=$region;radius=200";
-        String url =
+    String url =
         "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$address;key=$apiKey;location=$myLatLng;region=$region;radius=200";
     final result = await get(
       Api.externalRedirect,
@@ -141,7 +141,8 @@ class GeocoderService extends ApiService {
     if (apiResult.allGood) {
       //
       Map<String, dynamic> apiResponse = apiResult.body;
-      List<dynamic> queryResult = ((apiResponse["predictions"] ?? apiResponse["results"]) as List);
+      List<dynamic> queryResult =
+          ((apiResponse["predictions"] ?? apiResponse["results"]) as List);
       return queryResult.map((e) {
         Address address;
         try {
@@ -161,10 +162,7 @@ class GeocoderService extends ApiService {
     if (!AppMapSettings.useGoogleOnApp) {
       final apiresult = await get(
         Api.geocoderPlaceDetails,
-        queryParameters: {
-          "place_id": address.gMapPlaceId,
-          "plain": true,
-        },
+        queryParameters: {"place_id": address.gMapPlaceId, "plain": true},
       );
 
       //

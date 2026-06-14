@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class BusyIndicator extends StatelessWidget {
-  const BusyIndicator({
-    this.color,
-    Key? key,
-  }) : super(key: key);
+  const BusyIndicator({this.color, Key? key}) : super(key: key);
 
   final Color? color;
   @override

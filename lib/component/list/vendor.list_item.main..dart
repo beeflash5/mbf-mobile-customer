@@ -47,15 +47,9 @@ class VendorListItemMain extends StatelessWidget {
               //
               Positioned(
                 child: VStack([
-                  TimeTag(
-                    vendor.prepareTime,
-                    iconData: Icons.access_time,
-                  ),
+                  TimeTag(vendor.prepareTime, iconData: Icons.access_time),
                   UiSpacer.verticalSpace(space: 5),
-                  TimeTag(
-                    vendor.deliveryTime,
-                    iconData: Icons.directions_bike,
-                  ),
+                  TimeTag(vendor.deliveryTime, iconData: Icons.directions_bike),
                 ]),
                 left: 10,
                 bottom: 5,
@@ -106,11 +100,7 @@ class VendorListItemMain extends StatelessWidget {
                     .color(AppColor.ratingColor)
                     .medium
                     .make(),
-                Icon(
-                  Icons.star,
-                  color: AppColor.ratingColor,
-                  size: 10,
-                ),
+                Icon(Icons.star, color: AppColor.ratingColor, size: 10),
               ]),
 
               //

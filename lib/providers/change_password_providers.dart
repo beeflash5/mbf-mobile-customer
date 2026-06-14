@@ -16,8 +16,9 @@ class ChangePasswordFailure extends ChangePasswordResult {
   final String message;
 }
 
-final changePasswordAuthRequestProvider =
-    Provider<AuthRequest>((_) => AuthRequest());
+final changePasswordAuthRequestProvider = Provider<AuthRequest>(
+  (_) => AuthRequest(),
+);
 
 class ChangePasswordController extends AsyncNotifier<void> {
   @override
@@ -50,5 +51,5 @@ class ChangePasswordController extends AsyncNotifier<void> {
 
 final changePasswordControllerProvider =
     AsyncNotifierProvider<ChangePasswordController, void>(
-  ChangePasswordController.new,
-);
+      ChangePasswordController.new,
+    );

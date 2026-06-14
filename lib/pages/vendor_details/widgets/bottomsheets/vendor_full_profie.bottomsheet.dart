@@ -22,49 +22,47 @@ class VendorFullProfileBottomSheet extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: context.percentHeight * 90,
-      child: VStack(
-        [
-          UiSpacer.swipeIndicator().py(12),
-          //name
-          "${vendor.name}".text.xl2.bold.make().px(12),
+      child:
+          VStack([
+            UiSpacer.swipeIndicator().py(12),
+            //name
+            "${vendor.name}".text.xl2.bold.make().px(12),
 
-          //tags
-          Wrap(
-            children: [
-              //is open
-              vendor.isOpen ? OpenTag() : CloseTag(),
+            //tags
+            Wrap(
+              children: [
+                //is open
+                vendor.isOpen ? OpenTag() : CloseTag(),
 
-              //can deliveree
-              if (vendor.delivery == 1) DeliveryTag(),
+                //can deliveree
+                if (vendor.delivery == 1) DeliveryTag(),
 
-              //can pickup
-              if (vendor.pickup == 1) PickupTag(),
+                //can pickup
+                if (vendor.pickup == 1) PickupTag(),
 
-              //prepare time
-              TimeTag(
-                "${vendor.prepareTime} ${vendor.prepareTimeUnit}",
-                iconData: Icons.access_time,
-              ),
-              //delivery time
-              TimeTag(
-                "${vendor.deliveryTime} ${vendor.deliveryTimeUnit}",
-                iconData: Icons.directions_bike,
-              ),
-            ],
-            spacing: 12,
-            runSpacing: 12,
-            crossAxisAlignment: WrapCrossAlignment.center,
-          ).px(12),
+                //prepare time
+                TimeTag(
+                  "${vendor.prepareTime} ${vendor.prepareTimeUnit}",
+                  iconData: Icons.access_time,
+                ),
+                //delivery time
+                TimeTag(
+                  "${vendor.deliveryTime} ${vendor.deliveryTimeUnit}",
+                  iconData: Icons.directions_bike,
+                ),
+              ],
+              spacing: 12,
+              runSpacing: 12,
+              crossAxisAlignment: WrapCrossAlignment.center,
+            ).px(12),
 
-          VStack(
-            [
+            VStack([
               //address
               if (vendor.address.isNotEmptyAndNotNull &&
                   AppUISettings.showVendorAddress)
                 HStack(
                   [
-                    "${vendor.address}"
-                        .text
+                    "${vendor.address}".text
                         .size(Sizes.fontSizeDefault)
                         .make()
                         .expand(),
@@ -80,8 +78,7 @@ class VendorFullProfileBottomSheet extends StatelessWidget {
                   AppUISettings.showVendorPhone)
                 HStack(
                   [
-                    "${vendor.phone}"
-                        .text
+                    "${vendor.phone}".text
                         .size(Sizes.fontSizeDefault)
                         .make()
                         .expand(),
@@ -91,56 +88,37 @@ class VendorFullProfileBottomSheet extends StatelessWidget {
                   crossAlignment: CrossAxisAlignment.center,
                   alignment: MainAxisAlignment.center,
                 ),
-            ],
-            spacing: 8,
-          ).px(12),
-          //working hours
-          Divider(color: Colors.grey.shade400, thickness: 1.6),
-          VStack(
-            [
+            ], spacing: 8).px(12),
+            //working hours
+            Divider(color: Colors.grey.shade400, thickness: 1.6),
+            VStack([
               "Working hours".tr().text.bold.uppercase.make(),
               //
               VStack(
-                vendor.days.map(
-                  (opDay) {
-                    return HStack(
-                      [
-                        "${opDay.name}".tr().text.medium.make().expand(),
-                        "${opDay.openTime} - ${opDay.closeTime}"
-                            .text
-                            .medium
-                            .make(),
-                      ],
-                      alignment: MainAxisAlignment.spaceBetween,
-                    );
-                  },
-                ).toList(),
+                vendor.days.map((opDay) {
+                  return HStack([
+                    "${opDay.name}".tr().text.medium.make().expand(),
+                    "${opDay.openTime} - ${opDay.closeTime}".text.medium.make(),
+                  ], alignment: MainAxisAlignment.spaceBetween);
+                }).toList(),
                 spacing: 4,
               ),
 
               // empty: days
               Visibility(
                 visible: vendor.days.isEmpty,
-                child: HStack(
-                  [
-                    ("Sunday".tr() + " - " + "Saturday".tr())
-                        .text
-                        .medium
-                        .make()
-                        .expand(),
-                    "All Hours".tr().text.medium.make(),
-                  ],
-                  alignment: MainAxisAlignment.spaceBetween,
-                ),
+                child: HStack([
+                  ("Sunday".tr() + " - " + "Saturday".tr()).text.medium
+                      .make()
+                      .expand(),
+                  "All Hours".tr().text.medium.make(),
+                ], alignment: MainAxisAlignment.spaceBetween),
               ),
-            ],
-            spacing: 4,
-          ).px(12),
+            ], spacing: 4).px(12),
 
-          //description
-          Divider(color: Colors.grey.shade400, thickness: 1.6),
-          VStack(
-            [
+            //description
+            Divider(color: Colors.grey.shade400, thickness: 1.6),
+            VStack([
               "Description".tr().text.bold.uppercase.make(),
               WebViewer(
                 url: vendor.description_url,
@@ -153,12 +131,8 @@ class VendorFullProfileBottomSheet extends StatelessWidget {
               //   vendor.description,
               //   padding: EdgeInsets.zero,
               // ),
-            ],
-            spacing: 4,
-          ).px(12),
-        ],
-        spacing: 10,
-      ).scrollVertical(),
+            ], spacing: 4).px(12),
+          ], spacing: 10).scrollVertical(),
     );
   }
 }

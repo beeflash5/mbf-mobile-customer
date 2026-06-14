@@ -24,8 +24,7 @@ class ProductReviewsPage extends ConsumerStatefulWidget {
   final Product product;
 
   @override
-  ConsumerState<ProductReviewsPage> createState() =>
-      _ProductReviewsPageState();
+  ConsumerState<ProductReviewsPage> createState() => _ProductReviewsPageState();
 }
 
 class _ProductReviewsPageState extends ConsumerState<ProductReviewsPage> {
@@ -73,10 +72,8 @@ class _ProductReviewsPageState extends ConsumerState<ProductReviewsPage> {
           noScrollPhysics: true,
           isLoading: asyncState.isLoading && reviews.isEmpty,
           dataSet: reviews,
-          separatorBuilder: (_, __) =>
-              UiSpacer.divider(thickness: 0.4).py(8),
-          itemBuilder: (ctx, index) =>
-              ProductReviewListItem(reviews[index]),
+          separatorBuilder: (_, __) => UiSpacer.divider(thickness: 0.4).py(8),
+          itemBuilder: (ctx, index) => ProductReviewListItem(reviews[index]),
         ),
         CustomVisibilty(
           visible: s?.loadingMore ?? false,
@@ -103,21 +100,22 @@ class _ProductReviewsPageState extends ConsumerState<ProductReviewsPage> {
             .expand(flex: 2),
         UiSpacer.hSpace(8),
         HStack([
-          Container(color: AppColor.ratingColor, height: 20)
-              .expand(flex: (stat.percentage / 10).ceil()),
-          Container(color: Utils.systemGreyColor(), height: 20)
-              .expand(flex: ((100 - stat.percentage) / 10).ceil()),
-        ])
-            .box
+              Container(
+                color: AppColor.ratingColor,
+                height: 20,
+              ).expand(flex: (stat.percentage / 10).ceil()),
+              Container(
+                color: Utils.systemGreyColor(),
+                height: 20,
+              ).expand(flex: ((100 - stat.percentage) / 10).ceil()),
+            ]).box
             .withRounded(value: 5)
             .border(color: Utils.systemGreyColor())
             .clip(Clip.antiAliasWithSaveLayer)
             .make()
             .expand(flex: 8),
         UiSpacer.hSpace(8),
-        "${NumberFormat("#.##").format(stat.percentage)}%"
-            .text
-            .medium
+        "${NumberFormat("#.##").format(stat.percentage)}%".text.medium
             .color(Utils.primaryOrTheme)
             .maxLines(1)
             .make()

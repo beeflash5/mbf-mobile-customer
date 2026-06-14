@@ -15,7 +15,7 @@ class TripService {
 
   /// Private constructor
   TripService._() {}
-//
+  //
   Future<int?> generatePossibleDriverETA({
     required double lat,
     required double lng,
@@ -23,9 +23,8 @@ class TripService {
   }) async {
     try {
       //
-      double driverSearchRange = double.tryParse(
-            AppStrings.env("driverSearchRadius").toString(),
-          ) ??
+      double driverSearchRange =
+          double.tryParse(AppStrings.env("driverSearchRadius").toString()) ??
           10;
       //generate location geohash
       int precision = getPrecision(driverSearchRange);
@@ -47,8 +46,10 @@ class TripService {
 
       //if vehicle type is provided
       if (vehicleTypeId != null) {
-        driversQuery =
-            driversQuery.where("vehicle_type_id", isEqualTo: vehicleTypeId);
+        driversQuery = driversQuery.where(
+          "vehicle_type_id",
+          isEqualTo: vehicleTypeId,
+        );
       }
 
       final drivers = await driversQuery.limit(5).get();
@@ -57,15 +58,20 @@ class TripService {
       List<double> driversETA = [];
       double driverAvgSpeed =
           AppStrings.env("taxi")["drivingSpeed"].toString().toDoubleOrNull() ??
-              40;
+          40;
       //
       drivers.docs.forEach((driver) {
         print(driver.data());
         double driverLat = double.parse(driver.data()["lat"].toString());
         double driverLng = double.parse(
-            (driver.data()["lng"] ?? driver.data()["long"]).toString());
-        double driverDistance =
-            Geolocator.distanceBetween(driverLat, driverLng, lat, lng);
+          (driver.data()["lng"] ?? driver.data()["long"]).toString(),
+        );
+        double driverDistance = Geolocator.distanceBetween(
+          driverLat,
+          driverLng,
+          lat,
+          lng,
+        );
         //convert to km
         driverDistance = driverDistance / 1000;
         //calculate ETA

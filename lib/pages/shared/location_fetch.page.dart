@@ -17,8 +17,7 @@ class LocationFetchPage extends ConsumerStatefulWidget {
   final Widget child;
 
   @override
-  ConsumerState<LocationFetchPage> createState() =>
-      _LocationFetchPageState();
+  ConsumerState<LocationFetchPage> createState() => _LocationFetchPageState();
 }
 
 class _LocationFetchPageState extends ConsumerState<LocationFetchPage> {
@@ -26,9 +25,8 @@ class _LocationFetchPageState extends ConsumerState<LocationFetchPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final ok = await ref
-          .read(locationFetchControllerProvider.notifier)
-          .initialise();
+      final ok =
+          await ref.read(locationFetchControllerProvider.notifier).initialise();
       if (ok && mounted) _loadNext();
     });
   }
@@ -40,9 +38,10 @@ class _LocationFetchPageState extends ConsumerState<LocationFetchPage> {
   }
 
   Future<void> _tryAgain() async {
-    final ok = await ref
-        .read(locationFetchControllerProvider.notifier)
-        .handleFetchCurrentLocation();
+    final ok =
+        await ref
+            .read(locationFetchControllerProvider.notifier)
+            .handleFetchCurrentLocation();
     if (ok && mounted) _loadNext();
   }
 
@@ -60,23 +59,18 @@ class _LocationFetchPageState extends ConsumerState<LocationFetchPage> {
       body: VStack([
         HStack([
           UiSpacer.expandedSpace(),
-          CustomTextButton(
-            title: "Skip".tr(),
-            onPressed: _loadNext,
-          ),
+          CustomTextButton(title: "Skip".tr(), onPressed: _loadNext),
         ]).safeArea(),
         Center(
           child: VStack([
             FittedBox(
-              child: Image.asset(AppImages.locationGif)
-                  .wh(
-                    context.percentWidth * 30,
-                    context.percentWidth * 30,
-                  )
-                  .box
-                  .roundedFull
-                  .clip(Clip.antiAlias)
-                  .make(),
+              child:
+                  Image.asset(AppImages.locationGif)
+                      .wh(context.percentWidth * 30, context.percentWidth * 30)
+                      .box
+                      .roundedFull
+                      .clip(Clip.antiAlias)
+                      .make(),
             ),
             UiSpacer.vSpace(),
             Visibility(
@@ -100,29 +94,27 @@ class _LocationFetchPageState extends ConsumerState<LocationFetchPage> {
             ),
             Visibility(
               visible: state.showManuallySelection,
-              child: VStack(
-                [
-                  "We are unable to determine current location. Please try again or manually select location"
-                      .tr()
-                      .text
-                      .lg
-                      .medium
-                      .center
-                      .makeCentered()
-                      .px(40),
-                  UiSpacer.vSpace(),
-                  CustomButton(
-                    title: "Choose On Map".tr(),
-                    onPressed: _pickFromMap,
-                  ).w40(context),
-                  UiSpacer.vSpace(10),
-                  CustomTextButton(
-                    title: "Try again".tr(),
-                    onPressed: _tryAgain,
-                  ).w24(context),
-                ],
-                crossAlignment: CrossAxisAlignment.center,
-              ).p20(),
+              child:
+                  VStack([
+                    "We are unable to determine current location. Please try again or manually select location"
+                        .tr()
+                        .text
+                        .lg
+                        .medium
+                        .center
+                        .makeCentered()
+                        .px(40),
+                    UiSpacer.vSpace(),
+                    CustomButton(
+                      title: "Choose On Map".tr(),
+                      onPressed: _pickFromMap,
+                    ).w40(context),
+                    UiSpacer.vSpace(10),
+                    CustomTextButton(
+                      title: "Try again".tr(),
+                      onPressed: _tryAgain,
+                    ).w24(context),
+                  ], crossAlignment: CrossAxisAlignment.center).p20(),
             ),
             UiSpacer.vSpace(),
           ], crossAlignment: CrossAxisAlignment.center),

@@ -25,7 +25,7 @@ class ProductTags extends StatelessWidget {
                 ),
                 child: "${tag.name}".text.xs.make(),
               );
-            }).toList())
+            }).toList()),
           ],
           spacing: 8,
         ),

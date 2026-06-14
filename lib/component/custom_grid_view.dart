@@ -69,27 +69,22 @@ class CustomGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return this.justList
         ? _getBody()
-        : VStack(
-            [
-              this.title ?? UiSpacer.emptySpace(),
-              _getBody(),
-            ],
-            crossAlignment: CrossAxisAlignment.start,
-          );
+        : VStack([
+          this.title ?? UiSpacer.emptySpace(),
+          _getBody(),
+        ], crossAlignment: CrossAxisAlignment.start);
   }
 
   Widget _getBody() {
     return this.isLoading
         ? this.loadingWidget ?? LoadingShimmer()
         : this.hasError
-            ? this.errorWidget ?? EmptyState()
-            : this.justList
-                ? (this.dataSet == null || this.dataSet!.isEmpty)
-                    ? this.emptyWidget ?? UiSpacer.emptySpace()
-                    : _getBodyList()
-                : Expanded(
-                    child: _getBodyList(),
-                  );
+        ? this.errorWidget ?? EmptyState()
+        : this.justList
+        ? (this.dataSet == null || this.dataSet!.isEmpty)
+            ? this.emptyWidget ?? UiSpacer.emptySpace()
+            : _getBodyList()
+        : Expanded(child: _getBodyList());
   }
 
   //
@@ -113,11 +108,11 @@ class CustomGridView extends StatelessWidget {
         //     child: _getListView(),
         //   )
         ? CustomEasyRefreshView(
-            triggerAxis: this.scrollDirection,
-            onRefresh: () => this.onRefresh!(),
-            onLoad: this.onLoading != null ? () => this.onLoading!() : null,
-            child: _getListView(),
-          )
+          triggerAxis: this.scrollDirection,
+          onRefresh: () => this.onRefresh!(),
+          onLoad: this.onLoading != null ? () => this.onLoading!() : null,
+          child: _getListView(),
+        )
         : _getListView();
   }
 

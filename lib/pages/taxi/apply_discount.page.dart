@@ -72,8 +72,7 @@ class _ApplyDiscountPageState extends ConsumerState<ApplyDiscountPage> {
               hintText: 'Coupon Code'.tr(),
               textEditingController: _codeCtrl,
               errorText: state.error,
-              onChanged: (v) =>
-                  setState(() => _canApply = v.trim().isNotEmpty),
+              onChanged: (v) => setState(() => _canApply = v.trim().isNotEmpty),
             ),
             const SizedBox(height: 20),
             SizedBox(

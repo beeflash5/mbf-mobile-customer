@@ -14,78 +14,55 @@ class OrderAddressesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        if (order.isPackageDelivery &&
-            order.orderStops != null &&
-            order.orderStops!.isNotEmpty)
-          VStack(
-            [
-              ParcelOrderStopListView(
-                "Pickup Location",
-                order.orderStops!.first,
-                canCall: order.canChatVendor,
-              ),
-              ..._stopsList(),
-              if (order.orderStops!.length > 1)
-                ParcelOrderStopListView(
-                  "Dropoff Location",
-                  order.orderStops!.last,
-                  canCall: order.canChatVendor,
-                ),
-            ],
-          )
-        else
-          UiSpacer.emptySpace(),
-        Visibility(
-          visible: !order.isPackageDelivery,
-          child: VStack(
-            [
-              "Delivery details".tr().text.xl.semiBold.make(),
-              HStack(
-                [
-                  Image.asset(
-                    AppImages.pickupLocation,
-                    width: 15,
-                    height: 15,
-                  ),
-                  UiSpacer.smHorizontalSpace(),
-                  "${order.vendor?.address}".text.make().expand(),
-                ],
-                crossAlignment: CrossAxisAlignment.start,
-              ).py12(),
-              Visibility(
-                visible: order.deliveryAddress != null,
-                child: HStack(
-                  [
-                    Image.asset(
-                      AppImages.dropoffLocation,
-                      width: 15,
-                      height: 15,
-                    ),
-                    UiSpacer.smHorizontalSpace(),
-                    VStack(
-                      [
-                        if (order.deliveryAddress != null)
-                          "${order.deliveryAddress!.address}".text.make(),
-                        if (order.deliveryAddress != null)
-                          "${order.deliveryAddress!.name}"
-                              .text
-                              .color(Vx.gray400)
-                              .sm
-                              .light
-                              .make(),
-                      ],
-                    ).expand(),
-                  ],
-                  crossAlignment: CrossAxisAlignment.start,
-                ),
-              ),
-            ],
+    return VStack([
+      if (order.isPackageDelivery &&
+          order.orderStops != null &&
+          order.orderStops!.isNotEmpty)
+        VStack([
+          ParcelOrderStopListView(
+            "Pickup Location",
+            order.orderStops!.first,
+            canCall: order.canChatVendor,
           ),
-        ),
-      ],
-    );
+          ..._stopsList(),
+          if (order.orderStops!.length > 1)
+            ParcelOrderStopListView(
+              "Dropoff Location",
+              order.orderStops!.last,
+              canCall: order.canChatVendor,
+            ),
+        ])
+      else
+        UiSpacer.emptySpace(),
+      Visibility(
+        visible: !order.isPackageDelivery,
+        child: VStack([
+          "Delivery details".tr().text.xl.semiBold.make(),
+          HStack([
+            Image.asset(AppImages.pickupLocation, width: 15, height: 15),
+            UiSpacer.smHorizontalSpace(),
+            "${order.vendor?.address}".text.make().expand(),
+          ], crossAlignment: CrossAxisAlignment.start).py12(),
+          Visibility(
+            visible: order.deliveryAddress != null,
+            child: HStack([
+              Image.asset(AppImages.dropoffLocation, width: 15, height: 15),
+              UiSpacer.smHorizontalSpace(),
+              VStack([
+                if (order.deliveryAddress != null)
+                  "${order.deliveryAddress!.address}".text.make(),
+                if (order.deliveryAddress != null)
+                  "${order.deliveryAddress!.name}".text
+                      .color(Vx.gray400)
+                      .sm
+                      .light
+                      .make(),
+              ]).expand(),
+            ], crossAlignment: CrossAxisAlignment.start),
+          ),
+        ]),
+      ),
+    ]);
   }
 
   List<Widget> _stopsList() {

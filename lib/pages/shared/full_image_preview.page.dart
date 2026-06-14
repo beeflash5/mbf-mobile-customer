@@ -9,11 +9,8 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:fuodz/utils/extensions/context.dart';
 
 class FullImagePreviewPage extends StatelessWidget {
-  const FullImagePreviewPage(
-    this.imageUrl, {
-    this.boxFit,
-    Key? key,
-  }) : super(key: key);
+  const FullImagePreviewPage(this.imageUrl, {this.boxFit, Key? key})
+    : super(key: key);
 
   final String imageUrl;
   final BoxFit? boxFit;
@@ -26,27 +23,24 @@ class FullImagePreviewPage extends StatelessWidget {
         child: Column(
           children: [
             //header
-            HStack(
-              [
-                //
-                Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ).box.p4.roundedFull.red500.make().onInkTap(() {
-                  context.pop();
-                }),
-                UiSpacer.expandedSpace(),
-              ],
-            ).p20(),
+            HStack([
+              //
+              Icon(
+                Icons.close,
+                color: Colors.white,
+              ).box.p4.roundedFull.red500.make().onInkTap(() {
+                context.pop();
+              }),
+              UiSpacer.expandedSpace(),
+            ]).p20(),
             //
             PinchZoom(
               maxScale: 5,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
-                errorWidget: (context, imageUrl, _) => Image.asset(
-                  AppImages.appLogo,
-                  fit: BoxFit.contain,
-                ),
+                errorWidget:
+                    (context, imageUrl, _) =>
+                        Image.asset(AppImages.appLogo, fit: BoxFit.contain),
                 fit: BoxFit.contain,
                 progressIndicatorBuilder: (context, imageURL, progress) {
                   return BusyIndicator().centered();

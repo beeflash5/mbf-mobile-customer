@@ -29,8 +29,7 @@ class WalletTransferPage extends ConsumerStatefulWidget {
   final Wallet wallet;
 
   @override
-  ConsumerState<WalletTransferPage> createState() =>
-      _WalletTransferPageState();
+  ConsumerState<WalletTransferPage> createState() => _WalletTransferPageState();
 }
 
 class _WalletTransferPageState extends ConsumerState<WalletTransferPage>
@@ -62,11 +61,9 @@ class _WalletTransferPageState extends ConsumerState<WalletTransferPage>
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final result =
-        await ref.read(walletTransferControllerProvider.notifier).submit(
-              amount: _amountCtrl.text,
-              password: _passwordCtrl.text,
-            );
+    final result = await ref
+        .read(walletTransferControllerProvider.notifier)
+        .submit(amount: _amountCtrl.text, password: _passwordCtrl.text);
     if (!mounted) return;
     switch (result) {
       case WalletTransferSuccess(:final message):
@@ -91,96 +88,97 @@ class _WalletTransferPageState extends ConsumerState<WalletTransferPage>
       body: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: VStack([
-          CustomTextFormField(
-            labelText: 'Amount'.tr(),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            textEditingController: _amountCtrl,
-            validator: (value) => FormValidator.validateCustom(
-              value,
-              name: 'Amount'.tr(),
-              rules: 'required|lt:${widget.wallet.balance}',
-            ),
-          ),
-          UiSpacer.formVerticalSpace(),
-          'Receiver'.tr().text.lg.semiBold.make(),
-          UiSpacer.verticalSpace(space: 6),
-          Row(
-            children: [
-              TypeAheadField(
-                hideOnLoading: true,
-                hideWithKeyboard: false,
-                debounceDuration: const Duration(seconds: 1),
-                builder: (context, controller, focusNode) {
-                  return TextField(
-                    controller: controller,
-                    focusNode: focusNode,
-                    autofocus: false,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryColor),
-                      ),
-                      hintText: 'Email/Phone'.tr(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: AppColor.primaryColor),
-                      ),
+        child:
+            VStack([
+              CustomTextFormField(
+                labelText: 'Amount'.tr(),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                textEditingController: _amountCtrl,
+                validator:
+                    (value) => FormValidator.validateCustom(
+                      value,
+                      name: 'Amount'.tr(),
+                      rules: 'required|lt:${widget.wallet.balance}',
                     ),
-                  );
-                },
-                suggestionsCallback: notifier.searchUsers,
-                itemBuilder: (context, User? suggestion) {
-                  if (suggestion == null) return const Divider();
-                  return VStack([
-                    VStack([
-                      '${suggestion.name}'.text.semiBold.lg.make(),
-                      UiSpacer.vSpace(5),
-                      "${suggestion.code ?? ''} - ${suggestion.phone.isNotBlank ? suggestion.phone.maskString(start: 3, end: 8) : ''}"
-                          .text
-                          .sm
-                          .make(),
-                    ]).px12().py(3),
-                    const Divider(),
-                  ]);
-                },
-                onSelected: notifier.selectUser,
-              ).expand(),
-              UiSpacer.horizontalSpace(),
-              Icon(
-                Icons.qr_code,
-                size: 32,
-                color: Utils.textColorByTheme(),
-              )
-                  .p12()
-                  .box
-                  .roundedSM
-                  .outerShadowSm
-                  .color(AppColor.primaryColor)
-                  .make()
-                  .onInkTap(_scanWalletAddress),
-            ],
-          ),
-          if (selectedUser != null) SelectedWalletUser(selectedUser),
-          UiSpacer.formVerticalSpace(),
-          CustomTextFormField(
-            labelText: 'Password'.tr(),
-            textEditingController: _passwordCtrl,
-            obscureText: true,
-            validator: FormValidator.validatePassword,
-          ),
-          UiSpacer.formVerticalSpace(),
-          CustomButton(
-            loading: isBusy,
-            title: 'Transfer'.tr(),
-            onPressed: isBusy ? null : _submit,
-          ).wFull(context),
-          UiSpacer.formVerticalSpace(),
-        ]).p20().scrollVertical(),
+              ),
+              UiSpacer.formVerticalSpace(),
+              'Receiver'.tr().text.lg.semiBold.make(),
+              UiSpacer.verticalSpace(space: 6),
+              Row(
+                children: [
+                  TypeAheadField(
+                    hideOnLoading: true,
+                    hideWithKeyboard: false,
+                    debounceDuration: const Duration(seconds: 1),
+                    builder: (context, controller, focusNode) {
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColor.primaryColor,
+                            ),
+                          ),
+                          hintText: 'Email/Phone'.tr(),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColor.primaryColor,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppColor.primaryColor,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    suggestionsCallback: notifier.searchUsers,
+                    itemBuilder: (context, User? suggestion) {
+                      if (suggestion == null) return const Divider();
+                      return VStack([
+                        VStack([
+                          '${suggestion.name}'.text.semiBold.lg.make(),
+                          UiSpacer.vSpace(5),
+                          "${suggestion.code ?? ''} - ${suggestion.phone.isNotBlank ? suggestion.phone.maskString(start: 3, end: 8) : ''}"
+                              .text
+                              .sm
+                              .make(),
+                        ]).px12().py(3),
+                        const Divider(),
+                      ]);
+                    },
+                    onSelected: notifier.selectUser,
+                  ).expand(),
+                  UiSpacer.horizontalSpace(),
+                  Icon(Icons.qr_code, size: 32, color: Utils.textColorByTheme())
+                      .p12()
+                      .box
+                      .roundedSM
+                      .outerShadowSm
+                      .color(AppColor.primaryColor)
+                      .make()
+                      .onInkTap(_scanWalletAddress),
+                ],
+              ),
+              if (selectedUser != null) SelectedWalletUser(selectedUser),
+              UiSpacer.formVerticalSpace(),
+              CustomTextFormField(
+                labelText: 'Password'.tr(),
+                textEditingController: _passwordCtrl,
+                obscureText: true,
+                validator: FormValidator.validatePassword,
+              ),
+              UiSpacer.formVerticalSpace(),
+              CustomButton(
+                loading: isBusy,
+                title: 'Transfer'.tr(),
+                onPressed: isBusy ? null : _submit,
+              ).wFull(context),
+              UiSpacer.formVerticalSpace(),
+            ]).p20().scrollVertical(),
       ),
     );
   }

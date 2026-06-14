@@ -18,9 +18,8 @@ class SetupService {
 
       // Initialize services in order
 
-      
-        await _initializeNotifications();
-    
+      await _initializeNotifications();
+
       await _initializePhoneUtil();
       await _initializeFirebaseMessaging();
 

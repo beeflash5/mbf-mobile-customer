@@ -8,10 +8,10 @@ import 'package:fuodz/models/service_option_group.dart';
 import 'package:fuodz/services/service.request.dart';
 import 'package:fuodz/services/vendor.request.dart';
 
-final _serviceRequestProvider =
-    Provider<ServiceRequest>((_) => ServiceRequest());
-final _vendorRequestProvider =
-    Provider<VendorRequest>((_) => VendorRequest());
+final _serviceRequestProvider = Provider<ServiceRequest>(
+  (_) => ServiceRequest(),
+);
+final _vendorRequestProvider = Provider<VendorRequest>((_) => VendorRequest());
 
 class ServiceDetailsState {
   const ServiceDetailsState({
@@ -25,21 +25,19 @@ class ServiceDetailsState {
   final List<ServiceOption> selectedOptions;
   final int page;
 
-  List<int> get selectedOptionIds =>
-      selectedOptions.map((e) => e.id).toList();
+  List<int> get selectedOptionIds => selectedOptions.map((e) => e.id).toList();
 
   ServiceDetailsState copyWith({
     Service? service,
     List<Review>? reviews,
     List<ServiceOption>? selectedOptions,
     int? page,
-  }) =>
-      ServiceDetailsState(
-        service: service ?? this.service,
-        reviews: reviews ?? this.reviews,
-        selectedOptions: selectedOptions ?? this.selectedOptions,
-        page: page ?? this.page,
-      );
+  }) => ServiceDetailsState(
+    service: service ?? this.service,
+    reviews: reviews ?? this.reviews,
+    selectedOptions: selectedOptions ?? this.selectedOptions,
+    page: page ?? this.page,
+  );
 }
 
 class ServiceDetailsController
@@ -47,12 +45,13 @@ class ServiceDetailsController
   @override
   Future<ServiceDetailsState> build(Service arg) async {
     final oldHeroTag = arg.heroTag;
-    final detail = await ref.read(_serviceRequestProvider).serviceDetails(arg.id);
+    final detail = await ref
+        .read(_serviceRequestProvider)
+        .serviceDetails(arg.id);
     detail.heroTag = oldHeroTag;
-    final reviews = await ref.read(_vendorRequestProvider).getReviews(
-      page: 1,
-      vendorId: detail.vendorId,
-    );
+    final reviews = await ref
+        .read(_vendorRequestProvider)
+        .getReviews(page: 1, vendorId: detail.vendorId);
     return ServiceDetailsState(service: detail, reviews: reviews, page: 1);
   }
 
@@ -61,14 +60,15 @@ class ServiceDetailsController
     if (cur == null) return;
     final nextPage = cur.page + 1;
     try {
-      final more = await ref.read(_vendorRequestProvider).getReviews(
-        page: nextPage,
-        vendorId: cur.service.vendorId,
+      final more = await ref
+          .read(_vendorRequestProvider)
+          .getReviews(page: nextPage, vendorId: cur.service.vendorId);
+      state = AsyncData(
+        cur.copyWith(
+          reviews: [...cur.reviews, ...more],
+          page: more.isEmpty ? cur.page : nextPage,
+        ),
       );
-      state = AsyncData(cur.copyWith(
-        reviews: [...cur.reviews, ...more],
-        page: more.isEmpty ? cur.page : nextPage,
-      ));
     } catch (_) {}
   }
 
@@ -98,6 +98,7 @@ class ServiceDetailsController
 }
 
 final serviceDetailsControllerProvider = AsyncNotifierProvider.family<
-    ServiceDetailsController, ServiceDetailsState, Service>(
-  ServiceDetailsController.new,
-);
+  ServiceDetailsController,
+  ServiceDetailsState,
+  Service
+>(ServiceDetailsController.new);

@@ -42,8 +42,9 @@ class _MultipleOrderCheckoutPageState
 
   @override
   Widget build(BuildContext context) {
-    final state =
-        ref.watch(multipleCheckoutControllerProvider(widget.checkout));
+    final state = ref.watch(
+      multipleCheckoutControllerProvider(widget.checkout),
+    );
     final controller = ref.read(
       multipleCheckoutControllerProvider(widget.checkout).notifier,
     );
@@ -97,12 +98,14 @@ class _MultipleOrderCheckoutPageState
         MultipleVendorOrderSummary(
           subTotal: state.checkout.subTotal,
           deliveryFee: state.totalDeliveryFee,
-          discount: (state.checkout.coupon?.for_delivery ?? false)
-              ? null
-              : state.checkout.discount,
-          deliveryDiscount: (state.checkout.coupon?.for_delivery ?? false)
-              ? state.checkout.discount
-              : null,
+          discount:
+              (state.checkout.coupon?.for_delivery ?? false)
+                  ? null
+                  : state.checkout.discount,
+          deliveryDiscount:
+              (state.checkout.coupon?.for_delivery ?? false)
+                  ? state.checkout.discount
+                  : null,
           totalTax: state.taxes.sum(),
           totalFee: state.vendorFees.sum(),
           taxes: state.taxes,

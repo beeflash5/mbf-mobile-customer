@@ -6,8 +6,6 @@ extension NavigationExtensions on BuildContext {
   }
 
   Future<T?> push<T>(WidgetBuilder builder) {
-    return Navigator.of(this).push(
-      MaterialPageRoute(builder: builder),
-    );
+    return Navigator.of(this).push(MaterialPageRoute(builder: builder));
   }
 }

@@ -67,8 +67,10 @@ class AuthServices {
 
   static Future<User?> saveUser(dynamic jsonObject) async {
     if (jsonObject == null) return null;
-    await LocalStorageService.prefs!
-        .setString(_userKey, jsonEncode(jsonObject));
+    await LocalStorageService.prefs!.setString(
+      _userKey,
+      jsonEncode(jsonObject),
+    );
     currentUser = User.fromJson(Map<String, dynamic>.from(jsonObject as Map));
     return currentUser;
   }

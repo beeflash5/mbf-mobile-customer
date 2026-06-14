@@ -20,9 +20,10 @@ class Categories extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncCategories = ref.watch(
-      vendorCategoriesControllerProvider(
-        (vendorTypeId: vendorType.id, page: null),
-      ),
+      vendorCategoriesControllerProvider((
+        vendorTypeId: vendorType.id,
+        page: null,
+      )),
     );
     final categories = asyncCategories.valueOrNull ?? const [];
 
@@ -30,21 +31,27 @@ class Categories extends ConsumerWidget {
       HStack([
         SectionTitle("Categories".tr()).expand(),
         UiSpacer.smHorizontalSpace(),
-        "See all".tr().text.color(context.primaryColor).make().onInkTap(
+        "See all"
+            .tr()
+            .text
+            .color(context.primaryColor)
+            .make()
+            .onInkTap(
               () => context.pushRoute('/categories', extra: vendorType),
             ),
       ]).p12(),
       CustomHorizontalListView(
         isLoading: asyncCategories.isLoading,
-        itemsViews: categories
-            .map(
-              (category) => CategoryListItem(
-                category: category,
-                onPressed: NavigationService.categorySelected,
-                maxLine: false,
-              ),
-            )
-            .toList(),
+        itemsViews:
+            categories
+                .map(
+                  (category) => CategoryListItem(
+                    category: category,
+                    onPressed: NavigationService.categorySelected,
+                    maxLine: false,
+                  ),
+                )
+                .toList(),
       ),
     ]);
   }

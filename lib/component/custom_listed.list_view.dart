@@ -57,27 +57,23 @@ class CustomListedListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return this.justList
         ? _getBody()
-        : VStack(
-            [
-              this.title ?? UiSpacer.emptySpace(),
-              _getBody(),
-            ],
-            crossAlignment: CrossAxisAlignment.start,
-          );
+        : VStack([
+          this.title ?? UiSpacer.emptySpace(),
+          _getBody(),
+        ], crossAlignment: CrossAxisAlignment.start);
   }
 
   Widget _getBody() {
-    final contentBody = this.isLoading
-        ? this.loadingWidget ?? LoadingShimmer()
-        : this.hasError
+    final contentBody =
+        this.isLoading
+            ? this.loadingWidget ?? LoadingShimmer()
+            : this.hasError
             ? this.errorWidget ?? EmptyState(description: "There is an error")
             : this.items.isEmpty
-                ? this.emptyWidget ?? UiSpacer.emptySpace()
-                : this.justList
-                    ? _getListView()
-                    : Expanded(
-                        child: _getListView(),
-                      );
+            ? this.emptyWidget ?? UiSpacer.emptySpace()
+            : this.justList
+            ? _getListView()
+            : Expanded(child: _getListView());
 
     return (this.canRefresh && this.onRefresh != null)
         // ? SmartRefresher(
@@ -90,14 +86,14 @@ class CustomListedListView extends StatelessWidget {
         //     child: contentBody,
         //   )
         ? CustomEasyRefreshView(
-            // enablePullDown: true,
-            // enablePullUp: canPullUp,
-            // controller: this.refreshController!,
-            triggerAxis: this.scrollDirection,
-            onRefresh: () => this.onRefresh!(),
-            onLoad: this.onLoading != null ? () => this.onLoading!() : null,
-            child: contentBody,
-          )
+          // enablePullDown: true,
+          // enablePullUp: canPullUp,
+          // controller: this.refreshController!,
+          triggerAxis: this.scrollDirection,
+          onRefresh: () => this.onRefresh!(),
+          onLoad: this.onLoading != null ? () => this.onLoading!() : null,
+          child: contentBody,
+        )
         : contentBody;
   }
 

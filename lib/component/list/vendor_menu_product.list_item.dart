@@ -58,21 +58,13 @@ class VendorMenuProductListItem extends StatelessWidget {
               initialRating: product.rating ?? 0,
               ignoreGestures: true,
               ratingWidget: RatingWidget(
-                full: Icon(
-                  Icons.star,
-                  size: 12,
-                  color: Colors.yellow[800],
-                ),
+                full: Icon(Icons.star, size: 12, color: Colors.yellow[800]),
                 half: Icon(
                   Icons.star_half,
                   size: 12,
                   color: Colors.yellow[800],
                 ),
-                empty: Icon(
-                  Icons.star,
-                  size: 12,
-                  color: Colors.grey.shade400,
-                ),
+                empty: Icon(Icons.star, size: 12, color: Colors.grey.shade400),
               ),
               onRatingUpdate: (value) {},
             ),

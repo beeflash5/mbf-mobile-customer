@@ -30,7 +30,6 @@ class OrderListItem extends StatelessWidget {
             VStack([
               //
               HStack([
-                "#${order.code}".text.medium.make().expand(),
                 "${AppStrings.currencySymbol} ${order.total}"
                     .currencyFormat()
                     .text

@@ -20,12 +20,13 @@ class WalletHelper {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetContext) => WalletAmountEntryBottomSheet(
-        onSubmit: (amount) {
-          Navigator.of(sheetContext).pop();
-          _initiateTopUp(context, ref, amount);
-        },
-      ),
+      builder:
+          (sheetContext) => WalletAmountEntryBottomSheet(
+            onSubmit: (amount) {
+              Navigator.of(sheetContext).pop();
+              _initiateTopUp(context, ref, amount);
+            },
+          ),
     );
   }
 
@@ -34,8 +35,9 @@ class WalletHelper {
     WidgetRef ref,
     String amount,
   ) async {
-    final result =
-        await ref.read(walletControllerProvider.notifier).initiateTopUp(amount);
+    final result = await ref
+        .read(walletControllerProvider.notifier)
+        .initiateTopUp(amount);
     if (!context.mounted) return;
     switch (result) {
       case WalletTopupSuccess(:final link):
@@ -66,7 +68,9 @@ class WalletHelper {
     WidgetRef ref,
   ) async {
     final apiResponse =
-        await ref.read(walletControllerProvider.notifier).fetchMyWalletAddress();
+        await ref
+            .read(walletControllerProvider.notifier)
+            .fetchMyWalletAddress();
     if (!context.mounted) return;
     if (apiResponse.allGood) {
       showModalBottomSheet(

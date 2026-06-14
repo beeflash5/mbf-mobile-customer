@@ -28,67 +28,64 @@ class HorizontalVehicleTypeListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     final selected = taxiState.selectedVehicleType?.id == vehicleType.id;
-    final currencySymbol = vehicleType.currency != null
-        ? vehicleType.currency?.symbol
-        : AppStrings.currentCurrencySymbol;
+    final currencySymbol =
+        vehicleType.currency != null
+            ? vehicleType.currency?.symbol
+            : AppStrings.currentCurrencySymbol;
 
-    return HStack(
-      [
-        CustomImage(
-          imageUrl: vehicleType.photo,
-          width: 55,
-          height: 40,
-          boxFit: BoxFit.contain,
-        ),
-        VStack([
-          vehicleType.name.text.bold.maxLines(1).ellipsis.make(),
-          UiSpacer.vSpace(3),
-          HStack([
-            CurrencyHStack(
-              [
-                "min".tr(),
-                " ",
-                "$currencySymbol",
-                vehicleType.minFare
-                    .convertIf(vehicleType.currency == null)
-                    .currencyValueFormat(),
-              ],
-              textSize: 12,
-              textColor: Colors.grey.shade600,
-            ),
-            DotIndicator(size: 5, color: Colors.grey.shade600).px8(),
-            CurrencyHStack(
-              [
-                "base".tr(),
-                " ",
-                "$currencySymbol",
-                vehicleType.baseFare
-                    .convertIf(vehicleType.currency == null)
-                    .currencyValueFormat(),
-              ],
-              textSize: 12,
-              textColor: Colors.grey.shade600,
-            ),
+    return HStack([
+          CustomImage(
+            imageUrl: vehicleType.photo,
+            width: 55,
+            height: 40,
+            boxFit: BoxFit.contain,
+          ),
+          VStack([
+            vehicleType.name.text.bold.maxLines(1).ellipsis.make(),
+            UiSpacer.vSpace(3),
+            HStack([
+              CurrencyHStack(
+                [
+                  "min".tr(),
+                  " ",
+                  "$currencySymbol",
+                  vehicleType.minFare
+                      .convertIf(vehicleType.currency == null)
+                      .currencyValueFormat(),
+                ],
+                textSize: 12,
+                textColor: Colors.grey.shade600,
+              ),
+              DotIndicator(size: 5, color: Colors.grey.shade600).px8(),
+              CurrencyHStack(
+                [
+                  "base".tr(),
+                  " ",
+                  "$currencySymbol",
+                  vehicleType.baseFare
+                      .convertIf(vehicleType.currency == null)
+                      .currencyValueFormat(),
+                ],
+                textSize: 12,
+                textColor: Colors.grey.shade600,
+              ),
+            ]),
+          ]).px8().expand(),
+          VStack([
+            CurrencyHStack([
+              " $currencySymbol ".text.extraBold.make(),
+              " ${vehicleType.total.convertIf(vehicleType.currency == null)} "
+                  .currencyValueFormat()
+                  .text
+                  .extraBold
+                  .make(),
+            ]),
           ]),
-        ]).px8().expand(),
-        VStack([
-          CurrencyHStack([
-            " $currencySymbol ".text.extraBold.make(),
-            " ${vehicleType.total.convertIf(vehicleType.currency == null)} "
-                .currencyValueFormat()
-                .text
-                .extraBold
-                .make(),
-          ]),
-        ]),
-      ],
-      alignment: MainAxisAlignment.center,
-    )
-        .box
-        .p12
+        ], alignment: MainAxisAlignment.center).box.p12
         .color(
           selected
               ? AppColor.primaryColor.withOpacity(0.15)

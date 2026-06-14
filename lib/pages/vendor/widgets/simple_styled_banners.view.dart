@@ -41,29 +41,33 @@ class SimpleStyledBanners extends ConsumerWidget {
     if (isLoading) return BusyIndicator().centered().h(150);
 
     return Padding(
-      padding: withPadding
-          ? const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
-          : EdgeInsets.zero,
-      child: CarouselSlider(
-        options: CarouselOptions(
-          autoPlay: true,
-          initialPage: 1,
-          height: banners.isNotEmpty ? (height ?? 250.0) : 0.0,
-          disableCenter: true,
-          enlargeCenterPage: true,
-          viewportFraction: viewportFraction,
-        ),
-        items: banners
-            .map(
-              (banner) => BannerListItem(
-                imageUrl: banner.imageUrl ?? '',
-                radius: radius ?? 7.5,
-                noMargin: true,
-                onPressed: () => BannerHelper.bannerSelected(context, banner),
-              ),
-            )
-            .toList(),
-      ).box.clip(Clip.antiAlias).withRounded(value: radius ?? 7.5).make(),
+      padding:
+          withPadding
+              ? const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+              : EdgeInsets.zero,
+      child:
+          CarouselSlider(
+            options: CarouselOptions(
+              autoPlay: true,
+              initialPage: 1,
+              height: banners.isNotEmpty ? (height ?? 250.0) : 0.0,
+              disableCenter: true,
+              enlargeCenterPage: true,
+              viewportFraction: viewportFraction,
+            ),
+            items:
+                banners
+                    .map(
+                      (banner) => BannerListItem(
+                        imageUrl: banner.imageUrl ?? '',
+                        radius: radius ?? 7.5,
+                        noMargin: true,
+                        onPressed:
+                            () => BannerHelper.bannerSelected(context, banner),
+                      ),
+                    )
+                    .toList(),
+          ).box.clip(Clip.antiAlias).withRounded(value: radius ?? 7.5).make(),
     );
   }
 }

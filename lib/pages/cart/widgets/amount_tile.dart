@@ -17,13 +17,11 @@ class AmountTile extends StatelessWidget {
   final TextStyle? titleStyle;
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        //
-        title.text.textStyle(titleStyle ?? amountStyle).make().expand(),
-        UiSpacer.horizontalSpace(),
-        amount.text.textStyle(amountStyle).make(),
-      ],
-    );
+    return HStack([
+      //
+      title.text.textStyle(titleStyle ?? amountStyle).make().expand(),
+      UiSpacer.horizontalSpace(),
+      amount.text.textStyle(amountStyle).make(),
+    ]);
   }
 }

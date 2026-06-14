@@ -85,24 +85,27 @@ class CheckoutState {
     return CheckoutState(
       checkout: checkout ?? this.checkout,
       vendor: vendor ?? this.vendor,
-      deliveryAddress: identical(deliveryAddress, _sentinel)
-          ? this.deliveryAddress
-          : deliveryAddress as DeliveryAddress?,
+      deliveryAddress:
+          identical(deliveryAddress, _sentinel)
+              ? this.deliveryAddress
+              : deliveryAddress as DeliveryAddress?,
       isPickup: isPickup ?? this.isPickup,
       isScheduled: isScheduled ?? this.isScheduled,
       deliveryAddressOutOfRange:
           deliveryAddressOutOfRange ?? this.deliveryAddressOutOfRange,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
       dateFull: dateFull ?? this.dateFull,
       timeFull: timeFull ?? this.timeFull,
       tables: tables ?? this.tables,
-      tableSelected: identical(tableSelected, _sentinel)
-          ? this.tableSelected
-          : tableSelected as String?,
+      tableSelected:
+          identical(tableSelected, _sentinel)
+              ? this.tableSelected
+              : tableSelected as String?,
       paymentTermsAgreed: paymentTermsAgreed ?? this.paymentTermsAgreed,
       isBusy: isBusy ?? this.isBusy,
       loadingTime: loadingTime ?? this.loadingTime,
@@ -139,10 +142,7 @@ class CheckoutController
   Future<void> initialise() async {
     await _fetchVendorDetails();
     _setVendorRequirement();
-    await Future.wait([
-      _prefetchDeliveryAddress(),
-      _fetchPaymentOptions(),
-    ]);
+    await Future.wait([_prefetchDeliveryAddress(), _fetchPaymentOptions()]);
     await _updateTotalOrderSummary();
     if (state.vendor != null && state.vendor!.can_dinein == false) {
       await _fetchDateUse();
@@ -170,7 +170,7 @@ class CheckoutController
     } else if (v.allowOnlyPickup) {
       state = state.copyWith(isPickup: true);
     }
-    
+
     // Auto-schedule F&B if not pickup
     if (v.isFoodOrBeverage && !state.isPickup) {
       state = state.copyWith(isScheduled: true);
@@ -182,8 +182,8 @@ class CheckoutController
     try {
       final preselected =
           await CheckoutSharedHelpers.preselectedDeliveryAddress(
-        vendorId: state.vendor?.id,
-      );
+            vendorId: state.vendor?.id,
+          );
       if (preselected == null) return;
       final co = state.checkout;
       co.deliveryAddress = preselected;
@@ -236,8 +236,7 @@ class CheckoutController
   Future<void> _fetchDateUse() async {
     if (state.vendor == null) return;
     try {
-      final dates =
-          await CheckoutSharedHelpers.fetchDateUse(state.vendor!.id);
+      final dates = await CheckoutSharedHelpers.fetchDateUse(state.vendor!.id);
       state = state.copyWith(dateFull: dates);
     } catch (e) {
       // ignore: avoid_print
@@ -280,7 +279,7 @@ class CheckoutController
         final total = updated.total;
         final dp =
             (double.tryParse(AppStrings.down_payment.toString())! / 100) *
-                total;
+            total;
         updated.dp = dp;
         updated.sisa = total - dp;
       }
@@ -296,7 +295,9 @@ class CheckoutController
 
   void togglePickupStatus(bool? value) {
     final isPickup = value ?? false;
-    final bool allowSchedule = state.vendor?.allowScheduleOrder == true || state.vendor?.isFoodOrBeverage == true;
+    final bool allowSchedule =
+        state.vendor?.allowScheduleOrder == true ||
+        state.vendor?.isFoodOrBeverage == true;
     final isScheduled = value == true ? false : allowSchedule;
     final co = state.checkout;
     co.deliveryAddress = isPickup ? null : state.deliveryAddress;
@@ -368,10 +369,7 @@ class CheckoutController
     );
   }
 
-  void changeSelectedPaymentMethod(
-    PaymentMethod? pm, {
-    bool callTotal = true,
-  }) {
+  void changeSelectedPaymentMethod(PaymentMethod? pm, {bool callTotal = true}) {
     final co = state.checkout;
     co.paymentMethod = pm;
     state = state.copyWith(selectedPaymentMethod: pm, checkout: co);
@@ -400,7 +398,8 @@ class CheckoutController
         orderVendor!.minOrder! > state.checkout.subTotal) {
       AlertService.error(
         title: "Minimum Order Value".tr(),
-        text: "Order value/amount is less than vendor accepted minimum order"
+        text:
+            "Order value/amount is less than vendor accepted minimum order"
                 .tr() +
             "${AppStrings.currencySymbol} ${orderVendor.minOrder}"
                 .currencyFormat(),
@@ -410,7 +409,8 @@ class CheckoutController
         orderVendor!.maxOrder! < state.checkout.subTotal) {
       AlertService.error(
         title: "Maximum Order Value".tr(),
-        text: "Order value/amount is more than vendor accepted maximum order"
+        text:
+            "Order value/amount is more than vendor accepted maximum order"
                 .tr() +
             "${AppStrings.currencySymbol} ${orderVendor.maxOrder}"
                 .currencyFormat(),
@@ -453,10 +453,13 @@ class CheckoutController
     } else if (state.vendor?.isFoodOrBeverage == true &&
         !state.isPickup &&
         (guestCountTEC.text.isEmpty ||
-            (int.tryParse(guestCountTEC.text) ?? 0) < 3)) {
+            (int.tryParse(guestCountTEC.text) ?? 0) <
+                (state.vendor?.can_dinein == true ? 3 : 1))) {
       AlertService.error(
         title: "Reservation".tr(),
-        text: "Minimum 3 guests required".tr(),
+        text:
+            "Minimum ${state.vendor?.can_dinein == true ? 3 : 1} guests required"
+                .tr(),
       );
       return;
     } else if (state.vendor?.isFoodOrBeverage == true &&
@@ -483,13 +486,15 @@ class CheckoutController
       } else {
         co.total = co.totalWithTip;
       }
-      
-      co.reser_guest = guestCountTEC.text.isEmptyOrNull
-          ? null
-          : int.tryParse(guestCountTEC.text);
-      co.reser_table = state.tableSelected != null
-          ? int.tryParse(state.tableSelected!)
-          : null;
+
+      co.reser_guest =
+          guestCountTEC.text.isEmptyOrNull
+              ? null
+              : int.tryParse(guestCountTEC.text);
+      co.reser_table =
+          state.tableSelected != null
+              ? int.tryParse(state.tableSelected!)
+              : null;
       final apiResponse = await _checkoutRequest.newOrder(
         co,
         tip: driverTipTEC.text,
@@ -537,8 +542,7 @@ class CheckoutController
     AppService().changeHomePageIndex(index: 2);
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).popUntil(
-        (route) =>
-            route.settings.name == AppRoutes.homeRoute || route.isFirst,
+        (route) => route.settings.name == AppRoutes.homeRoute || route.isFirst,
       );
     }
   }
@@ -546,5 +550,5 @@ class CheckoutController
 
 final checkoutControllerProvider = NotifierProvider.autoDispose
     .family<CheckoutController, CheckoutState, CheckOut>(
-  CheckoutController.new,
-);
+      CheckoutController.new,
+    );

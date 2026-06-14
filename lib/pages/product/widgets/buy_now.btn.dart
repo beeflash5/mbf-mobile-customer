@@ -21,13 +21,14 @@ class BuyNowButton extends StatelessWidget {
     return CustomButton(
       color: AppColor.primaryColorDark,
       loading: loading,
-      child: "Buy Now"
-          .tr()
-          .text
-          .color(Utils.textColorByTheme())
-          .semiBold
-          .make()
-          .p12(),
+      child:
+          "Buy Now"
+              .tr()
+              .text
+              .color(Utils.textColorByTheme())
+              .semiBold
+              .make()
+              .p12(),
       onPressed: onPressed,
     );
   }

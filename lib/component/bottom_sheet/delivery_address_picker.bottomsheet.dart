@@ -42,72 +42,73 @@ class DeliveryAddressPicker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncState =
-        ref.watch(deliveryAddressPickerControllerProvider(vendorCheckRequired));
+    final asyncState = ref.watch(
+      deliveryAddressPickerControllerProvider(vendorCheckRequired),
+    );
     final notifier = ref.read(
       deliveryAddressPickerControllerProvider(vendorCheckRequired).notifier,
     );
     final filtered = asyncState.valueOrNull?.filtered ?? const [];
 
     return VStack([
-      UiSpacer.swipeIndicator().py12(),
-      HStack([
-        VStack([
-          "Delivery address".tr().text.make(),
-          "Select order delivery address".tr().text.make(),
-        ]).expand(),
-        AuthServices.authenticated()
-            ? CustomButton(
-                title: "New".tr(),
-                icon: Icons.add,
-                onPressed: () async {
-                  await context.pushWidget(const NewDeliveryAddressesPage());
-                  notifier.refresh();
+          UiSpacer.swipeIndicator().py12(),
+          HStack([
+            VStack([
+              "Delivery address".tr().text.make(),
+              "Select order delivery address".tr().text.make(),
+            ]).expand(),
+            AuthServices.authenticated()
+                ? CustomButton(
+                  title: "New".tr(),
+                  icon: Icons.add,
+                  onPressed: () async {
+                    await context.pushWidget(const NewDeliveryAddressesPage());
+                    notifier.refresh();
+                  },
+                )
+                : UiSpacer.emptySpace(),
+          ]).p16().box.outerShadow.color(context.cardColor).make(),
+          CustomTextFormField(
+            hintText: "Search".tr(),
+            prefixIcon: const Icon(Icons.search, size: 20),
+            onChanged: notifier.filter,
+          ).p20(),
+          CustomVisibilty(
+            visible: asyncState.isLoading || filtered.isNotEmpty,
+            child: SafeArea(
+              top: false,
+              child: CustomListView(
+                dataSet: filtered,
+                isLoading: asyncState.isLoading,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemBuilder: (context, index) {
+                  final addr = filtered[index];
+                  return DeliveryAddressListItem(
+                    deliveryAddress: addr,
+                    action: false,
+                    borderColor: Colors.grey.shade300,
+                  ).onInkTap(
+                    (addr.can_deliver == null || addr.can_deliver!)
+                        ? () => onSelectDeliveryAddress(addr)
+                        : null,
+                  );
                 },
+                separatorBuilder: (context, index) => UiSpacer.verticalSpace(),
+              ),
+            ),
+          ).expand(),
+          allowOnMap
+              ? SafeArea(
+                child:
+                    TextButton.icon(
+                      style: TextButton.styleFrom(alignment: Alignment.center),
+                      label: "Choose on map".tr().text.make(),
+                      icon: const Icon(Icons.location_on),
+                      onPressed: () => _pickFromMap(context),
+                    ).wFull(context).px20(),
               )
-            : UiSpacer.emptySpace(),
-      ]).p16().box.outerShadow.color(context.cardColor).make(),
-      CustomTextFormField(
-        hintText: "Search".tr(),
-        prefixIcon: const Icon(Icons.search, size: 20),
-        onChanged: notifier.filter,
-      ).p20(),
-      CustomVisibilty(
-        visible: asyncState.isLoading || filtered.isNotEmpty,
-        child: SafeArea(
-          top: false,
-          child: CustomListView(
-            dataSet: filtered,
-            isLoading: asyncState.isLoading,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemBuilder: (context, index) {
-              final addr = filtered[index];
-              return DeliveryAddressListItem(
-                deliveryAddress: addr,
-                action: false,
-                borderColor: Colors.grey.shade300,
-              ).onInkTap(
-                (addr.can_deliver == null || addr.can_deliver!)
-                    ? () => onSelectDeliveryAddress(addr)
-                    : null,
-              );
-            },
-            separatorBuilder: (context, index) => UiSpacer.verticalSpace(),
-          ),
-        ),
-      ).expand(),
-      allowOnMap
-          ? SafeArea(
-              child: TextButton.icon(
-                style: TextButton.styleFrom(alignment: Alignment.center),
-                label: "Choose on map".tr().text.make(),
-                icon: const Icon(Icons.location_on),
-                onPressed: () => _pickFromMap(context),
-              ).wFull(context).px20(),
-            )
-          : UiSpacer.emptySpace(),
-    ])
-        .box
+              : UiSpacer.emptySpace(),
+        ]).box
         .color(context.theme.colorScheme.surface)
         .topRounded()
         .clip(Clip.antiAlias)

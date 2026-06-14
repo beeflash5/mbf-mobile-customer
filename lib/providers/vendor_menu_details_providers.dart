@@ -7,10 +7,10 @@ import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/product.request.dart';
 import 'package:fuodz/services/vendor.request.dart';
 
-final _vendorRequestProvider =
-    Provider<VendorRequest>((_) => VendorRequest());
-final _productRequestProvider =
-    Provider<ProductRequest>((_) => ProductRequest());
+final _vendorRequestProvider = Provider<VendorRequest>((_) => VendorRequest());
+final _productRequestProvider = Provider<ProductRequest>(
+  (_) => ProductRequest(),
+);
 
 class VendorMenuDetailsState {
   const VendorMenuDetailsState({
@@ -29,13 +29,12 @@ class VendorMenuDetailsState {
     Map<int, List<Product>>? menuProducts,
     Map<int, int>? menuPages,
     Map<int, bool>? loadingMore,
-  }) =>
-      VendorMenuDetailsState(
-        vendor: vendor ?? this.vendor,
-        menuProducts: menuProducts ?? this.menuProducts,
-        menuPages: menuPages ?? this.menuPages,
-        loadingMore: loadingMore ?? this.loadingMore,
-      );
+  }) => VendorMenuDetailsState(
+    vendor: vendor ?? this.vendor,
+    menuProducts: menuProducts ?? this.menuProducts,
+    menuPages: menuPages ?? this.menuPages,
+    loadingMore: loadingMore ?? this.loadingMore,
+  );
 }
 
 /// Family arg = vendorId.
@@ -43,27 +42,28 @@ class VendorMenuDetailsController
     extends FamilyAsyncNotifier<VendorMenuDetailsState, int> {
   @override
   Future<VendorMenuDetailsState> build(int arg) async {
-    final vendor = await ref.read(_vendorRequestProvider).vendorDetails(
-      arg,
-      params: {'type': 'small'},
-    );
+    final vendor = await ref
+        .read(_vendorRequestProvider)
+        .vendorDetails(arg, params: {'type': 'small'});
     vendor.menus.insert(0, Menu.fromJson({'id': 0, 'name': 'All'.tr()}));
     final products = <int, List<Product>>{};
     final pages = <int, int>{};
-    await Future.wait(vendor.menus.map((menu) async {
-      try {
-        products[menu.id] = await ref
-            .read(_productRequestProvider)
-            .getProdcuts(
-              page: 1,
-              queryParams: {'menu_id': menu.id, 'vendor_id': vendor.id},
-            );
-        pages[menu.id] = 1;
-      } catch (_) {
-        products[menu.id] = const [];
-        pages[menu.id] = 1;
-      }
-    }));
+    await Future.wait(
+      vendor.menus.map((menu) async {
+        try {
+          products[menu.id] = await ref
+              .read(_productRequestProvider)
+              .getProdcuts(
+                page: 1,
+                queryParams: {'menu_id': menu.id, 'vendor_id': vendor.id},
+              );
+          pages[menu.id] = 1;
+        } catch (_) {
+          products[menu.id] = const [];
+          pages[menu.id] = 1;
+        }
+      }),
+    );
     return VendorMenuDetailsState(
       vendor: vendor,
       menuProducts: products,
@@ -75,27 +75,33 @@ class VendorMenuDetailsController
     final cur = state.valueOrNull;
     if (cur == null) return;
     if (cur.loadingMore[menuId] ?? false) return;
-    state = AsyncData(cur.copyWith(
-      loadingMore: {...cur.loadingMore, menuId: true},
-    ));
+    state = AsyncData(
+      cur.copyWith(loadingMore: {...cur.loadingMore, menuId: true}),
+    );
     final nextPage = (cur.menuPages[menuId] ?? 1) + 1;
     try {
-      final list = await ref.read(_productRequestProvider).getProdcuts(
-        page: nextPage,
-        queryParams: {'menu_id': menuId, 'vendor_id': cur.vendor.id},
+      final list = await ref
+          .read(_productRequestProvider)
+          .getProdcuts(
+            page: nextPage,
+            queryParams: {'menu_id': menuId, 'vendor_id': cur.vendor.id},
+          );
+      state = AsyncData(
+        state.value!.copyWith(
+          menuProducts: {
+            ...state.value!.menuProducts,
+            menuId: [...?state.value!.menuProducts[menuId], ...list],
+          },
+          menuPages: {...state.value!.menuPages, menuId: nextPage},
+          loadingMore: {...state.value!.loadingMore, menuId: false},
+        ),
       );
-      state = AsyncData(state.value!.copyWith(
-        menuProducts: {
-          ...state.value!.menuProducts,
-          menuId: [...?state.value!.menuProducts[menuId], ...list],
-        },
-        menuPages: {...state.value!.menuPages, menuId: nextPage},
-        loadingMore: {...state.value!.loadingMore, menuId: false},
-      ));
     } catch (_) {
-      state = AsyncData(state.value!.copyWith(
-        loadingMore: {...state.value!.loadingMore, menuId: false},
-      ));
+      state = AsyncData(
+        state.value!.copyWith(
+          loadingMore: {...state.value!.loadingMore, menuId: false},
+        ),
+      );
     }
   }
 
@@ -103,19 +109,24 @@ class VendorMenuDetailsController
     final cur = state.valueOrNull;
     if (cur == null) return;
     try {
-      final list = await ref.read(_productRequestProvider).getProdcuts(
-        page: 1,
-        queryParams: {'menu_id': menuId, 'vendor_id': cur.vendor.id},
+      final list = await ref
+          .read(_productRequestProvider)
+          .getProdcuts(
+            page: 1,
+            queryParams: {'menu_id': menuId, 'vendor_id': cur.vendor.id},
+          );
+      state = AsyncData(
+        cur.copyWith(
+          menuProducts: {...cur.menuProducts, menuId: list},
+          menuPages: {...cur.menuPages, menuId: 1},
+        ),
       );
-      state = AsyncData(cur.copyWith(
-        menuProducts: {...cur.menuProducts, menuId: list},
-        menuPages: {...cur.menuPages, menuId: 1},
-      ));
     } catch (_) {}
   }
 }
 
 final vendorMenuDetailsControllerProvider = AsyncNotifierProvider.family<
-    VendorMenuDetailsController, VendorMenuDetailsState, int>(
-  VendorMenuDetailsController.new,
-);
+  VendorMenuDetailsController,
+  VendorMenuDetailsState,
+  int
+>(VendorMenuDetailsController.new);

@@ -34,7 +34,8 @@ class _VendorHeaderState extends ConsumerState<VendorHeader> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cur = ref.read(currentDeliveryAddressControllerProvider).valueOrNull;
+      final cur =
+          ref.read(currentDeliveryAddressControllerProvider).valueOrNull;
       if (cur == null) {
         ref
             .read(currentDeliveryAddressControllerProvider.notifier)
@@ -48,24 +49,22 @@ class _VendorHeaderState extends ConsumerState<VendorHeader> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => DeliveryAddressPicker(
-        vendorCheckRequired: false,
-        onSelectDeliveryAddress: (addr) {
-          ref
-              .read(currentDeliveryAddressControllerProvider.notifier)
-              .setAddress(addr);
-          Navigator.of(context).pop();
-          widget.onrefresh();
-        },
-      ),
+      builder:
+          (_) => DeliveryAddressPicker(
+            vendorCheckRequired: false,
+            onSelectDeliveryAddress: (addr) {
+              ref
+                  .read(currentDeliveryAddressControllerProvider.notifier)
+                  .setAddress(addr);
+              Navigator.of(context).pop();
+              widget.onrefresh();
+            },
+          ),
     );
   }
 
   void _openSearch() {
-    final search = Search(
-      vendorType: widget.vendorType,
-      showProductsTag: true,
-    );
+    final search = Search(vendorType: widget.vendorType, showProductsTag: true);
     context.pushWidget(SearchPage(search: search));
   }
 
@@ -75,33 +74,34 @@ class _VendorHeaderState extends ConsumerState<VendorHeader> {
     final address = asyncAddr.valueOrNull;
 
     return HStack([
-      HStack([
-        const Icon(Icons.location_on, size: 24).onInkTap(() {
-          ref
-              .read(currentDeliveryAddressControllerProvider.notifier)
-              .useUserLocation();
-        }),
-        VStack([
           HStack([
-            "Delivery Location".tr().text.sm.semiBold.make(),
-            const Icon(Icons.keyboard_arrow_down).px4(),
-          ]),
-          "${address?.address ?? ''}".text.maxLines(1).ellipsis.base.make(),
-        ]).onInkTap(_openPicker).px12().expand(),
-      ]).expand(),
-      CustomVisibilty(
-        visible: widget.showSearch,
-        child: const Icon(Icons.search, size: 20)
-            .p8()
-            .onInkTap(_openSearch)
-            .box
-            .roundedSM
-            .clip(Clip.antiAlias)
-            .color(context.theme.colorScheme.surface)
-            .outerShadowSm
-            .make(),
-      ),
-    ])
+            const Icon(Icons.location_on, size: 24).onInkTap(() {
+              ref
+                  .read(currentDeliveryAddressControllerProvider.notifier)
+                  .useUserLocation();
+            }),
+            VStack([
+              HStack([
+                "Delivery Location".tr().text.sm.semiBold.make(),
+                const Icon(Icons.keyboard_arrow_down).px4(),
+              ]),
+              "${address?.address ?? ''}".text.maxLines(1).ellipsis.base.make(),
+            ]).onInkTap(_openPicker).px12().expand(),
+          ]).expand(),
+          CustomVisibilty(
+            visible: widget.showSearch,
+            child:
+                const Icon(Icons.search, size: 20)
+                    .p8()
+                    .onInkTap(_openSearch)
+                    .box
+                    .roundedSM
+                    .clip(Clip.antiAlias)
+                    .color(context.theme.colorScheme.surface)
+                    .outerShadowSm
+                    .make(),
+          ),
+        ])
         .p12()
         .box
         .color(context.theme.colorScheme.surface)

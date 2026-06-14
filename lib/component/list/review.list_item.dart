@@ -15,31 +15,24 @@ class ReviewListItem extends StatelessWidget {
     return HStack(
       [
         //
-        CustomImage(
-          imageUrl: review.user?.photo,
-          width: 45,
-          height: 45,
-        ),
+        CustomImage(imageUrl: review.user?.photo, width: 45, height: 45),
         //
-        VStack(
-          [
-            review.user!.name.text.semiBold.size(Sizes.fontSizeLarge).make(),
-            VxRating(
-              normalImage: EvaIcons.starOutline,
-              selectImage: EvaIcons.star,
-              value: review.rating.toDouble(),
-              stepInt: true,
-              selectionColor: AppColor.ratingColor,
-              normalColor: AppColor.ratingColor,
-              onRatingUpdate: (rating) {},
-              isSelectable: false,
-              size: 16,
-            ),
-            1.heightBox,
-            "${review.review}".text.size(Sizes.fontSizeLarge).make(),
-          ],
-          spacing: 5,
-        ).expand(),
+        VStack([
+          review.user!.name.text.semiBold.size(Sizes.fontSizeLarge).make(),
+          VxRating(
+            normalImage: EvaIcons.starOutline,
+            selectImage: EvaIcons.star,
+            value: review.rating.toDouble(),
+            stepInt: true,
+            selectionColor: AppColor.ratingColor,
+            normalColor: AppColor.ratingColor,
+            onRatingUpdate: (rating) {},
+            isSelectable: false,
+            size: 16,
+          ),
+          1.heightBox,
+          "${review.review}".text.size(Sizes.fontSizeLarge).make(),
+        ], spacing: 5).expand(),
       ],
       spacing: 10,
       crossAlignment: CrossAxisAlignment.start,

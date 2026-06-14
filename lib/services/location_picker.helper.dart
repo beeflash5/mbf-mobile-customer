@@ -25,8 +25,9 @@ class LocationPickerHelper {
       deliveryAddress.latitude ?? 0.00,
       deliveryAddress.longitude ?? 0.00,
     );
-    final addresses =
-        await GeocoderService().findAddressesFromCoordinates(coordinates);
+    final addresses = await GeocoderService().findAddressesFromCoordinates(
+      coordinates,
+    );
     for (final address in addresses) {
       deliveryAddress.address ??= address.addressLine;
       if (deliveryAddress.name.isEmptyOrNull) {
@@ -70,27 +71,32 @@ class LocationPickerHelper {
     try {
       mapRegion = await Utils.getCurrentCountryCode();
     } catch (_) {}
-    mapRegion ??= AppStrings.countryCode.trim().split(",").firstWhere(
-          (e) => !e.toLowerCase().contains("auto"),
-          orElse: () => "",
-        );
+    mapRegion ??= AppStrings.countryCode
+        .trim()
+        .split(",")
+        .firstWhere((e) => !e.toLowerCase().contains("auto"), orElse: () => "");
 
     if (!AppMapSettings.useGoogleOnApp) {
-      return await context.pushWidget(OPSMapPage(
-            region: mapRegion,
-            initialPosition: initialPosition,
-            useCurrentLocation: true,
-            initialZoom: initialZoom,
-          ));
+      return await context.pushWidget(
+        OPSMapPage(
+          region: mapRegion,
+          initialPosition: initialPosition,
+          useCurrentLocation: true,
+          initialZoom: initialZoom,
+        ),
+      );
     }
-    return await context.pushWidget(Builder(
-      builder: (pickerCtx) => PlacePicker(
-        apiKey: AppStrings.googleMapApiKey,
-        autocompleteLanguage: translator.activeLocale.languageCode,
-        region: mapRegion,
-        onPlacePicked: (result) => pickerCtx.popRoute(result),
-        initialPosition: initialPosition,
+    return await context.pushWidget(
+      Builder(
+        builder:
+            (pickerCtx) => PlacePicker(
+              apiKey: AppStrings.googleMapApiKey,
+              autocompleteLanguage: translator.activeLocale.languageCode,
+              region: mapRegion,
+              onPlacePicked: (result) => pickerCtx.popRoute(result),
+              initialPosition: initialPosition,
+            ),
       ),
-    ));
+    );
   }
 }

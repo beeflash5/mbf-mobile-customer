@@ -67,33 +67,35 @@ class _BannersState extends ConsumerState<Banners> {
               initialPage: 1,
               height: banners.isNotEmpty ? AppStrings.bannerHeight : 0.0,
               disableCenter: widget.disableCenter,
-              onPageChanged: (index, reason) =>
-                  setState(() => _currentIndex = index),
+              onPageChanged:
+                  (index, reason) => setState(() => _currentIndex = index),
             ),
-            items: banners
-                .map(
-                  (banner) => BannerListItem(
-                    radius: widget.itemRadius ?? 0.0,
-                    imageUrl: banner.imageUrl ?? '',
-                    onPressed: () =>
-                        BannerHelper.bannerSelected(context, banner),
-                  ),
-                )
-                .toList(),
+            items:
+                banners
+                    .map(
+                      (banner) => BannerListItem(
+                        radius: widget.itemRadius ?? 0.0,
+                        imageUrl: banner.imageUrl ?? '',
+                        onPressed:
+                            () => BannerHelper.bannerSelected(context, banner),
+                      ),
+                    )
+                    .toList(),
           ),
           CustomVisibilty(
             visible: banners.length <= 10 || widget.showIndicators,
-            child: AnimatedSmoothIndicator(
-              activeIndex: _currentIndex,
-              count: banners.length,
-              textDirection:
-                  Utils.isArabic ? TextDirection.rtl : TextDirection.ltr,
-              effect: ExpandingDotsEffect(
-                dotHeight: 6,
-                dotWidth: 10,
-                activeDotColor: context.primaryColor,
-              ),
-            ).centered().py8(),
+            child:
+                AnimatedSmoothIndicator(
+                  activeIndex: _currentIndex,
+                  count: banners.length,
+                  textDirection:
+                      Utils.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                  effect: ExpandingDotsEffect(
+                    dotHeight: 6,
+                    dotWidth: 10,
+                    activeDotColor: context.primaryColor,
+                  ),
+                ).centered().py8(),
           ),
         ]),
       ),

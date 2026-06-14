@@ -46,18 +46,19 @@ class AmazonCustomerProductReview extends ConsumerWidget {
       ),
       CustomVisibilty(
         visible: reviews.isNotEmpty,
-        child: CustomButton(
-          child: HStack([
-            "Sell all reviews".text.xl.semiBold.make().expand(),
-            Icon(
-              Utils.isArabic
-                  ? Icons.keyboard_arrow_left
-                  : Icons.keyboard_arrow_right,
-            ),
-          ]),
-          onPressed: openAll,
-          height: 50,
-        ).wFull(context).py12(),
+        child:
+            CustomButton(
+              child: HStack([
+                "Sell all reviews".text.xl.semiBold.make().expand(),
+                Icon(
+                  Utils.isArabic
+                      ? Icons.keyboard_arrow_left
+                      : Icons.keyboard_arrow_right,
+                ),
+              ]),
+              onPressed: openAll,
+              height: 50,
+            ).wFull(context).py12(),
       ),
     ]);
   }

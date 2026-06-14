@@ -6,8 +6,9 @@ import 'package:fuodz/services/cart.service.dart';
 import 'package:fuodz/services/delivery_address.request.dart';
 import 'package:fuodz/utils/app_strings.dart';
 
-final _deliveryAddressRequestProvider =
-    Provider<DeliveryAddressRequest>((_) => DeliveryAddressRequest());
+final _deliveryAddressRequestProvider = Provider<DeliveryAddressRequest>(
+  (_) => DeliveryAddressRequest(),
+);
 
 class DeliveryAddressPickerState {
   const DeliveryAddressPickerState({
@@ -20,11 +21,10 @@ class DeliveryAddressPickerState {
   DeliveryAddressPickerState copyWith({
     List<DeliveryAddress>? all,
     List<DeliveryAddress>? filtered,
-  }) =>
-      DeliveryAddressPickerState(
-        all: all ?? this.all,
-        filtered: filtered ?? this.filtered,
-      );
+  }) => DeliveryAddressPickerState(
+    all: all ?? this.all,
+    filtered: filtered ?? this.filtered,
+  );
 }
 
 class DeliveryAddressPickerController
@@ -39,27 +39,28 @@ class DeliveryAddressPickerController
   }
 
   Future<List<DeliveryAddress>> _fetch() async {
-    int? vendorId = CartServices.productsInCart.isNotEmpty
-        ? CartServices.productsInCart.first.product?.vendor.id
-        : AppService().vendorId;
+    int? vendorId =
+        CartServices.productsInCart.isNotEmpty
+            ? CartServices.productsInCart.first.product?.vendor.id
+            : AppService().vendorId;
 
-    List<int>? vendorIds = (CartServices.productsInCart.isNotEmpty &&
-            AppStrings.enableMultipleVendorOrder)
-        ? CartServices.productsInCart
-            .map((e) => e.product!.vendorId)
-            .toSet()
-            .toList()
-        : null;
+    List<int>? vendorIds =
+        (CartServices.productsInCart.isNotEmpty &&
+                AppStrings.enableMultipleVendorOrder)
+            ? CartServices.productsInCart
+                .map((e) => e.product!.vendorId)
+                .toSet()
+                .toList()
+            : null;
 
     if (!_vendorCheckRequired) {
       vendorIds = null;
       vendorId = null;
     }
 
-    return ref.read(_deliveryAddressRequestProvider).getDeliveryAddresses(
-      vendorId: vendorId,
-      vendorIds: vendorIds,
-    );
+    return ref
+        .read(_deliveryAddressRequestProvider)
+        .getDeliveryAddresses(vendorId: vendorId, vendorIds: vendorIds);
   }
 
   Future<void> refresh() async {
@@ -74,17 +75,19 @@ class DeliveryAddressPickerController
     final cur = state.valueOrNull;
     if (cur == null) return;
     final lower = keyword.toLowerCase();
-    final filtered = cur.all.where((e) {
-      final name = e.name ?? '';
-      final address = e.address ?? '';
-      return name.toLowerCase().contains(lower) ||
-          address.toLowerCase().contains(lower);
-    }).toList();
+    final filtered =
+        cur.all.where((e) {
+          final name = e.name ?? '';
+          final address = e.address ?? '';
+          return name.toLowerCase().contains(lower) ||
+              address.toLowerCase().contains(lower);
+        }).toList();
     state = AsyncData(cur.copyWith(filtered: filtered));
   }
 }
 
 final deliveryAddressPickerControllerProvider = AsyncNotifierProvider.family<
-    DeliveryAddressPickerController,
-    DeliveryAddressPickerState,
-    bool>(DeliveryAddressPickerController.new);
+  DeliveryAddressPickerController,
+  DeliveryAddressPickerState,
+  bool
+>(DeliveryAddressPickerController.new);

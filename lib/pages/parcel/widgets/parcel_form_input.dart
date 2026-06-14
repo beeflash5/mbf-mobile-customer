@@ -41,34 +41,27 @@ class ParcelFormInput extends StatelessWidget {
     return HStack(
       [
         //
-        icon ??
-            Icon(
-              iconData,
-              color: iconColor,
-              size: 20,
-            ),
+        icon ?? Icon(iconData, color: iconColor, size: 20),
         UiSpacer.horizontalSpace(),
 
         //
-        VStack(
-          [
-            labelText != null
-                ? labelText!.text.semiBold.make()
-                : UiSpacer.emptySpace(),
-            content ??
-                CustomTextFormField(
-                  maxLines: 1,
-                  hintText: hintText ?? "",
-                  isReadOnly: isReadOnly,
-                  underline: true,
-                  onTap: onInputTap,
-                  textEditingController: tec,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: keyboardType,
-                  validator: formValidator,
-                ),
-          ],
-        ).expand(),
+        VStack([
+          labelText != null
+              ? labelText!.text.semiBold.make()
+              : UiSpacer.emptySpace(),
+          content ??
+              CustomTextFormField(
+                maxLines: 1,
+                hintText: hintText ?? "",
+                isReadOnly: isReadOnly,
+                underline: true,
+                onTap: onInputTap,
+                textEditingController: tec,
+                textInputAction: TextInputAction.next,
+                keyboardType: keyboardType,
+                validator: formValidator,
+              ),
+        ]).expand(),
 
         //
         suffix ?? UiSpacer.emptySpace(),

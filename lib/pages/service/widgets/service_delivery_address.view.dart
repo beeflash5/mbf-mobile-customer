@@ -28,56 +28,49 @@ class ServiceDeliveryAddressPickerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
       visible: service.location,
-      child: VStack(
-        [
-          HStack(
-            [
-              VStack(
-                [
-                  "Booking address".tr().text.semiBold.xl.make(),
-                  "Please select %s address/location"
+      child: VStack([
+            HStack([
+              VStack([
+                "Booking address".tr().text.semiBold.xl.make(),
+                "Please select %s address/location"
+                    .tr()
+                    .fill(["booking".tr()])
+                    .text
+                    .make(),
+              ]).expand(),
+              CustomButton(title: "Select".tr(), onPressed: onPickAddress),
+            ]),
+            DottedBorder(
+              borderType: BorderType.RRect,
+              color: context.accentColor,
+              strokeWidth: 1,
+              strokeCap: StrokeCap.round,
+              radius: const Radius.circular(5),
+              dashPattern: const [3, 6],
+              child:
+                  deliveryAddress != null
+                      ? DeliveryAddressListItem(
+                        deliveryAddress: deliveryAddress!,
+                        action: false,
+                        border: false,
+                        showDefault: false,
+                      )
+                      : EmptyDeliveryAddress(
+                        selection: true,
+                        isBooking: true,
+                      ).py12().opacity(value: 0.90),
+            ).wFull(context).py12().onInkTap(onPickAddress),
+            Visibility(
+              visible: deliveryAddressOutOfRange,
+              child:
+                  "Booking address is out of vendor service range"
                       .tr()
-                      .fill(["booking".tr()])
                       .text
+                      .sm
+                      .red500
                       .make(),
-                ],
-              ).expand(),
-              CustomButton(
-                title: "Select".tr(),
-                onPressed: onPickAddress,
-              ),
-            ],
-          ),
-          DottedBorder(
-            borderType: BorderType.RRect,
-            color: context.accentColor,
-            strokeWidth: 1,
-            strokeCap: StrokeCap.round,
-            radius: const Radius.circular(5),
-            dashPattern: const [3, 6],
-            child: deliveryAddress != null
-                ? DeliveryAddressListItem(
-                    deliveryAddress: deliveryAddress!,
-                    action: false,
-                    border: false,
-                    showDefault: false,
-                  )
-                : EmptyDeliveryAddress(
-                    selection: true,
-                    isBooking: true,
-                  ).py12().opacity(value: 0.90),
-          ).wFull(context).py12().onInkTap(onPickAddress),
-          Visibility(
-            visible: deliveryAddressOutOfRange,
-            child: "Booking address is out of vendor service range"
-                .tr()
-                .text
-                .sm
-                .red500
-                .make(),
-          ),
-        ],
-      )
+            ),
+          ])
           .p12()
           .box
           .roundedSM

@@ -54,35 +54,33 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   Future<void> _pickPhoto() async {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
-    ref.read(editProfileControllerProvider.notifier).setPhoto(
-          picked != null ? File(picked.path) : null,
-        );
+    ref
+        .read(editProfileControllerProvider.notifier)
+        .setPhoto(picked != null ? File(picked.path) : null);
   }
 
   void _pickCountry() {
     showCountryPicker(
       context: context,
       showPhoneCode: true,
-      onSelect: (c) =>
-          ref.read(editProfileControllerProvider.notifier).setCountry(c),
+      onSelect:
+          (c) => ref.read(editProfileControllerProvider.notifier).setCountry(c),
     );
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final result =
-        await ref.read(editProfileControllerProvider.notifier).submit(
-              name: _nameCtrl.text,
-              email: _emailCtrl.text,
-              phoneLocal: _phoneCtrl.text,
-            );
+    final result = await ref
+        .read(editProfileControllerProvider.notifier)
+        .submit(
+          name: _nameCtrl.text,
+          email: _emailCtrl.text,
+          phoneLocal: _phoneCtrl.text,
+        );
     if (!mounted) return;
     switch (result) {
       case EditProfileSuccess(:final message):
-        await AlertService.success(
-          title: 'Profile Update'.tr(),
-          text: message,
-        );
+        await AlertService.success(title: 'Profile Update'.tr(), text: message);
         if (!mounted) return;
         Navigator.of(context).pop(true);
       case EditProfileFailure(:final message):
@@ -118,14 +116,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   else
                     (newPhoto == null
                             ? CachedNetworkImage(
-                                imageUrl: user.photo,
-                                progressIndicatorBuilder:
-                                    (context, url, progress) =>
-                                        BusyIndicator(),
-                                errorWidget: (context, _, __) =>
-                                    Image.asset(AppImages.user),
-                                fit: BoxFit.cover,
-                              )
+                              imageUrl: user.photo,
+                              progressIndicatorBuilder:
+                                  (context, url, progress) => BusyIndicator(),
+                              errorWidget:
+                                  (context, _, __) =>
+                                      Image.asset(AppImages.user),
+                              fit: BoxFit.cover,
+                            )
                             : Image.file(newPhoto, fit: BoxFit.cover))
                         .wh(Vx.dp64 * 1.3, Vx.dp64 * 1.3)
                         .box
@@ -187,11 +185,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: CustomButton(
-                        title: 'Update Profile'.tr(),
-                        loading: isBusy,
-                        onPressed: isBusy ? null : _submit,
-                      ).centered(),
+                      child:
+                          CustomButton(
+                            title: 'Update Profile'.tr(),
+                            loading: isBusy,
+                            onPressed: isBusy ? null : _submit,
+                          ).centered(),
                     ),
                   ],
                 ),

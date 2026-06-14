@@ -14,7 +14,8 @@ class DeliveryTag extends StatelessWidget {
         .text
         .xs
         .color(
-            Utils.isDark(AppColor.deliveryColor) ? Colors.white : Colors.black)
+          Utils.isDark(AppColor.deliveryColor) ? Colors.white : Colors.black,
+        )
         .make()
         .py2()
         .px8()

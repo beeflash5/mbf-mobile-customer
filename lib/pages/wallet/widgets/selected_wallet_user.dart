@@ -14,44 +14,45 @@ class SelectedWalletUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomVisibilty(
       visible: selectedUser != null,
-      child: HStack(
-        [
-          //profile photo
-          CustomImage(
-            imageUrl: selectedUser?.photo ?? "",
-            boxFit: BoxFit.fill,
-          ).box.clip(Clip.antiAlias).roundedFull.make().wh(60, 60),
-          UiSpacer.horizontalSpace(),
-          //name and email
-          VStack(
-            [
-              //
-              "${selectedUser?.name}".text.semiBold.lg.make(),
-              "${selectedUser?.phone}"
-                  .hidePartial(
-                    begin: selectedUser != null
-                        ? ((3 / 10) * selectedUser!.phone.length).floor()
-                        : 4,
-                    end: selectedUser != null
-                        ? ((8 / 10) * selectedUser!.phone.length).floor()
-                        : 9,
-                  )!
-                  .text
-                  .light
-                  .sm
-                  .make(),
-            ],
-          ).expand(),
-          //
-        ],
-      )
-          .p8()
-          .box
-          .roundedSM
-          .color(context.theme.colorScheme.surface)
-          .outerShadow
-          .make()
-          .py12(),
+      child:
+          HStack([
+                //profile photo
+                CustomImage(
+                  imageUrl: selectedUser?.photo ?? "",
+                  boxFit: BoxFit.fill,
+                ).box.clip(Clip.antiAlias).roundedFull.make().wh(60, 60),
+                UiSpacer.horizontalSpace(),
+                //name and email
+                VStack([
+                  //
+                  "${selectedUser?.name}".text.semiBold.lg.make(),
+                  "${selectedUser?.phone}"
+                      .hidePartial(
+                        begin:
+                            selectedUser != null
+                                ? ((3 / 10) * selectedUser!.phone.length)
+                                    .floor()
+                                : 4,
+                        end:
+                            selectedUser != null
+                                ? ((8 / 10) * selectedUser!.phone.length)
+                                    .floor()
+                                : 9,
+                      )!
+                      .text
+                      .light
+                      .sm
+                      .make(),
+                ]).expand(),
+                //
+              ])
+              .p8()
+              .box
+              .roundedSM
+              .color(context.theme.colorScheme.surface)
+              .outerShadow
+              .make()
+              .py12(),
     );
   }
 }

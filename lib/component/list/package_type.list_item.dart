@@ -19,32 +19,30 @@ class PackageTypeListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HStack(
-      [
-        //image
-        CustomImage(
-          imageUrl: packageType.photo,
-        ).wh(Vx.dp56, Vx.dp56).pOnly(
-              right: AppService.isDirectionRTL(context) ? Vx.dp0 : Vx.dp12,
-              left: AppService.isDirectionRTL(context) ? Vx.dp12 : Vx.dp0,
-            ),
-
-        VStack(
           [
-            packageType.name.text.semiBold.make(),
-            packageType.description.text.sm.make(),
+            //image
+            CustomImage(imageUrl: packageType.photo)
+                .wh(Vx.dp56, Vx.dp56)
+                .pOnly(
+                  right: AppService.isDirectionRTL(context) ? Vx.dp0 : Vx.dp12,
+                  left: AppService.isDirectionRTL(context) ? Vx.dp12 : Vx.dp0,
+                ),
+
+            VStack([
+              packageType.name.text.semiBold.make(),
+              packageType.description.text.sm.make(),
+            ]).expand(),
           ],
-        ).expand(),
-      ],
-      crossAlignment: CrossAxisAlignment.start,
-      // alignment: MainAxisAlignment.start,
-    )
+          crossAlignment: CrossAxisAlignment.start,
+          // alignment: MainAxisAlignment.start,
+        )
         .p12()
         .onInkTap(
           onPressed == null
               ? null
               : () {
-                  onPressed!(packageType);
-                },
+                onPressed!(packageType);
+              },
         )
         .box
         .roundedSM

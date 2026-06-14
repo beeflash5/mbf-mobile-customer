@@ -28,13 +28,12 @@ class TaxiCustomTextFormField extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 12),
             suffix:
                 clear
-                    ? Icon(
-                      Icons.close,
-                      color: Colors.red.shade300,
-                    ).onInkTap(() {
-                      controller.clear();
-                      onClearPressed();
-                    })
+                    ? Icon(Icons.close, color: Colors.red.shade300).onInkTap(
+                      () {
+                        controller.clear();
+                        onClearPressed();
+                      },
+                    )
                     : null,
           ),
           autofocus: false,

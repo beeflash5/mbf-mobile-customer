@@ -56,8 +56,7 @@ class ProductsNewArival extends ConsumerWidget {
       byLocation: false,
       isHome: false,
     );
-    final asyncProducts =
-        ref.watch(productsListingControllerProvider(args));
+    final asyncProducts = ref.watch(productsListingControllerProvider(args));
     final products = asyncProducts.valueOrNull ?? const <Product>[];
     final isLoading = asyncProducts.isLoading;
 
@@ -65,47 +64,50 @@ class ProductsNewArival extends ConsumerWidget {
 
     return CustomVisibilty(
       visible: !isLoading && products.isNotEmpty,
-      child: VStack([
-        HStack([const SizedBox(height: 20)]).wFull(context),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            title.tr().text.bold.xl.make(),
-            subtitle.tr().text.make(),
-          ],
-        ),
-        const SizedBox(height: 20),
-        CustomVisibilty(
-          visible: showGrid,
-          child: CustomMasonryGridView(
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 15,
-            crossAxisCount: 1,
-            isLoading: isLoading,
-            items: List.generate(products.length, (index) {
-              final product = products[index];
-              return Container(
-                constraints: BoxConstraints(
-                  maxHeight: maxHeight ?? double.infinity,
-                ),
-                child:
-                    CardCommerce(product, boxFit: BoxFit.cover).wFull(context),
-              );
-            }),
-          ),
-        ),
-        products.isNotEmpty
-            ? CustomButtonLight(
-                title: "View All".tr(),
-                onPressed: () =>
-                    ProductSearchHelper.openProductsSeeAllPage(
-                  title: "New Arrivals".tr(),
-                  vendorType: vendorType,
-                  type: ProductFetchDataType.NEW,
-                ),
-              )
-            : const SizedBox(),
-      ]).py12(),
+      child:
+          VStack([
+            HStack([const SizedBox(height: 20)]).wFull(context),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                title.tr().text.bold.xl.make(),
+                subtitle.tr().text.make(),
+              ],
+            ),
+            const SizedBox(height: 20),
+            CustomVisibilty(
+              visible: showGrid,
+              child: CustomMasonryGridView(
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                crossAxisCount: 1,
+                isLoading: isLoading,
+                items: List.generate(products.length, (index) {
+                  final product = products[index];
+                  return Container(
+                    constraints: BoxConstraints(
+                      maxHeight: maxHeight ?? double.infinity,
+                    ),
+                    child: CardCommerce(
+                      product,
+                      boxFit: BoxFit.cover,
+                    ).wFull(context),
+                  );
+                }),
+              ),
+            ),
+            products.isNotEmpty
+                ? CustomButtonLight(
+                  title: "View All".tr(),
+                  onPressed:
+                      () => ProductSearchHelper.openProductsSeeAllPage(
+                        title: "New Arrivals".tr(),
+                        vendorType: vendorType,
+                        type: ProductFetchDataType.NEW,
+                      ),
+                )
+                : const SizedBox(),
+          ]).py12(),
     );
   }
 }

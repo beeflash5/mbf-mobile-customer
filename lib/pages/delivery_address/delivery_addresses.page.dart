@@ -49,7 +49,9 @@ class DeliveryAddressesPage extends ConsumerWidget {
           return DeliveryAddressListItem(
             deliveryAddress: addr,
             onEditPressed: () async {
-              await context.pushWidget(EditDeliveryAddressesPage(deliveryAddress: addr));
+              await context.pushWidget(
+                EditDeliveryAddressesPage(deliveryAddress: addr),
+              );
               notifier.refresh();
             },
             onDeletePressed: () {
@@ -78,8 +80,7 @@ class DeliveryAddressesPage extends ConsumerWidget {
             },
           );
         },
-        separatorBuilder: (context, index) =>
-            UiSpacer.verticalSpace(space: 10),
+        separatorBuilder: (context, index) => UiSpacer.verticalSpace(space: 10),
       ),
     );
   }

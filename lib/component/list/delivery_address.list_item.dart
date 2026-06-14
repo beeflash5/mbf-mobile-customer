@@ -26,104 +26,89 @@ class DeliveryAddressListItem extends StatelessWidget {
   final Color? borderColor;
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //
-        HStack(
-          [
+    return VStack([
+      //
+      HStack([
             //
-            VStack(
-              [
-                "${deliveryAddress.name}".text.semiBold.lg.make(),
-                "${deliveryAddress.address}"
-                    .text
-                    .sm
-                    .maxLines(3)
-                    .overflow(TextOverflow.ellipsis)
-                    .make(),
-                "${deliveryAddress.description}".text.sm.make(),
-                (deliveryAddress.defaultDeliveryAddress && showDefault)
-                    ? "Default"
-                        .tr()
-                        .text
-                        .xs
-                        .italic
-                        .maxLines(3)
-                        .overflow(TextOverflow.ellipsis)
-                        .make()
-                    : UiSpacer.emptySpace(),
-              ],
-            ).p12().expand(),
+            VStack([
+              "${deliveryAddress.name}".text.semiBold.lg.make(),
+              "${deliveryAddress.address}".text.sm
+                  .maxLines(3)
+                  .overflow(TextOverflow.ellipsis)
+                  .make(),
+              "${deliveryAddress.description}".text.sm.make(),
+              (deliveryAddress.defaultDeliveryAddress && showDefault)
+                  ? "Default"
+                      .tr()
+                      .text
+                      .xs
+                      .italic
+                      .maxLines(3)
+                      .overflow(TextOverflow.ellipsis)
+                      .make()
+                  : UiSpacer.emptySpace(),
+            ]).p12().expand(),
             //
             this.action
                 ? VStack(
-                    [
-                      //delete icon
-                      Icon(
-                        Icons.delete,
-                        size: 16,
-                        color: Colors.white,
-                      )
-                          .wFull(context)
-                          .onInkTap(
-                            this.onDeletePressed != null
-                                ? () => this.onDeletePressed!()
-                                : () {},
-                          )
-                          .py12()
-                          .box
-                          .red500
-                          .make(),
-                      //edit icon
-                      Icon(
-                        Icons.edit,
-                        size: 16,
-                        color: Colors.white,
-                      )
-                          .wFull(context)
-                          .onInkTap(
-                            this.onEditPressed != null
-                                ? () => this.onEditPressed!()
-                                : () {},
-                          )
-                          .py12()
-                          .box
-                          .blue500
-                          .make(),
-                    ],
-                    axisSize: MainAxisSize.max,
-                    // crossAlignment: CrossAxisAlignment.center,
-                  ).w(context.percentWidth * 15)
+                  [
+                    //delete icon
+                    Icon(Icons.delete, size: 16, color: Colors.white)
+                        .wFull(context)
+                        .onInkTap(
+                          this.onDeletePressed != null
+                              ? () => this.onDeletePressed!()
+                              : () {},
+                        )
+                        .py12()
+                        .box
+                        .red500
+                        .make(),
+                    //edit icon
+                    Icon(Icons.edit, size: 16, color: Colors.white)
+                        .wFull(context)
+                        .onInkTap(
+                          this.onEditPressed != null
+                              ? () => this.onEditPressed!()
+                              : () {},
+                        )
+                        .py12()
+                        .box
+                        .blue500
+                        .make(),
+                  ],
+                  axisSize: MainAxisSize.max,
+                  // crossAlignment: CrossAxisAlignment.center,
+                ).w(context.percentWidth * 15)
                 : UiSpacer.emptySpace(),
-          ],
-        )
-            .box
-            .roundedSM
-            .clip(Clip.antiAlias)
-            .border(
-              color: borderColor != null
-                  ? borderColor!
-                  : (border ? context.accentColor : Colors.transparent),
-              width: border ? 1 : 0,
-            )
-            .make(),
+          ]).box.roundedSM
+          .clip(Clip.antiAlias)
+          .border(
+            color:
+                borderColor != null
+                    ? borderColor!
+                    : (border ? context.accentColor : Colors.transparent),
+            width: border ? 1 : 0,
+          )
+          .make(),
 
-        //
-        //can deliver
-        CustomVisibilty(
-          visible: deliveryAddress.can_deliver != null &&
-              !(deliveryAddress.can_deliver ?? true),
-          child: "Vendor does not service this location"
-              .tr()
-              .text
-              .red500
-              .xs
-              .thin
-              .make()
-              .px12()
-              .py2(),
-        ),
-      ],
-    );
+      //
+      //can deliver
+      CustomVisibilty(
+        visible:
+            deliveryAddress.can_deliver != null &&
+            !(deliveryAddress.can_deliver ?? true),
+        child:
+            "Vendor does not service this location"
+                .tr()
+                .text
+                .red500
+                .xs
+                .thin
+                .make()
+                .px12()
+                .py2(),
+      ),
+    ]);
   }
 }

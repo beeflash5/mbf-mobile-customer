@@ -23,15 +23,15 @@ class CouponDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bgColor = coupon.color != null
-        ? Vx.hexToColor(coupon.color!)
-        : AppColor.primaryColor;
+    final bgColor =
+        coupon.color != null
+            ? Vx.hexToColor(coupon.color!)
+            : AppColor.primaryColor;
     final textColor = Utils.textColorByColor(bgColor);
 
     // Fetch detail terbaru via Riverpod; fallback ke coupon yang dilempar
     // sebagai argumen kalau masih loading/error.
-    final detailAsync =
-        ref.watch(couponDetailsControllerProvider(coupon.id));
+    final detailAsync = ref.watch(couponDetailsControllerProvider(coupon.id));
     final current = detailAsync.valueOrNull ?? coupon;
     final isBusy = detailAsync.isLoading;
 
@@ -57,16 +57,8 @@ class CouponDetailsPage extends ConsumerWidget {
       body: VStack([
         // header
         VStack([
-          '${current.code}'
-              .text
-              .xl3
-              .extraBlack
-              .color(textColor)
-              .makeCentered(),
-          '${current.description}'
-              .text
-              .sm
-              .medium
+          '${current.code}'.text.xl3.extraBlack.color(textColor).makeCentered(),
+          '${current.description}'.text.sm.medium
               .color(textColor)
               .makeCentered(),
           UiSpacer.vSpace(),

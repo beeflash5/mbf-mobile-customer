@@ -38,46 +38,53 @@ class HomeService extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncServices =
-        ref.watch(homeBestServicesControllerProvider(vendorType.id));
+    final asyncServices = ref.watch(
+      homeBestServicesControllerProvider(vendorType.id),
+    );
     final services = asyncServices.valueOrNull ?? const [];
     final isLoading = asyncServices.isLoading;
 
     return CustomVisibilty(
       visible: services.isNotEmpty && !isLoading,
-      child: VStack([
-        HStack([
-          title.text.xl.semiBold.make().expand(),
-          UiSpacer.smHorizontalSpace(),
-          "See all".tr().text.color(context.primaryColor).make().onInkTap(() {
-            if (onSeeAllPressed != null) {
-              onSeeAllPressed!();
-            } else {
-              final search = Search(
-                category: category,
-                vendorType: vendorType,
-                showProductsTag: true,
-              );
-              context.pushRoute(AppRoutes.search, extra: search);
-            }
-          }),
-        ]).p12(),
-        if (showGrid)
-          CustomMasonryGridView(
-            isLoading: isLoading,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            crossAxisCount: crossAxisCount,
-            items: services
-                .map(
-                  (service) => HomeServicesListItem(
-                    service: service,
-                    onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
-                  ),
-                )
-                .toList(),
-          ).px12(),
-      ]).py12(),
+      child:
+          VStack([
+            HStack([
+              title.text.xl.semiBold.make().expand(),
+              UiSpacer.smHorizontalSpace(),
+              "See all".tr().text.color(context.primaryColor).make().onInkTap(
+                () {
+                  if (onSeeAllPressed != null) {
+                    onSeeAllPressed!();
+                  } else {
+                    final search = Search(
+                      category: category,
+                      vendorType: vendorType,
+                      showProductsTag: true,
+                    );
+                    context.pushRoute(AppRoutes.search, extra: search);
+                  }
+                },
+              ),
+            ]).p12(),
+            if (showGrid)
+              CustomMasonryGridView(
+                isLoading: isLoading,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: crossAxisCount,
+                items:
+                    services
+                        .map(
+                          (service) => HomeServicesListItem(
+                            service: service,
+                            onPressed:
+                                (s) =>
+                                    context.pushWidget(ServiceDetailsPage(s)),
+                          ),
+                        )
+                        .toList(),
+              ).px12(),
+          ]).py12(),
     );
   }
 }

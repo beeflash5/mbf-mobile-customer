@@ -50,13 +50,14 @@ class CustomHorizontalListView extends StatelessWidget {
   }
 
   Widget _getBody() {
-    final contentBody = this.isLoading
-        ? this.loadingWidget ?? LoadingShimmer()
-        : this.hasError
+    final contentBody =
+        this.isLoading
+            ? this.loadingWidget ?? LoadingShimmer()
+            : this.hasError
             ? this.errorWidget ?? EmptyState(description: "There is an error")
             : this.itemsViews.isEmpty
-                ? this.emptyWidget ?? UiSpacer.emptySpace()
-                : _getListView();
+            ? this.emptyWidget ?? UiSpacer.emptySpace()
+            : _getListView();
 
     return contentBody;
   }

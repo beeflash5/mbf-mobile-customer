@@ -54,39 +54,44 @@ class CustomButton extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           backgroundColor: this.color ?? AppColor.primaryColor,
           disabledBackgroundColor: this.loading ? AppColor.primaryColor : null,
-          shape: this.shape ??
+          shape:
+              this.shape ??
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(this.shapeRadius ?? Vx.dp4),
               ),
         ),
-        onPressed: (this.loading || this.onPressed == null)
-            ? null
-            : () {
-                //remove focus from any input field
-                FocusScope.of(context).unfocus();
-                this.onPressed!();
-              },
-        child: this.loading
-            ? BusyIndicator(color: Colors.white)
-            : Container(
-                padding: this.padding,
-                width: null, //double.infinity,
-                height: this.isFixedHeight ? Vx.dp48 : (this.height ?? Vx.dp48),
-                child: this.child ??
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        this.icon != null
-                            ? Icon(this.icon,
-                                    color: this.iconColor ?? Colors.white,
-                                    size: this.iconSize ?? 20,
-                                    textDirection:
-                                        translator.activeLocale.languageCode ==
-                                                "ar"
-                                            ? TextDirection.rtl
-                                            : TextDirection.ltr)
-                                .pOnly(
+        onPressed:
+            (this.loading || this.onPressed == null)
+                ? null
+                : () {
+                  //remove focus from any input field
+                  FocusScope.of(context).unfocus();
+                  this.onPressed!();
+                },
+        child:
+            this.loading
+                ? BusyIndicator(color: Colors.white)
+                : Container(
+                  padding: this.padding,
+                  width: null, //double.infinity,
+                  height:
+                      this.isFixedHeight ? Vx.dp48 : (this.height ?? Vx.dp48),
+                  child:
+                      this.child ??
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          this.icon != null
+                              ? Icon(
+                                this.icon,
+                                color: this.iconColor ?? Colors.white,
+                                size: this.iconSize ?? 20,
+                                textDirection:
+                                    translator.activeLocale.languageCode == "ar"
+                                        ? TextDirection.rtl
+                                        : TextDirection.ltr,
+                              ).pOnly(
                                 right:
                                     translator.activeLocale.languageCode == "ar"
                                         ? Vx.dp0
@@ -96,21 +101,23 @@ class CustomButton extends StatelessWidget {
                                         ? Vx.dp0
                                         : Vx.dp5,
                               )
-                            : UiSpacer.emptySpace(),
-                        this.title.isNotEmptyAndNotNull
-                            ? Text(
+                              : UiSpacer.emptySpace(),
+                          this.title.isNotEmptyAndNotNull
+                              ? Text(
                                 "${this.title}",
                                 textAlign: TextAlign.center,
-                                style: this.titleStyle ??
+                                style:
+                                    this.titleStyle ??
                                     AppTextStyle.h3TitleTextStyle(
                                       color: Utils.textColorByColor(
-                                          this.color ?? AppColor.primaryColor),
+                                        this.color ?? AppColor.primaryColor,
+                                      ),
                                     ),
                               ).centered()
-                            : UiSpacer.emptySpace(),
-                      ],
-                    ),
-              ),
+                              : UiSpacer.emptySpace(),
+                        ],
+                      ),
+                ),
       ),
     );
   }

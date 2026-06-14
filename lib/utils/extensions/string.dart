@@ -8,7 +8,7 @@ extension NumberParsing on dynamic {
   String currencyFormat([String? currencySymbol]) {
     final uiConfig = AppStrings.uiConfig;
     final currencyConfig = uiConfig != null ? uiConfig["currency"] : null;
-    
+
     final thousandSeparator = currencyConfig?["format"] ?? ".";
     final decimalSeparator = currencyConfig?["decimal_format"] ?? ",";
     final currencylOCATION = currencyConfig?["location"] ?? 'left';
@@ -16,10 +16,10 @@ extension NumberParsing on dynamic {
     if (this.toString().contains(AppStrings.currentCurrencySymbol)) {
       currencySymbol = AppStrings.currentCurrencySymbol;
     }
-    
+
     String valStr = this.toString().replaceAll(" ", "");
     String targetSymbol = currencySymbol ?? AppStrings.currencySymbol;
-    
+
     String numberPart = valStr;
     if (valStr.contains(targetSymbol)) {
       numberPart = valStr.replaceAll(targetSymbol, "");
@@ -55,7 +55,7 @@ extension NumberParsing on dynamic {
   String currencyValueFormat() {
     final uiConfig = AppStrings.uiConfig;
     final currencyConfig = uiConfig != null ? uiConfig["currency"] : null;
-    
+
     final thousandSeparator = currencyConfig?["format"] ?? ".";
     final decimalSeparator = currencyConfig?["decimal_format"] ?? ",";
     String values = this.toString().replaceAll(" ", "");
@@ -74,7 +74,7 @@ extension NumberParsing on dynamic {
       thousandSeparator: thousandSeparator,
       decimalSeparator: decimalSeparator,
     );
-    
+
     return CurrencyFormatter.format(
       parsedValue ?? values,
       currencySettings,

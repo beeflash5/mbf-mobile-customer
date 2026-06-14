@@ -142,20 +142,20 @@ class _BasePageVendorState extends State<BasePageVendor> {
                 ]),
 
                 //cart view
-                if(widget.showCartView)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: MeasureSize(
-                    onChange: (size) {
-                      setState(() {
-                        bottomPaddingSize = size.height;
-                      });
-                    },
-                    child: GoToCartView(),
+                if (widget.showCartView)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: MeasureSize(
+                      onChange: (size) {
+                        setState(() {
+                          bottomPaddingSize = size.height;
+                        });
+                      },
+                      child: GoToCartView(),
+                    ),
                   ),
-                ),
               ],
             ).safeArea(top: false),
             bottomNavigationBar: widget.bottomNavigationBar,

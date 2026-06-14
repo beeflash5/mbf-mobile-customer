@@ -23,8 +23,9 @@ class TaxiDiscountSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     return VStack(
       [
         HStack(
@@ -32,49 +33,41 @@ class TaxiDiscountSection extends ConsumerWidget {
             "Add Coupon".tr().text.make().expand(),
             UiSpacer.hSpace(5),
             if (!fullView)
-              Icon(
-                Icons.add,
-                color: AppColor.primaryColor,
-                size: 20,
-              )
+              Icon(Icons.add, color: AppColor.primaryColor, size: 20)
             else
               UiSpacer.emptySpace(),
           ],
           crossAlignment: CrossAxisAlignment.center,
           alignment: MainAxisAlignment.center,
         ).p(!fullView ? 10 : 0),
+        Visibility(visible: fullView, child: UiSpacer.verticalSpace(space: 10)),
         Visibility(
           visible: fullView,
-          child: UiSpacer.verticalSpace(space: 10),
-        ),
-        Visibility(
-          visible: fullView,
-          child: HStack(
-            [
-              CustomTextFormField(
-                hintText: "Coupon Code".tr(),
-                textEditingController: taxiController.couponTEC,
-                errorText: taxiState.couponError?.toString(),
-                onChanged: taxiController.couponCodeChange,
-              ).expand(flex: 2),
-              UiSpacer.horizontalSpace(),
-              Column(
-                children: [
-                  CustomButton(
-                    title: "Apply".tr(),
-                    isFixedHeight: true,
-                    loading: taxiState.couponBusy,
-                    onPressed: taxiState.canApplyCoupon
-                        ? taxiController.applyCoupon
-                        : null,
-                  ).h(Vx.dp56),
-                  taxiState.couponError != null
-                      ? UiSpacer.verticalSpace(space: 12)
-                      : UiSpacer.verticalSpace(space: 1),
-                ],
-              ).expand(),
-            ],
-          ),
+          child: HStack([
+            CustomTextFormField(
+              hintText: "Coupon Code".tr(),
+              textEditingController: taxiController.couponTEC,
+              errorText: taxiState.couponError?.toString(),
+              onChanged: taxiController.couponCodeChange,
+            ).expand(flex: 2),
+            UiSpacer.horizontalSpace(),
+            Column(
+              children: [
+                CustomButton(
+                  title: "Apply".tr(),
+                  isFixedHeight: true,
+                  loading: taxiState.couponBusy,
+                  onPressed:
+                      taxiState.canApplyCoupon
+                          ? taxiController.applyCoupon
+                          : null,
+                ).h(Vx.dp56),
+                taxiState.couponError != null
+                    ? UiSpacer.verticalSpace(space: 12)
+                    : UiSpacer.verticalSpace(space: 1),
+              ],
+            ).expand(),
+          ]),
         ),
       ],
       crossAlignment: CrossAxisAlignment.center,

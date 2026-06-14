@@ -34,7 +34,6 @@ class BannerTops extends ConsumerStatefulWidget {
 }
 
 class _BannerTopsState extends ConsumerState<BannerTops> {
-
   @override
   Widget build(BuildContext context) {
     final args = (
@@ -60,96 +59,101 @@ class _BannerTopsState extends ConsumerState<BannerTops> {
             autoPlayCurve: Curves.easeInOut,
             disableCenter: widget.disableCenter,
           ),
-          items: banners.map((banner) {
-            return GestureDetector(
-              onTap: () => BannerHelper.bannerSelected(context, banner),
-              child: SizedBox(
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(widget.itemRadius ?? 20),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      BannerListItem(
-                        radius: widget.itemRadius ?? 20,
-                        imageUrl: banner.imageUrl ?? '',
-                        onPressed: () =>
-                            BannerHelper.bannerSelected(context, banner),
+          items:
+              banners.map((banner) {
+                return GestureDetector(
+                  onTap: () => BannerHelper.bannerSelected(context, banner),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        widget.itemRadius ?? 20,
                       ),
-                      Positioned.fill(
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.black.withOpacity(0.80),
-                                Colors.black.withOpacity(0.60),
-                                Colors.black.withOpacity(0.40),
-                              ],
-                            ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          BannerListItem(
+                            radius: widget.itemRadius ?? 20,
+                            imageUrl: banner.imageUrl ?? '',
+                            onPressed:
+                                () => BannerHelper.bannerSelected(
+                                  context,
+                                  banner,
+                                ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 20,
-                        right: 20,
-                        bottom: 20,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Travel Like a Local in Bali",
-                              maxLines: 2,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                height: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "Discover authentic experiences, book directly with locals.",
-                              maxLines: 2,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.92),
-                                fontSize: 13,
-                                height: 1.5,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18,
-                                vertical: 12,
-                              ),
+                          Positioned.fill(
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
                               decoration: BoxDecoration(
-                                color: context.primaryColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                "Explore Experiences",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                                borderRadius: BorderRadius.circular(20),
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    Colors.black.withOpacity(0.80),
+                                    Colors.black.withOpacity(0.60),
+                                    Colors.black.withOpacity(0.40),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                            left: 20,
+                            right: 20,
+                            bottom: 20,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Travel Like a Local in Bali",
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Discover authentic experiences, book directly with locals.",
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.92),
+                                    fontSize: 13,
+                                    height: 1.5,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 18,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: context.primaryColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Text(
+                                    "Explore Experiences",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
+                );
+              }).toList(),
         ),
       ),
     );

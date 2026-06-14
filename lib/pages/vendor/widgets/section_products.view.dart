@@ -66,8 +66,7 @@ class SectionProductsView extends ConsumerWidget {
       byLocation: byLocation,
       isHome: false,
     );
-    final asyncProducts =
-        ref.watch(productsListingControllerProvider(args));
+    final asyncProducts = ref.watch(productsListingControllerProvider(args));
     final products = asyncProducts.valueOrNull ?? const <Product>[];
     final isLoading = asyncProducts.isLoading;
 
@@ -108,8 +107,7 @@ class SectionProductsView extends ConsumerWidget {
             itemView = GroceryProductListItem(
               product: product,
               onPressed: (p) => _openProduct(context, p),
-              qtyUpdated: (p, q) =>
-                  CartHelper.addToCartDirectly(context, p, q),
+              qtyUpdated: (p, q) => CartHelper.addToCartDirectly(context, p, q),
             );
           }
           itemView = CommerceProductListItem(product, height: 80);
@@ -118,8 +116,7 @@ class SectionProductsView extends ConsumerWidget {
         return itemView;
       },
       emptyWidget: EmptyVendor(),
-      separatorBuilder:
-          separator != null ? (ctx, index) => separator! : null,
+      separatorBuilder: separator != null ? (ctx, index) => separator! : null,
     );
 
     return CustomVisibilty(
@@ -127,8 +124,7 @@ class SectionProductsView extends ConsumerWidget {
         visible: !isLoading && products.isNotEmpty,
         child: VStack([
           Padding(
-            padding:
-                titlePadding ?? const EdgeInsets.symmetric(horizontal: 12),
+            padding: titlePadding ?? const EdgeInsets.symmetric(horizontal: 12),
             child: SectionTitle(title),
           ),
           if (products.isEmpty)

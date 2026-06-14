@@ -17,20 +17,13 @@ class WalletRequest extends ApiService {
   }
 
   Future<String> walletTopup(String amount, {int? paymentMethodId}) async {
-    Map<String, dynamic> params = {
-      "amount": amount,
-    };
+    Map<String, dynamic> params = {"amount": amount};
 
     if (paymentMethodId != null) {
-      params.addAll({
-        "payment_method_id": paymentMethodId,
-      });
+      params.addAll({"payment_method_id": paymentMethodId});
     }
 
-    final apiResult = await post(
-      Api.walletTopUp,
-      params,
-    );
+    final apiResult = await post(Api.walletTopUp, params);
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       return apiResponse.body["link"];
@@ -40,8 +33,10 @@ class WalletRequest extends ApiService {
   }
 
   Future<List<WalletTransaction>> walletTransactions({int page = 1}) async {
-    final apiResult =
-        await get(Api.walletTransactions, queryParameters: {"page": page});
+    final apiResult = await get(
+      Api.walletTransactions,
+      queryParameters: {"page": page},
+    );
 
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
@@ -61,9 +56,7 @@ class WalletRequest extends ApiService {
   Future<ApiResponse> getWalletAddress(String keyword) async {
     final apiResult = await get(
       Api.walletAddressesSearch,
-      queryParameters: {
-        "keyword": keyword,
-      },
+      queryParameters: {"keyword": keyword},
     );
     return ApiResponse.fromResponse(apiResult);
   }
@@ -73,14 +66,11 @@ class WalletRequest extends ApiService {
     String walletAddress,
     String password,
   ) async {
-    final apiResult = await post(
-      Api.walletTransfer,
-      {
-        "wallet_address": walletAddress,
-        "amount": amount,
-        "password": password,
-      },
-    );
+    final apiResult = await post(Api.walletTransfer, {
+      "wallet_address": walletAddress,
+      "amount": amount,
+      "password": password,
+    });
     return ApiResponse.fromResponse(apiResult);
   }
 }

@@ -27,10 +27,11 @@ class SingleParcelDeliveryStopsView extends StatelessWidget {
           hintText: "Pickup Location".tr(),
           tec: controller.fromTEC,
           onInputTap: () => controller.handlePickupStop(context),
-          formValidator: (value) => FormValidator.validateCustom(
-            value,
-            name: "Pickup Location".tr(),
-          ),
+          formValidator:
+              (value) => FormValidator.validateCustom(
+                value,
+                name: "Pickup Location".tr(),
+              ),
         ),
         UiSpacer.formVerticalSpace(),
         ParcelFormInput(
@@ -40,10 +41,11 @@ class SingleParcelDeliveryStopsView extends StatelessWidget {
           hintText: "Dropoff Location".tr(),
           tec: controller.toTEC,
           onInputTap: () => controller.handleDropoffStop(context),
-          formValidator: (value) => FormValidator.validateCustom(
-            value,
-            name: "Dropoff Location".tr(),
-          ),
+          formValidator:
+              (value) => FormValidator.validateCustom(
+                value,
+                name: "Dropoff Location".tr(),
+              ),
         ),
         UiSpacer.formVerticalSpace(),
       ],

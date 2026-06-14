@@ -27,18 +27,15 @@ class OrderBottomSheet extends StatelessWidget {
       return UiSpacer.emptySpace();
     }
     return SafeArea(
-      child: VStack(
-        [
-          CustomButton(
-            title: "Cancel Order".tr(),
-            color: AppColor.closeColor,
-            icon: Icons.close,
-            onPressed: onCancel,
-            loading: orderBusy,
-          ).p20(),
-        ],
-        crossAlignment: CrossAxisAlignment.center,
-      ),
+      child: VStack([
+        CustomButton(
+          title: "Cancel Order".tr(),
+          color: AppColor.closeColor,
+          icon: Icons.close,
+          onPressed: onCancel,
+          loading: orderBusy,
+        ).p20(),
+      ], crossAlignment: CrossAxisAlignment.center),
     ).box.shadow.color(context.theme.colorScheme.surface).make().wFull(context);
   }
 }

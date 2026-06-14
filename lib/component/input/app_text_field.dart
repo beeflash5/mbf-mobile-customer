@@ -64,7 +64,8 @@ class AppTextField extends StatelessWidget {
       borderSide: BorderSide.none,
     );
     // Argumen -> InputDecorationTheme (auto dark/light) -> fallback hardcoded.
-    final resolvedFill = fillColor ??
+    final resolvedFill =
+        fillColor ??
         Theme.of(context).inputDecorationTheme.fillColor ??
         AppColor.inputFillColor;
 
@@ -93,8 +94,10 @@ class AppTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: resolvedFill,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
         border: border,
         enabledBorder: border,
         focusedBorder: border.copyWith(

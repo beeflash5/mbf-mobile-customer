@@ -11,15 +11,13 @@ class FavouriteRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       List<Product> products = [];
-      apiResponse.data.forEach(
-        (jsonObject) {
-          try {
-            products.add(Product.fromJson(jsonObject["product"]));
-          } catch (error) {
-            print("error: $error");
-          }
-        },
-      );
+      apiResponse.data.forEach((jsonObject) {
+        try {
+          products.add(Product.fromJson(jsonObject["product"]));
+        } catch (error) {
+          print("error: $error");
+        }
+      });
       return products;
     }
 
@@ -28,12 +26,7 @@ class FavouriteRequest extends ApiService {
 
   //
   Future<ApiResponse> makeFavourite(int id) async {
-    final apiResult = await post(
-      Api.favourites,
-      {
-        "product_id": id,
-      },
-    );
+    final apiResult = await post(Api.favourites, {"product_id": id});
 
     return ApiResponse.fromResponse(apiResult);
   }
@@ -50,15 +43,13 @@ class FavouriteRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       List<Vendor> dataset = [];
-      apiResponse.data.forEach(
-        (jsonObject) {
-          try {
-            dataset.add(Vendor.fromJson(jsonObject["vendor"]));
-          } catch (error) {
-            print("error: $error");
-          }
-        },
-      );
+      apiResponse.data.forEach((jsonObject) {
+        try {
+          dataset.add(Vendor.fromJson(jsonObject["vendor"]));
+        } catch (error) {
+          print("error: $error");
+        }
+      });
       return dataset;
     }
 
@@ -67,12 +58,7 @@ class FavouriteRequest extends ApiService {
 
   //
   Future<ApiResponse> makeFavouriteVendor(int id) async {
-    final apiResult = await post(
-      Api.favouriteVendors,
-      {
-        "vendor_id": id,
-      },
-    );
+    final apiResult = await post(Api.favouriteVendors, {"vendor_id": id});
 
     return ApiResponse.fromResponse(apiResult);
   }

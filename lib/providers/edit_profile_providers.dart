@@ -48,8 +48,9 @@ class EditProfileFailure extends EditProfileResult {
   final String message;
 }
 
-final editProfileAuthRequestProvider =
-    Provider<AuthRequest>((_) => AuthRequest());
+final editProfileAuthRequestProvider = Provider<AuthRequest>(
+  (_) => AuthRequest(),
+);
 
 class EditProfileController extends AsyncNotifier<EditProfileState> {
   @override
@@ -100,10 +101,9 @@ class EditProfileController extends AsyncNotifier<EditProfileState> {
       if (res.allGood) {
         await AuthServices.saveUser(res.body['user'], reload: false);
         final updated = await AuthServices.getCurrentUser();
-        state = AsyncData(EditProfileState(
-          currentUser: updated,
-          selectedCountry: country,
-        ));
+        state = AsyncData(
+          EditProfileState(currentUser: updated, selectedCountry: country),
+        );
         return EditProfileSuccess(res.message ?? 'Profile updated');
       }
       // restore last good state
@@ -118,5 +118,5 @@ class EditProfileController extends AsyncNotifier<EditProfileState> {
 
 final editProfileControllerProvider =
     AsyncNotifierProvider<EditProfileController, EditProfileState>(
-  EditProfileController.new,
-);
+      EditProfileController.new,
+    );

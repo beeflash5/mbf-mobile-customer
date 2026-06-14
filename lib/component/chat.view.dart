@@ -1,6 +1,6 @@
 // import 'dart:typed_data';
 
-// 
+//
 // import 'package:flutter/material.dart';
 // import 'package:fuodz/utils/app_colors.dart';
 // import 'package:fuodz/services/chat.request.dart';

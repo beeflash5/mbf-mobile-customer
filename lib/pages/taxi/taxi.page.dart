@@ -33,9 +33,7 @@ class _TaxiPageState extends ConsumerState<TaxiPage>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(taxiControllerProvider(widget.vendorType).notifier)
-          .initialise();
+      ref.read(taxiControllerProvider(widget.vendorType).notifier).initialise();
     });
   }
 
@@ -55,8 +53,9 @@ class _TaxiPageState extends ConsumerState<TaxiPage>
   @override
   Widget build(BuildContext context) {
     final taxiState = ref.watch(taxiControllerProvider(widget.vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(widget.vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(widget.vendorType).notifier,
+    );
     return BasePage(
       showAppBar: false,
       showLeadingAction: !AppStrings.isSingleVendorMode,
@@ -70,8 +69,9 @@ class _TaxiPageState extends ConsumerState<TaxiPage>
           SafeArea(
             child: GoogleMap(
               initialCameraPosition: taxiController.mapCameraPosition,
-              onMapCreated: (controller) =>
-                  taxiController.onMapCreated(controller, context),
+              onMapCreated:
+                  (controller) =>
+                      taxiController.onMapCreated(controller, context),
               padding: taxiState.googleMapPadding,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: false,
@@ -90,10 +90,10 @@ class _TaxiPageState extends ConsumerState<TaxiPage>
               color: AppColor.primaryColor,
               bgColor: Utils.textColorByTheme(),
             ).safeArea().positioned(
-                  top: 0,
-                  left: !Utils.isArabic ? 20 : null,
-                  right: Utils.isArabic ? 20 : null,
-                ),
+              top: 0,
+              left: !Utils.isArabic ? 20 : null,
+              right: Utils.isArabic ? 20 : null,
+            ),
           ),
           UnSupportedTaxiLocationView(vendorType: widget.vendorType),
           NewTaxiOrderLocationEntryView(vendorType: widget.vendorType),

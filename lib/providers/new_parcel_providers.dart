@@ -133,40 +133,49 @@ class NewParcelState {
       packageCheckout: packageCheckout ?? this.packageCheckout,
       activeStep: activeStep ?? this.activeStep,
       packageTypes: packageTypes ?? this.packageTypes,
-      selectedPackageType: identical(selectedPackageType, _sentinel)
-          ? this.selectedPackageType
-          : selectedPackageType as PackageType?,
+      selectedPackageType:
+          identical(selectedPackageType, _sentinel)
+              ? this.selectedPackageType
+              : selectedPackageType as PackageType?,
       vendors: vendors ?? this.vendors,
-      selectedVendor: identical(selectedVendor, _sentinel)
-          ? this.selectedVendor
-          : selectedVendor as Vendor?,
+      selectedVendor:
+          identical(selectedVendor, _sentinel)
+              ? this.selectedVendor
+              : selectedVendor as Vendor?,
       requireParcelInfo: requireParcelInfo ?? this.requireParcelInfo,
-      pickupLocation: identical(pickupLocation, _sentinel)
-          ? this.pickupLocation
-          : pickupLocation as DeliveryAddress?,
-      dropoffLocation: identical(dropoffLocation, _sentinel)
-          ? this.dropoffLocation
-          : dropoffLocation as DeliveryAddress?,
-      selectedPickupDate: identical(selectedPickupDate, _sentinel)
-          ? this.selectedPickupDate
-          : selectedPickupDate as DateTime?,
-      pickupDate: identical(pickupDate, _sentinel)
-          ? this.pickupDate
-          : pickupDate as String?,
-      selectedPickupTime: identical(selectedPickupTime, _sentinel)
-          ? this.selectedPickupTime
-          : selectedPickupTime as TimeOfDay?,
-      pickupTime: identical(pickupTime, _sentinel)
-          ? this.pickupTime
-          : pickupTime as String?,
+      pickupLocation:
+          identical(pickupLocation, _sentinel)
+              ? this.pickupLocation
+              : pickupLocation as DeliveryAddress?,
+      dropoffLocation:
+          identical(dropoffLocation, _sentinel)
+              ? this.dropoffLocation
+              : dropoffLocation as DeliveryAddress?,
+      selectedPickupDate:
+          identical(selectedPickupDate, _sentinel)
+              ? this.selectedPickupDate
+              : selectedPickupDate as DateTime?,
+      pickupDate:
+          identical(pickupDate, _sentinel)
+              ? this.pickupDate
+              : pickupDate as String?,
+      selectedPickupTime:
+          identical(selectedPickupTime, _sentinel)
+              ? this.selectedPickupTime
+              : selectedPickupTime as TimeOfDay?,
+      pickupTime:
+          identical(pickupTime, _sentinel)
+              ? this.pickupTime
+              : pickupTime as String?,
       isScheduled: isScheduled ?? this.isScheduled,
       availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
       openedRecipientFormIndex:
           openedRecipientFormIndex ?? this.openedRecipientFormIndex,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       canApplyCoupon: canApplyCoupon ?? this.canApplyCoupon,
       coupon: identical(coupon, _sentinel) ? this.coupon : coupon as Coupon?,
       isBusy: isBusy ?? this.isBusy,
@@ -175,12 +184,12 @@ class NewParcelState {
       paymentBusy: paymentBusy ?? this.paymentBusy,
       packageCheckoutBusy: packageCheckoutBusy ?? this.packageCheckoutBusy,
       couponBusy: couponBusy ?? this.couponBusy,
-      couponError: identical(couponError, _sentinel)
-          ? this.couponError
-          : couponError,
-      deliveryaddress: identical(deliveryaddress, _sentinel)
-          ? this.deliveryaddress
-          : deliveryaddress as DeliveryAddress?,
+      couponError:
+          identical(couponError, _sentinel) ? this.couponError : couponError,
+      deliveryaddress:
+          identical(deliveryaddress, _sentinel)
+              ? this.deliveryaddress
+              : deliveryaddress as DeliveryAddress?,
     );
   }
 
@@ -259,15 +268,15 @@ class NewParcelController
 
   Future<void> initialise() async {
     await CartServices.clearCart();
-    _currentLocationChangeStream =
-        LocationService.currenctAddressSubject.stream.listen((location) async {
-      var addr = state.deliveryaddress ?? DeliveryAddress();
-      addr.address = location.addressLine;
-      addr.latitude = location.coordinates?.latitude;
-      addr.longitude = location.coordinates?.longitude;
-      addr = await LocationPickerHelper.getLocationCityName(addr);
-      state = state.copyWith(deliveryaddress: addr);
-    });
+    _currentLocationChangeStream = LocationService.currenctAddressSubject.stream
+        .listen((location) async {
+          var addr = state.deliveryaddress ?? DeliveryAddress();
+          addr.address = location.addressLine;
+          addr.latitude = location.coordinates?.latitude;
+          addr.longitude = location.coordinates?.longitude;
+          addr = await LocationPickerHelper.getLocationCityName(addr);
+          state = state.copyWith(deliveryaddress: addr);
+        });
     if (AppStrings.enableParcelMultipleStops) {
       state.packageCheckout.stopsLocation = [];
       addNewStop();
@@ -288,7 +297,11 @@ class NewParcelController
   }
 
   Future<void> fetchParcelVendors() async {
-    state = state.copyWith(vendors: [], selectedVendor: null, vendorsBusy: true);
+    state = state.copyWith(
+      vendors: [],
+      selectedVendor: null,
+      vendorsBusy: true,
+    );
     try {
       final allStops = getAllStops();
       final vendors = await _vendorRequest.fetchParcelVendors(
@@ -528,7 +541,8 @@ class NewParcelController
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(
         Duration(
-          days: state.selectedVendor?.packageTypesPricing.first.maxBookingDays ??
+          days:
+              state.selectedVendor?.packageTypesPricing.first.maxBookingDays ??
               7,
         ),
       ),
@@ -538,9 +552,10 @@ class NewParcelController
       final pickupDate = Jiffy.parseFromMillisecondsSinceEpoch(
         result.millisecondsSinceEpoch,
       ).format(pattern: "yyyy-MM-dd");
-      dateTEC.text = Jiffy.parseFromMillisecondsSinceEpoch(
-        result.millisecondsSinceEpoch,
-      ).yMMMMd;
+      dateTEC.text =
+          Jiffy.parseFromMillisecondsSinceEpoch(
+            result.millisecondsSinceEpoch,
+          ).yMMMMd;
       state.packageCheckout.date = pickupDate;
       state = state.copyWith(
         selectedPickupDate: result,
@@ -792,9 +807,7 @@ class NewParcelController
   }
 
   void setupReceiverPaymentMethod() {
-    final cash = state.paymentMethods.firstOrNullWhere(
-      (e) => e.isCash == 1,
-    );
+    final cash = state.paymentMethods.firstOrNullWhere((e) => e.isCash == 1);
     if (cash != null) {
       changeSelectedPaymentMethod(cash);
     }
@@ -803,5 +816,5 @@ class NewParcelController
 
 final newParcelControllerProvider = NotifierProvider.autoDispose
     .family<NewParcelController, NewParcelState, VendorType>(
-  NewParcelController.new,
-);
+      NewParcelController.new,
+    );

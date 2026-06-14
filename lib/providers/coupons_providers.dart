@@ -3,20 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuodz/models/coupon.dart';
 import 'package:fuodz/services/coupon.request.dart';
 
-final couponRequestProvider =
-    Provider<CouponRequest>((_) => CouponRequest());
+final couponRequestProvider = Provider<CouponRequest>((_) => CouponRequest());
 
 /// List coupons. Family arg = vendorTypeId (0 = no filter).
-final couponsByVendorTypeProvider =
-    FutureProvider.family<List<Coupon>, int>((ref, vendorTypeId) async {
-  return ref.read(couponRequestProvider).fetchCoupons(
-    params: vendorTypeId == 0 ? null : {'vendor_type_id': vendorTypeId},
-  );
+final couponsByVendorTypeProvider = FutureProvider.family<List<Coupon>, int>((
+  ref,
+  vendorTypeId,
+) async {
+  return ref
+      .read(couponRequestProvider)
+      .fetchCoupons(
+        params: vendorTypeId == 0 ? null : {'vendor_type_id': vendorTypeId},
+      );
 });
 
 /// Detail coupon dengan kemampuan refresh. Family arg = couponId.
-class CouponDetailsController
-    extends FamilyAsyncNotifier<Coupon, int> {
+class CouponDetailsController extends FamilyAsyncNotifier<Coupon, int> {
   late int _id;
 
   @override
@@ -35,5 +37,5 @@ class CouponDetailsController
 
 final couponDetailsControllerProvider =
     AsyncNotifierProvider.family<CouponDetailsController, Coupon, int>(
-  CouponDetailsController.new,
-);
+      CouponDetailsController.new,
+    );

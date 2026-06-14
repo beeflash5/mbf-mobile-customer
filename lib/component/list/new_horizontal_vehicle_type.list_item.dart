@@ -26,49 +26,49 @@ class NewHorizontalVehicleTypeListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     final selected = taxiState.selectedVehicleType?.id == vehicleType.id;
-    final currencySymbol = vehicleType.currency != null
-        ? vehicleType.currency?.symbol
-        : AppStrings.currentCurrencySymbol;
+    final currencySymbol =
+        vehicleType.currency != null
+            ? vehicleType.currency?.symbol
+            : AppStrings.currentCurrencySymbol;
 
     return VStack(
-      [
-        CustomImage(
-          imageUrl: vehicleType.photo,
-          height: context.percentWidth * 12,
-          boxFit: BoxFit.fitWidth,
-        ).centered(),
-        Sizes.paddingSizeDefault.heightBox,
-        VStack([
-          CurrencyHStack([
-            " $currencySymbol ".text.lg.bold.make(),
-            " ${vehicleType.total.convertIf(vehicleType.currency == null)} "
-                .currencyValueFormat()
-                .text
-                .lg
-                .bold
-                .make(),
-          ]),
-          if (vehicleType.hasSurge)
-            HStack([
-              Icon(
-                Icons.trending_up_outlined,
-                color: Colors.red.shade300,
-                size: 12,
-              ),
-              " ${vehicleType.surgeRate}x ".text.sm.red500.bold.make(),
+          [
+            CustomImage(
+              imageUrl: vehicleType.photo,
+              height: context.percentWidth * 12,
+              boxFit: BoxFit.fitWidth,
+            ).centered(),
+            Sizes.paddingSizeDefault.heightBox,
+            VStack([
+              CurrencyHStack([
+                " $currencySymbol ".text.lg.bold.make(),
+                " ${vehicleType.total.convertIf(vehicleType.currency == null)} "
+                    .currencyValueFormat()
+                    .text
+                    .lg
+                    .bold
+                    .make(),
+              ]),
+              if (vehicleType.hasSurge)
+                HStack([
+                  Icon(
+                    Icons.trending_up_outlined,
+                    color: Colors.red.shade300,
+                    size: 12,
+                  ),
+                  " ${vehicleType.surgeRate}x ".text.sm.red500.bold.make(),
+                ]),
             ]),
-        ]),
-        vehicleType.name.text.bold.maxLines(1).ellipsis.make(),
-      ],
-      alignment: MainAxisAlignment.center,
-      crossAlignment: CrossAxisAlignment.center,
-      spacing: Sizes.paddingSizeExtraSmall,
-    )
-        .box
-        .p4
+            vehicleType.name.text.bold.maxLines(1).ellipsis.make(),
+          ],
+          alignment: MainAxisAlignment.center,
+          crossAlignment: CrossAxisAlignment.center,
+          spacing: Sizes.paddingSizeExtraSmall,
+        ).box.p4
         .border(
           color: selected ? AppColor.primaryColor : Colors.grey.shade200,
           width: 1,

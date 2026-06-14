@@ -22,20 +22,20 @@ class What3wordsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return (AppStrings.isWhat3wordsApiKey
             ? VStack([
-                CustomTextFormField(
-                  labelText: "What3words " + "Name".tr(),
-                  textEditingController: what3wordsTEC,
-                  onFieldSubmitted: onSubmitted,
-                ),
-                "Get What3words name from this link"
-                    .tr()
-                    .text
-                    .sm
-                    .underline
-                    .make()
-                    .py2()
-                    .onInkTap(onShare),
-              ])
+              CustomTextFormField(
+                labelText: "What3words " + "Name".tr(),
+                textEditingController: what3wordsTEC,
+                onFieldSubmitted: onSubmitted,
+              ),
+              "Get What3words name from this link"
+                  .tr()
+                  .text
+                  .sm
+                  .underline
+                  .make()
+                  .py2()
+                  .onInkTap(onShare),
+            ])
             : UiSpacer.emptySpace())
         .py16();
   }

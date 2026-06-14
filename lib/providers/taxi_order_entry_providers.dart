@@ -58,12 +58,14 @@ class TaxiOrderEntryState {
           shortPreviousAddressesList ?? this.shortPreviousAddressesList,
       customViewHeight: customViewHeight ?? this.customViewHeight,
       showChooseOnMap: showChooseOnMap ?? this.showChooseOnMap,
-      selectedDate: identical(selectedDate, _sentinel)
-          ? this.selectedDate
-          : selectedDate as DateTime?,
-      selectedTime: identical(selectedTime, _sentinel)
-          ? this.selectedTime
-          : selectedTime as TimeOfDay?,
+      selectedDate:
+          identical(selectedDate, _sentinel)
+              ? this.selectedDate
+              : selectedDate as DateTime?,
+      selectedTime:
+          identical(selectedTime, _sentinel)
+              ? this.selectedTime
+              : selectedTime as TimeOfDay?,
       places: places ?? this.places,
       previousAddressesBusy:
           previousAddressesBusy ?? this.previousAddressesBusy,
@@ -120,7 +122,9 @@ class TaxiOrderEntryController
     try {
       final list = await _taxiRequest.locationHistory();
       final shortList =
-          list.length > 3 ? list.sublist(0, 3) : List<TaxiOrderLocationHistory>.from(list);
+          list.length > 3
+              ? list.sublist(0, 3)
+              : List<TaxiOrderLocationHistory>.from(list);
       state = state.copyWith(
         previousAddresses: list,
         shortPreviousAddressesList: shortList,
@@ -136,7 +140,9 @@ class TaxiOrderEntryController
   }
 
   void updateLoadingHeight() {
-    state = state.copyWith(customViewHeight: AppUISizes.taxiNewOrderHistoryHeight);
+    state = state.copyWith(
+      customViewHeight: AppUISizes.taxiNewOrderHistoryHeight,
+    );
   }
 
   void resetStateViewHeight([double height = 0]) {
@@ -256,10 +262,7 @@ class TaxiOrderEntryController
     });
   }
 
-  Future<void> onAddressSelected(
-    BuildContext context,
-    Address address,
-  ) async {
+  Future<void> onAddressSelected(BuildContext context, Address address) async {
     AlertService.showLoading();
     try {
       final filled = await GeocoderService().fecthPlaceDetails(address);
@@ -315,5 +318,5 @@ class TaxiOrderEntryController
 
 final taxiOrderEntryControllerProvider = NotifierProvider.autoDispose
     .family<TaxiOrderEntryController, TaxiOrderEntryState, VendorType>(
-  TaxiOrderEntryController.new,
-);
+      TaxiOrderEntryController.new,
+    );

@@ -50,18 +50,19 @@ class _NewDeliveryAddressesPageState
       context: context,
       isScrollControlled: true,
       isDismissible: false,
-      builder: (context) => AddressSearchView(
-        placeSearchTEC: _placeSearchTEC,
-        addressSelected: (prediction) async {
-          await DeliveryAddressHelper.applyPickerResult(
-            prediction,
-            _deliveryAddress,
-            _addressTEC,
-          );
-          if (mounted) setState(() {});
-        },
-        selectOnMap: _pickOnMap,
-      ),
+      builder:
+          (context) => AddressSearchView(
+            placeSearchTEC: _placeSearchTEC,
+            addressSelected: (prediction) async {
+              await DeliveryAddressHelper.applyPickerResult(
+                prediction,
+                _deliveryAddress,
+                _addressTEC,
+              );
+              if (mounted) setState(() {});
+            },
+            selectOnMap: _pickOnMap,
+          ),
     );
   }
 
@@ -135,10 +136,11 @@ class _NewDeliveryAddressesPageState
             labelText: "Address".tr(),
             isReadOnly: true,
             textEditingController: _addressTEC,
-            validator: (value) => FormValidator.validateEmpty(
-              value,
-              errorTitle: "Address".tr(),
-            ),
+            validator:
+                (value) => FormValidator.validateEmpty(
+                  value,
+                  errorTitle: "Address".tr(),
+                ),
             onTap: _openLocationPicker,
           ).py2(),
           UiSpacer.verticalSpace(),
@@ -150,12 +152,12 @@ class _NewDeliveryAddressesPageState
             textInputAction: TextInputAction.newline,
           ).py2(),
           HStack([
-            Checkbox(
-              value: _isDefault,
-              onChanged: (v) => setState(() => _isDefault = v ?? false),
-            ),
-            "Default".tr().text.make(),
-          ])
+                Checkbox(
+                  value: _isDefault,
+                  onChanged: (v) => setState(() => _isDefault = v ?? false),
+                ),
+                "Default".tr().text.make(),
+              ])
               .onInkTap(() => setState(() => _isDefault = !_isDefault))
               .wFull(context)
               .py12(),

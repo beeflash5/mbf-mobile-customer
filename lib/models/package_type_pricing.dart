@@ -48,9 +48,10 @@ class PackageTypePricing {
       vendorId: json["vendor_id"]?.toString().toInt() ?? 0,
       packageTypeId: json["package_type_id"]?.toString().toInt() ?? 0,
 
-      maxBookingDays: json["max_booking_days"] == null
-          ? 7
-          : (json["max_booking_days"].toString().toInt() ?? 7),
+      maxBookingDays:
+          json["max_booking_days"] == null
+              ? 7
+              : (json["max_booking_days"].toString().toInt() ?? 7),
       sizePrice: double.parse(json["size_price"].toString()),
       pricePerKg: double.parse(json["price_per_kg"].toString()),
       distancePrice: double.parse(json["distance_price"].toString()),

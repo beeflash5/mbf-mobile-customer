@@ -20,32 +20,30 @@ class PackageTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        "Select Package Type".tr().text.xl.medium.make().py20(),
-        CustomListView(
-          isLoading: state.packageTypesBusy,
-          dataSet: state.packageTypes,
-          noScrollPhysics: true,
-          itemBuilder: (context, index) {
-            final packageType = state.packageTypes[index];
-            return PackageTypeListItem(
-              packageType: packageType,
-              selected: state.selectedPackageType == packageType,
-              onPressed: controller.changeSelectedPackageType,
-            );
-          },
-          separatorBuilder: (context, index) =>
-              UiSpacer.verticalSpace(space: 5),
-        ).box.make().scrollVertical().expand(),
-        FormStepController(
-          showPrevious: false,
-          showLoadingNext: state.vendorsBusy,
-          onNextPressed: state.selectedPackageType != null
-              ? () => controller.nextForm(1)
-              : null,
-        ),
-      ],
-    );
+    return VStack([
+      "Select Package Type".tr().text.xl.medium.make().py20(),
+      CustomListView(
+        isLoading: state.packageTypesBusy,
+        dataSet: state.packageTypes,
+        noScrollPhysics: true,
+        itemBuilder: (context, index) {
+          final packageType = state.packageTypes[index];
+          return PackageTypeListItem(
+            packageType: packageType,
+            selected: state.selectedPackageType == packageType,
+            onPressed: controller.changeSelectedPackageType,
+          );
+        },
+        separatorBuilder: (context, index) => UiSpacer.verticalSpace(space: 5),
+      ).box.make().scrollVertical().expand(),
+      FormStepController(
+        showPrevious: false,
+        showLoadingNext: state.vendorsBusy,
+        onNextPressed:
+            state.selectedPackageType != null
+                ? () => controller.nextForm(1)
+                : null,
+      ),
+    ]);
   }
 }

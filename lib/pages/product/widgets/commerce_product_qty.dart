@@ -21,54 +21,49 @@ class CommerceProductQtyEntry extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currencySymbol = AppStrings.currencySymbol;
     final asyncState = ref.watch(productDetailsControllerProvider(product));
-    final notifier =
-        ref.read(productDetailsControllerProvider(product).notifier);
+    final notifier = ref.read(
+      productDetailsControllerProvider(product).notifier,
+    );
     final state = asyncState.valueOrNull;
     final liveProduct = state?.product ?? product;
     final total = state?.total ?? 0;
     return Visibility(
       visible: liveProduct.hasStock,
-      child: VStack([
-        HStack([
-          "Quantity:".tr().text.make().expand(flex: 2),
-          HStack([
-            QtyStepper(
-              defaultValue: liveProduct.selectedQty,
-              min: 1,
-              max: (liveProduct.availableQty != null &&
-                      liveProduct.availableQty! > 0)
-                  ? liveProduct.availableQty!
-                  : 20,
-              disableInput: true,
-              onChange: notifier.updateSelectedQty,
-              actionIconColor: AppColor.primaryColor,
-            )
-                .box
-                .border(color: AppColor.primaryColor)
-                .roundedLg
-                .p1
-                .make(),
-          ]).expand(flex: 4),
-        ]),
-        UiSpacer.verticalSpace(),
-        HStack([
-          "Total Price:".tr().text.make().expand(flex: 2),
-          UiSpacer.smHorizontalSpace(),
-          CurrencyHStack(
-            [
-              currencySymbol.text.sm.bold.color(context.primaryColor).make(),
-              total
-                  .currencyValueFormat()
-                  .text
-                  .xl
-                  .bold
-                  .color(context.primaryColor)
-                  .make(),
-            ],
-            crossAlignment: CrossAxisAlignment.end,
-          ).expand(flex: 4),
-        ]),
-      ]).py12().px20(),
+      child:
+          VStack([
+            HStack([
+              "Quantity:".tr().text.make().expand(flex: 2),
+              HStack([
+                QtyStepper(
+                  defaultValue: liveProduct.selectedQty,
+                  min: 1,
+                  max:
+                      (liveProduct.availableQty != null &&
+                              liveProduct.availableQty! > 0)
+                          ? liveProduct.availableQty!
+                          : 20,
+                  disableInput: true,
+                  onChange: notifier.updateSelectedQty,
+                  actionIconColor: AppColor.primaryColor,
+                ).box.border(color: AppColor.primaryColor).roundedLg.p1.make(),
+              ]).expand(flex: 4),
+            ]),
+            UiSpacer.verticalSpace(),
+            HStack([
+              "Total Price:".tr().text.make().expand(flex: 2),
+              UiSpacer.smHorizontalSpace(),
+              CurrencyHStack([
+                currencySymbol.text.sm.bold.color(context.primaryColor).make(),
+                total
+                    .currencyValueFormat()
+                    .text
+                    .xl
+                    .bold
+                    .color(context.primaryColor)
+                    .make(),
+              ], crossAlignment: CrossAxisAlignment.end).expand(flex: 4),
+            ]),
+          ]).py12().px20(),
     );
   }
 }

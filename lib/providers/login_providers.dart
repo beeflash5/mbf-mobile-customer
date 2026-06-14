@@ -43,18 +43,12 @@ class LoginFailure extends LoginPhase {
 }
 
 class LoginState {
-  const LoginState({
-    this.isBusy = false,
-    this.phase = const LoginIdle(),
-  });
+  const LoginState({this.isBusy = false, this.phase = const LoginIdle()});
   final bool isBusy;
   final LoginPhase phase;
 
   LoginState copyWith({bool? isBusy, LoginPhase? phase}) =>
-      LoginState(
-        isBusy: isBusy ?? this.isBusy,
-        phase: phase ?? this.phase,
-      );
+      LoginState(isBusy: isBusy ?? this.isBusy, phase: phase ?? this.phase);
 }
 
 class LoginController extends Notifier<LoginState> {
@@ -123,7 +117,8 @@ class LoginController extends Notifier<LoginState> {
     return _handleDeviceLogin(response);
   }
 
-  Future<LoginPhase> processOTPLogin(String phone, {
+  Future<LoginPhase> processOTPLogin(
+    String phone, {
     required String countryPhoneCode,
     required bool isFirebaseOtp,
   }) async {
@@ -155,10 +150,12 @@ class LoginController extends Notifier<LoginState> {
       codeSent: (verificationId, _) {
         _firebaseVerificationId = verificationId;
         if (!completer.isCompleted) {
-          completer.complete(LoginAwaitingOtp(
-            verificationId: verificationId,
-            phone: _accountPhoneNumber!,
-          ));
+          completer.complete(
+            LoginAwaitingOtp(
+              verificationId: verificationId,
+              phone: _accountPhoneNumber!,
+            ),
+          );
         }
       },
       codeAutoRetrievalTimeout: (_) {},
@@ -188,8 +185,9 @@ class LoginController extends Notifier<LoginState> {
         verificationId: _firebaseVerificationId!,
         smsCode: smsCode,
       );
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
       final firebaseToken = await userCredential.user!.getIdToken();
       final response = await authRequest.verifyFirebaseToken(
         _accountPhoneNumber!,
@@ -275,5 +273,6 @@ class LoginController extends Notifier<LoginState> {
   }
 }
 
-final loginControllerProvider =
-    NotifierProvider<LoginController, LoginState>(LoginController.new);
+final loginControllerProvider = NotifierProvider<LoginController, LoginState>(
+  LoginController.new,
+);

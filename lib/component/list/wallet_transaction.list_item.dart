@@ -10,17 +10,15 @@ import 'package:intl/intl.dart';
 
 class WalletTransactionListItem extends StatelessWidget {
   const WalletTransactionListItem(this.walletTransaction, {Key? key})
-      : super(key: key);
+    : super(key: key);
 
   final WalletTransaction walletTransaction;
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //
-        UiSpacer.verticalSpace(space: 5),
-        HStack(
-          [
+    return VStack([
+          //
+          UiSpacer.verticalSpace(space: 5),
+          HStack([
             "${walletTransaction.status.isEmpty ? 'Error' : walletTransaction.status}"
                 .tr()
                 .allWordsCapitilize()
@@ -37,22 +35,19 @@ class WalletTransactionListItem extends StatelessWidget {
                 .semiBold
                 .lg
                 .color(
-                    walletTransaction.isCredit == 1 ? Colors.green : Colors.red)
-                .make()
-          ],
-        ),
-        //
-        HStack(
-          [
+                  walletTransaction.isCredit == 1 ? Colors.green : Colors.red,
+                )
+                .make(),
+          ]),
+          //
+          HStack([
             "${walletTransaction.reason}".tr().text.sm.make().expand(),
             "${DateFormat.MMMd(translator.activeLocale.languageCode).format(walletTransaction.createdAt)}"
                 .text
                 .light
-                .make()
-          ],
-        ),
-      ],
-    )
+                .make(),
+          ]),
+        ])
         .p8()
         .box
         .outerShadow

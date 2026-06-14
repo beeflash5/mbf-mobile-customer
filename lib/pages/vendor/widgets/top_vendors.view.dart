@@ -54,9 +54,8 @@ class _TopVendorsState extends ConsumerState<TopVendors> {
             color: Colors.white,
           ),
           onPressed: () => setState(() => _selectedType = 1),
-          color: _selectedType == 1
-              ? AppColor.primaryColor
-              : Colors.grey.shade600,
+          color:
+              _selectedType == 1 ? AppColor.primaryColor : Colors.grey.shade600,
         ).h(32).px8(),
         CustomButton(
           title: "Pickup".tr(),
@@ -64,9 +63,8 @@ class _TopVendorsState extends ConsumerState<TopVendors> {
             fontSize: 12,
             color: Colors.white,
           ),
-          color: _selectedType == 2
-              ? AppColor.primaryColor
-              : Colors.grey.shade600,
+          color:
+              _selectedType == 2 ? AppColor.primaryColor : Colors.grey.shade600,
           onPressed: () => setState(() => _selectedType = 2),
         ),
       ]).h(32).p12(),
@@ -81,7 +79,8 @@ class _TopVendorsState extends ConsumerState<TopVendors> {
             final vendor = vendors[index];
             return VendorListItem(
               vendor: vendor,
-              onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
+              onPressed:
+                  (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
             );
           },
           emptyWidget: EmptyVendor(),
@@ -99,7 +98,8 @@ class _TopVendorsState extends ConsumerState<TopVendors> {
             final vendor = vendors[index];
             return VendorListItem(
               vendor: vendor,
-              onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
+              onPressed:
+                  (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
             );
           },
           emptyWidget: EmptyVendor(),

@@ -17,22 +17,21 @@ class HorizontalVendorListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //
-    return HStack(
-      [
-        //
-        Hero(
-          tag: vendor.heroTag ?? vendor.id,
-          child: CustomImage(imageUrl: vendor.logo)
-              .wh(Vx.dp64, Vx.dp64)
-              .box
-              .clip(Clip.antiAlias)
-              .roundedSM
-              .make(),
-        ),
+    return HStack([
+          //
+          Hero(
+            tag: vendor.heroTag ?? vendor.id,
+            child:
+                CustomImage(imageUrl: vendor.logo)
+                    .wh(Vx.dp64, Vx.dp64)
+                    .box
+                    .clip(Clip.antiAlias)
+                    .roundedSM
+                    .make(),
+          ),
 
-        //Details
-        VStack(
-          [
+          //Details
+          VStack([
             //name
             vendor.name.text.lg.medium
                 .maxLines(2)
@@ -43,24 +42,22 @@ class HorizontalVendorListItem extends StatelessWidget {
                 .maxLines(1)
                 .overflow(TextOverflow.ellipsis)
                 .make(),
-          ],
-        ).px12().expand(),
+          ]).px12().expand(),
 
-        //rating
-        HStack(
-          [
-            Icon(
-              Icons.star,
-              size: 15,
-              color: Colors.yellow[800],
-            ).pOnly(right: 2),
-            vendor.rating.text.xl.make(),
-          ],
-          crossAlignment: CrossAxisAlignment.center,
-          alignment: MainAxisAlignment.center,
-        ).pOnly(right: 20),
-      ],
-    )
+          //rating
+          HStack(
+            [
+              Icon(
+                Icons.star,
+                size: 15,
+                color: Colors.yellow[800],
+              ).pOnly(right: 2),
+              vendor.rating.text.xl.make(),
+            ],
+            crossAlignment: CrossAxisAlignment.center,
+            alignment: MainAxisAlignment.center,
+          ).pOnly(right: 20),
+        ])
         .wFull(context)
         .onInkTap(() => onPressed(vendor))
         .box

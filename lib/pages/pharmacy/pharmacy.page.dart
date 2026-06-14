@@ -58,14 +58,15 @@ class _PharmacyPageState extends ConsumerState<PharmacyPage>
           enablePullDown: true,
           controller: _refreshController,
           onRefresh: _reload,
-          child: VStack([
-            Banners(widget.vendorType),
-            PharmacyCategories(widget.vendorType),
-            FlashSaleView(widget.vendorType),
-            BestSellingProducts(widget.vendorType),
-            NearByVendors(widget.vendorType),
-            ViewAllVendorsView(vendorType: widget.vendorType),
-          ], spacing: 10).scrollVertical(),
+          child:
+              VStack([
+                Banners(widget.vendorType),
+                PharmacyCategories(widget.vendorType),
+                FlashSaleView(widget.vendorType),
+                BestSellingProducts(widget.vendorType),
+                NearByVendors(widget.vendorType),
+                ViewAllVendorsView(vendorType: widget.vendorType),
+              ], spacing: 10).scrollVertical(),
         ).expand(),
       ]),
     );

@@ -34,43 +34,45 @@ class CommerceProductDetailsPage extends ConsumerWidget {
       appBarItemColor: AppColor.primaryColor,
       showCart: true,
       extendBodyBehindAppBar: true,
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: SafeArea(
-              bottom: false,
-              top: false,
-              child: Hero(
-                tag: detail.heroTag ?? detail.id,
-                child: ProductImagesGalleryView(detail),
+      body:
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: SafeArea(
+                  bottom: false,
+                  top: false,
+                  child: Hero(
+                    tag: detail.heroTag ?? detail.id,
+                    child: ProductImagesGalleryView(detail),
+                  ),
+                ),
               ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: VStack([
-              CommerceProductDetailsHeader(product: detail),
-              UiSpacer.divider(),
-              CommerceProductPrice(product: detail),
-              UiSpacer.divider(),
-              CommerceProductOptions(detail),
-              UiSpacer.divider(),
-              CommerceProductQtyEntry(product: detail),
-              UiSpacer.divider(),
-              CommerceSellerTile(product: detail),
-              UiSpacer.divider().pOnly(bottom: Vx.dp12),
-              HtmlTextView(detail.description),
-              SimilarCommerceProducts(detail),
-            ])
-                .pOnly(bottom: context.percentHeight * 30)
-                .box
-                .outerShadow
-                .color(context.theme.colorScheme.surface)
-                .topRounded(value: 20)
-                .clip(Clip.antiAlias)
-                .make(),
-          ),
-        ],
-      ).box.color(AppColor.faintBgColor).make(),
+              SliverToBoxAdapter(
+                child:
+                    VStack([
+                          CommerceProductDetailsHeader(product: detail),
+                          UiSpacer.divider(),
+                          CommerceProductPrice(product: detail),
+                          UiSpacer.divider(),
+                          CommerceProductOptions(detail),
+                          UiSpacer.divider(),
+                          CommerceProductQtyEntry(product: detail),
+                          UiSpacer.divider(),
+                          CommerceSellerTile(product: detail),
+                          UiSpacer.divider().pOnly(bottom: Vx.dp12),
+                          HtmlTextView(detail.description),
+                          SimilarCommerceProducts(detail),
+                        ])
+                        .pOnly(bottom: context.percentHeight * 30)
+                        .box
+                        .outerShadow
+                        .color(context.theme.colorScheme.surface)
+                        .topRounded(value: 20)
+                        .clip(Clip.antiAlias)
+                        .make(),
+              ),
+            ],
+          ).box.color(AppColor.faintBgColor).make(),
       bottomSheet: CommerceProductDetailsCartBottomSheet(product: detail),
     );
   }

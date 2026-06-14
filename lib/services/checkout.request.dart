@@ -46,9 +46,10 @@ class CheckoutRequest extends ApiService {
       "schedule_date": checkout.deliverySlotDate,
       "schedule_time": checkout.deliverySlotTime,
       "products": checkout.cartItems?.map((e) => e.toCheckout()).toList(),
-      "vendor_id": (checkout.cartItems?.isNotEmpty ?? false)
-          ? checkout.cartItems!.first.product?.vendorId
-          : null,
+      "vendor_id":
+          (checkout.cartItems?.isNotEmpty ?? false)
+              ? checkout.cartItems!.first.product?.vendorId
+              : null,
       "delivery_address_id": checkout.deliveryAddress?.id,
       "payment_method_id": checkout.paymentMethod?.id,
       "sub_total": checkout.subTotal,
@@ -205,7 +206,11 @@ class CheckoutRequest extends ApiService {
       "fees": fees,
       "token": checkout.token,
       "duration": service.selectedQty,
-      "schedule_order": (checkout.deliverySlotDate != null && checkout.deliverySlotDate!.isNotEmpty) ? 1 : 0,
+      "schedule_order":
+          (checkout.deliverySlotDate != null &&
+                  checkout.deliverySlotDate!.isNotEmpty)
+              ? 1
+              : 0,
 
       // tattoo
       "tatto_type": tatto_type,

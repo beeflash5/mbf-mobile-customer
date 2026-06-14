@@ -13,6 +13,7 @@ import 'package:fuodz/pages/search/main_search_home.page.dart';
 import 'package:fuodz/pages/service/service_details.page.dart';
 import 'package:fuodz/pages/vendor/widgets/ads_bottom.view.dart';
 import 'package:fuodz/pages/vendor/widgets/banners_top.view.dart';
+import 'package:fuodz/pages/welcome/widgets/flash_sales.dart';
 import 'package:fuodz/pages/welcome/widgets/travel_new_page.dart';
 import 'package:fuodz/providers/welcome_providers.dart';
 import 'package:fuodz/services/auth.service.dart';
@@ -46,11 +47,10 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
     final vendorTypes = state?.vendorTypes ?? const [];
     final topRated = state?.topRated ?? const [];
     final blogs = state?.blogs ?? const [];
+    final flashSales = state?.flashSales ?? const [];
 
     if (asyncState.isLoading && state == null) {
-      return const Scaffold(
-        body: LoadingShimmer(),
-      );
+      return const Scaffold(body: LoadingShimmer());
     }
 
     return Scaffold(
@@ -154,6 +154,14 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
                 ],
               ),
               const SizedBox(height: 16),
+              if (flashSales.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FlashSales(products: flashSales),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               "Category".text.lg.bold.make().px20(),
               SizedBox(
                 height: 110,

@@ -29,13 +29,11 @@ class AuthServices {
   }
 
   static Future<bool> isAuthenticated() async {
-    await LocalStorageService.rxPrefs?.write(
-      AppStrings.authenticated,
-      true,
-      (value) {
-        return value;
-      },
-    );
+    await LocalStorageService.rxPrefs?.write(AppStrings.authenticated, true, (
+      value,
+    ) {
+      return value;
+    });
     return LocalStorageService.prefs!.setBool(AppStrings.authenticated, true);
   }
 
@@ -45,8 +43,10 @@ class AuthServices {
   }
 
   static Future<bool> setAuthBearerToken(token) async {
-    return LocalStorageService.prefs!
-        .setString(AppStrings.userAuthToken, token);
+    return LocalStorageService.prefs!.setString(
+      AppStrings.userAuthToken,
+      token,
+    );
   }
 
   //Locale
@@ -79,15 +79,15 @@ class AuthServices {
   ///
   ///
   ///
-  static Future<User?> saveUser(dynamic jsonObject,
-      {bool reload = true}) async {
+  static Future<User?> saveUser(
+    dynamic jsonObject, {
+    bool reload = true,
+  }) async {
     final currentUser = User.fromJson(jsonObject);
     try {
       await LocalStorageService.prefs?.setString(
         AppStrings.userKey,
-        json.encode(
-          currentUser.toJson(),
-        ),
+        json.encode(currentUser.toJson()),
       );
 
       //subscribe to firebase topic
@@ -95,7 +95,7 @@ class AuthServices {
         "all",
         "${currentUser.id}",
         "${currentUser.role}",
-        "client"
+        "client",
       ];
 
       for (var role in roles) {
@@ -133,7 +133,7 @@ class AuthServices {
       "${currentUser?.id}",
       "${currentUser?.role}",
       "client",
-      "all"
+      "all",
     ];
     for (var role in roles) {
       try {

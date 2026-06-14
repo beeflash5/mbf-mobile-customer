@@ -56,8 +56,7 @@ class OrderSummaryBooking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencySymbol =
-        mCurrencySymbol ?? AppStrings.currentCurrencySymbol;
+    final currencySymbol = mCurrencySymbol ?? AppStrings.currentCurrencySymbol;
 
     return VStack([
       Row(
@@ -85,7 +84,7 @@ class OrderSummaryBooking extends StatelessWidget {
               children: [
                 "Check-in".tr().text.make(),
                 "${DateFormat('dd/MM/yyyy').format(DateTime.parse(deliverySlotDate!))}, "
-                    "${DateFormat('hh:mm a').format(DateFormat('HH:mm:ss').parse(deliverySlotTime!))}"
+                        "${DateFormat('hh:mm a').format(DateFormat('HH:mm:ss').parse(deliverySlotTime!))}"
                     .text
                     .color(const Color(0xff808080))
                     .semiBold
@@ -143,8 +142,7 @@ class OrderSummaryBooking extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 "Stay Duration".tr().text.make(),
-                "$durationQty ${duration!.capitalize()}"
-                    .text
+                "$durationQty ${duration!.capitalize()}".text
                     .color(const Color(0xff808080))
                     .semiBold
                     .make(),
@@ -204,5 +202,6 @@ class OrderSummaryBooking extends StatelessWidget {
 }
 
 extension _StringCapitalize on String {
-  String capitalize() => isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
+  String capitalize() =>
+      isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
 }

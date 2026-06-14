@@ -226,13 +226,20 @@ class Order {
           json["vendor_id"] == null
               ? null
               : int.parse(json["vendor_id"].toString()),
-      userId: json["user_id"] == null ? 0 : int.parse(json["user_id"].toString()),
+      userId:
+          json["user_id"] == null ? 0 : int.parse(json["user_id"].toString()),
       driverId:
           json["driver_id"] == null
               ? null
               : int.parse(json["driver_id"].toString()),
-      createdAt: json["created_at"] == null ? DateTime.now() : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null ? DateTime.now() : DateTime.parse(json["updated_at"]),
+      createdAt:
+          json["created_at"] == null
+              ? DateTime.now()
+              : DateTime.parse(json["created_at"]),
+      updatedAt:
+          json["updated_at"] == null
+              ? DateTime.now()
+              : DateTime.parse(json["updated_at"]),
       formattedDate:
           json["formatted_date"] == null ? null : json["formatted_date"],
       paymentLink: json["payment_link"] == null ? "" : json["payment_link"],
@@ -399,7 +406,9 @@ class Order {
             ? []
             : List<dynamic>.from((attachments ?? []).map((x) => x.toJson())),
     "fees":
-        fees == null ? [] : List<dynamic>.from((fees ?? []).map((x) => x.toJson())),
+        fees == null
+            ? []
+            : List<dynamic>.from((fees ?? []).map((x) => x.toJson())),
 
     "tatto_placement": tatto_placement,
     "tatto_size": tatto_size,
@@ -500,7 +509,13 @@ class Order {
       packageType != null;
   bool get isSerice =>
       vendor?.vendorType != null &&
-      ["service", "tour", "tattoo", "booking", "bookings"].contains(vendor?.vendorType.slug) &&
+      [
+        "service",
+        "tour",
+        "tattoo",
+        "booking",
+        "bookings",
+      ].contains(vendor?.vendorType.slug) &&
       orderService != null;
   get isCommerce =>
       vendor?.vendorType != null &&

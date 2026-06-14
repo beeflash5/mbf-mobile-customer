@@ -21,36 +21,35 @@ class OrderPaymentInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        CustomVisibilty(
-          visible: order.isPaymentPending && order.isOngoing,
-          child: CustomButton(
-            title: "PAY FOR ORDER".tr(),
-            titleStyle: context.textTheme.bodyLarge!.copyWith(
-              color: Colors.white,
-            ),
-            icon: Icons.credit_card,
-            iconSize: 18,
-            onPressed: () =>
-                OrderService.openOrderPayment(order, context: context),
-          ).p20().pOnly(bottom: Vx.dp20),
-        ),
-        CustomVisibilty(
-          visible: order.paymentStatus == "request" &&
-              ["pending"].contains(order.status),
-          child: CustomButton(
-            title: "PAY FOR ORDER".tr(),
-            titleStyle: context.textTheme.bodyLarge!.copyWith(
-              color: Colors.white,
-            ),
-            icon: Icons.credit_card,
-            iconSize: 18,
-            loading: paymentStatusBusy,
-            onPressed: onOpenPaymentMethodSelection,
-          ).wFull(context).p20().pOnly(bottom: Vx.dp20),
-        ),
-      ],
-    );
+    return VStack([
+      CustomVisibilty(
+        visible: order.isPaymentPending && order.isOngoing,
+        child: CustomButton(
+          title: "PAY FOR ORDER".tr(),
+          titleStyle: context.textTheme.bodyLarge!.copyWith(
+            color: Colors.white,
+          ),
+          icon: Icons.credit_card,
+          iconSize: 18,
+          onPressed:
+              () => OrderService.openOrderPayment(order, context: context),
+        ).p20().pOnly(bottom: Vx.dp20),
+      ),
+      CustomVisibilty(
+        visible:
+            order.paymentStatus == "request" &&
+            ["pending"].contains(order.status),
+        child: CustomButton(
+          title: "PAY FOR ORDER".tr(),
+          titleStyle: context.textTheme.bodyLarge!.copyWith(
+            color: Colors.white,
+          ),
+          icon: Icons.credit_card,
+          iconSize: 18,
+          loading: paymentStatusBusy,
+          onPressed: onOpenPaymentMethodSelection,
+        ).wFull(context).p20().pOnly(bottom: Vx.dp20),
+      ),
+    ]);
   }
 }

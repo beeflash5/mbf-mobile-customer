@@ -23,23 +23,25 @@ class FavPositiedView extends ConsumerStatefulWidget {
 class _FavPositiedViewState extends ConsumerState<FavPositiedView> {
   @override
   Widget build(BuildContext context) {
-    final isBusy = ref
-        .watch(favouriteProductControllerProvider(widget.product.id))
-        .isLoading;
+    final isBusy =
+        ref
+            .watch(favouriteProductControllerProvider(widget.product.id))
+            .isLoading;
 
     return Positioned(
       top: 0,
       left: !Utils.isArabic ? null : 0,
       right: Utils.isArabic ? null : 0,
-      child: isBusy
-          ? BusyIndicator().wh(18, 18).p4()
-          : Icon(
-              widget.product.isFavourite
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-              color: AppColor.primaryColor,
-              size: 20,
-            ).p4().onTap(_handleTap),
+      child:
+          isBusy
+              ? BusyIndicator().wh(18, 18).p4()
+              : Icon(
+                widget.product.isFavourite
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: AppColor.primaryColor,
+                size: 20,
+              ).p4().onTap(_handleTap),
     );
   }
 

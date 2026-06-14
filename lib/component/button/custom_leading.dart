@@ -23,21 +23,22 @@ class CustomLeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 14),
-      child: Icon(
-        Utils.isArabic ? EvaIcons.arrowForward : EvaIcons.arrowBack,
-        size: size ?? 20,
-        color: color ?? Utils.textColorByTheme(),
-      )
-          .p(padding ?? 4)
-          .onInkTap(() {
-            context.pop();
-          })
-          .box
-          .shadowSm
-          .roundedSM
-          .clip(Clip.antiAlias)
-          .color(bgColor ?? AppColor.primaryColor)
-          .make(),
+      child:
+          Icon(
+                Utils.isArabic ? EvaIcons.arrowForward : EvaIcons.arrowBack,
+                size: size ?? 20,
+                color: color ?? Utils.textColorByTheme(),
+              )
+              .p(padding ?? 4)
+              .onInkTap(() {
+                context.pop();
+              })
+              .box
+              .shadowSm
+              .roundedSM
+              .clip(Clip.antiAlias)
+              .color(bgColor ?? AppColor.primaryColor)
+              .make(),
     );
   }
 }

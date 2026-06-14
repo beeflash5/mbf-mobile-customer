@@ -149,5 +149,6 @@ class LoginController extends AsyncNotifier<void> {
   }
 }
 
-final loginControllerProvider =
-    AsyncNotifierProvider<LoginController, void>(LoginController.new);
+final loginControllerProvider = AsyncNotifierProvider<LoginController, void>(
+  LoginController.new,
+);

@@ -7,21 +7,16 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceProviderSection extends StatelessWidget {
-  const ServiceProviderSection({
-    required this.service,
-    super.key,
-  });
+  const ServiceProviderSection({required this.service, super.key});
   //
   final Service service;
 
   //
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        "Provider".tr().text.medium.xl.make(),
-        HStack(
-          [
+    return VStack([
+      "Provider".tr().text.medium.xl.make(),
+      HStack([
             //provider logo
             CustomImage(
               imageUrl: service.vendor.logo,
@@ -29,30 +24,21 @@ class ServiceProviderSection extends StatelessWidget {
               height: 50,
             ).box.roundedSM.clip(Clip.antiAlias).make(),
             //provider details
-            VStack(
-              [
-                service.vendor.name.text.semiBold.lg.make(),
-                "${service.vendor.phone}".text.medium.sm.make(),
-                "${service.vendor.address}".text.light.sm.maxLines(1).make(),
-              ],
-            ).px12().expand(),
-          ],
-        )
-            .box
-            .p8
-            .color(context.theme.colorScheme.surface)
-            .roundedSM
-            .make()
-            .onInkTap(
-          () {
+            VStack([
+              service.vendor.name.text.semiBold.lg.make(),
+              "${service.vendor.phone}".text.medium.sm.make(),
+              "${service.vendor.address}".text.light.sm.maxLines(1).make(),
+            ]).px12().expand(),
+          ]).box.p8
+          .color(context.theme.colorScheme.surface)
+          .roundedSM
+          .make()
+          .onInkTap(() {
             context.pushRoute(
               '${AppRoutes.vendorDetails}/${service.vendor.id}',
               extra: service.vendor,
             );
-          },
-        ),
-      ],
-      spacing: 6,
-    );
+          }),
+    ], spacing: 6);
   }
 }

@@ -85,24 +85,27 @@ class PharmacyUploadState {
       vendor: vendor ?? this.vendor,
       checkout: checkout ?? this.checkout,
       prescriptionPhotos: prescriptionPhotos ?? this.prescriptionPhotos,
-      deliveryAddress: identical(deliveryAddress, _sentinel)
-          ? this.deliveryAddress
-          : deliveryAddress as DeliveryAddress?,
+      deliveryAddress:
+          identical(deliveryAddress, _sentinel)
+              ? this.deliveryAddress
+              : deliveryAddress as DeliveryAddress?,
       isPickup: isPickup ?? this.isPickup,
       isScheduled: isScheduled ?? this.isScheduled,
       deliveryAddressOutOfRange:
           deliveryAddressOutOfRange ?? this.deliveryAddressOutOfRange,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
       dateFull: dateFull ?? this.dateFull,
       timeFull: timeFull ?? this.timeFull,
       tables: tables ?? this.tables,
-      tableSelected: identical(tableSelected, _sentinel)
-          ? this.tableSelected
-          : tableSelected as String?,
+      tableSelected:
+          identical(tableSelected, _sentinel)
+              ? this.tableSelected
+              : tableSelected as String?,
       isBusy: isBusy ?? this.isBusy,
       loadingTime: loadingTime ?? this.loadingTime,
       loadingTables: loadingTables ?? this.loadingTables,
@@ -131,10 +134,7 @@ class PharmacyUploadController
   Future<void> initialise() async {
     await _fetchVendorDetails();
     _setVendorRequirement();
-    await Future.wait([
-      _prefetchDeliveryAddress(),
-      _fetchPaymentOptions(),
-    ]);
+    await Future.wait([_prefetchDeliveryAddress(), _fetchPaymentOptions()]);
     if (state.vendor != null && state.vendor!.can_dinein == false) {
       await _fetchDateUse();
     }
@@ -164,9 +164,10 @@ class PharmacyUploadController
 
   Future<void> _prefetchDeliveryAddress() async {
     try {
-      final preselected = await CheckoutSharedHelpers.preselectedDeliveryAddress(
-        vendorId: state.vendor?.id,
-      );
+      final preselected =
+          await CheckoutSharedHelpers.preselectedDeliveryAddress(
+            vendorId: state.vendor?.id,
+          );
       if (preselected == null) return;
       final co = state.checkout;
       co?.deliveryAddress = preselected;
@@ -303,10 +304,7 @@ class PharmacyUploadController
     co?.deliverySlotDate = dateStr;
     co?.deliverySlotTime = "";
     final times = state.vendor?.deliverySlots[index].times ?? [];
-    state = state.copyWith(
-      checkout: co,
-      availableTimeSlots: times,
-    );
+    state = state.copyWith(checkout: co, availableTimeSlots: times);
     _fetchTableAvailability();
   }
 
@@ -345,10 +343,7 @@ class PharmacyUploadController
   void changeSelectedPaymentMethod(PaymentMethod? pm) {
     final co = state.checkout;
     co?.paymentMethod = pm;
-    state = state.copyWith(
-      selectedPaymentMethod: pm,
-      checkout: co,
-    );
+    state = state.copyWith(selectedPaymentMethod: pm, checkout: co);
   }
 
   Future<void> placeOrder({
@@ -408,10 +403,7 @@ class PharmacyUploadController
           _showOrdersTab(context: context);
         }
       } else {
-        AlertService.error(
-          title: "Checkout".tr(),
-          text: apiResponse.message,
-        );
+        AlertService.error(title: "Checkout".tr(), text: apiResponse.message);
       }
     } catch (error) {
       ToastService.toastError("$error");
@@ -424,8 +416,7 @@ class PharmacyUploadController
     AppService().changeHomePageIndex(index: 2);
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).popUntil(
-        (route) =>
-            route.settings.name == AppRoutes.homeRoute || route.isFirst,
+        (route) => route.settings.name == AppRoutes.homeRoute || route.isFirst,
       );
     }
   }
@@ -433,5 +424,5 @@ class PharmacyUploadController
 
 final pharmacyUploadControllerProvider = NotifierProvider.autoDispose
     .family<PharmacyUploadController, PharmacyUploadState, Vendor>(
-  PharmacyUploadController.new,
-);
+      PharmacyUploadController.new,
+    );

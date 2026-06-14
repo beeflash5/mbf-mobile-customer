@@ -44,7 +44,8 @@ class _ProductSearchResultViewState
       if (_refreshController.isLoading) _refreshController.loadComplete();
     });
 
-    void openProduct(product) => context.pushWidget(ProductDetailsPage(product: product));
+    void openProduct(product) =>
+        context.pushWidget(ProductDetailsPage(product: product));
 
     if (layout == null || layout == 'grid') {
       return CustomMasonryGridView(
@@ -59,9 +60,10 @@ class _ProductSearchResultViewState
         crossAxisSpacing: 10,
         childAspectRatio: (context.screenWidth / 2.5) / 100,
         emptyWidget: EmptySearch(type: 'product'),
-        items: products
-            .map((p) => CommerceProductListItem(p, height: 100))
-            .toList(),
+        items:
+            products
+                .map((p) => CommerceProductListItem(p, height: 100))
+                .toList(),
       );
     }
     return CustomListView(

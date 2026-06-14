@@ -36,13 +36,11 @@ class FeaturedVendorsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncVendors = ref.watch(
-      sectionVendorsControllerProvider(
-        (
-          vendorTypeId: 0,
-          type: SearchFilterType.featured,
-          byLocation: false,
-        ),
-      ),
+      sectionVendorsControllerProvider((
+        vendorTypeId: 0,
+        type: SearchFilterType.featured,
+        byLocation: false,
+      )),
     );
     final vendors = asyncVendors.valueOrNull ?? const [];
 
@@ -56,7 +54,9 @@ class FeaturedVendorsView extends ConsumerWidget {
             child: HStack([
               "$title".text.lg.medium.make().expand(),
               if (onSeeAllPressed != null)
-                "See more".tr().text.sm.make().onInkTap(() => onSeeAllPressed!()),
+                "See more".tr().text.sm.make().onInkTap(
+                  () => onSeeAllPressed!(),
+                ),
             ], spacing: 10).wFull(context),
           ),
         ),

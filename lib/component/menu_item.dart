@@ -34,42 +34,24 @@ class MenuItem extends StatelessWidget {
       elevation: 0.6,
       color: context.theme.colorScheme.surface,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      child: HStack(
-        [
-          if (prefix != null)
-            HStack(
-              [
-                prefix!,
-                16.widthBox,
-              ],
-            ),
+      child: HStack([
+        if (prefix != null) HStack([prefix!, 16.widthBox]),
 
-          //
-          CustomVisibilty(
-            visible: ic != null,
-            child: HStack(
-              [
-                //
-                Image.asset(
-                  ic ?? AppImages.appLogo,
-                  width: 24,
-                  height: 24,
-                ),
-                //
-                UiSpacer.horizontalSpace(),
-              ],
-            ),
-          ),
-          //
-          (child ?? "$title".text.lg.light.make()).expand(),
-          //
-          suffix ??
-              Icon(
-                Icons.chevron_right,
-                size: 16,
-              ),
-        ],
-      ),
+        //
+        CustomVisibilty(
+          visible: ic != null,
+          child: HStack([
+            //
+            Image.asset(ic ?? AppImages.appLogo, width: 24, height: 24),
+            //
+            UiSpacer.horizontalSpace(),
+          ]),
+        ),
+        //
+        (child ?? "$title".text.lg.light.make()).expand(),
+        //
+        suffix ?? Icon(Icons.chevron_right, size: 16),
+      ]),
     ).pOnly(bottom: Vx.dp3);
   }
 }

@@ -11,8 +11,9 @@ import 'package:fuodz/utils/app_images.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/utils/utils.dart';
 
-final _settingsRequestProvider =
-    Provider<SettingsRequest>((_) => SettingsRequest());
+final _settingsRequestProvider = Provider<SettingsRequest>(
+  (_) => SettingsRequest(),
+);
 
 class OnboardingController
     extends FamilyAsyncNotifier<List<PageModel>, BuildContext> {
@@ -26,25 +27,27 @@ class OnboardingController
       final apiResponse =
           await ref.read(_settingsRequestProvider).appOnboardings();
       if (apiResponse.allGood) {
-        final list = (apiResponse.body as List).map((e) {
-          return PageModel.withChild(
-            child: VStack([
-              CustomImage(
-                imageUrl: "${e['photo']}",
-                width: double.infinity,
-                height: null,
-                boxFit: BoxFit.fill,
-                hideDefaultImg: true,
-              ),
-              20.heightBox,
-              "${e['title']}".tr().text.xl3.bold.make(),
-              UiSpacer.vSpace(5),
-              "${e['description']}".tr().text.lg.hairLine.make(),
-            ]).p20(),
-            color: _ctx.theme.colorScheme.surface,
-            doAnimateChild: true,
-          );
-        }).toList();
+        final list =
+            (apiResponse.body as List).map((e) {
+              return PageModel.withChild(
+                child:
+                    VStack([
+                      CustomImage(
+                        imageUrl: "${e['photo']}",
+                        width: double.infinity,
+                        height: null,
+                        boxFit: BoxFit.fill,
+                        hideDefaultImg: true,
+                      ),
+                      20.heightBox,
+                      "${e['title']}".tr().text.xl3.bold.make(),
+                      UiSpacer.vSpace(5),
+                      "${e['description']}".tr().text.lg.hairLine.make(),
+                    ]).p20(),
+                color: _ctx.theme.colorScheme.surface,
+                doAnimateChild: true,
+              );
+            }).toList();
         if (list.isNotEmpty) return list;
       } else {
         ToastService.toastError('${apiResponse.message}');
@@ -95,6 +98,7 @@ class OnboardingController
 }
 
 final onboardingControllerProvider = AsyncNotifierProvider.family<
-    OnboardingController, List<PageModel>, BuildContext>(
-  OnboardingController.new,
-);
+  OnboardingController,
+  List<PageModel>,
+  BuildContext
+>(OnboardingController.new);

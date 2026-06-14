@@ -62,114 +62,105 @@ class _PharmacyUploadPrescriptionState
       appBarColor: context.theme.colorScheme.surface,
       appBarItemColor: AppColor.primaryColor,
       showCart: true,
-      body: VStack(
-        [
-          // prescription photo grid
-          VStack(
-            [
-              CustomGridView(
-                noScrollPhysics: true,
-                dataSet: state.prescriptionPhotos,
-                separatorBuilder: (p0, p1) => UiSpacer.vSpace(10),
-                itemBuilder: (ctx, index) {
-                  final prescriptionPhoto = state.prescriptionPhotos[index];
-                  return Stack(
-                    children: [
-                      Image.file(
-                        prescriptionPhoto,
-                        fit: BoxFit.cover,
-                      ).wFull(context),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                          size: 16,
-                        )
-                            .p4()
-                            .box
-                            .red500
-                            .roundedSM
-                            .clip(Clip.antiAlias)
-                            .make()
-                            .onTap(() => controller.removePhoto(index)),
-                      ),
-                    ],
-                  ).wFull(context).h(100);
-                },
-              ),
-              CustomButton(
-                child: HStack(
-                  [
-                    Icon(
-                      Icons.camera_alt,
-                      size: 18,
-                      color: Utils.textColorByPrimaryColor(),
-                    ),
-                    UiSpacer.horizontalSpace(space: 10),
-                    "Upload Photo"
-                        .text
-                        .color(Utils.textColorByPrimaryColor())
-                        .make(),
-                  ],
-                ).centered(),
-                shapeRadius: 30,
-                height: 20,
-                titleStyle: context.textTheme.bodyLarge!.copyWith(
-                  fontSize: 11,
-                  color: Utils.textColorByPrimaryColor(),
-                ),
-                onPressed: controller.changePhoto,
-              ).px(context.percentWidth * 25).py(15).centered(),
-            ],
-          ).wFull(context),
-
-          UiSpacer.verticalSpace(),
-          ScheduleOrderView(
-            vendor: vendor,
-            isScheduled: state.isScheduled,
-            onToggleScheduled: controller.toggleScheduledOrder,
-            selectedDate: state.checkout?.deliverySlotDate,
-            selectedTime: state.checkout?.deliverySlotTime,
-            availableTimeSlots: state.availableTimeSlots,
-            dateFull: state.dateFull,
-            timeFull: state.timeFull,
-            onSelectDate: controller.changeSelectedDeliveryDate,
-            onSelectTime: controller.changeSelectedDeliveryTime,
-            loadingTime: state.loadingTime,
-            loadingTables: state.loadingTables,
-            tables: state.tables,
-            tableSelected: state.tableSelected,
-            guestCountController: _guestCountTEC,
-            onSelectTable: controller.selectTableSelecte,
+      body: VStack([
+        // prescription photo grid
+        VStack([
+          CustomGridView(
+            noScrollPhysics: true,
+            dataSet: state.prescriptionPhotos,
+            separatorBuilder: (p0, p1) => UiSpacer.vSpace(10),
+            itemBuilder: (ctx, index) {
+              final prescriptionPhoto = state.prescriptionPhotos[index];
+              return Stack(
+                children: [
+                  Image.file(
+                    prescriptionPhoto,
+                    fit: BoxFit.cover,
+                  ).wFull(context),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Icon(Icons.delete, color: Colors.white, size: 16)
+                        .p4()
+                        .box
+                        .red500
+                        .roundedSM
+                        .clip(Clip.antiAlias)
+                        .make()
+                        .onTap(() => controller.removePhoto(index)),
+                  ),
+                ],
+              ).wFull(context).h(100);
+            },
           ),
-          OrderDeliveryAddressPickerView(
-            vendor: vendor,
-            isPickup: state.isPickup,
-            onTogglePickup: controller.togglePickupStatus,
-            onPickAddress: () => controller.pickDeliveryAddress(context),
-            deliveryAddress: state.deliveryAddress,
-            deliveryAddressOutOfRange: state.deliveryAddressOutOfRange,
-          ),
-          UiSpacer.verticalSpace(),
-          CustomTextFormField(
-            labelText: "Note".tr(),
-            textEditingController: _noteTEC,
-          ),
-          UiSpacer.verticalSpace(),
           CustomButton(
-            title: "PLACE ORDER REQUEST".tr(),
-            loading: state.isBusy,
-            onPressed: state.prescriptionPhotos.isNotEmpty
-                ? () => controller.placeOrder(
-                      context: context,
-                      note: _noteTEC.text,
-                    )
-                : null,
-          ).wFull(context),
-        ],
-      ).p20().scrollVertical().pOnly(bottom: context.mq.viewInsets.bottom),
+            child:
+                HStack([
+                  Icon(
+                    Icons.camera_alt,
+                    size: 18,
+                    color: Utils.textColorByPrimaryColor(),
+                  ),
+                  UiSpacer.horizontalSpace(space: 10),
+                  "Upload Photo".text
+                      .color(Utils.textColorByPrimaryColor())
+                      .make(),
+                ]).centered(),
+            shapeRadius: 30,
+            height: 20,
+            titleStyle: context.textTheme.bodyLarge!.copyWith(
+              fontSize: 11,
+              color: Utils.textColorByPrimaryColor(),
+            ),
+            onPressed: controller.changePhoto,
+          ).px(context.percentWidth * 25).py(15).centered(),
+        ]).wFull(context),
+
+        UiSpacer.verticalSpace(),
+        ScheduleOrderView(
+          vendor: vendor,
+          isScheduled: state.isScheduled,
+          onToggleScheduled: controller.toggleScheduledOrder,
+          selectedDate: state.checkout?.deliverySlotDate,
+          selectedTime: state.checkout?.deliverySlotTime,
+          availableTimeSlots: state.availableTimeSlots,
+          dateFull: state.dateFull,
+          timeFull: state.timeFull,
+          onSelectDate: controller.changeSelectedDeliveryDate,
+          onSelectTime: controller.changeSelectedDeliveryTime,
+          loadingTime: state.loadingTime,
+          loadingTables: state.loadingTables,
+          tables: state.tables,
+          tableSelected: state.tableSelected,
+          guestCountController: _guestCountTEC,
+          onSelectTable: controller.selectTableSelecte,
+        ),
+        OrderDeliveryAddressPickerView(
+          vendor: vendor,
+          isPickup: state.isPickup,
+          onTogglePickup: controller.togglePickupStatus,
+          onPickAddress: () => controller.pickDeliveryAddress(context),
+          deliveryAddress: state.deliveryAddress,
+          deliveryAddressOutOfRange: state.deliveryAddressOutOfRange,
+        ),
+        UiSpacer.verticalSpace(),
+        CustomTextFormField(
+          labelText: "Note".tr(),
+          textEditingController: _noteTEC,
+        ),
+        UiSpacer.verticalSpace(),
+        CustomButton(
+          title: "PLACE ORDER REQUEST".tr(),
+          loading: state.isBusy,
+          onPressed:
+              state.prescriptionPhotos.isNotEmpty
+                  ? () => controller.placeOrder(
+                    context: context,
+                    note: _noteTEC.text,
+                  )
+                  : null,
+        ).wFull(context),
+      ]).p20().scrollVertical().pOnly(bottom: context.mq.viewInsets.bottom),
     );
   }
 }

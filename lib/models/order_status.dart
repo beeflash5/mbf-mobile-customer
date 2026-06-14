@@ -34,27 +34,32 @@ class OrderStatus {
   factory OrderStatus.fromJson(Map<String, dynamic> json) {
     return OrderStatus(
       id: json["id"] == null ? null : json["id"],
-      name: json["name"] == null ? null : json["name"].toString().parseLocalized(),
+      name:
+          json["name"] == null
+              ? null
+              : json["name"].toString().parseLocalized(),
       reason: json["reason"],
       modelType: json["model_type"] == null ? null : json["model_type"],
       modelId: json["model_id"] == null ? null : json["model_id"],
-      createdAt: json["created_at"] == null
-          ? null
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? null
-          : DateTime.parse(json["updated_at"]),
+      createdAt:
+          json["created_at"] == null
+              ? null
+              : DateTime.parse(json["created_at"]),
+      updatedAt:
+          json["updated_at"] == null
+              ? null
+              : DateTime.parse(json["updated_at"]),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "reason": reason,
-        "passed": passed,
-        "model_type": modelType == null ? null : modelType,
-        "model_id": modelId == null ? null : modelId,
-        "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
-        "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
-      };
+    "id": id == null ? null : id,
+    "name": name == null ? null : name,
+    "reason": reason,
+    "passed": passed,
+    "model_type": modelType == null ? null : modelType,
+    "model_id": modelId == null ? null : modelId,
+    "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
+    "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
+  };
 }

@@ -78,9 +78,7 @@ class _PackageStopRecipientViewState extends State<PackageStopRecipientView> {
                   ]).expand(),
                   UiSpacer.hSpace(10),
                   Icon(
-                    isOpen
-                        ? Icons.arrow_drop_down
-                        : Icons.arrow_drop_up,
+                    isOpen ? Icons.arrow_drop_down : Icons.arrow_drop_up,
                     color: AppColor.primaryColor,
                   ),
                 ], crossAlignment: CrossAxisAlignment.start).onInkTap(() {

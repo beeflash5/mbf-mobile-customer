@@ -20,32 +20,31 @@ class VendorPackageTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        "Select Courier Vendor".tr().text.xl.medium.make().py20(),
-        CustomListView(
-          isLoading: state.vendorsBusy,
-          dataSet: state.vendors,
-          emptyWidget: EmptyVendor(showDescription: false),
-          noScrollPhysics: true,
-          itemBuilder: (context, index) {
-            final vendor = state.vendors[index];
-            return ParcelVendorListItem(
-              vendor,
-              selected: state.selectedVendor == vendor,
-              onPressed: controller.changeSelectedVendor,
-              state: state,
-              controller: controller,
-            );
-          },
-        ).box.make().scrollVertical().expand(),
-        FormStepController(
-          onPreviousPressed: () => controller.nextForm(1),
-          onNextPressed: state.selectedVendor != null
-              ? () => controller.validateSelectedVendor(context)
-              : null,
-        ),
-      ],
-    );
+    return VStack([
+      "Select Courier Vendor".tr().text.xl.medium.make().py20(),
+      CustomListView(
+        isLoading: state.vendorsBusy,
+        dataSet: state.vendors,
+        emptyWidget: EmptyVendor(showDescription: false),
+        noScrollPhysics: true,
+        itemBuilder: (context, index) {
+          final vendor = state.vendors[index];
+          return ParcelVendorListItem(
+            vendor,
+            selected: state.selectedVendor == vendor,
+            onPressed: controller.changeSelectedVendor,
+            state: state,
+            controller: controller,
+          );
+        },
+      ).box.make().scrollVertical().expand(),
+      FormStepController(
+        onPreviousPressed: () => controller.nextForm(1),
+        onNextPressed:
+            state.selectedVendor != null
+                ? () => controller.validateSelectedVendor(context)
+                : null,
+      ),
+    ]);
   }
 }

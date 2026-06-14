@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuodz/utils/app_routes.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -29,11 +30,17 @@ import 'package:fuodz/utils/extensions/dynamic.dart';
 import 'package:fuodz/utils/extensions/string.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/utils/utils.dart';
+import 'package:fuodz/providers/cart_providers.dart';
+import 'package:fuodz/services/cart.service.dart';
+import 'package:fuodz/services/auth.service.dart';
 
 import 'widgets/amazon/amazon_customer_product_reviews.dart';
 
 class AmazonStyledCommerceProductDetailsPage extends ConsumerStatefulWidget {
-  const AmazonStyledCommerceProductDetailsPage({super.key, required this.product});
+  const AmazonStyledCommerceProductDetailsPage({
+    super.key,
+    required this.product,
+  });
 
   final Product product;
 
@@ -64,9 +71,8 @@ class _AmazonStyledCommerceProductDetailsPageState
       return false;
     }
     setState(() => _busy = true);
-    final s = ref
-        .read(productDetailsControllerProvider(widget.product))
-        .valueOrNull;
+    final s =
+        ref.read(productDetailsControllerProvider(widget.product)).valueOrNull;
     if (s == null) {
       setState(() => _busy = false);
       return false;
@@ -86,7 +92,28 @@ class _AmazonStyledCommerceProductDetailsPageState
   Future<void> _buyNow() async {
     final ok = await _addToCart(skip: true);
     if (!ok || !mounted) return;
-    context.pushWidget(CartPage());
+
+    bool canOpenCheckout = true;
+    if (!AuthServices.authenticated()) {
+      final result = await context.pushRoute<bool>(AppRoutes.loginRoute);
+      if (result == null || result == false) canOpenCheckout = false;
+    }
+    if (!canOpenCheckout || !context.mounted) return;
+
+    final cartState = ref.read(cartControllerProvider);
+    final checkOut = cartState.toCheckout();
+
+    dynamic result;
+    if (AppStrings.enableMultipleVendorOrder &&
+        CartServices.isMultipleOrder()) {
+      result = await context.pushRoute('/checkout/multiple', extra: checkOut);
+    } else {
+      result = await context.pushRoute('/checkout', extra: checkOut);
+    }
+
+    if (result == true) {
+      await ref.read(cartControllerProvider.notifier).clearCart();
+    }
   }
 
   void _scrollTo(GlobalKey viewKey) {
@@ -100,8 +127,9 @@ class _AmazonStyledCommerceProductDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(productDetailsControllerProvider(widget.product));
+    final asyncState = ref.watch(
+      productDetailsControllerProvider(widget.product),
+    );
     final notifier = ref.read(
       productDetailsControllerProvider(widget.product).notifier,
     );
@@ -140,7 +168,11 @@ class _AmazonStyledCommerceProductDetailsPageState
                   .size(13)
                   .medium
                   .make()
-                  .onInkTap(() => context.pushWidget(VendorDetailsPage(vendor: detail.vendor))),
+                  .onInkTap(
+                    () => context.pushWidget(
+                      VendorDetailsPage(vendor: detail.vendor),
+                    ),
+                  ),
               UiSpacer.vSpace(5),
               detail.name.text.size(18).semiBold.make(),
               UiSpacer.vSpace(5),
@@ -154,8 +186,7 @@ class _AmazonStyledCommerceProductDetailsPageState
                   selectionColor: AppColor.ratingColor,
                 ),
                 UiSpacer.hSpace(10),
-                "(${detail.reviewsCount})"
-                    .text
+                "(${detail.reviewsCount})".text
                     .color(AppColor.primaryColor)
                     .make(),
               ]).onTap(() => _scrollTo(_productReviewsKey)),
@@ -194,52 +225,57 @@ class _AmazonStyledCommerceProductDetailsPageState
               child: VStack([
                 CommerceProductOptions(detail),
                 UiSpacer.vSpace(15),
-                HStack([
-                  "Quantity".tr().text.semiBold.lg.make().expand(),
-                  QtyStepper(
-                    defaultValue: detail.selectedQty,
-                    min: 1,
-                    max: (detail.availableQty != null &&
-                            detail.availableQty! > 0)
-                        ? detail.availableQty!
-                        : 20,
-                    disableInput: true,
-                    onChange: notifier.updateSelectedQty,
-                    actionIconColor: AppColor.primaryColor,
-                    valueSize: 20,
-                  )
-                      .box
-                      .border(color: AppColor.primaryColor)
-                      .roundedSM
-                      .make()
-                      .fittedBox()
-                      .w(context.percentWidth * 25),
-                ], spacing: 10, crossAlignment: CrossAxisAlignment.center)
-                    .px20(),
+                HStack(
+                  [
+                    "Quantity".tr().text.semiBold.lg.make().expand(),
+                    QtyStepper(
+                          defaultValue: detail.selectedQty,
+                          min: 1,
+                          max:
+                              (detail.availableQty != null &&
+                                      detail.availableQty! > 0)
+                                  ? detail.availableQty!
+                                  : 20,
+                          disableInput: true,
+                          onChange: notifier.updateSelectedQty,
+                          actionIconColor: AppColor.primaryColor,
+                          valueSize: 20,
+                        ).box
+                        .border(color: AppColor.primaryColor)
+                        .roundedSM
+                        .make()
+                        .fittedBox()
+                        .w(context.percentWidth * 25),
+                  ],
+                  spacing: 10,
+                  crossAlignment: CrossAxisAlignment.center,
+                ).px20(),
                 UiSpacer.vSpace(12),
                 AddToCartButton(
                   loading: _busy,
                   onPressed: () => _addToCart(),
                 ).wFull(context).px20(),
                 10.heightBox,
-                BuyNowButton(loading: _busy, onPressed: _buyNow)
-                    .wFull(context)
-                    .px20(),
+                BuyNowButton(
+                  loading: _busy,
+                  onPressed: _buyNow,
+                ).wFull(context).px20(),
               ]),
             ),
             CustomVisibilty(
               visible: !detail.hasStock,
-              child: "No stock"
-                  .tr()
-                  .text
-                  .white
-                  .makeCentered()
-                  .p8()
-                  .box
-                  .red500
-                  .roundedSM
-                  .make()
-                  .p8(),
+              child:
+                  "No stock"
+                      .tr()
+                      .text
+                      .white
+                      .makeCentered()
+                      .p8()
+                      .box
+                      .red500
+                      .roundedSM
+                      .make()
+                      .p8(),
             ).px20(),
             UiSpacer.divider(height: 2, thickness: 1).py12(),
             FrequentlyBoughtTogetherView(detail),

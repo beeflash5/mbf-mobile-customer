@@ -29,75 +29,61 @@ class SearchBarInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mBorder = OutlineInputBorder(
-      borderSide: BorderSide(
-        width: 0.6,
-        color: Colors.grey.shade600,
-      ),
+      borderSide: BorderSide(width: 0.6, color: Colors.grey.shade600),
       borderRadius: BorderRadius.circular(5),
     );
-    return HStack(
-      [
-        //
-        TextFormField(
-          readOnly: readOnly,
-          onTap: () {
-            if (search != null) {
-              //pages
-              context.pushRoute('/search', extra: search!);
-            } else if (onTap != null) {
-              onTap!();
-            }
-          },
-          controller: searchTEC,
-          onFieldSubmitted: onSubmitted,
-          decoration: InputDecoration(
-            hintText: hintText ?? "Search".tr(),
-            hintStyle: context.textTheme.bodyMedium!.copyWith(
-              fontSize: 15,
-              fontWeight: FontWeight.w100,
-              color: Colors.grey.shade400,
-            ),
-            border: mBorder,
-            enabledBorder: mBorder,
-            focusedBorder: mBorder,
-            prefixIcon: Icon(
-              Icons.search,
-              size: 20,
-            ),
-            contentPadding: EdgeInsets.symmetric(vertical: 15),
-            filled: true,
-            fillColor: context.theme.colorScheme.surface,
+    return HStack([
+      //
+      TextFormField(
+        readOnly: readOnly,
+        onTap: () {
+          if (search != null) {
+            //pages
+            context.pushRoute('/search', extra: search!);
+          } else if (onTap != null) {
+            onTap!();
+          }
+        },
+        controller: searchTEC,
+        onFieldSubmitted: onSubmitted,
+        decoration: InputDecoration(
+          hintText: hintText ?? "Search".tr(),
+          hintStyle: context.textTheme.bodyMedium!.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.w100,
+            color: Colors.grey.shade400,
           ),
-        ).expand(),
-        Visibility(
-          visible: showFilter ?? true,
-          child: HStack(
-            [
-              UiSpacer.horizontalSpace(),
-              //filter icon
-              IconButton(
+          border: mBorder,
+          enabledBorder: mBorder,
+          focusedBorder: mBorder,
+          prefixIcon: Icon(Icons.search, size: 20),
+          contentPadding: EdgeInsets.symmetric(vertical: 15),
+          filled: true,
+          fillColor: context.theme.colorScheme.surface,
+        ),
+      ).expand(),
+      Visibility(
+        visible: showFilter ?? true,
+        child: HStack([
+          UiSpacer.horizontalSpace(),
+          //filter icon
+          IconButton(
                 onPressed: null,
                 color: context.theme.colorScheme.surface,
-                icon: Icon(
-                  Icons.tune,
-                  color: context.primaryColor,
-                  size: 20,
-                ),
+                icon: Icon(Icons.tune, color: context.primaryColor, size: 20),
               )
-                  .onInkTap(
-                    onFilterPressed != null ? () => onFilterPressed!() : () {},
-                  )
-                  .material(color: context.theme.colorScheme.surface)
-                  .box
-                  .color(context.theme.colorScheme.surface)
-                  .outerShadowSm
-                  .roundedSM
-                  .clip(Clip.antiAlias)
-                  .make(),
-            ],
-          ),
-        ),
-      ],
-    );
+              .onInkTap(
+                onFilterPressed != null ? () => onFilterPressed!() : () {},
+              )
+              .material(color: context.theme.colorScheme.surface)
+              .box
+              .color(context.theme.colorScheme.surface)
+              .outerShadowSm
+              .roundedSM
+              .clip(Clip.antiAlias)
+              .make(),
+        ]),
+      ),
+    ]);
   }
 }

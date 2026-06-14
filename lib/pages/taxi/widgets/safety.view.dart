@@ -9,18 +9,14 @@ class SafetyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        Icon(
-          Icons.shield,
-          color: Colors.white,
-        ).p12().box.roundedFull.shadowSm.red500.makeCentered().onInkTap(
-          () {
-            launchUrlString("tel:${AppStrings.emergencyContact}");
-          },
-        ),
-        "Safety".tr().text.makeCentered().py4(),
-      ],
-    );
+    return VStack([
+      Icon(
+        Icons.shield,
+        color: Colors.white,
+      ).p12().box.roundedFull.shadowSm.red500.makeCentered().onInkTap(() {
+        launchUrlString("tel:${AppStrings.emergencyContact}");
+      }),
+      "Safety".tr().text.makeCentered().py4(),
+    ]);
   }
 }

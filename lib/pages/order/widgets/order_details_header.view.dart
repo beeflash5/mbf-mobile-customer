@@ -19,44 +19,24 @@ class OrderDetailsHeaderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        HStack(
-          [
-            VStack(
-              [
-                "Code".tr().text.gray500.medium.sm.make(),
-                "#${order.code}".text.medium.xl.make(),
-              ],
-            ).expand(),
-            CurrencyHStack(
-              [
-                AppStrings.currencySymbol.text.medium.lg.make().px4(),
-                (order.total ?? 0.00)
-                    .currencyValueFormat()
-                    .text
-                    .medium
-                    .xl2
-                    .make(),
-              ],
-            ),
-          ],
-        ).pOnly(bottom: Vx.dp20),
-        HStack(
-          [
-            VStack(
-              [
-                "Verification Code".tr().text.gray500.medium.sm.make(),
-                "${order.verificationCode}".text.medium.xl.make(),
-              ],
-            ).expand(),
-            const Icon(
-              Icons.qr_code,
-              size: 28,
-            ).onInkTap(onShowVerificationQR),
-          ],
-        ).wFull(context).pOnly(bottom: Vx.dp20),
-      ],
-    );
+    return VStack([
+      HStack([
+        VStack([
+          "Code".tr().text.gray500.medium.sm.make(),
+          "#${order.code}".text.medium.xl.make(),
+        ]).expand(),
+        CurrencyHStack([
+          AppStrings.currencySymbol.text.medium.lg.make().px4(),
+          (order.total ?? 0.00).currencyValueFormat().text.medium.xl2.make(),
+        ]),
+      ]).pOnly(bottom: Vx.dp20),
+      HStack([
+        VStack([
+          "Verification Code".tr().text.gray500.medium.sm.make(),
+          "${order.verificationCode}".text.medium.xl.make(),
+        ]).expand(),
+        const Icon(Icons.qr_code, size: 28).onInkTap(onShowVerificationQR),
+      ]).wFull(context).pOnly(bottom: Vx.dp20),
+    ]);
   }
 }

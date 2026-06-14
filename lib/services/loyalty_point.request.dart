@@ -19,9 +19,7 @@ class LoyaltyPointRequest extends ApiService {
   Future<List<LoyaltyPointReport>> loyaltyPointReports({int page = 1}) async {
     final apiResult = await get(
       Api.loyaltyPointsReport,
-      queryParameters: {
-        "page": page,
-      },
+      queryParameters: {"page": page},
     );
 
     final apiResponse = ApiResponse.fromResponse(apiResult);
@@ -34,15 +32,8 @@ class LoyaltyPointRequest extends ApiService {
     throw apiResponse.message!;
   }
 
-  Future<ApiResponse> withdrawPoints(
-    String points,
-  ) async {
-    final apiResult = await post(
-      Api.loyaltyPointsWithdraw,
-      {
-        "points": points,
-      },
-    );
+  Future<ApiResponse> withdrawPoints(String points) async {
+    final apiResult = await post(Api.loyaltyPointsWithdraw, {"points": points});
     return ApiResponse.fromResponse(apiResult);
   }
 }

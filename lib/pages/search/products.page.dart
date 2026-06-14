@@ -51,10 +51,10 @@ class _ProducsPageState extends ConsumerState<ProducsPage> {
   }
 
   SeeAllProductsArgs get _args => (
-        type: widget.type,
-        categoryId: widget.category?.id ?? 0,
-        vendorTypeId: widget.vendorType?.id ?? 0,
-      );
+    type: widget.type,
+    categoryId: widget.category?.id ?? 0,
+    vendorTypeId: widget.vendorType?.id ?? 0,
+  );
 
   void _open(Product product) {
     context.pushRoute('/products/${product.id}', extra: product);
@@ -66,10 +66,8 @@ class _ProducsPageState extends ConsumerState<ProducsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(seeAllProductsControllerProvider(_args));
-    final notifier =
-        ref.read(seeAllProductsControllerProvider(_args).notifier);
+    final asyncState = ref.watch(seeAllProductsControllerProvider(_args));
+    final notifier = ref.read(seeAllProductsControllerProvider(_args).notifier);
 
     asyncState.whenData((s) {
       if (_refreshController.isRefresh) _refreshController.refreshCompleted();
@@ -83,67 +81,69 @@ class _ProducsPageState extends ConsumerState<ProducsPage> {
       showAppBar: true,
       showLeadingAction: true,
       title: widget.title,
-      body: widget.showGrid
-          ? CustomDynamicHeightGridView(
-              crossAxisCount: 1,
-              noScrollPhysics: true,
-              refreshController: _refreshController,
-              canRefresh: true,
-              canPullUp: true,
-              onRefresh: notifier.refresh,
-              onLoading: notifier.loadMore,
-              isLoading: isBusy,
-              itemCount: products.length,
-              crossAxisSpacing: Sizes.paddingSizeDefault,
-              mainAxisSpacing: Sizes.paddingSizeDefault,
-              padding: EdgeInsets.all(Sizes.paddingSizeDefault),
-              itemBuilder: (context, index) {
-                final product = products[index];
-                if (product.vendor.vendorType.isFood) {
-                  return FoodCard(
-                    product: product,
-                    onTap: () => context.pushRoute(
-                      '${AppRoutes.product}/${product.id}',
-                      extra: product,
-                    ),
-                  );
-                }
-                return CardCommerce(product);
-              },
-              separatorBuilder: (context, index) =>
-                  Sizes.paddingSizeDefault.heightBox,
-              emptyWidget: EmptyProduct(),
-            )
-          : CustomListView(
-              refreshController: _refreshController,
-              canRefresh: true,
-              canPullUp: true,
-              padding: EdgeInsets.all(Sizes.paddingSizeDefault),
-              onRefresh: notifier.refresh,
-              onLoading: notifier.loadMore,
-              isLoading: isBusy,
-              dataSet: products,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                if (product.vendor.vendorType.isGrocery) {
-                  return GroceryProductListItem(
-                    product: product,
+      body:
+          widget.showGrid
+              ? CustomDynamicHeightGridView(
+                crossAxisCount: 1,
+                noScrollPhysics: true,
+                refreshController: _refreshController,
+                canRefresh: true,
+                canPullUp: true,
+                onRefresh: notifier.refresh,
+                onLoading: notifier.loadMore,
+                isLoading: isBusy,
+                itemCount: products.length,
+                crossAxisSpacing: Sizes.paddingSizeDefault,
+                mainAxisSpacing: Sizes.paddingSizeDefault,
+                padding: EdgeInsets.all(Sizes.paddingSizeDefault),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  if (product.vendor.vendorType.isFood) {
+                    return FoodCard(
+                      product: product,
+                      onTap:
+                          () => context.pushRoute(
+                            '${AppRoutes.product}/${product.id}',
+                            extra: product,
+                          ),
+                    );
+                  }
+                  return CardCommerce(product);
+                },
+                separatorBuilder:
+                    (context, index) => Sizes.paddingSizeDefault.heightBox,
+                emptyWidget: EmptyProduct(),
+              )
+              : CustomListView(
+                refreshController: _refreshController,
+                canRefresh: true,
+                canPullUp: true,
+                padding: EdgeInsets.all(Sizes.paddingSizeDefault),
+                onRefresh: notifier.refresh,
+                onLoading: notifier.loadMore,
+                isLoading: isBusy,
+                dataSet: products,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  if (product.vendor.vendorType.isGrocery) {
+                    return GroceryProductListItem(
+                      product: product,
+                      onPressed: _open,
+                      qtyUpdated: _qtyChanged,
+                    );
+                  } else if (product.vendor.vendorType.isCommerce) {
+                    return CommerceProductListItem(product, height: 80);
+                  }
+                  return HorizontalProductListItem(
+                    product,
                     onPressed: _open,
                     qtyUpdated: _qtyChanged,
                   );
-                } else if (product.vendor.vendorType.isCommerce) {
-                  return CommerceProductListItem(product, height: 80);
-                }
-                return HorizontalProductListItem(
-                  product,
-                  onPressed: _open,
-                  qtyUpdated: _qtyChanged,
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  Sizes.paddingSizeDefault.heightBox,
-              emptyWidget: EmptyProduct(),
-            ),
+                },
+                separatorBuilder:
+                    (context, index) => Sizes.paddingSizeDefault.heightBox,
+                emptyWidget: EmptyProduct(),
+              ),
     );
   }
 }

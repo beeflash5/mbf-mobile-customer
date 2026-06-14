@@ -9,10 +9,10 @@ import 'package:fuodz/services/wallet.request.dart';
 
 import 'package:fuodz/services/payment_method.request.dart';
 
-final _walletRequestProvider =
-    Provider<WalletRequest>((_) => WalletRequest());
-final _paymentMethodRequestProvider =
-    Provider<PaymentMethodRequest>((_) => PaymentMethodRequest());
+final _walletRequestProvider = Provider<WalletRequest>((_) => WalletRequest());
+final _paymentMethodRequestProvider = Provider<PaymentMethodRequest>(
+  (_) => PaymentMethodRequest(),
+);
 
 class WalletState {
   const WalletState({
@@ -31,13 +31,12 @@ class WalletState {
     List<WalletTransaction>? transactions,
     int? page,
     bool? isLoadingMore,
-  }) =>
-      WalletState(
-        wallet: wallet ?? this.wallet,
-        transactions: transactions ?? this.transactions,
-        page: page ?? this.page,
-        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-      );
+  }) => WalletState(
+    wallet: wallet ?? this.wallet,
+    transactions: transactions ?? this.transactions,
+    page: page ?? this.page,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+  );
 }
 
 sealed class WalletTopupResult {
@@ -83,13 +82,16 @@ class WalletController extends AsyncNotifier<WalletState> {
     state = AsyncData(cur.copyWith(isLoadingMore: true));
     try {
       final next = cur.page + 1;
-      final more =
-          await ref.read(_walletRequestProvider).walletTransactions(page: next);
-      state = AsyncData(cur.copyWith(
-        transactions: [...cur.transactions, ...more],
-        page: next,
-        isLoadingMore: false,
-      ));
+      final more = await ref
+          .read(_walletRequestProvider)
+          .walletTransactions(page: next);
+      state = AsyncData(
+        cur.copyWith(
+          transactions: [...cur.transactions, ...more],
+          page: next,
+          isLoadingMore: false,
+        ),
+      );
     } catch (e, st) {
       state = AsyncError(e, st);
     }
@@ -99,15 +101,22 @@ class WalletController extends AsyncNotifier<WalletState> {
     try {
       int? paymentMethodId;
       try {
-        final paymentMethods = await ref.read(_paymentMethodRequestProvider).getPaymentOptions();
-        final activeMethods = paymentMethods.where((m) => m.isActive == 1 && m.isCash == 0 && m.useWallet == 1).toList();
+        final paymentMethods =
+            await ref.read(_paymentMethodRequestProvider).getPaymentOptions();
+        final activeMethods =
+            paymentMethods
+                .where(
+                  (m) => m.isActive == 1 && m.isCash == 0 && m.useWallet == 1,
+                )
+                .toList();
         if (activeMethods.isNotEmpty) {
           final topupMethod = activeMethods.firstWhere(
             (m) => m.slug.toLowerCase().contains('xendit'),
-            orElse: () => activeMethods.firstWhere(
-              (m) => m.slug.toLowerCase().contains('midtrans'),
-              orElse: () => activeMethods.first,
-            ),
+            orElse:
+                () => activeMethods.firstWhere(
+                  (m) => m.slug.toLowerCase().contains('midtrans'),
+                  orElse: () => activeMethods.first,
+                ),
           );
           paymentMethodId = topupMethod.id;
         }
@@ -115,7 +124,9 @@ class WalletController extends AsyncNotifier<WalletState> {
         print("Error fetching payment methods for topup: $e");
       }
 
-      final link = await ref.read(_walletRequestProvider).walletTopup(amount, paymentMethodId: paymentMethodId);
+      final link = await ref
+          .read(_walletRequestProvider)
+          .walletTopup(amount, paymentMethodId: paymentMethodId);
       return WalletTopupSuccess(link);
     } catch (e) {
       return WalletTopupFailure('$e');
@@ -129,6 +140,4 @@ class WalletController extends AsyncNotifier<WalletState> {
 }
 
 final walletControllerProvider =
-    AsyncNotifierProvider<WalletController, WalletState>(
-  WalletController.new,
-);
+    AsyncNotifierProvider<WalletController, WalletState>(WalletController.new);

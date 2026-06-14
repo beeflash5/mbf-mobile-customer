@@ -66,8 +66,9 @@ class _WalletPageState extends ConsumerState<WalletPage>
                 noScrollPhysics: true,
                 isLoading: asyncState.isLoading && transactions.isEmpty,
                 dataSet: transactions,
-                itemBuilder: (context, index) =>
-                    WalletTransactionListItem(transactions[index]),
+                itemBuilder:
+                    (context, index) =>
+                        WalletTransactionListItem(transactions[index]),
                 separatorBuilder: (_, __) => 10.heightBox,
               ),
             ], spacing: 10).px20(),

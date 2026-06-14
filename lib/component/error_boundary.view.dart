@@ -58,10 +58,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     }
 
     // Wrap child with error handling
-    return _ErrorCatcher(
-      onError: _handleError,
-      child: widget.child,
-    );
+    return _ErrorCatcher(onError: _handleError, child: widget.child);
   }
 }
 
@@ -70,10 +67,7 @@ class _ErrorCatcher extends StatefulWidget {
   final Widget child;
   final void Function(FlutterErrorDetails) onError;
 
-  const _ErrorCatcher({
-    required this.child,
-    required this.onError,
-  });
+  const _ErrorCatcher({required this.child, required this.onError});
 
   @override
   State<_ErrorCatcher> createState() => _ErrorCatcherState();
@@ -87,14 +81,14 @@ class _ErrorCatcherState extends State<_ErrorCatcher> {
     super.initState();
     // Store the previous error widget builder
     _previousErrorWidgetBuilder = ErrorWidget.builder;
-    
+
     // Override error widget builder for this subtree
     ErrorWidget.builder = (FlutterErrorDetails details) {
       // Handle the error in the parent ErrorBoundary
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onError(details);
       });
-      
+
       // Return a placeholder while the error is being handled
       return const SizedBox.shrink();
     };

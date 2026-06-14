@@ -8,9 +8,7 @@ class CartRequest extends ApiService {
   Future<Coupon> fetchCoupon(String code, {int? vendorTypeId}) async {
     Map<String, dynamic> params = {};
     if (vendorTypeId != null) {
-      params = {
-        "vendor_type_id": vendorTypeId,
-      };
+      params = {"vendor_type_id": vendorTypeId};
     }
 
     final apiResult = await get(

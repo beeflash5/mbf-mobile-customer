@@ -23,35 +23,31 @@ class SeeAllProductsState {
     int? page,
     bool? canLoadMore,
     bool? isLoadingMore,
-  }) =>
-      SeeAllProductsState(
-        products: products ?? this.products,
-        page: page ?? this.page,
-        canLoadMore: canLoadMore ?? this.canLoadMore,
-        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
-      );
+  }) => SeeAllProductsState(
+    products: products ?? this.products,
+    page: page ?? this.page,
+    canLoadMore: canLoadMore ?? this.canLoadMore,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+  );
 }
 
 /// Argumen family — record. Pakai 0 sebagai sentinel "no filter".
-typedef SeeAllProductsArgs = ({
-  ProductFetchDataType type,
-  int categoryId,
-  int vendorTypeId,
-});
+typedef SeeAllProductsArgs =
+    ({ProductFetchDataType type, int categoryId, int vendorTypeId});
 
-final _productRequestProvider =
-    Provider<ProductRequest>((_) => ProductRequest());
+final _productRequestProvider = Provider<ProductRequest>(
+  (_) => ProductRequest(),
+);
 
-class SeeAllProductsController extends FamilyAsyncNotifier<
-    SeeAllProductsState, SeeAllProductsArgs> {
+class SeeAllProductsController
+    extends FamilyAsyncNotifier<SeeAllProductsState, SeeAllProductsArgs> {
   late SeeAllProductsArgs _args;
 
   Map<String, dynamic> _params(int page) {
     final t = _args.type.name.toLowerCase();
     return {
       'category_id': _args.categoryId == 0 ? null : _args.categoryId,
-      'vendor_type_id':
-          _args.vendorTypeId == 0 ? null : _args.vendorTypeId,
+      'vendor_type_id': _args.vendorTypeId == 0 ? null : _args.vendorTypeId,
       'type': t,
       'filter': t,
       'page': page,
@@ -96,12 +92,14 @@ class SeeAllProductsController extends FamilyAsyncNotifier<
       final more = await ref
           .read(_productRequestProvider)
           .getProdcuts(queryParams: _params(nextPage), page: nextPage);
-      state = AsyncData(current.copyWith(
-        products: [...current.products, ...more],
-        page: nextPage,
-        isLoadingMore: false,
-        canLoadMore: more.isNotEmpty,
-      ));
+      state = AsyncData(
+        current.copyWith(
+          products: [...current.products, ...more],
+          page: nextPage,
+          isLoadingMore: false,
+          canLoadMore: more.isNotEmpty,
+        ),
+      );
     } catch (_) {
       state = AsyncData(current.copyWith(isLoadingMore: false));
       rethrow;
@@ -110,6 +108,7 @@ class SeeAllProductsController extends FamilyAsyncNotifier<
 }
 
 final seeAllProductsControllerProvider = AsyncNotifierProvider.family<
-    SeeAllProductsController,
-    SeeAllProductsState,
-    SeeAllProductsArgs>(SeeAllProductsController.new);
+  SeeAllProductsController,
+  SeeAllProductsState,
+  SeeAllProductsArgs
+>(SeeAllProductsController.new);

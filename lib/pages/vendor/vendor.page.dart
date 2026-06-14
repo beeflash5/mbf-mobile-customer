@@ -55,10 +55,7 @@ class _VendorPageState extends ConsumerState<VendorPage>
       showCart: true,
       key: pageKey,
       body: VStack([
-        VendorHeader(
-          vendorType: widget.vendorType,
-          onrefresh: _reload,
-        ),
+        VendorHeader(vendorType: widget.vendorType, onrefresh: _reload),
         SmartRefresher(
           enablePullDown: true,
           controller: _refreshController,
@@ -66,24 +63,25 @@ class _VendorPageState extends ConsumerState<VendorPage>
             _refreshController.refreshCompleted();
             _reload();
           },
-          child: VStack([
-            Banners(widget.vendorType),
-            VendorTypeCategories(
-              widget.vendorType,
-              showTitle: false,
-              description: "Categories".tr(),
-              childAspectRatio: 1.4,
-            ),
-            AppStrings.enableSingleVendor
-                ? UiSpacer.emptySpace()
-                : NearByVendors(widget.vendorType),
-            BestSellingProducts(widget.vendorType),
-            ForYouProducts(widget.vendorType),
-            AppStrings.enableSingleVendor
-                ? UiSpacer.verticalSpace()
-                : TopVendors(widget.vendorType),
-            ViewAllVendorsView(vendorType: widget.vendorType),
-          ]).scrollVertical(),
+          child:
+              VStack([
+                Banners(widget.vendorType),
+                VendorTypeCategories(
+                  widget.vendorType,
+                  showTitle: false,
+                  description: "Categories".tr(),
+                  childAspectRatio: 1.4,
+                ),
+                AppStrings.enableSingleVendor
+                    ? UiSpacer.emptySpace()
+                    : NearByVendors(widget.vendorType),
+                BestSellingProducts(widget.vendorType),
+                ForYouProducts(widget.vendorType),
+                AppStrings.enableSingleVendor
+                    ? UiSpacer.verticalSpace()
+                    : TopVendors(widget.vendorType),
+                ViewAllVendorsView(vendorType: widget.vendorType),
+              ]).scrollVertical(),
         ).expand(),
       ]),
     );

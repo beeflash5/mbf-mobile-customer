@@ -31,21 +31,21 @@ class ProductBoughtTogetherState {
     Set<int>? selectedIds,
     bool? expanded,
     bool? isAddingToCart,
-  }) =>
-      ProductBoughtTogetherState(
-        products: products ?? this.products,
-        selectedIds: selectedIds ?? this.selectedIds,
-        expanded: expanded ?? this.expanded,
-        isAddingToCart: isAddingToCart ?? this.isAddingToCart,
-      );
+  }) => ProductBoughtTogetherState(
+    products: products ?? this.products,
+    selectedIds: selectedIds ?? this.selectedIds,
+    expanded: expanded ?? this.expanded,
+    isAddingToCart: isAddingToCart ?? this.isAddingToCart,
+  );
 }
 
-final _productRequestProvider =
-    Provider<ProductRequest>((_) => ProductRequest());
+final _productRequestProvider = Provider<ProductRequest>(
+  (_) => ProductRequest(),
+);
 
 /// Family by product id (produk yang sedang dilihat).
-class ProductBoughtTogetherController extends FamilyAsyncNotifier<
-    ProductBoughtTogetherState, int> {
+class ProductBoughtTogetherController
+    extends FamilyAsyncNotifier<ProductBoughtTogetherState, int> {
   @override
   Future<ProductBoughtTogetherState> build(int arg) async {
     final products = await ref
@@ -83,11 +83,7 @@ class ProductBoughtTogetherController extends FamilyAsyncNotifier<
       for (final product in s.selectedProducts) {
         product.selectedQty = 1;
         await CartServices.addToCart(
-          Cart(
-            product: product,
-            selectedQty: 1,
-            price: product.sellPrice,
-          ),
+          Cart(product: product, selectedQty: 1, price: product.sellPrice),
         );
       }
       state = AsyncData(s.copyWith(isAddingToCart: false));
@@ -100,6 +96,7 @@ class ProductBoughtTogetherController extends FamilyAsyncNotifier<
 }
 
 final productBoughtTogetherControllerProvider = AsyncNotifierProvider.family<
-    ProductBoughtTogetherController,
-    ProductBoughtTogetherState,
-    int>(ProductBoughtTogetherController.new);
+  ProductBoughtTogetherController,
+  ProductBoughtTogetherState,
+  int
+>(ProductBoughtTogetherController.new);

@@ -35,23 +35,25 @@ class TopRatedVendors extends ConsumerWidget {
       ),
       Visibility(
         visible: vendors.isNotEmpty,
-        child: VStack([
-          "Top Rated".tr().text.lg.medium.make().p12(),
-          CustomListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            dataSet: vendors,
-            isLoading: asyncVendors.isLoading,
-            itemBuilder: (context, index) {
-              final vendor = vendors[index];
-              return TopRatedVendorListItem(
-                vendor: vendor,
-                onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
-              );
-            },
-            emptyWidget: EmptyVendor(),
-          ).h(vendors.isEmpty ? 220 : 140),
-        ]).py12(),
+        child:
+            VStack([
+              "Top Rated".tr().text.lg.medium.make().p12(),
+              CustomListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                dataSet: vendors,
+                isLoading: asyncVendors.isLoading,
+                itemBuilder: (context, index) {
+                  final vendor = vendors[index];
+                  return TopRatedVendorListItem(
+                    vendor: vendor,
+                    onPressed:
+                        (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
+                  );
+                },
+                emptyWidget: EmptyVendor(),
+              ).h(vendors.isEmpty ? 220 : 140),
+            ]).py12(),
       ),
     ]);
   }

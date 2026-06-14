@@ -8,20 +8,23 @@ import 'package:fuodz/services/service.request.dart';
 import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 
-final _productRequestProvider =
-    Provider<ProductRequest>((_) => ProductRequest());
-final _serviceRequestProvider =
-    Provider<ServiceRequest>((_) => ServiceRequest());
+final _productRequestProvider = Provider<ProductRequest>(
+  (_) => ProductRequest(),
+);
+final _serviceRequestProvider = Provider<ServiceRequest>(
+  (_) => ServiceRequest(),
+);
 
 /// Args for both `products` and `home_products`. `isHome=true` matches the
 /// legacy HomeProductsViewModel behaviour (sets `is_home=1`).
-typedef ProductsListingArgs = ({
-  int vendorTypeId,
-  ProductFetchDataType type,
-  int categoryId,
-  bool byLocation,
-  bool isHome,
-});
+typedef ProductsListingArgs =
+    ({
+      int vendorTypeId,
+      ProductFetchDataType type,
+      int categoryId,
+      bool byLocation,
+      bool isHome,
+    });
 
 class ProductsListingController
     extends FamilyAsyncNotifier<List<Product>, ProductsListingArgs> {
@@ -33,8 +36,7 @@ class ProductsListingController
       'type': arg.type.name.toLowerCase(),
       if (arg.isHome) 'is_home': true,
     };
-    final useLocation =
-        arg.byLocation || AppStrings.enableFatchByLocation;
+    final useLocation = arg.byLocation || AppStrings.enableFatchByLocation;
     final coords = LocationService.currenctAddress?.coordinates;
     if (useLocation && coords?.latitude != null) {
       params['latitude'] = coords!.latitude;
@@ -45,9 +47,10 @@ class ProductsListingController
 }
 
 final productsListingControllerProvider = AsyncNotifierProvider.family<
-    ProductsListingController, List<Product>, ProductsListingArgs>(
-  ProductsListingController.new,
-);
+  ProductsListingController,
+  List<Product>,
+  ProductsListingArgs
+>(ProductsListingController.new);
 
 // =====================================================================
 // HOME SERVICES (best services) — family by vendorTypeId (0 = all)
@@ -56,18 +59,21 @@ class HomeBestServicesController
     extends FamilyAsyncNotifier<List<Service>, int> {
   @override
   Future<List<Service>> build(int arg) async {
-    return ref.read(_serviceRequestProvider).getServices(
-      page: 1,
-      queryParams: {
-        'type': 'best',
-        if (arg != 0) 'vendor_type_id': arg,
-        'direction': 'desc',
-      },
-    );
+    return ref
+        .read(_serviceRequestProvider)
+        .getServices(
+          page: 1,
+          queryParams: {
+            'type': 'best',
+            if (arg != 0) 'vendor_type_id': arg,
+            'direction': 'desc',
+          },
+        );
   }
 }
 
 final homeBestServicesControllerProvider = AsyncNotifierProvider.family<
-    HomeBestServicesController, List<Service>, int>(
-  HomeBestServicesController.new,
-);
+  HomeBestServicesController,
+  List<Service>,
+  int
+>(HomeBestServicesController.new);

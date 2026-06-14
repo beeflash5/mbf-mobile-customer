@@ -60,60 +60,71 @@ class Coupon {
       description: json["description"] == null ? null : json["description"],
       color: json["color"],
       photo: json["photo"],
-      discount: json["discount"] == null
-          ? 0.00
-          : double.parse(json["discount"].toString()),
-      min_order_amount: json["min_order_amount"] != null
-          ? double.parse(json["min_order_amount"].toString())
-          : null,
-      max_coupon_amount: json["max_coupon_amount"] != null
-          ? double.parse(json["max_coupon_amount"].toString())
-          : null,
+      discount:
+          json["discount"] == null
+              ? 0.00
+              : double.parse(json["discount"].toString()),
+      min_order_amount:
+          json["min_order_amount"] != null
+              ? double.parse(json["min_order_amount"].toString())
+              : null,
+      max_coupon_amount:
+          json["max_coupon_amount"] != null
+              ? double.parse(json["max_coupon_amount"].toString())
+              : null,
       percentage: json["percentage"] == null ? null : json["percentage"],
-      expiresOn: json["expires_on"] == null
-          ? null
-          : DateTime.parse(json["expires_on"]),
+      expiresOn:
+          json["expires_on"] == null
+              ? null
+              : DateTime.parse(json["expires_on"]),
       times: json["times"],
       expired: json["expired"],
       useLeft: int.parse(json["use_left"].toString()),
       isActive: json["is_active"] == null ? null : json["is_active"],
-      formattedExpiresOn: json["formatted_expires_on"] == null
-          ? null
-          : json["formatted_expires_on"],
-      products: json["products"] == null
-          ? []
-          : List<Product>.from(
-              json["products"].map((x) => Product.fromJson(x))),
-      vendors: json["vendors"] == null
-          ? []
-          : List<Vendor>.from(json["vendors"].map((x) => Vendor.fromJson(x))),
+      formattedExpiresOn:
+          json["formatted_expires_on"] == null
+              ? null
+              : json["formatted_expires_on"],
+      products:
+          json["products"] == null
+              ? []
+              : List<Product>.from(
+                json["products"].map((x) => Product.fromJson(x)),
+              ),
+      vendors:
+          json["vendors"] == null
+              ? []
+              : List<Vendor>.from(
+                json["vendors"].map((x) => Vendor.fromJson(x)),
+              ),
       for_delivery: json["for_delivery"] == null ? false : json["for_delivery"],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "vendor_type_id": vendorTypeId,
-        "color": color,
-        "photo": photo,
-        "code": code,
-        "description": description,
-        "discount": discount,
-        "min_order_amount": min_order_amount,
-        "max_coupon_amount": max_coupon_amount,
-        "percentage": percentage,
-        "expires_on": expiresOn == null
+    "id": id,
+    "vendor_type_id": vendorTypeId,
+    "color": color,
+    "photo": photo,
+    "code": code,
+    "description": description,
+    "discount": discount,
+    "min_order_amount": min_order_amount,
+    "max_coupon_amount": max_coupon_amount,
+    "percentage": percentage,
+    "expires_on":
+        expiresOn == null
             ? null
             : "${expiresOn?.year.toString().padLeft(4, '0')}-${expiresOn?.month.toString().padLeft(2, '0')}-${expiresOn?.day.toString().padLeft(2, '0')}",
-        "times": times,
-        "expired": expired,
-        "use_left": useLeft,
-        "is_active": isActive,
-        "formatted_expires_on": formattedExpiresOn,
-        "products": List<dynamic>.from(products.map((x) => x.toJson())),
-        "vendors": List<dynamic>.from(vendors.map((x) => x.toJson())),
-        "for_delivery": for_delivery,
-      };
+    "times": times,
+    "expired": expired,
+    "use_left": useLeft,
+    "is_active": isActive,
+    "formatted_expires_on": formattedExpiresOn,
+    "products": List<dynamic>.from(products.map((x) => x.toJson())),
+    "vendors": List<dynamic>.from(vendors.map((x) => x.toJson())),
+    "for_delivery": for_delivery,
+  };
 
   //
   double validateDiscount(double amount, double discount) {
@@ -123,7 +134,8 @@ class Coupon {
       throw "Order amount is less than coupon minimum allowed order".tr();
     }
 
-    if (this.max_coupon_amount != null && discount > (this.max_coupon_amount ?? 0)) {
+    if (this.max_coupon_amount != null &&
+        discount > (this.max_coupon_amount ?? 0)) {
       return (this.max_coupon_amount ?? 0);
     } else {
       return discount;

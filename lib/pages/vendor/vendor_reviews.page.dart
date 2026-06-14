@@ -20,8 +20,7 @@ class VendorReviewsPage extends ConsumerStatefulWidget {
   final Vendor vendor;
 
   @override
-  ConsumerState<VendorReviewsPage> createState() =>
-      _VendorReviewsPageState();
+  ConsumerState<VendorReviewsPage> createState() => _VendorReviewsPageState();
 }
 
 class _VendorReviewsPageState extends ConsumerState<VendorReviewsPage> {
@@ -36,10 +35,10 @@ class _VendorReviewsPageState extends ConsumerState<VendorReviewsPage> {
   @override
   Widget build(BuildContext context) {
     final vendorId = widget.vendor.id;
-    final asyncState =
-        ref.watch(vendorReviewsControllerProvider(vendorId));
-    final notifier =
-        ref.read(vendorReviewsControllerProvider(vendorId).notifier);
+    final asyncState = ref.watch(vendorReviewsControllerProvider(vendorId));
+    final notifier = ref.read(
+      vendorReviewsControllerProvider(vendorId).notifier,
+    );
 
     asyncState.whenData((s) {
       if (_refreshController.isRefresh) _refreshController.refreshCompleted();
@@ -67,12 +66,13 @@ class _VendorReviewsPageState extends ConsumerState<VendorReviewsPage> {
         itemBuilder: (context, index) {
           return ReviewListItem(reviews[index]);
         },
-        emptyWidget: EmptyState(
-          imageUrl: AppImages.noReview,
-          title: 'No Review'.tr(),
-          description:
-              'When customer drop review, you will see them here'.tr(),
-        ).centered(),
+        emptyWidget:
+            EmptyState(
+              imageUrl: AppImages.noReview,
+              title: 'No Review'.tr(),
+              description:
+                  'When customer drop review, you will see them here'.tr(),
+            ).centered(),
       ),
     );
   }

@@ -22,10 +22,7 @@ import 'package:fuodz/utils/ui_spacer.dart';
 import 'widgets/taxi_trip_map.preview.dart';
 
 class TaxiOrderDetailPage extends ConsumerStatefulWidget {
-  const TaxiOrderDetailPage({
-    super.key,
-    required this.order,
-  });
+  const TaxiOrderDetailPage({super.key, required this.order});
 
   final Order order;
 
@@ -48,8 +45,9 @@ class _TaxiOrderDetailPageState extends ConsumerState<TaxiOrderDetailPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(orderDetailsControllerProvider(widget.order));
-    final controller =
-        ref.read(orderDetailsControllerProvider(widget.order).notifier);
+    final controller = ref.read(
+      orderDetailsControllerProvider(widget.order).notifier,
+    );
     final order = state.order;
     final String currencySymbol = order.taxiOrder!.currencySymbol;
 
@@ -59,91 +57,89 @@ class _TaxiOrderDetailPageState extends ConsumerState<TaxiOrderDetailPage> {
       showAppBar: true,
       showLeadingAction: true,
       isLoading: state.isBusy,
-      body: VStack(
-        [
-          TaxiTripMapPreview(order),
-          BasicTaxiTripInfoView(order),
-          UiSpacer.vSpace(),
-          OrderPaymentInfoView(
-            order: order,
-            onOpenPaymentMethodSelection: () =>
-                controller.openPaymentMethodSelection(context),
-            paymentStatusBusy: state.paymentStatusBusy,
-          )
-              .wFull(context)
-              .box
-              .shadowXs
-              .color(context.theme.colorScheme.surface)
-              .make(),
-          OrderDriverInfoView(
-            order,
-            rateDriverAction: () => controller.rateDriver(context),
-          ),
-          TaxiOrderTripVerificationView(order),
-          OrderSummary(
-            subTotal: order.subTotal!,
-            discount: order.discount ?? 0,
-            driverTip: order.tip ?? 0,
-            tax: order.tax,
-            total: order.total!,
-            mCurrencySymbol:
-                "${order.taxiOrder!.currency != null ? order.taxiOrder!.currency!.symbol : AppStrings.currencySymbol}",
-            customWidget: VStack(
-              [
-                AmountTile(
-                  "Base Fare".tr(),
-                  "$currencySymbol ${order.taxiOrder!.base_fare ?? 0}"
-                      .currencyFormat(currencySymbol),
-                ).py2(),
-                AmountTile(
-                  ("Trip Distance".tr() + " (Km)"),
-                  "${order.taxiOrder!.trip_distance ?? 0}  (${order.taxiOrder!.distance_fare ?? 0}/Km)",
-                ).py2(),
-                AmountTile(
-                  "Trip Duration".tr(),
-                  "${order.taxiOrder!.trip_time ?? 0}  (${order.taxiOrder!.time_fare ?? 0}/${'Minute'.tr()})",
-                ).py2(),
-                DottedLine(
-                  dashColor: context.textTheme.bodyLarge!.color!,
-                ).py8(),
-              ],
+      body:
+          VStack([
+            TaxiTripMapPreview(order),
+            BasicTaxiTripInfoView(order),
+            UiSpacer.vSpace(),
+            OrderPaymentInfoView(
+                  order: order,
+                  onOpenPaymentMethodSelection:
+                      () => controller.openPaymentMethodSelection(context),
+                  paymentStatusBusy: state.paymentStatusBusy,
+                )
+                .wFull(context)
+                .box
+                .shadowXs
+                .color(context.theme.colorScheme.surface)
+                .make(),
+            OrderDriverInfoView(
+              order,
+              rateDriverAction: () => controller.rateDriver(context),
             ),
-          )
-              .px20()
-              .py12()
-              .box
-              .shadowXs
-              .color(context.theme.colorScheme.surface)
-              .make()
-              .pSymmetric(v: 20),
-          (context.percentHeight * 20).heightBox,
-        ],
-      ).scrollVertical(),
-      bottomSheet: order.isScheduled
-          ? Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.backgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: const Offset(0, 0),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: SafeArea(
-                child: CustomButton(
-                  loading: state.orderBusy,
-                  color: AppColor.closeColor,
-                  title: "Cancel Order".tr(),
-                  onPressed: () => controller.cancelOrder(context),
+            TaxiOrderTripVerificationView(order),
+            OrderSummary(
+                  subTotal: order.subTotal!,
+                  discount: order.discount ?? 0,
+                  driverTip: order.tip ?? 0,
+                  tax: order.tax,
+                  total: order.total!,
+                  mCurrencySymbol:
+                      "${order.taxiOrder!.currency != null ? order.taxiOrder!.currency!.symbol : AppStrings.currencySymbol}",
+                  customWidget: VStack([
+                    AmountTile(
+                      "Base Fare".tr(),
+                      "$currencySymbol ${order.taxiOrder!.base_fare ?? 0}"
+                          .currencyFormat(currencySymbol),
+                    ).py2(),
+                    AmountTile(
+                      ("Trip Distance".tr() + " (Km)"),
+                      "${order.taxiOrder!.trip_distance ?? 0}  (${order.taxiOrder!.distance_fare ?? 0}/Km)",
+                    ).py2(),
+                    AmountTile(
+                      "Trip Duration".tr(),
+                      "${order.taxiOrder!.trip_time ?? 0}  (${order.taxiOrder!.time_fare ?? 0}/${'Minute'.tr()})",
+                    ).py2(),
+                    DottedLine(
+                      dashColor: context.textTheme.bodyLarge!.color!,
+                    ).py8(),
+                  ]),
+                )
+                .px20()
+                .py12()
+                .box
+                .shadowXs
+                .color(context.theme.colorScheme.surface)
+                .make()
+                .pSymmetric(v: 20),
+            (context.percentHeight * 20).heightBox,
+          ]).scrollVertical(),
+      bottomSheet:
+          order.isScheduled
+              ? Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.backgroundColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade200,
+                      offset: const Offset(0, 0),
+                      blurRadius: 8,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-              ),
-            )
-          : null,
+                child: SafeArea(
+                  child: CustomButton(
+                    loading: state.orderBusy,
+                    color: AppColor.closeColor,
+                    title: "Cancel Order".tr(),
+                    onPressed: () => controller.cancelOrder(context),
+                  ),
+                ),
+              )
+              : null,
     );
   }
 }

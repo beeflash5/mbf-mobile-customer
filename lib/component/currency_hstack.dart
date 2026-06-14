@@ -22,17 +22,17 @@ class CurrencyHStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final listItems = children.map((e) {
-      if (e is Widget) {
-        return e;
-      } else {
-        return "$e"
-            .text
-            .size(textSize ?? 12)
-            .color(textColor ?? Utils.textColorByTheme())
-            .make();
-      }
-    }).toList();
+    final listItems =
+        children.map((e) {
+          if (e is Widget) {
+            return e;
+          } else {
+            return "$e".text
+                .size(textSize ?? 12)
+                .color(textColor ?? Utils.textColorByTheme())
+                .make();
+          }
+        }).toList();
     return HStack(
       !Utils.currencyLeftSided ? listItems.reversed.toList() : listItems,
     );

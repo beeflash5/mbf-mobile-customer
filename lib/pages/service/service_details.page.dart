@@ -37,8 +37,7 @@ class ServiceDetailsPage extends ConsumerStatefulWidget {
   const ServiceDetailsPage(this.service, {super.key});
 
   @override
-  ConsumerState<ServiceDetailsPage> createState() =>
-      _ServiceDetailsPageState();
+  ConsumerState<ServiceDetailsPage> createState() => _ServiceDetailsPageState();
 }
 
 class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
@@ -76,8 +75,9 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(serviceDetailsControllerProvider(widget.service));
+    final asyncState = ref.watch(
+      serviceDetailsControllerProvider(widget.service),
+    );
     final state = asyncState.valueOrNull;
     final vmService = state?.service ?? widget.service;
     final reviews = state?.reviews ?? const [];
@@ -98,124 +98,127 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
       reviews: reviews,
       selectedOptions: selectedOptions,
       isBusy: isLoading,
-      onReload: () => ref
-          .read(serviceDetailsControllerProvider(widget.service).notifier)
-          .loadMoreReviews(),
+      onReload:
+          () =>
+              ref
+                  .read(
+                    serviceDetailsControllerProvider(widget.service).notifier,
+                  )
+                  .loadMoreReviews(),
       onBook: () => _bookService(vmService, selectedOptions),
-      onOpenVendor: () => context.pushRoute(
-        '${AppRoutes.vendorDetails}/${vmService.vendor.id}',
-        extra: vmService.vendor,
-      ),
+      onOpenVendor:
+          () => context.pushRoute(
+            '${AppRoutes.vendorDetails}/${vmService.vendor.id}',
+            extra: vmService.vendor,
+          ),
     );
     return _legacyBuild(vm);
   }
 
   Widget _legacyBuild(_VmShim vm) {
-        return Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              _buildSliverAppBar(vm),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverAppBar(vm),
 
-              SliverToBoxAdapter(
-                child: Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.width - 100,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            PageView.builder(
-                              itemCount: widget.service.photos.length,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentImageIndex = index;
-                                });
-                              },
-                              itemBuilder: (context, index) {
-                                return CachedNetworkImage(
-                                  imageUrl: widget.service.photos[index],
-                                  fit: BoxFit.cover,
-                                  placeholder:
-                                      (context, url) => Container(
-                                        color: Colors.grey[300],
-                                        child: const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
+          SliverToBoxAdapter(
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.width - 100,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        PageView.builder(
+                          itemCount: widget.service.photos.length,
+                          onPageChanged: (index) {
+                            setState(() {
+                              _currentImageIndex = index;
+                            });
+                          },
+                          itemBuilder: (context, index) {
+                            return CachedNetworkImage(
+                              imageUrl: widget.service.photos[index],
+                              fit: BoxFit.cover,
+                              placeholder:
+                                  (context, url) => Container(
+                                    color: Colors.grey[300],
+                                    child: const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                              errorWidget:
+                                  (context, url, error) => Container(
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.error),
+                                  ),
+                            );
+                          },
+                        ),
+                        if (widget.service.photos.length > 1)
+                          Positioned(
+                            bottom: 16,
+                            left: 0,
+                            right: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:
+                                  widget.service.photos.asMap().entries.map((
+                                    entry,
+                                  ) {
+                                    return Container(
+                                      width: 8,
+                                      height: 8,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4,
                                       ),
-                                  errorWidget:
-                                      (context, url, error) => Container(
-                                        color: Colors.grey[300],
-                                        child: const Icon(Icons.error),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:
+                                            _currentImageIndex == entry.key
+                                                ? Colors.white
+                                                : Colors.white.withOpacity(0.5),
                                       ),
-                                );
-                              },
+                                    );
+                                  }).toList(),
                             ),
-                            if (widget.service.photos.length > 1)
-                              Positioned(
-                                bottom: 16,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children:
-                                      widget.service.photos.asMap().entries.map(
-                                        (entry) {
-                                          return Container(
-                                            width: 8,
-                                            height: 8,
-                                            margin: const EdgeInsets.symmetric(
-                                              horizontal: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color:
-                                                  _currentImageIndex ==
-                                                          entry.key
-                                                      ? Colors.white
-                                                      : Colors.white
-                                                          .withOpacity(0.5),
-                                            ),
-                                          );
-                                        },
-                                      ).toList(),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: VStack(
-                          [
-                            // SizedBox(height: 200),
-                            _buildServiceHeader(),
-
-                            _buildTabsSection(context, vm),
-
-                            // _buildPriceSection(),
-                            // _buildServiceDetails(),
-
-                            // vm.service.video.isNotEmptyAndNotNull
-                            //     ? NetworkVideoPlayer(url: vm.service.video!)
-                            //     : SizedBox(),
-                            // _buildServiceFeatures(),
-                            // if (vm.service.optionGroups?.isNotEmpty ?? false)
-                            //   _buildServiceOptions(vm),
-                            // _buildVendorSection(vm),
-                          ],
-                          crossAlignment: CrossAxisAlignment.start,
-                          spacing: Sizes.paddingSizeDefault,
-                        ),
-                      ),
-                    ],
+                          ),
+                      ],
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: VStack(
+                      [
+                        // SizedBox(height: 200),
+                        _buildServiceHeader(),
+
+                        _buildTabsSection(context, vm),
+
+                        // _buildPriceSection(),
+                        // _buildServiceDetails(),
+
+                        // vm.service.video.isNotEmptyAndNotNull
+                        //     ? NetworkVideoPlayer(url: vm.service.video!)
+                        //     : SizedBox(),
+                        // _buildServiceFeatures(),
+                        // if (vm.service.optionGroups?.isNotEmpty ?? false)
+                        //   _buildServiceOptions(vm),
+                        // _buildVendorSection(vm),
+                      ],
+                      crossAlignment: CrossAxisAlignment.start,
+                      spacing: Sizes.paddingSizeDefault,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-          bottomNavigationBar: _buildBottomBookButton(vm),
-        );
+        ],
+      ),
+      bottomNavigationBar: _buildBottomBookButton(vm),
+    );
   }
 
   Widget _buildTabsSection(BuildContext context, _VmShim vm) {
@@ -652,7 +655,6 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
     );
   }
 
-
   Widget _buildDetailRow(String label, String value) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -677,7 +679,6 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
       ],
     );
   }
-
 
   Widget _buildServiceOptions(_VmShim vm) {
     //options if any
@@ -712,7 +713,6 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
       ),
     ]);
   }
-
 
   Widget _buildServiceFeatures() {
     return Column(

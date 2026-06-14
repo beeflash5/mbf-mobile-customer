@@ -33,8 +33,9 @@ class _VendorDetailsPageState extends ConsumerState<VendorDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncVendor =
-        ref.watch(vendorDetailsControllerProvider(widget.vendor.id));
+    final asyncVendor = ref.watch(
+      vendorDetailsControllerProvider(widget.vendor.id),
+    );
     final detail = asyncVendor.valueOrNull ?? widget.vendor;
     return (!detail.hasSubcategories && !detail.isServiceType)
         ? VendorDetailsWithMenuPage(vendor: detail)

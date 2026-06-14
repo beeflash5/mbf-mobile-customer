@@ -26,33 +26,31 @@ class FormStepController extends StatelessWidget {
   final double? nextBtnWidth;
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        //prev
-        showPrevious
-            ? OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                // height: Vx.dp40,
-                child: "PREVIOUS".tr().text.make(),
-                onPressed: () => onPreviousPressed!() ?? () {},
-              ).py20().w(context.percentWidth * 35)
-            : UiSpacer.emptySpace(),
-        Spacer(),
-        //next
-        showLoadingNext
-            ? BusyIndicator().py20().px4()
-            : showNext
-                ? CustomButton(
-                    height: Vx.dp40,
-                    title: nextTitle ?? "NEXT".tr(),
-                    onPressed: onNextPressed,
-                  ).py20().w(nextBtnWidth ?? (context.percentWidth * 35))
-                : UiSpacer.emptySpace(),
-      ],
-    );
+    return HStack([
+      //prev
+      showPrevious
+          ? OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            // height: Vx.dp40,
+            child: "PREVIOUS".tr().text.make(),
+            onPressed: () => onPreviousPressed!() ?? () {},
+          ).py20().w(context.percentWidth * 35)
+          : UiSpacer.emptySpace(),
+      Spacer(),
+      //next
+      showLoadingNext
+          ? BusyIndicator().py20().px4()
+          : showNext
+          ? CustomButton(
+            height: Vx.dp40,
+            title: nextTitle ?? "NEXT".tr(),
+            onPressed: onNextPressed,
+          ).py20().w(nextBtnWidth ?? (context.percentWidth * 35))
+          : UiSpacer.emptySpace(),
+    ]);
   }
 }

@@ -3,11 +3,8 @@ import 'package:fuodz/component/card/custom.visibility.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ToogleGridViewIcon extends StatefulWidget {
-  ToogleGridViewIcon({
-    this.showGrid = false,
-    required this.onchange,
-    Key? key,
-  }) : super(key: key);
+  ToogleGridViewIcon({this.showGrid = false, required this.onchange, Key? key})
+    : super(key: key);
 
   final bool showGrid;
   final Function(bool) onchange;
@@ -26,39 +23,27 @@ class _ToogleGridViewIconState extends State<ToogleGridViewIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //
-        CustomVisibilty(
-          visible: showGrid,
-          child: Icon(
-            Icons.grid_view,
-            size: 20,
-            color: context.primaryColor,
+    return VStack([
+          //
+          CustomVisibilty(
+            visible: showGrid,
+            child: Icon(Icons.grid_view, size: 20, color: context.primaryColor),
           ),
-        ),
 
-        //
-        CustomVisibilty(
-          visible: !showGrid,
-          child: Icon(
-            Icons.list,
-            size: 20,
-            color: context.primaryColor,
+          //
+          CustomVisibilty(
+            visible: !showGrid,
+            child: Icon(Icons.list, size: 20, color: context.primaryColor),
           ),
-        ),
-      ],
-    )
+        ])
         .p8()
-        .onInkTap(
-          () {
-            setState(() {
-              showGrid = !showGrid;
-            });
-            //
-            widget.onchange(showGrid);
-          },
-        )
+        .onInkTap(() {
+          setState(() {
+            showGrid = !showGrid;
+          });
+          //
+          widget.onchange(showGrid);
+        })
         .material(color: context.theme.colorScheme.surface)
         .box
         .outerShadowSm

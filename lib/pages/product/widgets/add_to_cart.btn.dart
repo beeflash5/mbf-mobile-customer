@@ -19,13 +19,14 @@ class AddToCartButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomButton(
       loading: loading,
-      child: "Add to cart"
-          .tr()
-          .text
-          .color(Utils.textColorByTheme())
-          .semiBold
-          .make()
-          .p12(),
+      child:
+          "Add to cart"
+              .tr()
+              .text
+              .color(Utils.textColorByTheme())
+              .semiBold
+              .make()
+              .p12(),
       onPressed: onPressed,
     );
   }

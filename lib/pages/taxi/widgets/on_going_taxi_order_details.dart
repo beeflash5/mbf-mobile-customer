@@ -17,8 +17,9 @@ class OnGoingTaxiOrderDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     return Positioned(
       bottom: 0,
       left: 0,
@@ -27,24 +28,24 @@ class OnGoingTaxiOrderDetails extends ConsumerWidget {
         onChange: (size) {
           taxiController.updateGoogleMapPadding(height: size.height);
         },
-        child: VStack(
-          [
-            Visibility(
-              visible: taxiState.onGoingOrderTrip?.canCancelTaxi ?? false,
-              child: CustomTextButton(
-                title: "Cancel Booking".tr(),
-                titleColor: AppColor.getStausColor("failed"),
-              ).centered(),
-            ),
-          ],
-        )
-            .p20()
-            .scrollVertical()
-            .box
-            .color(context.theme.colorScheme.surface)
-            .topRounded(value: 30)
-            .shadow5xl
-            .make(),
+        child:
+            VStack([
+                  Visibility(
+                    visible: taxiState.onGoingOrderTrip?.canCancelTaxi ?? false,
+                    child:
+                        CustomTextButton(
+                          title: "Cancel Booking".tr(),
+                          titleColor: AppColor.getStausColor("failed"),
+                        ).centered(),
+                  ),
+                ])
+                .p20()
+                .scrollVertical()
+                .box
+                .color(context.theme.colorScheme.surface)
+                .topRounded(value: 30)
+                .shadow5xl
+                .make(),
       ),
     );
   }

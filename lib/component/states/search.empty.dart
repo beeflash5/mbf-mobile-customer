@@ -4,10 +4,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EmptySearch extends StatelessWidget {
-  const EmptySearch({
-    this.type = "",
-    Key? key,
-  }) : super(key: key);
+  const EmptySearch({this.type = "", Key? key}) : super(key: key);
   final String type;
   @override
   Widget build(BuildContext context) {

@@ -61,27 +61,22 @@ class CustomMasonryGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return this.justList
         ? _getBody()
-        : VStack(
-            [
-              this.title ?? UiSpacer.emptySpace(),
-              _getBody(),
-            ],
-            crossAlignment: CrossAxisAlignment.start,
-          );
+        : VStack([
+          this.title ?? UiSpacer.emptySpace(),
+          _getBody(),
+        ], crossAlignment: CrossAxisAlignment.start);
   }
 
   Widget _getBody() {
     return (this.isLoading && this.items.isEmpty)
         ? this.loadingWidget ?? LoadingShimmer()
         : this.hasError
-            ? this.errorWidget ?? EmptyState()
-            : this.items.isEmpty
-                ? this.emptyWidget ?? UiSpacer.emptySpace()
-                : this.justList
-                    ? _getBodyList()
-                    : Expanded(
-                        child: _getBodyList(),
-                      );
+        ? this.errorWidget ?? EmptyState()
+        : this.items.isEmpty
+        ? this.emptyWidget ?? UiSpacer.emptySpace()
+        : this.justList
+        ? _getBodyList()
+        : Expanded(child: _getBodyList());
   }
 
   //
@@ -96,20 +91,17 @@ class CustomMasonryGridView extends StatelessWidget {
         //     child: _getListView(),
         //   )
         ? CustomEasyRefreshView(
-            onRefresh: () => this.onRefresh!(),
-            onLoad: this.onLoading != null ? () => this.onLoading!() : null,
-            loading: isLoading,
-            loadingWidget: this.loadingWidget ?? LoadingShimmer(),
-            emptyView: this.emptyWidget ?? UiSpacer.emptySpace(),
-            child: SingleChildScrollView(
-              child: _getListView(),
-              padding: padding ??
-                  EdgeInsets.symmetric(
-                    horizontal: 2,
-                    vertical: 10,
-                  ),
-            ),
-          )
+          onRefresh: () => this.onRefresh!(),
+          onLoad: this.onLoading != null ? () => this.onLoading!() : null,
+          loading: isLoading,
+          loadingWidget: this.loadingWidget ?? LoadingShimmer(),
+          emptyView: this.emptyWidget ?? UiSpacer.emptySpace(),
+          child: SingleChildScrollView(
+            child: _getListView(),
+            padding:
+                padding ?? EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+          ),
+        )
         : _getListView();
   }
 

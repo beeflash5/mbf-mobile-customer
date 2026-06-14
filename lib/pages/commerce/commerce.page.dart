@@ -17,6 +17,7 @@ import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/utils/sizes.dart';
+import 'package:fuodz/pages/flash_sale/widgets/flash_sale.view.dart';
 
 class CommercePage extends ConsumerStatefulWidget {
   const CommercePage(this.vendorType, {super.key});
@@ -128,6 +129,8 @@ class _CommercePageState extends ConsumerState<CommercePage>
                     featured: false,
                     height: 80,
                   ),
+                  const SizedBox(height: 10),
+                  FlashSaleView(widget.vendorType),
                 ],
               ),
             ),

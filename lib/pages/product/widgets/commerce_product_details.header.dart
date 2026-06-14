@@ -24,9 +24,7 @@ class CommerceProductDetailsHeader extends StatelessWidget {
       UiSpacer.verticalSpace(),
       product.name.text.lg.semiBold.make(),
       HStack([
-        (product.canBeDelivered
-                ? "Deliverable".tr()
-                : "Not Deliverable".tr())
+        (product.canBeDelivered ? "Deliverable".tr() : "Not Deliverable".tr())
             .text
             .white
             .sm
@@ -39,12 +37,9 @@ class CommerceProductDetailsHeader extends StatelessWidget {
             .make(),
         UiSpacer.expandedSpace(),
         CustomVisibilty(
-          visible: !product.capacity.isEmptyOrNull &&
-              !product.unit.isEmptyOrNull,
-          child: "${product.capacity} ${product.unit}"
-              .text
-              .sm
-              .black
+          visible:
+              !product.capacity.isEmptyOrNull && !product.unit.isEmptyOrNull,
+          child: "${product.capacity} ${product.unit}".text.sm.black
               .make()
               .py4()
               .px8()
@@ -56,19 +51,20 @@ class CommerceProductDetailsHeader extends StatelessWidget {
         ),
         CustomVisibilty(
           visible: product.packageCount != null,
-          child: "%s Items"
-              .tr()
-              .fill(["${product.packageCount}"])
-              .text
-              .sm
-              .black
-              .make()
-              .py4()
-              .px8()
-              .box
-              .roundedLg
-              .gray500
-              .make(),
+          child:
+              "%s Items"
+                  .tr()
+                  .fill(["${product.packageCount}"])
+                  .text
+                  .sm
+                  .black
+                  .make()
+                  .py4()
+                  .px8()
+                  .box
+                  .roundedLg
+                  .gray500
+                  .make(),
         ),
         UiSpacer.smHorizontalSpace(),
         ProductFavButton(product: product),

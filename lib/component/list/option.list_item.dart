@@ -32,54 +32,49 @@ class OptionListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currencySymbol = AppStrings.currentCurrencySymbol;
     final state = ref.watch(productDetailsControllerProvider(product));
-    final notifier =
-        ref.read(productDetailsControllerProvider(product).notifier);
+    final notifier = ref.read(
+      productDetailsControllerProvider(product).notifier,
+    );
     final selected =
         state.valueOrNull?.selectedOptionIds.contains(option.id) ?? false;
 
     return HStack([
-      Stack(children: [
-        CustomImage(
-          imageUrl: option.photo,
-          width: Vx.dp32,
-          height: Vx.dp32,
-          canZoom: true,
-          hideDefaultImg: true,
-        ).card.clip(Clip.antiAlias).roundedSM.make(),
-        if (selected)
-          Positioned(
-            top: 5,
-            bottom: 5,
-            left: 5,
-            right: 5,
-            child: Icon(Icons.check)
-                .box
-                .color(AppColor.accentColor)
-                .roundedSM
-                .make(),
-          )
-        else
-          UiSpacer.emptySpace(),
-      ]),
+      Stack(
+        children: [
+          CustomImage(
+            imageUrl: option.photo,
+            width: Vx.dp32,
+            height: Vx.dp32,
+            canZoom: true,
+            hideDefaultImg: true,
+          ).card.clip(Clip.antiAlias).roundedSM.make(),
+          if (selected)
+            Positioned(
+              top: 5,
+              bottom: 5,
+              left: 5,
+              right: 5,
+              child:
+                  Icon(
+                    Icons.check,
+                  ).box.color(AppColor.accentColor).roundedSM.make(),
+            )
+          else
+            UiSpacer.emptySpace(),
+        ],
+      ),
       VStack([
         option.name.text.medium.lg.make(),
         if (option.description.isNotEmptyAndNotNull ||
             option.description.isNotNullOrBlank)
-          "${option.description}"
-              .text
-              .sm
+          "${option.description}".text.sm
               .maxLines(3)
               .overflow(TextOverflow.ellipsis)
               .make(),
       ]).px12().expand(),
       CurrencyHStack([
         currencySymbol.text.sm.medium.make(),
-        option.price.convertCurrency
-            .currencyValueFormat()
-            .text
-            .sm
-            .bold
-            .make(),
+        option.price.convertCurrency.currencyValueFormat().text.sm.bold.make(),
       ], crossAlignment: CrossAxisAlignment.end),
     ], crossAlignment: CrossAxisAlignment.center).onInkTap(() {
       final error = notifier.toggleOption(optionGroup, option);

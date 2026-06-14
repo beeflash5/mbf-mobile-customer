@@ -25,16 +25,11 @@ class NewTaxiOrderPaymentMethodSelectionView extends ConsumerWidget {
     );
     final pm = taxiState.selectedPaymentMethod;
     if (pm == null) return const SizedBox.shrink();
-    return HStack(
-      [
-        CustomImage(
-          imageUrl: pm.photo,
-          boxFit: BoxFit.cover,
-        ).wh(40, 40),
-        pm.name.text.make().px12().expand(),
-        const DirectionalChevron(),
-      ],
-    )
+    return HStack([
+          CustomImage(imageUrl: pm.photo, boxFit: BoxFit.cover).wh(40, 40),
+          pm.name.text.make().px12().expand(),
+          const DirectionalChevron(),
+        ])
         .onInkTap(() => summaryController.openPaymentMethodSelection(context))
         .px8()
         .py4()

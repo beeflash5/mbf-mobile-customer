@@ -41,47 +41,49 @@ class WalletTransaction {
   String? formattedUpdatedDate;
   String? photo;
 
-  factory WalletTransaction.fromJson(Map<String, dynamic> json) =>
-      WalletTransaction(
-        id: json["id"] ?? 0,
-        amount: json["amount"] == null
+  factory WalletTransaction.fromJson(
+    Map<String, dynamic> json,
+  ) => WalletTransaction(
+    id: json["id"] ?? 0,
+    amount:
+        json["amount"] == null
             ? 0.0
             : (double.tryParse(json["amount"].toString()) ?? 0.0),
-        reason: json["reason"] == null ? "" : json["reason"],
-        ref: json["ref"] ?? "",
-        walletId: json["wallet_id"] ?? 0,
-        paymentMethodId: json["payment_method_id"] == null
-            ? null
-            : json["payment_method_id"],
-        status: json["status"] ?? "",
-        isCredit: json["is_credit"] ?? 0,
-        createdAt: json["created_at"] == null
+    reason: json["reason"] == null ? "" : json["reason"],
+    ref: json["ref"] ?? "",
+    walletId: json["wallet_id"] ?? 0,
+    paymentMethodId:
+        json["payment_method_id"] == null ? null : json["payment_method_id"],
+    status: json["status"] ?? "",
+    isCredit: json["is_credit"] ?? 0,
+    createdAt:
+        json["created_at"] == null
             ? DateTime.now()
             : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
-        formattedDate:
-            json["formatted_date"] == null ? null : json["formatted_date"],
-        formattedUpdatedDate: json["formatted_updated_date"] == null
+    updatedAt:
+        json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    formattedDate:
+        json["formatted_date"] == null ? null : json["formatted_date"],
+    formattedUpdatedDate:
+        json["formatted_updated_date"] == null
             ? null
             : json["formatted_updated_date"],
-        photo: json["photo"] == null ? null : json["photo"],
-      );
+    photo: json["photo"] == null ? null : json["photo"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "amount": amount,
-        "reason": reason,
-        "ref": ref,
-        "wallet_id": walletId,
-        "payment_method_id": paymentMethodId,
-        "status": status,
-        "is_credit": isCredit,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "formatted_date": formattedDate,
-        "formatted_updated_date": formattedUpdatedDate,
-        "photo": photo,
-      };
+    "id": id,
+    "amount": amount,
+    "reason": reason,
+    "ref": ref,
+    "wallet_id": walletId,
+    "payment_method_id": paymentMethodId,
+    "status": status,
+    "is_credit": isCredit,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "formatted_date": formattedDate,
+    "formatted_updated_date": formattedUpdatedDate,
+    "photo": photo,
+  };
 }

@@ -138,7 +138,7 @@ class _HomeProductListItemState extends State<HomeProductListItem> {
         )
         .onInkTap(() => this.widget.onPressed(this.widget.product))
         .material(color: context.theme.colorScheme.surface)
-          .box
+        .box
         .outerShadow
         .color(context.theme.colorScheme.surface)
         .clip(Clip.antiAlias)

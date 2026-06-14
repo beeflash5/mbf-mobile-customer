@@ -47,65 +47,65 @@ class DeliveryAddress {
   double? distance;
   bool? can_deliver;
 
-  factory DeliveryAddress.fromJson(Map<String, dynamic> json) =>
-      DeliveryAddress(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"] == null ? "" : json["description"],
-        address: json["address"],
-        city: json["city"],
-        state: json["state"],
-        country: json["country"],
-        latitude: double.parse(json["latitude"].toString()),
-        longitude: double.parse(json["longitude"].toString()),
-        distance: json["distance"] == null
+  factory DeliveryAddress.fromJson(
+    Map<String, dynamic> json,
+  ) => DeliveryAddress(
+    id: json["id"],
+    name: json["name"],
+    description: json["description"] == null ? "" : json["description"],
+    address: json["address"],
+    city: json["city"],
+    state: json["state"],
+    country: json["country"],
+    latitude: double.parse(json["latitude"].toString()),
+    longitude: double.parse(json["longitude"].toString()),
+    distance:
+        json["distance"] == null
             ? null
             : double.parse(json["distance"].toString()),
-        isDefault: int.tryParse(json["is_default"].toString()) ?? 0,
-        userId: int.tryParse(json["user_id"].toString()) ?? 0,
-        createdAt: json["created_at"] != null
-            ? DateTime.parse(json["created_at"])
-            : null,
-        updatedAt: json["updated_at"] != null
-            ? DateTime.parse(json["updated_at"])
-            : null,
-        formattedDate: json["formatted_date"],
-        photo: json["photo"],
-        can_deliver: json["can_deliver"],
-      );
+    isDefault: int.tryParse(json["is_default"].toString()) ?? 0,
+    userId: int.tryParse(json["user_id"].toString()) ?? 0,
+    createdAt:
+        json["created_at"] != null ? DateTime.parse(json["created_at"]) : null,
+    updatedAt:
+        json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : null,
+    formattedDate: json["formatted_date"],
+    photo: json["photo"],
+    can_deliver: json["can_deliver"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "city": city,
-        "state": state,
-        "country": country,
-        "address": address,
-        "latitude": latitude,
-        "longitude": longitude,
-        "distance": distance,
-        "is_default": isDefault,
-        "user_id": userId,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "formatted_date": formattedDate,
-        "photo": photo,
-        "can_deliver": can_deliver
-      };
+    "id": id,
+    "name": name,
+    "description": description,
+    "city": city,
+    "state": state,
+    "country": country,
+    "address": address,
+    "latitude": latitude,
+    "longitude": longitude,
+    "distance": distance,
+    "is_default": isDefault,
+    "user_id": userId,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "formatted_date": formattedDate,
+    "photo": photo,
+    "can_deliver": can_deliver,
+  };
 
   //
   Map<String, dynamic> toSaveJson() => {
-        "name": name,
-        "description": description,
-        "address": address,
-        "city": city,
-        "state": state,
-        "country": country,
-        "latitude": latitude,
-        "longitude": longitude,
-        "is_default": isDefault,
-      };
+    "name": name,
+    "description": description,
+    "address": address,
+    "city": city,
+    "state": state,
+    "country": country,
+    "latitude": latitude,
+    "longitude": longitude,
+    "is_default": isDefault,
+  };
 
   bool get defaultDeliveryAddress => isDefault == 1;
   LatLng get latLng => LatLng(latitude ?? 0.0, longitude ?? 0.0);

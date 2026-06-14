@@ -59,18 +59,19 @@ class _EditDeliveryAddressesPageState
       context: context,
       isScrollControlled: true,
       isDismissible: false,
-      builder: (context) => AddressSearchView(
-        placeSearchTEC: _placeSearchTEC,
-        addressSelected: (prediction) async {
-          await DeliveryAddressHelper.applyPickerResult(
-            prediction,
-            _deliveryAddress,
-            _addressTEC,
-          );
-          if (mounted) setState(() {});
-        },
-        selectOnMap: _pickOnMap,
-      ),
+      builder:
+          (context) => AddressSearchView(
+            placeSearchTEC: _placeSearchTEC,
+            addressSelected: (prediction) async {
+              await DeliveryAddressHelper.applyPickerResult(
+                prediction,
+                _deliveryAddress,
+                _addressTEC,
+              );
+              if (mounted) setState(() {});
+            },
+            selectOnMap: _pickOnMap,
+          ),
     );
   }
 
@@ -121,61 +122,63 @@ class _EditDeliveryAddressesPageState
       title: "Update Delivery Address".tr(),
       body: Form(
         key: _formKey,
-        child: VStack([
-          CustomTextFormField(
-            labelText: "Name".tr(),
-            textEditingController: _nameTEC,
-            validator: FormValidator.validateName,
-          ),
-          What3wordsView(
-            what3wordsTEC: _what3wordsTEC,
-            onSubmitted: (value) async {
-              final ok = await DeliveryAddressHelper.validateWhat3words(
-                context,
-                value,
-                _deliveryAddress,
-                addressTEC: _addressTEC,
-              );
-              if (ok && mounted) setState(() {});
-            },
-            onShare: DeliveryAddressHelper.shareWhat3words,
-          ),
-          CustomTextFormField(
-            labelText: "Address".tr(),
-            isReadOnly: true,
-            textEditingController: _addressTEC,
-            validator: (value) => FormValidator.validateEmpty(
-              value,
-              errorTitle: "Address".tr(),
-            ),
-            onTap: _openLocationPicker,
-          ).py2(),
-          UiSpacer.verticalSpace(),
-          CustomTextFormField(
-            labelText: "Description".tr(),
-            textEditingController: _descriptionTEC,
-            keyboardType: TextInputType.multiline,
-            minLines: 3,
-            textInputAction: TextInputAction.newline,
-          ).py2(),
-          HStack([
-            Checkbox(
-              value: _isDefault,
-              onChanged: (v) => setState(() => _isDefault = v ?? false),
-            ),
-            "Default".tr().text.make(),
-          ])
-              .onInkTap(() => setState(() => _isDefault = !_isDefault))
-              .wFull(context)
-              .py12(),
-          CustomButton(
-            isFixedHeight: true,
-            height: Vx.dp48,
-            title: "Save".tr(),
-            onPressed: _save,
-            loading: _submitting,
-          ).centered(),
-        ]).p20().scrollVertical(),
+        child:
+            VStack([
+              CustomTextFormField(
+                labelText: "Name".tr(),
+                textEditingController: _nameTEC,
+                validator: FormValidator.validateName,
+              ),
+              What3wordsView(
+                what3wordsTEC: _what3wordsTEC,
+                onSubmitted: (value) async {
+                  final ok = await DeliveryAddressHelper.validateWhat3words(
+                    context,
+                    value,
+                    _deliveryAddress,
+                    addressTEC: _addressTEC,
+                  );
+                  if (ok && mounted) setState(() {});
+                },
+                onShare: DeliveryAddressHelper.shareWhat3words,
+              ),
+              CustomTextFormField(
+                labelText: "Address".tr(),
+                isReadOnly: true,
+                textEditingController: _addressTEC,
+                validator:
+                    (value) => FormValidator.validateEmpty(
+                      value,
+                      errorTitle: "Address".tr(),
+                    ),
+                onTap: _openLocationPicker,
+              ).py2(),
+              UiSpacer.verticalSpace(),
+              CustomTextFormField(
+                labelText: "Description".tr(),
+                textEditingController: _descriptionTEC,
+                keyboardType: TextInputType.multiline,
+                minLines: 3,
+                textInputAction: TextInputAction.newline,
+              ).py2(),
+              HStack([
+                    Checkbox(
+                      value: _isDefault,
+                      onChanged: (v) => setState(() => _isDefault = v ?? false),
+                    ),
+                    "Default".tr().text.make(),
+                  ])
+                  .onInkTap(() => setState(() => _isDefault = !_isDefault))
+                  .wFull(context)
+                  .py12(),
+              CustomButton(
+                isFixedHeight: true,
+                height: Vx.dp48,
+                title: "Save".tr(),
+                onPressed: _save,
+                loading: _submitting,
+              ).centered(),
+            ]).p20().scrollVertical(),
       ),
     );
   }

@@ -12,19 +12,16 @@ import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class BestSellingProducts extends ConsumerWidget {
-  const BestSellingProducts(
-    this.vendorType, {
-    this.imageHeight,
-    super.key,
-  });
+  const BestSellingProducts(this.vendorType, {this.imageHeight, super.key});
 
   final VendorType vendorType;
   final double? imageHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncProducts =
-        ref.watch(bestSellingProductsControllerProvider(vendorType.id));
+    final asyncProducts = ref.watch(
+      bestSellingProductsControllerProvider(vendorType.id),
+    );
     final products = asyncProducts.valueOrNull ?? const [];
 
     return VStack([
@@ -37,11 +34,13 @@ class BestSellingProducts extends ConsumerWidget {
               .text
               .color(const Color(0xFF1B8A9E))
               .make()
-              .onTap(() => ProductSearchHelper.openProductsSeeAllPage(
-                    title: "Best Selling".tr(),
-                    vendorType: vendorType,
-                    type: ProductFetchDataType.BEST,
-                  )),
+              .onTap(
+                () => ProductSearchHelper.openProductsSeeAllPage(
+                  title: "Best Selling".tr(),
+                  vendorType: vendorType,
+                  type: ProductFetchDataType.BEST,
+                ),
+              ),
         ],
       ).px12().py2(),
       CustomDynamicHeightGridView(
@@ -49,10 +48,11 @@ class BestSellingProducts extends ConsumerWidget {
         separatorBuilder: (context, index) => UiSpacer.smHorizontalSpace(),
         itemCount: products.length,
         isLoading: asyncProducts.isLoading,
-        itemBuilder: (context, index) => CommerceProductListItem(
-          products[index],
-          height: imageHeight ?? 80,
-        ),
+        itemBuilder:
+            (context, index) => CommerceProductListItem(
+              products[index],
+              height: imageHeight ?? 80,
+            ),
       ).px12().py2(),
     ], spacing: 10);
   }

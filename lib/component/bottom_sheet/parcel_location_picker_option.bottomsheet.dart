@@ -11,28 +11,26 @@ class ParcelLocationPickerOptionBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        //
-        UiSpacer.swipeIndicator().py12(),
-        "Where to pick delivery address from?".tr().text.semiBold.make(),
-        UiSpacer.verticalSpace(),
-        //filter result
-        CustomButton(
-          title: "Delivery Address List".tr(),
-          onPressed: () {
-            context.pop(0);
-          },
-        ),
-        UiSpacer.verticalSpace(),
-        CustomTextButton(
-          title: "Directly from map".tr(),
-          onPressed: () {
-            context.pop(1);
-          },
-        ).wFull(context),
-      ],
-    )
+    return VStack([
+          //
+          UiSpacer.swipeIndicator().py12(),
+          "Where to pick delivery address from?".tr().text.semiBold.make(),
+          UiSpacer.verticalSpace(),
+          //filter result
+          CustomButton(
+            title: "Delivery Address List".tr(),
+            onPressed: () {
+              context.pop(0);
+            },
+          ),
+          UiSpacer.verticalSpace(),
+          CustomTextButton(
+            title: "Directly from map".tr(),
+            onPressed: () {
+              context.pop(1);
+            },
+          ).wFull(context),
+        ])
         .p20()
         .box
         .color(context.theme.colorScheme.surface)

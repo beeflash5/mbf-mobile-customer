@@ -25,29 +25,29 @@ class VendorFeesView extends StatelessWidget {
 
     return Visibility(
       visible: fees.isNotEmpty,
-      child: VStack(
-        [
-          ...(fees.map((fee) {
-            //fixed
-            if ((fee.percentage != 1)) {
-              return AmountTile(
-                "${fee.name}".tr(),
-                "+ " +
-                    " $currencySymbol ${fee.value}"
-                        .currencyFormat(currencySymbol),
-              ).py2();
-            } else {
-              //percentage
-              return AmountTile(
-                "${fee.name} (%s)".tr().fill(["${fee.value}%"]),
-                "+ " +
-                    " $currencySymbol ${fee.getRate(subTotal)}"
-                        .currencyFormat(currencySymbol),
-              ).py2();
-            }
-          }).toList()),
-        ],
-      ),
+      child: VStack([
+        ...(fees.map((fee) {
+          //fixed
+          if ((fee.percentage != 1)) {
+            return AmountTile(
+              "${fee.name}".tr(),
+              "+ " +
+                  " $currencySymbol ${fee.value}".currencyFormat(
+                    currencySymbol,
+                  ),
+            ).py2();
+          } else {
+            //percentage
+            return AmountTile(
+              "${fee.name} (%s)".tr().fill(["${fee.value}%"]),
+              "+ " +
+                  " $currencySymbol ${fee.getRate(subTotal)}".currencyFormat(
+                    currencySymbol,
+                  ),
+            ).py2();
+          }
+        }).toList()),
+      ]),
     );
   }
 }

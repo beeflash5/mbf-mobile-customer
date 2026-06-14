@@ -61,13 +61,13 @@ class _ServicePageState extends ConsumerState<ServicePage>
         child: VStack([
           10.heightBox,
           ComplexVendorHeader(
-            onrefresh: _reload,
-            onSearchPressed: () => NavigationService.openServiceSearch(
-              context,
-              vendorType: widget.vendorType,
-            ),
-          )
-              .box
+                onrefresh: _reload,
+                onSearchPressed:
+                    () => NavigationService.openServiceSearch(
+                      context,
+                      vendorType: widget.vendorType,
+                    ),
+              ).box
               .color(context.theme.colorScheme.surface)
               .roundedSM
               .outerShadowSm

@@ -20,23 +20,21 @@ class Fee {
   int? percentage;
 
   factory Fee.fromJson(Map<String, dynamic> json) => Fee(
-        id: json["id"],
-        name: json["name"],
-        value:
-            json["value"] == null ? 0 : double.parse(json["value"].toString()),
-        amount: json["amount"] == null
-            ? 0
-            : double.parse(json["amount"].toString()),
-        percentage: json["percentage"],
-      );
+    id: json["id"],
+    name: json["name"],
+    value: json["value"] == null ? 0 : double.parse(json["value"].toString()),
+    amount:
+        json["amount"] == null ? 0 : double.parse(json["amount"].toString()),
+    percentage: json["percentage"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "value": value,
-        "amount": amount,
-        "percentage": percentage,
-      };
+    "id": id,
+    "name": name,
+    "value": value,
+    "amount": amount,
+    "percentage": percentage,
+  };
 
   double getRate(double subTotal) {
     if (!isPercentage) {

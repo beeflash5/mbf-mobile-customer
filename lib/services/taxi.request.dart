@@ -27,9 +27,8 @@ class TaxiRequest extends ApiService {
     DeliveryAddress pickup,
     DeliveryAddress dropoff, {
     String? countryCode,
-    String? vendorType, 
+    String? vendorType,
   }) async {
-
     print("testing ${vendorType}");
     //
     final apiResult = await get(
@@ -44,17 +43,15 @@ class TaxiRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       List<VehicleType> vehicleTypes = [];
-      (apiResponse.body as List).forEach(
-        (object) {
-          //
-          try {
-            final vehicleType = VehicleType.fromJson(object);
-            vehicleTypes.add(vehicleType);
-          } catch (e) {
-            print(e);
-          }
-        },
-      );
+      (apiResponse.body as List).forEach((object) {
+        //
+        try {
+          final vehicleType = VehicleType.fromJson(object);
+          vehicleTypes.add(vehicleType);
+        } catch (e) {
+          print(e);
+        }
+      });
 
       return vehicleTypes;
     } else {
@@ -68,28 +65,18 @@ class TaxiRequest extends ApiService {
   ) async {
     final apiResult = await get(
       Api.taxiLocationAvailable,
-      queryParameters: {
-        "latitude": latitude,
-        "longitude": longitude,
-      },
+      queryParameters: {"latitude": latitude, "longitude": longitude},
     );
     return ApiResponse.fromResponse(apiResult);
   }
 
-  Future<ApiResponse> placeNeworder({
-    Map<String, dynamic>? params,
-  }) async {
-    final apiResult = await post(
-      "${Api.newTaxiBooking}",
-      params,
-    );
+  Future<ApiResponse> placeNeworder({Map<String, dynamic>? params}) async {
+    final apiResult = await post("${Api.newTaxiBooking}", params);
     return ApiResponse.fromResponse(apiResult);
   }
 
   Future<Order?> getOnGoingTrip() async {
-    final apiResult = await get(
-      "${Api.currentTaxiBooking}",
-    );
+    final apiResult = await get("${Api.currentTaxiBooking}");
     //
     final apiResponse = ApiResponse.fromResponse(apiResult);
     //
@@ -108,18 +95,14 @@ class TaxiRequest extends ApiService {
 
   //
   Future<ApiResponse> cancelTrip(int id) async {
-    final apiResult = await get(
-      "${Api.cancelTaxiBooking}/$id",
-    );
+    final apiResult = await get("${Api.cancelTaxiBooking}/$id");
     //
     return ApiResponse.fromResponse(apiResult);
   }
 
   //
   Future<Driver> getDriverInfo(int id) async {
-    final apiResult = await get(
-      "${Api.taxiDriverInfo}/$id",
-    );
+    final apiResult = await get("${Api.taxiDriverInfo}/$id");
     //
     final apiResponse = ApiResponse.fromResponse(apiResult);
     final driver = Driver.fromJson(apiResponse.body["driver"]);
@@ -134,16 +117,13 @@ class TaxiRequest extends ApiService {
     String review,
   ) async {
     //
-    final apiResult = await post(
-      "${Api.rating}",
-      {
-        //
-        "driver_id": driverId,
-        "order_id": orderId,
-        "rating": newTripRating,
-        "review": review,
-      },
-    );
+    final apiResult = await post("${Api.rating}", {
+      //
+      "driver_id": driverId,
+      "order_id": orderId,
+      "rating": newTripRating,
+      "review": review,
+    });
     //
     return ApiResponse.fromResponse(apiResult);
   }

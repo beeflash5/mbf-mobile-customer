@@ -28,7 +28,8 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isTattoo = order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
+    bool isTattoo =
+        order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
         order.vendor?.vendorType?.slug.toLowerCase() == 'tatto';
 
     return VStack([
@@ -43,24 +44,28 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
           order.vendor!.name.text.medium.xl.make().py8().pOnly(bottom: Vx.dp4),
         ]).expand(),
         Visibility(
-          visible: !isTattoo && order.canChatVendor && AppUISettings.canCallVendor,
-          child: CustomButton(
-            icon: Icons.phone,
-            iconColor: Colors.white,
-            color: AppColor.primaryColor,
-            shapeRadius: Sizes.radiusSmall,
-            onPressed: onCallVendor,
-          ).h(50).fittedBox(),
+          visible:
+              !isTattoo && order.canChatVendor && AppUISettings.canCallVendor,
+          child:
+              CustomButton(
+                icon: Icons.phone,
+                iconColor: Colors.white,
+                color: AppColor.primaryColor,
+                shapeRadius: Sizes.radiusSmall,
+                onPressed: onCallVendor,
+              ).h(50).fittedBox(),
         ),
         Visibility(
-          visible: !isTattoo && order.canChatVendor && AppUISettings.canVendorChat,
-          child: CustomButton(
-            icon: Icons.chat,
-            iconColor: Colors.white,
-            color: AppColor.primaryColor,
-            shapeRadius: Sizes.radiusSmall,
-            onPressed: onChatVendor,
-          ).h(50).fittedBox(),
+          visible:
+              !isTattoo && order.canChatVendor && AppUISettings.canVendorChat,
+          child:
+              CustomButton(
+                icon: Icons.chat,
+                iconColor: Colors.white,
+                color: AppColor.primaryColor,
+                shapeRadius: Sizes.radiusSmall,
+                onPressed: onChatVendor,
+              ).h(50).fittedBox(),
         ),
       ], spacing: 8),
       if (order.canRateVendor)

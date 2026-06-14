@@ -19,8 +19,9 @@ class UnSupportedTaxiLocationView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taxiState = ref.watch(taxiControllerProvider(vendorType));
-    final taxiController =
-        ref.read(taxiControllerProvider(vendorType).notifier);
+    final taxiController = ref.read(
+      taxiControllerProvider(vendorType).notifier,
+    );
     return Visibility(
       visible: taxiState.currentOrderStep == 0,
       child: Positioned(
@@ -33,39 +34,41 @@ class UnSupportedTaxiLocationView extends ConsumerWidget {
               height: size.height + Vx.dp20 + Vx.dp20,
             );
           },
-          child: taxiState.isBusy
-              ? const BusyIndicator().centered()
-              : VStack(
-                  [
-                    "Not available".tr().text.semiBold.xl.make(),
-                    "Taxi booking is currently not available in the selected location. Please another location"
-                        .tr()
-                        .text
-                        .sm
-                        .light
-                        .make()
-                        .py4(),
-                    UiSpacer.vSpace(10),
-                    SafeArea(
-                      top: false,
-                      child: CustomButton(
-                        child: "Try another location"
+          child:
+              taxiState.isBusy
+                  ? const BusyIndicator().centered()
+                  : VStack([
+                        "Not available".tr().text.semiBold.xl.make(),
+                        "Taxi booking is currently not available in the selected location. Please another location"
                             .tr()
                             .text
-                            .color(Utils.textColorByPrimaryColor())
-                            .makeCentered(),
-                        onPressed: () =>
-                            taxiController.closeOrderSummary(clear: true),
-                      ).wFull(context),
-                    ),
-                  ],
-                )
-                  .p20()
-                  .box
-                  .color(context.theme.colorScheme.surface)
-                  .roundedSM
-                  .outerShadow2Xl
-                  .make(),
+                            .sm
+                            .light
+                            .make()
+                            .py4(),
+                        UiSpacer.vSpace(10),
+                        SafeArea(
+                          top: false,
+                          child: CustomButton(
+                            child:
+                                "Try another location"
+                                    .tr()
+                                    .text
+                                    .color(Utils.textColorByPrimaryColor())
+                                    .makeCentered(),
+                            onPressed:
+                                () => taxiController.closeOrderSummary(
+                                  clear: true,
+                                ),
+                          ).wFull(context),
+                        ),
+                      ])
+                      .p20()
+                      .box
+                      .color(context.theme.colorScheme.surface)
+                      .roundedSM
+                      .outerShadow2Xl
+                      .make(),
         ),
       ),
     );

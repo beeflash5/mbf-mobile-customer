@@ -40,7 +40,9 @@ class CartPage extends ConsumerWidget {
     dynamic result;
     if (AppStrings.enableMultipleVendorOrder &&
         CartServices.isMultipleOrder()) {
-      result = await context.pushWidget(MultipleOrderCheckoutPage(checkout: checkOut));
+      result = await context.pushWidget(
+        MultipleOrderCheckoutPage(checkout: checkOut),
+      );
     } else {
       result = await context.pushWidget(CheckoutPage(checkout: checkOut));
     }
@@ -73,93 +75,100 @@ class CartPage extends ConsumerWidget {
             EmptyCart().centered().expand()
           else
             VStack([
-              CustomListView(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
-                noScrollPhysics: true,
-                dataSet: state.cartItems,
-                separatorBuilder: (_, __) => 12.heightBox,
-                itemBuilder: (context, index) {
-                  final cart = state.cartItems[index];
-                  final product = cart.product;
-                  return InkWell(
-                    child: CartListItem(
-                      key: Key("${cart.product?.id}:$index"),
-                      cart,
-                      onQuantityChange: (qty) =>
-                          notifier.updateCartItemQuantity(context, index, qty),
-                      deleteCartItem: () => notifier.deleteCartItem(index),
+                  CustomListView(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                    noScrollPhysics: true,
+                    dataSet: state.cartItems,
+                    separatorBuilder: (_, __) => 12.heightBox,
+                    itemBuilder: (context, index) {
+                      final cart = state.cartItems[index];
+                      final product = cart.product;
+                      return InkWell(
+                        child: CartListItem(
+                          key: Key("${cart.product?.id}:$index"),
+                          cart,
+                          onQuantityChange:
+                              (qty) => notifier.updateCartItemQuantity(
+                                context,
+                                index,
+                                qty,
+                              ),
+                          deleteCartItem: () => notifier.deleteCartItem(index),
+                        ),
+                        onTap:
+                            () => context.pushWidget(
+                              ProductDetailsPage(product: product!),
+                            ),
+                      );
+                    },
+                  ).box.color(AppColor.faintBgColor).make(),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: context.backgroundColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade200,
+                          blurRadius: 4,
+                          spreadRadius: 1,
+                          offset: const Offset(4, -4),
+                        ),
+                      ],
                     ),
-                    onTap: () => context.pushWidget(ProductDetailsPage(product: product!)),
-                  );
-                },
-              ).box.color(AppColor.faintBgColor).make(),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: context.backgroundColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade200,
-                      blurRadius: 4,
-                      spreadRadius: 1,
-                      offset: const Offset(4, -4),
-                    ),
-                  ],
-                ),
-                child: VStack([
-                  const ApplyCoupon(),
-                  10.heightBox,
-                  AmountTile(
-                    "Total Item".tr(),
-                    state.totalCartItems.toString(),
-                    amountStyle: summaryStyle,
-                  ),
-                  AmountTile(
-                    "Sub-Total".tr(),
-                    "$currencySymbol ${state.subTotalPrice.convertCurrency}"
-                        .currencyFormat(),
-                    amountStyle: summaryStyle,
-                  ),
-                  Visibility(
-                    visible: state.coupon != null &&
-                        !state.coupon!.for_delivery,
-                    child: AmountTile(
-                      "Discount".tr(),
-                      "$currencySymbol ${state.discountCartPrice.convertCurrency}"
-                          .currencyFormat(),
-                      amountStyle: summaryStyle,
-                    ),
-                  ),
-                  Visibility(
-                    visible: state.coupon != null &&
-                        state.coupon!.for_delivery,
                     child: VStack([
+                      const ApplyCoupon(),
+                      10.heightBox,
+                      AmountTile(
+                        "Total Item".tr(),
+                        state.totalCartItems.toString(),
+                        amountStyle: summaryStyle,
+                      ),
+                      AmountTile(
+                        "Sub-Total".tr(),
+                        "$currencySymbol ${state.subTotalPrice.convertCurrency}"
+                            .currencyFormat(),
+                        amountStyle: summaryStyle,
+                      ),
+                      Visibility(
+                        visible:
+                            state.coupon != null && !state.coupon!.for_delivery,
+                        child: AmountTile(
+                          "Discount".tr(),
+                          "$currencySymbol ${state.discountCartPrice.convertCurrency}"
+                              .currencyFormat(),
+                          amountStyle: summaryStyle,
+                        ),
+                      ),
+                      Visibility(
+                        visible:
+                            state.coupon != null && state.coupon!.for_delivery,
+                        child: VStack([
+                          DottedLine(
+                            dashColor: context.textTheme.bodyLarge!.color!,
+                          ).py12(),
+                          "Discount will be applied to delivery fee on checkout"
+                              .tr()
+                              .text
+                              .medium
+                              .make(),
+                        ]).py(4),
+                      ),
                       DottedLine(
                         dashColor: context.textTheme.bodyLarge!.color!,
-                      ).py12(),
-                      "Discount will be applied to delivery fee on checkout"
-                          .tr()
-                          .text
-                          .medium
-                          .make(),
-                    ]).py(4),
+                      ).py(10),
+                      AmountTile(
+                        "Total".tr(),
+                        "$currencySymbol ${state.totalCartPrice.convertCurrency}"
+                            .currencyFormat(),
+                        amountStyle: totalStyle,
+                      ),
+                      CustomButton(
+                        title: "CHECKOUT".tr(),
+                        onPressed: () => _checkout(context, ref),
+                      ).h(Vx.dp48).py32(),
+                    ]),
                   ),
-                  DottedLine(
-                    dashColor: context.textTheme.bodyLarge!.color!,
-                  ).py(10),
-                  AmountTile(
-                    "Total".tr(),
-                    "$currencySymbol ${state.totalCartPrice.convertCurrency}"
-                        .currencyFormat(),
-                    amountStyle: totalStyle,
-                  ),
-                  CustomButton(
-                    title: "CHECKOUT".tr(),
-                    onPressed: () => _checkout(context, ref),
-                  ).h(Vx.dp48).py32(),
-                ]),
-              ),
-            ])
+                ])
                 .pOnly(bottom: context.mq.viewPadding.bottom)
                 .scrollVertical()
                 .expand(),

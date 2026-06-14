@@ -65,14 +65,10 @@ class VendorDetailsHeader extends StatelessWidget {
             VStack([
               vendor.name.text.semiBold.lg.make(),
               CustomVisibilty(
-                visible: vendor.address.isNotEmptyAndNotNull &&
+                visible:
+                    vendor.address.isNotEmptyAndNotNull &&
                     AppUISettings.showVendorAddress,
-                child: "${vendor.address}"
-                    .text
-                    .light
-                    .sm
-                    .maxLines(1)
-                    .make(),
+                child: "${vendor.address}".text.light.sm.maxLines(1).make(),
               ),
               Visibility(
                 visible: AppUISettings.showVendorPhone,
@@ -84,11 +80,7 @@ class VendorDetailsHeader extends StatelessWidget {
                   initialRating: vendor.rating.toDouble(),
                   ignoreGestures: true,
                   ratingWidget: RatingWidget(
-                    full: Icon(
-                      Icons.star,
-                      size: 12,
-                      color: Colors.yellow[800],
-                    ),
+                    full: Icon(Icons.star, size: 12, color: Colors.yellow[800]),
                     half: Icon(
                       Icons.star_half,
                       size: 12,
@@ -102,13 +94,13 @@ class VendorDetailsHeader extends StatelessWidget {
                   ),
                   onRatingUpdate: (value) {},
                 ).pOnly(right: 2),
-                "(${vendor.reviews_count} ${'Reviews'.tr()})"
-                    .text
-                    .sm
-                    .thin
+                "(${vendor.reviews_count} ${'Reviews'.tr()})".text.sm.thin
                     .make(),
               ]).py2().onTap(() {
-                context.pushRoute('/vendors/${vendor.id}/reviews', extra: vendor);
+                context.pushRoute(
+                  '/vendors/${vendor.id}/reviews',
+                  extra: vendor,
+                );
               }),
             ]).pOnly(left: Vx.dp12).expand(),
             HStack([

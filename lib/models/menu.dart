@@ -26,23 +26,26 @@ class Menu {
   List<Product> products;
 
   factory Menu.fromJson(Map<String, dynamic> json) => Menu(
-        id: json["id"],
-        name: json["name"],
-        vendorId: json["vendor_id"] != null
+    id: json["id"],
+    name: json["name"],
+    vendorId:
+        json["vendor_id"] != null
             ? int.parse(json["vendor_id"].toString())
             : null,
-        photo: json["photo"] == null ? null : json["photo"],
-        products: json["products"] == null
+    photo: json["photo"] == null ? null : json["photo"],
+    products:
+        json["products"] == null
             ? []
             : List<Product>.from(
-                json["products"].map((x) => Product.fromJson(x))),
-      );
+              json["products"].map((x) => Product.fromJson(x)),
+            ),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "vendor_id": vendorId,
-        "photo": photo,
-        "products": List<dynamic>.from(products.map((x) => x.toJson())),
-      };
+    "id": id,
+    "name": name,
+    "vendor_id": vendorId,
+    "photo": photo,
+    "products": List<dynamic>.from(products.map((x) => x.toJson())),
+  };
 }

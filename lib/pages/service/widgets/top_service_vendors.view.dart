@@ -36,33 +36,39 @@ class TopServiceVendors extends ConsumerWidget {
         child: VStack([
           "Top Rated Providers".tr().text.xl.bold.make().px20(),
           12.heightBox,
-          Builder(builder: (context) {
-            const double spacing = 20;
-            final double eachWidth =
-                (context.screenWidth - (spacing * 2)) / 1.15;
-            final List<Widget> children = vendors
-                .map(
-                  (vendor) => TopServiceVendorHorizontalListItem(
-                    vendor: vendor,
-                    onPressed: (v) => context.pushWidget(VendorDetailsPage(vendor: v)),
-                  ).w(eachWidth),
-                )
-                .toList();
-            children.insert(0, 0.widthBox);
-            children.add(0.widthBox);
-            return Scrollbar(
-              thumbVisibility: false,
-              trackVisibility: false,
-              interactive: true,
-              child: HStack(
-                children,
-                spacing: spacing,
-                axisSize: MainAxisSize.min,
-                alignment: MainAxisAlignment.start,
-                crossAlignment: CrossAxisAlignment.start,
-              ).scrollHorizontal(physics: const BouncingScrollPhysics()),
-            );
-          }),
+          Builder(
+            builder: (context) {
+              const double spacing = 20;
+              final double eachWidth =
+                  (context.screenWidth - (spacing * 2)) / 1.15;
+              final List<Widget> children =
+                  vendors
+                      .map(
+                        (vendor) => TopServiceVendorHorizontalListItem(
+                          vendor: vendor,
+                          onPressed:
+                              (v) => context.pushWidget(
+                                VendorDetailsPage(vendor: v),
+                              ),
+                        ).w(eachWidth),
+                      )
+                      .toList();
+              children.insert(0, 0.widthBox);
+              children.add(0.widthBox);
+              return Scrollbar(
+                thumbVisibility: false,
+                trackVisibility: false,
+                interactive: true,
+                child: HStack(
+                  children,
+                  spacing: spacing,
+                  axisSize: MainAxisSize.min,
+                  alignment: MainAxisAlignment.start,
+                  crossAlignment: CrossAxisAlignment.start,
+                ).scrollHorizontal(physics: const BouncingScrollPhysics()),
+              );
+            },
+          ),
         ]),
       ),
     ]);

@@ -24,23 +24,21 @@ class PaymentMethodSelectionPage extends StatelessWidget {
       showAppBar: true,
       showLeadingAction: true,
       title: "Payment Methods".tr(),
-      body: VStack(
-        [
-          CustomListView(
-            dataSet: list,
-            separatorBuilder: (ctx, index) => UiSpacer.vSpace(10),
-            itemBuilder: (ctx, index) {
-              final paymentMethod = list[index];
-              return PaymentOptionListItem(
-                paymentMethod,
-                onSelected: (paymentMethod) {
-                  ctx.pop(paymentMethod);
-                },
-              );
-            },
-          ).p12(),
-        ],
-      ),
+      body: VStack([
+        CustomListView(
+          dataSet: list,
+          separatorBuilder: (ctx, index) => UiSpacer.vSpace(10),
+          itemBuilder: (ctx, index) {
+            final paymentMethod = list[index];
+            return PaymentOptionListItem(
+              paymentMethod,
+              onSelected: (paymentMethod) {
+                ctx.pop(paymentMethod);
+              },
+            );
+          },
+        ).p12(),
+      ]),
     );
   }
 }

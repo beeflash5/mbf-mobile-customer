@@ -8,31 +8,17 @@ class ToastService {
   //show toast
   static toastSuccessful(String msg, {String? title}) {
     try {
-      AlertController.show(
-        title ?? "Successful".tr(),
-        msg,
-        TypeAlert.success,
-      );
+      AlertController.show(title ?? "Successful".tr(), msg, TypeAlert.success);
     } catch (error) {
-      AlertService.success(
-        title: title ?? "Successful".tr(),
-        text: msg,
-      );
+      AlertService.success(title: title ?? "Successful".tr(), text: msg);
     }
   }
 
   static toastError(String msg, {String? title}) {
     try {
-      AlertController.show(
-        title ?? "Error".tr(),
-        msg,
-        TypeAlert.error,
-      );
+      AlertController.show(title ?? "Error".tr(), msg, TypeAlert.error);
     } catch (error) {
-      AlertService.error(
-        title: title ?? "Error".tr(),
-        text: msg,
-      );
+      AlertService.error(title: title ?? "Error".tr(), text: msg);
     }
   }
 }

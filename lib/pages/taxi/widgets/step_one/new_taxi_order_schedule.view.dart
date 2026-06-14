@@ -35,33 +35,34 @@ class NewTaxiOrderScheduleView extends ConsumerWidget {
           Visibility(
             visible: pickupDate != null,
             child: HStack([
-              const Icon(Icons.close, color: Colors.red, size: 20)
-                  .onInkTap(entryController.clearScheduleSelection),
+              const Icon(
+                Icons.close,
+                color: Colors.red,
+                size: 20,
+              ).onInkTap(entryController.clearScheduleSelection),
               UiSpacer.hSpace(10),
             ]),
           ),
           HStack(
-            [
-              const Icon(Icons.calendar_today, size: 18),
-              UiSpacer.hSpace(5),
-              (pickupDate != null
-                      ? (!Utils.isArabic
-                          ? Jiffy.parse(
-                              "$pickupDate $pickupTime",
-                              pattern: "yyyy-MM-dd HH:mm",
-                            ).format(pattern: "d MMM, y hh:mm a")
-                          : "$pickupDate $pickupTime")
-                      : "Now".tr())
-                  .text
-                  .sm
-                  .semiBold
-                  .make(),
-            ],
-            crossAlignment: CrossAxisAlignment.center,
-            alignment: MainAxisAlignment.center,
-          )
-              .box
-              .roundedSM
+                [
+                  const Icon(Icons.calendar_today, size: 18),
+                  UiSpacer.hSpace(5),
+                  (pickupDate != null
+                          ? (!Utils.isArabic
+                              ? Jiffy.parse(
+                                "$pickupDate $pickupTime",
+                                pattern: "yyyy-MM-dd HH:mm",
+                              ).format(pattern: "d MMM, y hh:mm a")
+                              : "$pickupDate $pickupTime")
+                          : "Now".tr())
+                      .text
+                      .sm
+                      .semiBold
+                      .make(),
+                ],
+                crossAlignment: CrossAxisAlignment.center,
+                alignment: MainAxisAlignment.center,
+              ).box.roundedSM
               .padding(const EdgeInsets.symmetric(vertical: 5, horizontal: 10))
               .border(color: AppColor.primaryColor, width: 0.88)
               .color(context.theme.colorScheme.surface)

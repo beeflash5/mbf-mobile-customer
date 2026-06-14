@@ -35,46 +35,43 @@ class ReferralBottomsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VStack([
-      Image.asset(
-        AppImages.refer,
-        width: context.percentWidth * 60,
-      ),
-      "Share this code with your family and friends and you could earn %s when they completed their first order"
-          .tr()
-          .fill([
-            "${AppStrings.currencySymbol} ${AppStrings.referAmount}"
-                .currencyFormat(),
-          ])
-          .text
-          .center
-          .makeCentered(),
-      UiSpacer.verticalSpace(),
-      UiSpacer.verticalSpace(),
-      HStack([
-        "${user.code}"
-            .text
-            .semiBold
-            .make()
-            .px32()
-            .py12()
-            .box
-            .color(Vx.gray200)
-            .make(),
-        "Share"
-            .tr()
-            .text
-            .color(Utils.isDark(AppColor.primaryColor)
-                ? Colors.white
-                : Colors.black)
-            .make()
-            .box
-            .p12
-            .color(AppColor.primaryColor)
-            .make()
-            .material()
-            .onInkTap(_shareReferralCode),
-      ]).box.roundedSM.clip(Clip.antiAlias).make().centered(),
-    ])
+          Image.asset(AppImages.refer, width: context.percentWidth * 60),
+          "Share this code with your family and friends and you could earn %s when they completed their first order"
+              .tr()
+              .fill([
+                "${AppStrings.currencySymbol} ${AppStrings.referAmount}"
+                    .currencyFormat(),
+              ])
+              .text
+              .center
+              .makeCentered(),
+          UiSpacer.verticalSpace(),
+          UiSpacer.verticalSpace(),
+          HStack([
+            "${user.code}".text.semiBold
+                .make()
+                .px32()
+                .py12()
+                .box
+                .color(Vx.gray200)
+                .make(),
+            "Share"
+                .tr()
+                .text
+                .color(
+                  Utils.isDark(AppColor.primaryColor)
+                      ? Colors.white
+                      : Colors.black,
+                )
+                .make()
+                .box
+                .p12
+                .color(AppColor.primaryColor)
+                .make()
+                .material()
+                .onInkTap(_shareReferralCode),
+          ]).box.roundedSM.clip(Clip.antiAlias).make().centered(),
+        ])
         .p20()
         .scrollVertical()
         .hThreeForth(context)

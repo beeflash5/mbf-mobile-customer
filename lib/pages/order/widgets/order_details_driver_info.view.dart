@@ -26,54 +26,45 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
   Widget build(BuildContext context) {
     if (order.driver == null) return UiSpacer.emptySpace();
 
-    bool isTattoo = order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
+    bool isTattoo =
+        order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
         order.vendor?.vendorType?.slug.toLowerCase() == 'tatto';
 
-    return VStack(
-      [
-        HStack(
-          [
-            VStack(
-              [
-                "Driver".tr().text.gray500.medium.make(),
-                "${order.driver?.name}"
-                    .text
-                    .medium
-                    .xl
-                    .make()
-                    .pOnly(bottom: Vx.dp20),
-              ],
-            ).expand(),
-            Visibility(
-              visible:
-                  !isTattoo && order.canChatDriver && AppUISettings.canCallDriver,
-              child: CustomButton(
+    return VStack([
+      HStack([
+        VStack([
+          "Driver".tr().text.gray500.medium.make(),
+          "${order.driver?.name}".text.medium.xl.make().pOnly(bottom: Vx.dp20),
+        ]).expand(),
+        Visibility(
+          visible:
+              !isTattoo && order.canChatDriver && AppUISettings.canCallDriver,
+          child:
+              CustomButton(
                 icon: Icons.phone,
                 iconColor: Colors.white,
                 color: AppColor.primaryColor,
                 shapeRadius: Vx.dp48,
                 onPressed: onCallDriver,
               ).wh(Vx.dp64, Vx.dp40).p12(),
-            ),
-          ],
         ),
-        if (!isTattoo && order.canChatDriver && AppUISettings.canDriverChat)
-          CustomButton(
-            icon: Icons.chat,
-            iconColor: Colors.white,
-            title: "Chat with driver".tr(),
-            color: AppColor.primaryColor,
-            onPressed: onChatDriver,
-          ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20),
-        if (order.canRateDriver)
-          CustomButton(
-            icon: Icons.rate_review,
-            iconColor: Colors.white,
-            title: "Rate The Driver".tr(),
-            color: AppColor.primaryColor,
-            onPressed: onRateDriver,
-          ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20),
-      ],
-    ).px(20);
+      ]),
+      if (!isTattoo && order.canChatDriver && AppUISettings.canDriverChat)
+        CustomButton(
+          icon: Icons.chat,
+          iconColor: Colors.white,
+          title: "Chat with driver".tr(),
+          color: AppColor.primaryColor,
+          onPressed: onChatDriver,
+        ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20),
+      if (order.canRateDriver)
+        CustomButton(
+          icon: Icons.rate_review,
+          iconColor: Colors.white,
+          title: "Rate The Driver".tr(),
+          color: AppColor.primaryColor,
+          onPressed: onRateDriver,
+        ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20),
+    ]).px(20);
   }
 }

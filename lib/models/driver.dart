@@ -19,17 +19,17 @@ class Driver extends User {
     this.vehicle,
     this.rating,
   }) : super(
-          id: id,
-          code: code,
-          name: name,
-          email: email,
-          phone: phone,
-          rawPhone: rawPhone,
-          countryCode: countryCode,
-          photo: photo,
-          role: role,
-          walletAddress: walletAddress,
-        );
+         id: id,
+         code: code,
+         name: name,
+         email: email,
+         phone: phone,
+         rawPhone: rawPhone,
+         countryCode: countryCode,
+         photo: photo,
+         role: role,
+         walletAddress: walletAddress,
+       );
 
   //create fatory method to convert json to object
   factory Driver.fromJson(Map<String, dynamic> json) {

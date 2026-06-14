@@ -13,23 +13,17 @@ class GuestModel {
     required this.price,
   });
 
-  factory GuestModel.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory GuestModel.fromJson(Map<String, dynamic> json) {
     return GuestModel(
       id: json["id"] ?? 0,
 
       name: json["name"] ?? '',
 
-      description:
-          json["description"] ?? '',
+      description: json["description"] ?? '',
 
       qty: json["qty"] ?? 0,
 
-      price: double.tryParse(
-            json["price"].toString(),
-          ) ??
-          0,
+      price: double.tryParse(json["price"].toString()) ?? 0,
     );
   }
 

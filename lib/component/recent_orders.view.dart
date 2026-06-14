@@ -16,11 +16,7 @@ import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class RecentOrdersView extends ConsumerWidget {
-  const RecentOrdersView({
-    super.key,
-    this.vendorType,
-    this.emptyView,
-  });
+  const RecentOrdersView({super.key, this.vendorType, this.emptyView});
 
   final VendorType? vendorType;
   final Widget? emptyView;
@@ -35,8 +31,10 @@ class RecentOrdersView extends ConsumerWidget {
         EmptyState(
           auth: true,
           showAction: true,
-          actionPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => LoginPage())),
+          actionPressed:
+              () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => LoginPage())),
         ).py12().centered(),
       ]).px20();
     }
@@ -57,15 +55,15 @@ class RecentOrdersView extends ConsumerWidget {
           final order = orders[index];
           return OrderListItem(
             order: order,
-            orderPressed: () => context.pushWidget(OrderDetailsPage(order: order)),
+            orderPressed:
+                () => context.pushWidget(OrderDetailsPage(order: order)),
             onPayPressed: () {
               final link = order.paymentLink;
               if (link.isNotEmpty) launchUrlString(link);
             },
           );
         },
-        separatorBuilder: (context, index) =>
-            UiSpacer.verticalSpace(space: 2),
+        separatorBuilder: (context, index) => UiSpacer.verticalSpace(space: 2),
       ),
     ]).px20();
   }

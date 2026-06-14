@@ -30,59 +30,51 @@ class _ParcelDeliveryDiscountSectionState
   Widget build(BuildContext context) {
     final state = widget.state;
     final controller = widget.controller;
-    return VStack(
-      [
-        "Add Coupon".tr().text.semiBold.xl.make(),
-        UiSpacer.verticalSpace(space: 10),
-        HStack(
-          [
-            CustomTextFormField(
-              hintText: "Coupon Code".tr(),
-              textEditingController: controller.couponTEC,
-              errorText: state.couponError?.toString() ?? "",
-              onChanged: controller.couponCodeChange,
-            ).expand(),
-            Column(
-              children: [
-                Visibility(
-                  visible: !showClearButton,
-                  child: CustomButton(
-                    title: "Apply".tr(),
-                    shapeRadius: 0,
-                    isFixedHeight: true,
-                    loading: state.couponBusy,
-                    onPressed: state.canApplyCoupon
+    return VStack([
+      "Add Coupon".tr().text.semiBold.xl.make(),
+      UiSpacer.verticalSpace(space: 10),
+      HStack([
+        CustomTextFormField(
+          hintText: "Coupon Code".tr(),
+          textEditingController: controller.couponTEC,
+          errorText: state.couponError?.toString() ?? "",
+          onChanged: controller.couponCodeChange,
+        ).expand(),
+        Column(
+          children: [
+            Visibility(
+              visible: !showClearButton,
+              child: CustomButton(
+                title: "Apply".tr(),
+                shapeRadius: 0,
+                isFixedHeight: true,
+                loading: state.couponBusy,
+                onPressed:
+                    state.canApplyCoupon
                         ? () {
-                            if (controller.couponTEC.text.isEmpty) return;
-                            controller.applyCoupon();
-                            setState(() => showClearButton = true);
-                          }
+                          if (controller.couponTEC.text.isEmpty) return;
+                          controller.applyCoupon();
+                          setState(() => showClearButton = true);
+                        }
                         : null,
-                  ).h(48),
-                ),
-                Visibility(
-                  visible: showClearButton,
-                  child: CustomButton(
-                    icon: Icons.clear,
-                    padding: const EdgeInsets.all(0),
-                    child: const Icon(
-                      Icons.clear,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    color: Colors.red,
-                    onPressed: () {
-                      controller.clearCoupon();
-                      setState(() => showClearButton = false);
-                    },
-                  ).h(Vx.dp32).w(32).pOnly(left: 8),
-                ),
-              ],
+              ).h(48),
+            ),
+            Visibility(
+              visible: showClearButton,
+              child: CustomButton(
+                icon: Icons.clear,
+                padding: const EdgeInsets.all(0),
+                child: const Icon(Icons.clear, color: Colors.white, size: 20),
+                color: Colors.red,
+                onPressed: () {
+                  controller.clearCoupon();
+                  setState(() => showClearButton = false);
+                },
+              ).h(Vx.dp32).w(32).pOnly(left: 8),
             ),
           ],
-          crossAlignment: CrossAxisAlignment.start,
         ),
-      ],
-    );
+      ], crossAlignment: CrossAxisAlignment.start),
+    ]);
   }
 }

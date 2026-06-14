@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/services/delivery_address.request.dart';
 
-final _deliveryAddressRequestProvider =
-    Provider<DeliveryAddressRequest>((_) => DeliveryAddressRequest());
+final _deliveryAddressRequestProvider = Provider<DeliveryAddressRequest>(
+  (_) => DeliveryAddressRequest(),
+);
 
 sealed class DeliveryAddressDeleteResult {
   const DeliveryAddressDeleteResult();
@@ -20,8 +21,7 @@ class DeliveryAddressDeleteFailure extends DeliveryAddressDeleteResult {
   final String message;
 }
 
-class DeliveryAddressesController
-    extends AsyncNotifier<List<DeliveryAddress>> {
+class DeliveryAddressesController extends AsyncNotifier<List<DeliveryAddress>> {
   @override
   Future<List<DeliveryAddress>> build() async {
     return ref.read(_deliveryAddressRequestProvider).getDeliveryAddresses();
@@ -55,5 +55,5 @@ class DeliveryAddressesController
 
 final deliveryAddressesControllerProvider =
     AsyncNotifierProvider<DeliveryAddressesController, List<DeliveryAddress>>(
-  DeliveryAddressesController.new,
-);
+      DeliveryAddressesController.new,
+    );

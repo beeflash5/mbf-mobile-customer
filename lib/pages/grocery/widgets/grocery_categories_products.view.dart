@@ -9,11 +9,7 @@ import 'package:fuodz/services/product_search.helper.dart';
 import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 
 class GroceryCategoryProducts extends ConsumerWidget {
-  const GroceryCategoryProducts(
-    this.vendorType, {
-    this.length = 2,
-    super.key,
-  });
+  const GroceryCategoryProducts(this.vendorType, {this.length = 2, super.key});
 
   final VendorType vendorType;
   final int length;
@@ -21,8 +17,7 @@ class GroceryCategoryProducts extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final args = (vendorTypeId: vendorType.id, page: null as int?);
-    final asyncCategories =
-        ref.watch(vendorCategoriesControllerProvider(args));
+    final asyncCategories = ref.watch(vendorCategoriesControllerProvider(args));
     final categories = asyncCategories.valueOrNull ?? const [];
 
     final shown = categories.sublist(
@@ -37,12 +32,13 @@ class GroceryCategoryProducts extends ConsumerWidget {
           vendorType,
           showGrid: true,
           category: category,
-          onSeeAllPressed: () => ProductSearchHelper.openProductsSeeAllPage(
-            title: category.name,
-            vendorType: vendorType,
-            category: category,
-            type: ProductFetchDataType.NEW,
-          ),
+          onSeeAllPressed:
+              () => ProductSearchHelper.openProductsSeeAllPage(
+                title: category.name,
+                vendorType: vendorType,
+                category: category,
+                type: ProductFetchDataType.NEW,
+              ),
         ),
       ),
     ]);

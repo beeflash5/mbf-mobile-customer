@@ -27,25 +27,31 @@ class ComplexVendorHeader extends ConsumerWidget {
             .useUserLocation();
       }),
       VStack([
-        "Delivery Location".tr().text.lg.semiBold.make(),
-        "${address?.address ?? '---'}".text.base.maxLines(1).make(),
-      ]).onInkTap(() {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (_) => DeliveryAddressPicker(
-            vendorCheckRequired: false,
-            onSelectDeliveryAddress: (addr) {
-              ref
-                  .read(currentDeliveryAddressControllerProvider.notifier)
-                  .setAddress(addr);
-              Navigator.of(context).pop();
-              onrefresh();
-            },
-          ),
-        );
-      }).px12().expand(),
+            "Delivery Location".tr().text.lg.semiBold.make(),
+            "${address?.address ?? '---'}".text.base.maxLines(1).make(),
+          ])
+          .onInkTap(() {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder:
+                  (_) => DeliveryAddressPicker(
+                    vendorCheckRequired: false,
+                    onSelectDeliveryAddress: (addr) {
+                      ref
+                          .read(
+                            currentDeliveryAddressControllerProvider.notifier,
+                          )
+                          .setAddress(addr);
+                      Navigator.of(context).pop();
+                      onrefresh();
+                    },
+                  ),
+            );
+          })
+          .px12()
+          .expand(),
       Icon(Icons.search, size: 24)
           .p8()
           .onInkTap(onSearchPressed)

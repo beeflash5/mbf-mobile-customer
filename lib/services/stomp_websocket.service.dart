@@ -15,15 +15,16 @@ class StompWebsocketService {
   StompClient? stompClient;
 
   // Change this to your spring boot server url
-  final String socketUrl = (() {
-    try {
-      final uri = Uri.parse(Api.baseUrl);
-      final scheme = uri.scheme == 'https' ? 'wss' : 'ws';
-      return uri.replace(scheme: scheme, path: '/ws').toString();
-    } catch (e) {
-      return "wss://api.mybalifriendz.co/ws";
-    }
-  })();
+  final String socketUrl =
+      (() {
+        try {
+          final uri = Uri.parse(Api.baseUrl);
+          final scheme = uri.scheme == 'https' ? 'wss' : 'ws';
+          return uri.replace(scheme: scheme, path: '/ws').toString();
+        } catch (e) {
+          return "wss://api.mybalifriendz.co/ws";
+        }
+      })();
 
   void connect({
     required Function(StompFrame) onConnect,

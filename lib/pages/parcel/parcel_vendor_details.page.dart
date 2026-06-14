@@ -36,8 +36,9 @@ class _ParcelVendorDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(parcelVendorDetailsControllerProvider(widget.vendor));
+    final asyncState = ref.watch(
+      parcelVendorDetailsControllerProvider(widget.vendor),
+    );
     final pricings = asyncState.valueOrNull?.pricings ?? const [];
     final countries = asyncState.valueOrNull?.countries ?? const [];
     final states = asyncState.valueOrNull?.states ?? const [];
@@ -56,10 +57,7 @@ class _ParcelVendorDetailsPageState
         ),
         body: NestedScrollView(
           controller: _scrollController,
-          headerSliverBuilder: (
-            BuildContext context,
-            bool innerBoxIsScrolled,
-          ) {
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               CollapsingSliverAppBar(
                 scrollController: _scrollController,
@@ -68,8 +66,10 @@ class _ParcelVendorDetailsPageState
                 leading: CustomLeading(),
                 expandedHeight: 360,
                 collapseThreshold: 240,
-                flexibleChild:
-                    VendorDetailsHeader(widget.vendor, showSearch: false),
+                flexibleChild: VendorDetailsHeader(
+                  widget.vendor,
+                  showSearch: false,
+                ),
               ),
               SliverPersistentHeader(
                 delegate: _SliverAppBarDelegate(
@@ -102,14 +102,10 @@ class _ParcelVendorDetailsPageState
                     final imgSize = context.percentWidth * 15;
                     final imgHeight = context.percentHeight * 5;
                     return Container(
-                      padding: const EdgeInsets.all(
-                        Sizes.paddingSizeDefault,
-                      ),
+                      padding: const EdgeInsets.all(Sizes.paddingSizeDefault),
                       decoration: BoxDecoration(
                         color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(
-                          Sizes.radiusSmall,
-                        ),
+                        borderRadius: BorderRadius.circular(Sizes.radiusSmall),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: VStack([
@@ -122,13 +118,9 @@ class _ParcelVendorDetailsPageState
                               height: imgHeight,
                             ),
                             VStack([
-                              "${pricing.package_type?.name}"
-                                  .text
-                                  .xl
-                                  .semiBold
+                              "${pricing.package_type?.name}".text.xl.semiBold
                                   .make(),
-                              "${pricing.package_type?.description}"
-                                  .text
+                              "${pricing.package_type?.description}".text
                                   .make(),
                             ]).expand(),
                           ],

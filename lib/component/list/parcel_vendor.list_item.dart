@@ -29,50 +29,39 @@ class ParcelVendorListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VStack(
-      [
-        HStack(
-          [
-            CustomImage(
-              imageUrl: vendor.logo,
-            ).wh(Vx.dp56, Vx.dp56).pOnly(
+    return VStack([
+          HStack([
+            CustomImage(imageUrl: vendor.logo)
+                .wh(Vx.dp56, Vx.dp56)
+                .pOnly(
                   right: AppService.isDirectionRTL(context) ? Vx.dp0 : Vx.dp12,
                   left: AppService.isDirectionRTL(context) ? Vx.dp12 : Vx.dp0,
                 ),
-            VStack(
-              [
-                vendor.name.text.semiBold.make(),
-                vendor.description.text.sm.make(),
-              ],
-            ).expand(),
-          ],
-          crossAlignment: CrossAxisAlignment.start,
-        ),
-        if (selected && state != null && controller != null)
-          VStack(
-            [
+            VStack([
+              vendor.name.text.semiBold.make(),
+              vendor.description.text.sm.make(),
+            ]).expand(),
+          ], crossAlignment: CrossAxisAlignment.start),
+          if (selected && state != null && controller != null)
+            VStack([
               if (state!.selectedVendor != null)
                 ParcelScheduleView(state: state!, controller: controller!),
               if (state!.selectedVendor != null &&
                   !state!.selectedVendor!.allowScheduleOrder)
-                VStack(
-                  [
-                    UiSpacer.divider().py4(),
-                    "DATE & TIME".tr().text.semiBold.base.make(),
-                    "Vendor does not allow order scheduling. So you order will be processed as soon as you place them"
-                        .tr()
-                        .text
-                        .color(context.textTheme.bodyLarge!.color)
-                        .sm
-                        .make(),
-                  ],
-                ),
-            ],
-          ).py12()
-        else
-          CustomVisibilty(visible: false, child: const SizedBox.shrink()),
-      ],
-    )
+                VStack([
+                  UiSpacer.divider().py4(),
+                  "DATE & TIME".tr().text.semiBold.base.make(),
+                  "Vendor does not allow order scheduling. So you order will be processed as soon as you place them"
+                      .tr()
+                      .text
+                      .color(context.textTheme.bodyLarge!.color)
+                      .sm
+                      .make(),
+                ]),
+            ]).py12()
+          else
+            CustomVisibilty(visible: false, child: const SizedBox.shrink()),
+        ])
         .p12()
         .onInkTap(() {
           if (onPressed != null) onPressed!(vendor);

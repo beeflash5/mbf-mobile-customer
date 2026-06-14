@@ -49,80 +49,70 @@ class _ScrollIndicatorState extends State<ScrollIndicator> {
   Widget build(BuildContext context) {
     return widget.scrollDirection == Axis.vertical
         ? Column(
-            children: [
-              Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (scrollNotification) {
-                    _scrollListener();
-                    return false;
+          children: [
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  _scrollListener();
+                  return false;
+                },
+                child: ListView.builder(
+                  controller: _controller,
+                  scrollDirection: widget.scrollDirection,
+                  itemCount: widget.children.length,
+                  itemBuilder: (context, index) {
+                    return widget.children[index];
                   },
-                  child: ListView.builder(
-                    controller: _controller,
-                    scrollDirection: widget.scrollDirection,
-                    itemCount: widget.children.length,
-                    itemBuilder: (context, index) {
-                      return widget.children[index];
-                    },
-                    physics: widget.snap
-                        ? PageScrollPhysics()
-                        : ClampingScrollPhysics(),
-                  ),
+                  physics:
+                      widget.snap
+                          ? PageScrollPhysics()
+                          : ClampingScrollPhysics(),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (_showLeadingArrow)
-                    Icon(
-                      Icons.arrow_upward,
-                      color: Colors.grey,
-                    ),
-                  if (_showTrailingArrow)
-                    Icon(
-                      Icons.arrow_downward,
-                      color: Colors.grey,
-                    ),
-                ],
-              ),
-            ],
-          )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (_showLeadingArrow)
+                  Icon(Icons.arrow_upward, color: Colors.grey),
+                if (_showTrailingArrow)
+                  Icon(Icons.arrow_downward, color: Colors.grey),
+              ],
+            ),
+          ],
+        )
         : Column(
-            children: [
-              Expanded(
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (scrollNotification) {
-                    _scrollListener();
-                    return false;
+          children: [
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (scrollNotification) {
+                  _scrollListener();
+                  return false;
+                },
+                child: ListView.builder(
+                  controller: _controller,
+                  scrollDirection: widget.scrollDirection,
+                  itemCount: widget.children.length,
+                  itemBuilder: (context, index) {
+                    return widget.children[index];
                   },
-                  child: ListView.builder(
-                    controller: _controller,
-                    scrollDirection: widget.scrollDirection,
-                    itemCount: widget.children.length,
-                    itemBuilder: (context, index) {
-                      return widget.children[index];
-                    },
-                    physics: widget.snap
-                        ? PageScrollPhysics()
-                        : ClampingScrollPhysics(),
-                  ),
+                  physics:
+                      widget.snap
+                          ? PageScrollPhysics()
+                          : ClampingScrollPhysics(),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (_showLeadingArrow)
-                    Icon(
-                      Icons.arrow_back,
-                      color: Colors.grey,
-                    ),
-                  if (_showTrailingArrow)
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.grey,
-                    ),
-                ],
-              ),
-            ],
-          );
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_showLeadingArrow)
+                  Icon(Icons.arrow_back, color: Colors.grey),
+                if (_showTrailingArrow)
+                  Icon(Icons.arrow_forward, color: Colors.grey),
+              ],
+            ),
+          ],
+        );
   }
 }

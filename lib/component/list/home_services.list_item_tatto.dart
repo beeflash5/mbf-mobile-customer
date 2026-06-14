@@ -30,8 +30,7 @@ class HomeServicesListItemTatto extends StatefulWidget {
       _HomeServicesListItemTattoState();
 }
 
-class _HomeServicesListItemTattoState
-    extends State<HomeServicesListItemTatto> {
+class _HomeServicesListItemTattoState extends State<HomeServicesListItemTatto> {
   @override
   Widget build(BuildContext context) {
     final Service service = widget.service;
@@ -52,8 +51,7 @@ class _HomeServicesListItemTattoState
       ),
       clipBehavior: Clip.hardEdge,
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// IMAGE PORTRAIT STATIC
           Stack(
@@ -61,18 +59,18 @@ class _HomeServicesListItemTattoState
               SizedBox(
                 height: 230,
                 width: double.infinity,
-                child: service.photos.isNotEmpty
-                    ? CustomImage(
-                        imageUrl:
-                            service.photos.first,
-                        width: double.infinity,
-                        boxFit: BoxFit.cover,
-                      )
-                    : Image.asset(
-                        AppImages.noImage,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+                child:
+                    service.photos.isNotEmpty
+                        ? CustomImage(
+                          imageUrl: service.photos.first,
+                          width: double.infinity,
+                          boxFit: BoxFit.cover,
+                        )
+                        : Image.asset(
+                          AppImages.noImage,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
               ),
 
               /// TOP LABEL
@@ -81,29 +79,22 @@ class _HomeServicesListItemTattoState
                   top: 0,
                   left: 0,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    decoration:
-                        const BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xFFECC85C),
-                      borderRadius:
-                          BorderRadius.only(
-                        bottomRight:
-                            Radius.circular(14),
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(14),
                       ),
                     ),
                     child: Text(
                       widget.title ?? "",
-                      style:
-                          const TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
-                        fontWeight:
-                            FontWeight.bold,
-                        color:
-                            Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
                   ),
@@ -114,96 +105,66 @@ class _HomeServicesListItemTattoState
           /// CONTENT
           Expanded(
             child: Padding(
-              padding:
-                  const EdgeInsets.fromLTRB(
-                12,
-                10,
-                12,
-                12,
-              ),
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// RATING
                   Row(
                     children: [
                       const Icon(
                         Icons.star,
-                        color:
-                            Color(0xffEEC860),
+                        color: Color(0xffEEC860),
                         size: 14,
                       ),
 
-                      const SizedBox(
-                          width: 3),
+                      const SizedBox(width: 3),
 
                       Text(
                         "${service.vendor.rating}",
-                        style:
-                            const TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
-                          fontWeight:
-                              FontWeight.w700,
-                          color:
-                              Colors.black87,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
                         ),
                       ),
 
                       Expanded(
                         child: Text(
                           " (${service.vendor.reviews_count} reviews)",
-                          overflow:
-                              TextOverflow
-                                  .ellipsis,
-                          style:
-                              const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
                             fontSize: 12,
-                            color:
-                                Colors.grey,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(
-                      height: 10),
+                  const SizedBox(height: 10),
 
                   /// TITLE
                   Text(
                     service.name,
                     maxLines: 1,
-                    overflow:
-                        TextOverflow
-                            .ellipsis,
-                    style:
-                        const TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontSize: 16,
-                      fontWeight:
-                          FontWeight.w700,
+                      fontWeight: FontWeight.w700,
                       height: 1.3,
-                      color:
-                          Colors.black,
+                      color: Colors.black,
                     ),
                   ),
 
-                  const SizedBox(
-                      height: 6),
+                  const SizedBox(height: 6),
 
                   /// PARTNER
                   Text(
                     service.vendor.name,
                     maxLines: 1,
-                    overflow:
-                        TextOverflow
-                            .ellipsis,
-                    style:
-                        const TextStyle(
-                      fontSize: 13,
-                      color:
-                          Colors.grey,
-                    ),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
                   ),
 
                   const Spacer(),
@@ -213,16 +174,11 @@ class _HomeServicesListItemTattoState
                     "${AppStrings.currentCurrencySymbol} ${service.sellPrice.convertCurrency}"
                         .currencyFormat(),
                     maxLines: 1,
-                    overflow:
-                        TextOverflow
-                            .ellipsis,
-                    style:
-                        const TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontSize: 15,
-                      fontWeight:
-                          FontWeight.bold,
-                      color:
-                          Color(0xFF1B8A9E),
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B8A9E),
                     ),
                   ),
                 ],

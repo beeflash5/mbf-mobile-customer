@@ -4,6 +4,7 @@ import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/guide.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/models/vendor_type.dart';
+import 'package:fuodz/utils/extensions/string.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 import 'service_option.dart';
@@ -88,17 +89,18 @@ class Service {
   }) {
     return Service(
       id: json["id"] == null ? 0 : int.parse(json["id"].toString()),
-      name: json["name"] ?? "",
+      name: (json["name"] ?? "").toString().parseLocalized(),
       description:
           json["description"] == null
               ? ""
               : !rawDescription
-              ? json["description"]
-              : json["description"].toString().replaceAll(
+              ? json["description"].toString().parseLocalized()
+              : json["description"].toString().parseLocalized().replaceAll(
                 RegExp(r'<[^>]*>'),
                 '',
               ),
-      price: json["price"] == null ? 0.0 : double.parse(json["price"].toString()),
+      price:
+          json["price"] == null ? 0.0 : double.parse(json["price"].toString()),
       discountPrice:
           json["discount_price"] == null
               ? 0.0
@@ -108,19 +110,29 @@ class Service {
           json["is_active"] == null
               ? 0
               : int.parse(json["is_active"].toString()),
-      vendorId: json["vendor_id"] == null ? 0 : int.parse(json["vendor_id"].toString()),
-      categoryId: json["category_id"] == null ? null : int.tryParse(json["category_id"].toString()),
-      createdAt: json["created_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
-      updatedAt: json["updated_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
-      formattedDate:
-          json["formatted_date"] ?? "",
-      vendor: json["vendor"] == null
-          ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
-          : Vendor.fromJson(json["vendor"]),
+      vendorId:
+          json["vendor_id"] == null
+              ? 0
+              : int.parse(json["vendor_id"].toString()),
+      categoryId:
+          json["category_id"] == null
+              ? null
+              : int.tryParse(json["category_id"].toString()),
+      createdAt:
+          json["created_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["created_at"].toString()) ??
+                  DateTime.now(),
+      updatedAt:
+          json["updated_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["updated_at"].toString()) ??
+                  DateTime.now(),
+      formattedDate: json["formatted_date"] ?? "",
+      vendor:
+          json["vendor"] == null
+              ? Vendor.fromJson({"id": json["vendor_id"] ?? 0})
+              : Vendor.fromJson(json["vendor"]),
       category:
           json["category"] == null ? null : Category.fromJson(json["category"]),
       subcategory:
@@ -157,7 +169,8 @@ class Service {
 
       //
       token: json["token"],
-      ageRestricted: json["age_restricted"] == 1 || json["age_restricted"] == true,
+      ageRestricted:
+          json["age_restricted"] == 1 || json["age_restricted"] == true,
       description_url: json["description_url"] ?? "",
       shareable_link: json["shareable_link"],
       deep_link: json["deep_link"],

@@ -58,10 +58,7 @@ class FlashSaleView extends ConsumerWidget {
           color: Utils.textColorByColor(AppColor.closeColor),
         ),
         VStack([
-          '${flashsale.name}'
-              .text
-              .semiBold
-              .lg
+          '${flashsale.name}'.text.semiBold.lg
               .color(Utils.textColorByTheme())
               .make(),
           UiSpacer.vSpace(1),
@@ -102,20 +99,17 @@ class FlashSaleView extends ConsumerWidget {
     Widget items = CustomListedListView(
       noScrollPhysics: false,
       scrollDirection: Axis.horizontal,
-      items: (flashsale.items ?? [])
-          .map(
-            (flashSaleItem) => FittedBox(
-              child: FlashSaleItemListItem(flashSaleItem),
-            ).pOnly(right: 5),
-          )
-          .toList(),
+      items:
+          (flashsale.items ?? [])
+              .map(
+                (flashSaleItem) => FittedBox(
+                  child: FlashSaleItemListItem(flashSaleItem),
+                ).pOnly(right: 5),
+              )
+              .toList(),
     ).h(Platform.isAndroid ? 160 : 190);
 
-    return VStack([
-      title,
-      items.py4(),
-      UiSpacer.vSpace(10),
-    ]).py12();
+    return VStack([title, items.py4(), UiSpacer.vSpace(10)]).py12();
   }
 
   void _openFlashSaleItems(BuildContext context, FlashSale flashsale) {

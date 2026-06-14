@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuodz/utils/app_routes.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -20,6 +21,7 @@ import 'package:fuodz/utils/app_strings.dart';
 import 'package:fuodz/utils/extensions/string.dart';
 import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/providers/cart_providers.dart';
+import 'package:fuodz/services/cart.service.dart';
 
 class ProductDetailsCartBottomSheet extends ConsumerStatefulWidget {
   const ProductDetailsCartBottomSheet({super.key, required this.product});
@@ -89,13 +91,34 @@ class _ProductDetailsCartBottomSheetState
       skip: true,
     );
 
-    // Navigate to cart
-
+    // Navigate to checkout directly
     if (mounted) {
       setState(() => _busy = false);
-      context.pushRoute(
-        '/cart',
-      ); // Navigate to Cart Page which handles checkout
+
+      bool canOpenCheckout = true;
+      if (!AuthServices.authenticated()) {
+        final result = await context.pushRoute<bool>(AppRoutes.loginRoute);
+        if (result == null || result == false) canOpenCheckout = false;
+      }
+      if (!canOpenCheckout || !context.mounted) return;
+
+      final cartState = ref.read(cartControllerProvider);
+      final checkOut = cartState.toCheckout();
+
+      dynamic result;
+      if (AppStrings.enableMultipleVendorOrder &&
+          CartServices.isMultipleOrder()) {
+        result = await context.pushRoute('/checkout/multiple', extra: checkOut);
+      } else {
+        result = await context.pushRoute('/checkout', extra: checkOut);
+      }
+
+      if (result == true) {
+        await ref.read(cartControllerProvider.notifier).clearCart();
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      }
     }
   }
 

@@ -44,8 +44,7 @@ class _CommerceTypeVendorTypeCategoriesState
   @override
   Widget build(BuildContext context) {
     final args = (vendorTypeId: widget.vendorType.id, page: null as int?);
-    final asyncCategories =
-        ref.watch(vendorCategoriesControllerProvider(args));
+    final asyncCategories = ref.watch(vendorCategoriesControllerProvider(args));
     final categories = asyncCategories.valueOrNull ?? const [];
 
     return VStack([
@@ -72,8 +71,7 @@ class _CommerceTypeVendorTypeCategoriesState
             .color(AppColor.primaryColor)
             .make()
             .onInkTap(
-              () =>
-                  context.pushRoute('/categories', extra: widget.vendorType),
+              () => context.pushRoute('/categories', extra: widget.vendorType),
             ),
       ]).p12(),
       CustomListView(

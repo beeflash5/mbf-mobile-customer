@@ -17,8 +17,9 @@ class ServiceVendorDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncServices =
-        ref.watch(serviceVendorDetailsControllerProvider(vendor.id));
+    final asyncServices = ref.watch(
+      serviceVendorDetailsControllerProvider(vendor.id),
+    );
     final services = asyncServices.valueOrNull ?? const [];
 
     return VStack([
@@ -28,16 +29,17 @@ class ServiceVendorDetailsPage extends ConsumerWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 20,
         childAspectRatio: 1.1,
-        items: services
-            .map(
-              (service) => HomeServicesListItem(
-                height: 290,
-                width: 170,
-                service: service,
-                onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
-              ),
-            )
-            .toList(),
+        items:
+            services
+                .map(
+                  (service) => HomeServicesListItem(
+                    height: 290,
+                    width: 170,
+                    service: service,
+                    onPressed: (s) => context.pushWidget(ServiceDetailsPage(s)),
+                  ),
+                )
+                .toList(),
       ).p20(),
     ]).scrollVertical().expand();
   }

@@ -51,10 +51,12 @@ class _VendorDetailsWithMenuPageState
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(vendorMenuDetailsControllerProvider(widget.vendor.id));
-    final notifier =
-        ref.read(vendorMenuDetailsControllerProvider(widget.vendor.id).notifier);
+    final asyncState = ref.watch(
+      vendorMenuDetailsControllerProvider(widget.vendor.id),
+    );
+    final notifier = ref.read(
+      vendorMenuDetailsControllerProvider(widget.vendor.id).notifier,
+    );
     final state = asyncState.valueOrNull;
     final vendor = state?.vendor ?? widget.vendor;
     final menus = state?.vendor.menus ?? const [];
@@ -130,43 +132,58 @@ class _VendorDetailsWithMenuPageState
                   indicatorSize: TabBarIndicatorSize.tab,
                   tabAlignment: TabAlignment.start,
                   dividerHeight: 0,
-                  tabs: menus
-                      .map((menu) => Tab(
-                            text: menu.name,
-                            iconMargin: EdgeInsets.zero,
-                          ))
-                      .toList(),
+                  tabs:
+                      menus
+                          .map(
+                            (menu) => Tab(
+                              text: menu.name,
+                              iconMargin: EdgeInsets.zero,
+                            ),
+                          )
+                          .toList(),
                 ),
               ),
           ];
         },
-        body: asyncState.isLoading || _tabController == null
-            ? BusyIndicator().p20().centered()
-            : TabBarView(
-                controller: _tabController,
-                children: menus.map((menu) {
-                  final products = state?.menuProducts[menu.id] ?? const [];
-                  final loading = state?.loadingMore[menu.id] ?? false;
-                  return CustomEasyRefreshView(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    onRefresh: () => notifier.refreshMenu(menu.id),
-                    onLoad: () => notifier.loadMore(menu.id),
-                    loading: loading,
-                    dataset: products,
-                    separator: 5.heightBox,
-                    listView: products
-                        .map(
-                          (product) => VendorMenuProductListItem(
-                            product,
-                            onPressed: (p) => context.pushWidget(ProductDetailsPage(product: p)),
-                            qtyUpdated: (p, q) =>
-                                CartHelper.addToCartDirectly(context, p, q),
-                          ),
-                        )
-                        .toList(),
-                  );
-                }).toList(),
-              ),
+        body:
+            asyncState.isLoading || _tabController == null
+                ? BusyIndicator().p20().centered()
+                : TabBarView(
+                  controller: _tabController,
+                  children:
+                      menus.map((menu) {
+                        final products =
+                            state?.menuProducts[menu.id] ?? const [];
+                        final loading = state?.loadingMore[menu.id] ?? false;
+                        return CustomEasyRefreshView(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          onRefresh: () => notifier.refreshMenu(menu.id),
+                          onLoad: () => notifier.loadMore(menu.id),
+                          loading: loading,
+                          dataset: products,
+                          separator: 5.heightBox,
+                          listView:
+                              products
+                                  .map(
+                                    (product) => VendorMenuProductListItem(
+                                      product,
+                                      onPressed:
+                                          (p) => context.pushWidget(
+                                            ProductDetailsPage(product: p),
+                                          ),
+                                      qtyUpdated:
+                                          (p, q) =>
+                                              CartHelper.addToCartDirectly(
+                                                context,
+                                                p,
+                                                q,
+                                              ),
+                                    ),
+                                  )
+                                  .toList(),
+                        );
+                      }).toList(),
+                ),
       ),
       bottomSheet: CartViewBottomSheet(),
     );

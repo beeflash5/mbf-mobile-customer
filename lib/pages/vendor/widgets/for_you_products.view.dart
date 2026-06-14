@@ -12,19 +12,16 @@ import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class ForYouProducts extends ConsumerWidget {
-  const ForYouProducts(
-    this.vendorType, {
-    this.imageHeight,
-    super.key,
-  });
+  const ForYouProducts(this.vendorType, {this.imageHeight, super.key});
 
   final VendorType vendorType;
   final double? imageHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncProducts =
-        ref.watch(forYouProductsControllerProvider(vendorType.id));
+    final asyncProducts = ref.watch(
+      forYouProductsControllerProvider(vendorType.id),
+    );
     final products = asyncProducts.valueOrNull ?? const [];
 
     return VStack([
@@ -37,11 +34,13 @@ class ForYouProducts extends ConsumerWidget {
               .text
               .color(const Color(0xFF1B8A9E))
               .make()
-              .onTap(() => ProductSearchHelper.openProductsSeeAllPage(
-                    title: "For You".tr(),
-                    vendorType: vendorType,
-                    type: ProductFetchDataType.RANDOM,
-                  )),
+              .onTap(
+                () => ProductSearchHelper.openProductsSeeAllPage(
+                  title: "For You".tr(),
+                  vendorType: vendorType,
+                  type: ProductFetchDataType.RANDOM,
+                ),
+              ),
         ],
       ).px12().py2(),
       CustomDynamicHeightGridView(
@@ -51,10 +50,11 @@ class ForYouProducts extends ConsumerWidget {
         itemCount: products.length,
         isLoading: asyncProducts.isLoading,
         noScrollPhysics: true,
-        itemBuilder: (context, index) => CommerceProductListItem(
-          products[index],
-          height: imageHeight ?? 80,
-        ),
+        itemBuilder:
+            (context, index) => CommerceProductListItem(
+              products[index],
+              height: imageHeight ?? 80,
+            ),
       ).px12().py2(),
     ]);
   }

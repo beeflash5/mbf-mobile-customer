@@ -32,12 +32,13 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    final result =
-        await ref.read(changePasswordControllerProvider.notifier).submit(
-              currentPassword: _currentCtrl.text,
-              newPassword: _newCtrl.text,
-              confirmPassword: _confirmCtrl.text,
-            );
+    final result = await ref
+        .read(changePasswordControllerProvider.notifier)
+        .submit(
+          currentPassword: _currentCtrl.text,
+          newPassword: _newCtrl.text,
+          confirmPassword: _confirmCtrl.text,
+        );
     if (!mounted) return;
     switch (result) {
       case ChangePasswordSuccess(:final message):

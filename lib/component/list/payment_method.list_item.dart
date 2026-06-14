@@ -21,28 +21,25 @@ class PaymentOptionListItem extends StatelessWidget {
     return Stack(
       alignment: Alignment.centerRight,
       children: [
-        HStack(
-          [
-            //
-            CustomImage(
-              imageUrl: paymentMethod.photo,
-              width: Vx.dp48,
-              height: Vx.dp48,
-              boxFit: BoxFit.contain,
-            ).px4().py8(),
+        HStack([
+              //
+              CustomImage(
+                imageUrl: paymentMethod.photo,
+                width: Vx.dp48,
+                height: Vx.dp48,
+                boxFit: BoxFit.contain,
+              ).px4().py8(),
 
-            //
-            paymentMethod.name.text.medium.lg.make().expand(),
+              //
+              paymentMethod.name.text.medium.lg.make().expand(),
 
-            40.widthBox,
-          ],
-        )
-            .box
-            .roundedSM
+              40.widthBox,
+            ]).box.roundedSM
             .border(
-              color: selected
-                  ? AppColor.primaryColor
-                  : context.textTheme.bodyLarge!.color!.withOpacity(0.20),
+              color:
+                  selected
+                      ? AppColor.primaryColor
+                      : context.textTheme.bodyLarge!.color!.withOpacity(0.20),
               width: selected ? 2 : 1,
             )
             .make(),
@@ -57,34 +54,31 @@ class PaymentOptionListItem extends StatelessWidget {
               shape: BoxShape.circle,
               color: Colors.white,
               border: Border.all(
-                color: selected
-                    ? AppColor.primaryColor
-                    : Colors.grey.shade400,
+                color: selected ? AppColor.primaryColor : Colors.grey.shade400,
                 width: 2,
               ),
             ),
-            child: selected
-                ? Center(
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColor.primaryColor,
+            child:
+                selected
+                    ? Center(
+                      child: Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.primaryColor,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 12,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 12,
-                      ),
-                    ),
-                  )
-                : null,
+                    )
+                    : null,
           ),
         ),
       ],
-    ).onInkTap(
-      () => onSelected(paymentMethod),
-    );
+    ).onInkTap(() => onSelected(paymentMethod));
   }
 }

@@ -33,12 +33,8 @@ class _CategoriesPageState extends ConsumerState<CategoriesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args = (
-      vendorTypeId: widget.vendorType?.id ?? 0,
-      page: null as int?,
-    );
-    final asyncCategories =
-        ref.watch(vendorCategoriesControllerProvider(args));
+    final args = (vendorTypeId: widget.vendorType?.id ?? 0, page: null as int?);
+    final asyncCategories = ref.watch(vendorCategoriesControllerProvider(args));
     final categories = asyncCategories.valueOrNull ?? const [];
     final isLoading = asyncCategories.isLoading;
     final isService = widget.vendorType?.isService ?? false;

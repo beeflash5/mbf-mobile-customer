@@ -3,7 +3,8 @@ import 'package:fuodz/utils/extensions/router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb_v2/google_maps_place_picker.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-import 'package:localize_and_translate/localize_and_translate.dart' show translator;
+import 'package:localize_and_translate/localize_and_translate.dart'
+    show translator;
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:what3words/what3words.dart' hide Coordinates;
@@ -20,8 +21,9 @@ import 'package:fuodz/utils/utils.dart';
 /// Static helpers extracted from `BaseDeliveryAddressesViewModel` so the
 /// delivery-address pages can use them without inheriting from MyBaseViewModel.
 class DeliveryAddressHelper {
-  static final What3WordsV3 what3WordsV3Api =
-      What3WordsV3(AppStrings.what3wordsApiKey);
+  static final What3WordsV3 what3WordsV3Api = What3WordsV3(
+    AppStrings.what3wordsApiKey,
+  );
 
   /// Reverse geocode lat/lng to fill in name / address / city / state / country
   /// where missing.
@@ -32,8 +34,9 @@ class DeliveryAddressHelper {
       deliveryAddress.latitude ?? 0.00,
       deliveryAddress.longitude ?? 0.00,
     );
-    final addresses =
-        await GeocoderService().findAddressesFromCoordinates(coordinates);
+    final addresses = await GeocoderService().findAddressesFromCoordinates(
+      coordinates,
+    );
     for (final address in addresses) {
       deliveryAddress.address ??= address.addressLine;
       if (deliveryAddress.name.isEmptyOrNull) {
@@ -77,10 +80,10 @@ class DeliveryAddressHelper {
     try {
       mapRegion = await Utils.getCurrentCountryCode();
     } catch (_) {}
-    mapRegion ??= AppStrings.countryCode.trim().split(',').firstWhere(
-          (e) => !e.toLowerCase().contains('auto'),
-          orElse: () => '',
-        );
+    mapRegion ??= AppStrings.countryCode
+        .trim()
+        .split(',')
+        .firstWhere((e) => !e.toLowerCase().contains('auto'), orElse: () => '');
 
     if (!AppMapSettings.useGoogleOnApp) {
       return context.push(
@@ -92,13 +95,15 @@ class DeliveryAddressHelper {
         ),
       );
     }
-    return context.pushWidget(PlacePicker(
-          apiKey: AppStrings.googleMapApiKey,
-          autocompleteLanguage: translator.activeLocale.languageCode,
-          region: mapRegion,
-          onPlacePicked: (result) => Navigator.of(context).pop(result),
-          initialPosition: initialPosition,
-        ));
+    return context.pushWidget(
+      PlacePicker(
+        apiKey: AppStrings.googleMapApiKey,
+        autocompleteLanguage: translator.activeLocale.languageCode,
+        region: mapRegion,
+        onPlacePicked: (result) => Navigator.of(context).pop(result),
+        initialPosition: initialPosition,
+      ),
+    );
   }
 
   /// Resolve a 3-word address into coordinates and set them on the
@@ -113,16 +118,16 @@ class DeliveryAddressHelper {
         await what3WordsV3Api.convertToCoordinates(value).execute();
     if (coordinates.isSuccessful()) {
       addressTEC.text = coordinates.data()?.toJson()['nearestPlace'];
-      deliveryAddress.address =
-          coordinates.data()?.toJson()['nearestPlace'];
+      deliveryAddress.address = coordinates.data()?.toJson()['nearestPlace'];
       deliveryAddress.latitude =
           coordinates.data()?.toJson()['coordinates']['lat'];
       deliveryAddress.longitude =
           coordinates.data()?.toJson()['coordinates']['lng'];
-      final c =
-          Coordinates(deliveryAddress.latitude!, deliveryAddress.longitude!);
-      final addresses =
-          await GeocoderService().findAddressesFromCoordinates(c);
+      final c = Coordinates(
+        deliveryAddress.latitude!,
+        deliveryAddress.longitude!,
+      );
+      final addresses = await GeocoderService().findAddressesFromCoordinates(c);
       if (addresses.isNotEmpty) {
         deliveryAddress.city = addresses.first.locality;
       }

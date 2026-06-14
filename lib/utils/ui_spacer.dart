@@ -18,36 +18,35 @@ class UiSpacer {
       SizedBox(height: space);
 
   static Widget emptySpace() => SizedBox(width: 0, height: 0);
-  static Widget expandedSpace() => Expanded(
-        child: SizedBox.shrink(),
-      );
+  static Widget expandedSpace() => Expanded(child: SizedBox.shrink());
 
   static Widget divider({
     double height = 1.5,
     double thickness = 1.2,
     Color? color,
-  }) =>
-      Divider(
-        height: height,
-        thickness: thickness,
-        color: color ?? UIColors.divider,
-      );
+  }) => Divider(
+    height: height,
+    thickness: thickness,
+    color: color ?? UIColors.divider,
+  );
 
-  static Widget swipeIndicator() => Divider(
+  static Widget swipeIndicator() =>
+      Divider(
         height: 4,
         thickness: 4,
       ).w(40).box.rounded.clip(Clip.antiAlias).make().centered();
 
   //
-  static Widget cutDivider({
-    Color? color,
-  }) =>
-      ClipPath(
-        clipper: MultiplePointsClipper(Sides.bottom,
-            heightOfPoint: 5, numberOfPoints: 40),
-        child: SizedBox(
+  static Widget cutDivider({Color? color}) => ClipPath(
+    clipper: MultiplePointsClipper(
+      Sides.bottom,
+      heightOfPoint: 5,
+      numberOfPoints: 40,
+    ),
+    child:
+        SizedBox(
           height: 8,
           width: double.infinity,
         ).box.color(color ?? Vx.gray200).make(),
-      );
+  );
 }

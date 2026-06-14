@@ -70,27 +70,22 @@ class CustomDynamicHeightGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return this.justList
         ? _getBody()
-        : VStack(
-            [
-              this.title ?? UiSpacer.emptySpace(),
-              _getBody(),
-            ],
-            crossAlignment: CrossAxisAlignment.start,
-          );
+        : VStack([
+          this.title ?? UiSpacer.emptySpace(),
+          _getBody(),
+        ], crossAlignment: CrossAxisAlignment.start);
   }
 
   Widget _getBody() {
     return (this.isLoading && this.itemCount <= 0)
         ? this.loadingWidget ?? LoadingShimmer()
         : this.hasError
-            ? this.errorWidget ?? EmptyState()
-            : this.justList
-                ? itemCount <= 0
-                    ? this.emptyWidget ?? UiSpacer.emptySpace()
-                    : _getBodyList()
-                : Expanded(
-                    child: _getBodyList(),
-                  );
+        ? this.errorWidget ?? EmptyState()
+        : this.justList
+        ? itemCount <= 0
+            ? this.emptyWidget ?? UiSpacer.emptySpace()
+            : _getBodyList()
+        : Expanded(child: _getBodyList());
   }
 
   //
@@ -114,13 +109,13 @@ class CustomDynamicHeightGridView extends StatelessWidget {
         //     child: _getListView(),
         //   )
         ? CustomEasyRefreshView(
-            // controller: this.refreshController!,
-            triggerAxis: this.scrollDirection,
-            onRefresh: () => this.onRefresh!(),
-            onLoad: this.onLoading != null ? () => this.onLoading!() : null,
-            loading: loading ?? false,
-            child: _getListView(),
-          )
+          // controller: this.refreshController!,
+          triggerAxis: this.scrollDirection,
+          onRefresh: () => this.onRefresh!(),
+          onLoad: this.onLoading != null ? () => this.onLoading!() : null,
+          loading: loading ?? false,
+          child: _getListView(),
+        )
         : _getListView();
   }
 

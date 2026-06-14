@@ -3,8 +3,9 @@ import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 
 class SearchService {
   static Future<List<String>> getSearchHistory() async {
-    final searchHistory =
-        await LocalStorageService.rxPrefs!.getStringList("search_history");
+    final searchHistory = await LocalStorageService.rxPrefs!.getStringList(
+      "search_history",
+    );
     return searchHistory ?? [];
   }
 
@@ -17,7 +18,9 @@ class SearchService {
     }
 
     searchHistory.add(keyword);
-    await LocalStorageService.rxPrefs!
-        .setStringList("search_history", searchHistory);
+    await LocalStorageService.rxPrefs!.setStringList(
+      "search_history",
+      searchHistory,
+    );
   }
 }

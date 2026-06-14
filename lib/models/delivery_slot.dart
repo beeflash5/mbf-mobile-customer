@@ -10,23 +10,21 @@ DeliverySlot deliverySlotFromJson(String str) =>
 String deliverySlotToJson(DeliverySlot data) => json.encode(data.toJson());
 
 class DeliverySlot {
-  DeliverySlot({
-    required this.date,
-    required this.times,
-  });
+  DeliverySlot({required this.date, required this.times});
 
   DateTime date;
   List<String> times;
 
   factory DeliverySlot.fromJson(Map<String, dynamic> json) => DeliverySlot(
-        date: DateTime.parse(json["date"]),
-        times: json["times"] == null
+    date: DateTime.parse(json["date"]),
+    times:
+        json["times"] == null
             ? []
             : List<String>.from(json["times"].map((x) => x)),
-      );
+  );
 
   Map<String, dynamic> toJson() => {
-        "date": date.toIso8601String(),
-        "times": List<dynamic>.from(times.map((x) => x)),
-      };
+    "date": date.toIso8601String(),
+    "times": List<dynamic>.from(times.map((x) => x)),
+  };
 }

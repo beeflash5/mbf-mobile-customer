@@ -20,11 +20,7 @@ import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/utils/utils.dart';
 
 class NewParcelPage extends ConsumerStatefulWidget {
-  const NewParcelPage(
-    this.vendorType, {
-    super.key,
-    this.onFinish,
-  });
+  const NewParcelPage(this.vendorType, {super.key, this.onFinish});
 
   final VendorType vendorType;
   final Function? onFinish;
@@ -38,8 +34,9 @@ class _NewParcelPageState extends ConsumerState<NewParcelPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctl =
-          ref.read(newParcelControllerProvider(widget.vendorType).notifier);
+      final ctl = ref.read(
+        newParcelControllerProvider(widget.vendorType).notifier,
+      );
       ctl.onFinish = widget.onFinish;
       ctl.initialise();
     });
@@ -48,8 +45,9 @@ class _NewParcelPageState extends ConsumerState<NewParcelPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(newParcelControllerProvider(widget.vendorType));
-    final controller =
-        ref.read(newParcelControllerProvider(widget.vendorType).notifier);
+    final controller = ref.read(
+      newParcelControllerProvider(widget.vendorType).notifier,
+    );
     return BasePage(
       showAppBar: true,
       showLeadingAction: true,
@@ -57,11 +55,11 @@ class _NewParcelPageState extends ConsumerState<NewParcelPage> {
       showCart: false,
       appBarColor: AppColor.primaryColor,
       appBarItemColor: Utils.textColorByTheme(),
-      body: VStack(
-        [
-          VStack(
-            [
-              "New Order".tr().text
+      body: VStack([
+        VStack([
+              "New Order"
+                  .tr()
+                  .text
                   .color(Utils.textColorByTheme())
                   .bold
                   .xl3
@@ -85,41 +83,39 @@ class _NewParcelPageState extends ConsumerState<NewParcelPage> {
                 ),
               ),
               UiSpacer.vSpace(10),
-            ],
-          )
-              .p20()
-              .box
-              .bgImage(
-                DecorationImage(
-                  image: NetworkImage(widget.vendorType.logo),
-                  opacity: 0.05,
-                ),
-              )
-              .color(AppColor.primaryColor)
-              .make()
-              .wFull(context),
-          PageView(
-            scrollDirection: Axis.vertical,
-            physics: const NeverScrollableScrollPhysics(),
-            controller: controller.pageController,
-            children: [
-              PackageTypeSelector(state: state, controller: controller),
-              PackageDeliveryInfo(state: state, controller: controller),
-              VendorPackageTypeSelector(state: state, controller: controller),
-              PackageRecipientInfo(state: state, controller: controller),
-              CustomVisibilty(
-                visible: state.requireParcelInfo,
-                child: PackageDeliveryParcelInfo(
-                  state: state,
-                  controller: controller,
-                ),
+            ])
+            .p20()
+            .box
+            .bgImage(
+              DecorationImage(
+                image: NetworkImage(widget.vendorType.logo),
+                opacity: 0.05,
               ),
-              PackageDeliverySummary(state: state, controller: controller),
-              PackageDeliveryPayment(state: state, controller: controller),
-            ],
-          ).box.make().px20().expand(),
-        ],
-      ).pOnly(bottom: context.mq.viewInsets.bottom),
+            )
+            .color(AppColor.primaryColor)
+            .make()
+            .wFull(context),
+        PageView(
+          scrollDirection: Axis.vertical,
+          physics: const NeverScrollableScrollPhysics(),
+          controller: controller.pageController,
+          children: [
+            PackageTypeSelector(state: state, controller: controller),
+            PackageDeliveryInfo(state: state, controller: controller),
+            VendorPackageTypeSelector(state: state, controller: controller),
+            PackageRecipientInfo(state: state, controller: controller),
+            CustomVisibilty(
+              visible: state.requireParcelInfo,
+              child: PackageDeliveryParcelInfo(
+                state: state,
+                controller: controller,
+              ),
+            ),
+            PackageDeliverySummary(state: state, controller: controller),
+            PackageDeliveryPayment(state: state, controller: controller),
+          ],
+        ).box.make().px20().expand(),
+      ]).pOnly(bottom: context.mq.viewInsets.bottom),
     );
   }
 }

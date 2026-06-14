@@ -13,19 +13,14 @@ class TaxiOrderTripVerificationView extends StatelessWidget {
   Widget build(BuildContext context) {
     //
     return Visibility(
-        visible: !order.isCompleted && AppTaxiSettings.requiredBookingCode,
-        child: VxBox(
-          child: VStack(
-            [
+      visible: !order.isCompleted && AppTaxiSettings.requiredBookingCode,
+      child: VxBox(
+        child:
+            VStack([
               "Booking/Verification Code".tr().text.light.italic.lg.make(),
               "${order.verificationCode}".text.xl2.semiBold.make(),
-            ],
-            crossAlignment: CrossAxisAlignment.center,
-          ).px20().py12(),
-        )
-            .shadowXs
-            .color(context.theme.colorScheme.surface)
-            .make()
-            .wFull(context));
+            ], crossAlignment: CrossAxisAlignment.center).px20().py12(),
+      ).shadowXs.color(context.theme.colorScheme.surface).make().wFull(context),
+    );
   }
 }

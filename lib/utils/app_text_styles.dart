@@ -52,7 +52,10 @@ class AppTextStyle {
     FontWeight fontWeight = FontWeight.w600,
   }) {
     return GoogleFonts.nunito(
-        fontSize: 22, fontWeight: fontWeight, color: color);
+      fontSize: 22,
+      fontWeight: fontWeight,
+      color: color,
+    );
   }
 
   static TextStyle h3TitleTextStyle({
@@ -71,18 +74,31 @@ class AppTextStyle {
     FontWeight fontWeight = FontWeight.w500,
   }) {
     return GoogleFonts.nunito(
-        fontSize: 15, fontWeight: fontWeight, color: color);
+      fontSize: 15,
+      fontWeight: fontWeight,
+      color: color,
+    );
   }
 
-  static TextStyle h5TitleTextStyle(
-      {Color color = Colors.black, FontWeight fontWeight = FontWeight.w400}) {
+  static TextStyle h5TitleTextStyle({
+    Color color = Colors.black,
+    FontWeight fontWeight = FontWeight.w400,
+  }) {
     return GoogleFonts.nunito(
-        fontSize: 13, fontWeight: fontWeight, color: color);
+      fontSize: 13,
+      fontWeight: fontWeight,
+      color: color,
+    );
   }
 
-  static TextStyle h6TitleTextStyle(
-      {Color color = Colors.black, FontWeight fontWeight = FontWeight.w300}) {
+  static TextStyle h6TitleTextStyle({
+    Color color = Colors.black,
+    FontWeight fontWeight = FontWeight.w300,
+  }) {
     return GoogleFonts.nunito(
-        fontSize: 11, fontWeight: fontWeight, color: color);
+      fontSize: 11,
+      fontWeight: fontWeight,
+      color: color,
+    );
   }
 }

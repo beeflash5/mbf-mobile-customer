@@ -79,7 +79,9 @@ class TaxiOrderSummaryController
   Future<void> openCouponDialog(BuildContext context) async {
     final taxi = ref.read(taxiControllerProvider(arg).notifier);
     final taxiState = ref.read(taxiControllerProvider(arg));
-    final result = await context.pushWidget(ApplyDiscountPage(coupon: taxiState.coupon));
+    final result = await context.pushWidget(
+      ApplyDiscountPage(coupon: taxiState.coupon),
+    );
     if (result != null && result is Coupon) {
       // Set coupon by triggering apply through TaxiController fields.
       taxi.couponTEC.text = result.code;
@@ -93,5 +95,5 @@ class TaxiOrderSummaryController
 
 final taxiOrderSummaryControllerProvider = NotifierProvider.autoDispose
     .family<TaxiOrderSummaryController, TaxiOrderSummaryState, VendorType>(
-  TaxiOrderSummaryController.new,
-);
+      TaxiOrderSummaryController.new,
+    );

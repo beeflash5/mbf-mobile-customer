@@ -13,20 +13,13 @@ class DeliveryAddressRequest extends ApiService {
   }) async {
     //
 
-    Map<String, dynamic> params = {
-      "vendor_id": vendorId,
-    };
+    Map<String, dynamic> params = {"vendor_id": vendorId};
 
     if (vendorIds != null) {
-      params.addAll({
-        "vendor_ids": jsonEncode(vendorIds),
-      });
+      params.addAll({"vendor_ids": jsonEncode(vendorIds)});
     }
 
-    final apiResult = await get(
-      Api.deliveryAddresses,
-      queryParameters: params,
-    );
+    final apiResult = await get(Api.deliveryAddresses, queryParameters: params);
 
     //
     final apiResponse = ApiResponse.fromResponse(apiResult);
@@ -43,10 +36,7 @@ class DeliveryAddressRequest extends ApiService {
   Future<DeliveryAddress?> preselectedDeliveryAddress({int? vendorId}) async {
     final apiResult = await get(
       Api.deliveryAddresses,
-      queryParameters: {
-        "action": "default",
-        "vendor_id": vendorId,
-      },
+      queryParameters: {"action": "default", "vendor_id": vendorId},
     );
 
     //
@@ -62,7 +52,8 @@ class DeliveryAddressRequest extends ApiService {
 
   //
   Future<ApiResponse> deleteDeliveryAddress(
-      DeliveryAddress deliveryAddress) async {
+    DeliveryAddress deliveryAddress,
+  ) async {
     final apiResult = await delete(
       Api.deliveryAddresses + "/" + deliveryAddress.id.toString(),
     );
@@ -73,7 +64,8 @@ class DeliveryAddressRequest extends ApiService {
 
   //
   Future<ApiResponse> saveDeliveryAddress(
-      DeliveryAddress deliveryAddress) async {
+    DeliveryAddress deliveryAddress,
+  ) async {
     //
     final apiResult = await post(
       Api.deliveryAddresses,

@@ -83,9 +83,10 @@ class _HomePageState extends ConsumerState<HomePage>
           child: UpgradeAlert(
             showIgnore: !AppUpgradeSettings.forceUpgrade(),
             shouldPopScope: () => !AppUpgradeSettings.forceUpgrade(),
-            dialogStyle: Platform.isIOS
-                ? UpgradeDialogStyle.cupertino
-                : UpgradeDialogStyle.material,
+            dialogStyle:
+                Platform.isIOS
+                    ? UpgradeDialogStyle.cupertino
+                    : UpgradeDialogStyle.material,
             upgrader: Upgrader(),
             child: PageView(
               controller: notifier.pageController,
@@ -101,9 +102,10 @@ class _HomePageState extends ConsumerState<HomePage>
           ),
         ),
         fab: AppUISettings.showCart ? const CartHomeFab() : null,
-        fabLocation: AppUISettings.showCart
-            ? FloatingActionButtonLocation.centerDocked
-            : null,
+        fabLocation:
+            AppUISettings.showCart
+                ? FloatingActionButtonLocation.centerDocked
+                : null,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: context.backgroundColor,
@@ -123,9 +125,10 @@ class _HomePageState extends ConsumerState<HomePage>
               elevation: 0,
               activeIndex: state.currentIndex,
               onTap: notifier.onTabChange,
-              gapLocation: AppUISettings.showCart
-                  ? GapLocation.center
-                  : GapLocation.none,
+              gapLocation:
+                  AppUISettings.showCart
+                      ? GapLocation.center
+                      : GapLocation.none,
               notchSmoothness: NotchSmoothness.defaultEdge,
               leftCornerRadius: 0,
               rightCornerRadius: 0,
@@ -157,15 +160,16 @@ class _HomePageState extends ConsumerState<HomePage>
                     ),
                     Padding(
                       padding: const EdgeInsets.all(0.5),
-                      child: titles[index]
-                          .tr()
-                          .text
-                          .scale(0.89)
-                          .fontWeight(
-                            isActive ? FontWeight.bold : FontWeight.normal,
-                          )
-                          .color(color)
-                          .make(),
+                      child:
+                          titles[index]
+                              .tr()
+                              .text
+                              .scale(0.89)
+                              .fontWeight(
+                                isActive ? FontWeight.bold : FontWeight.normal,
+                              )
+                              .color(color)
+                              .make(),
                     ),
                   ],
                 );

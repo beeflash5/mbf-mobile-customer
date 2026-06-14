@@ -11,10 +11,7 @@ import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/extensions/context.dart';
 
 class NewPasswordEntry extends StatefulWidget {
-  const NewPasswordEntry({
-    super.key,
-    required this.onSubmit,
-  });
+  const NewPasswordEntry({super.key, required this.onSubmit});
 
   final Function(String) onSubmit;
 
@@ -43,23 +40,24 @@ class _NewPasswordEntryState extends State<NewPasswordEntry> {
       leading: CustomLeading().onInkTap(() => context.pop()),
       body: Form(
         key: _resetFormKey,
-        child: VStack([
-          "Please enter account new password".tr().text.makeCentered(),
-          CustomTextFormField(
-            labelText: "New Password".tr(),
-            textEditingController: _passwordTEC,
-            validator: FormValidator.validatePassword,
-            obscureText: true,
-          ).py12(),
-          CustomButton(
-            title: "Reset Password".tr(),
-            onPressed: () {
-              if (_resetFormKey.currentState!.validate()) {
-                widget.onSubmit(_passwordTEC.text);
-              }
-            },
-          ).h(Vx.dp48),
-        ]).p20(),
+        child:
+            VStack([
+              "Please enter account new password".tr().text.makeCentered(),
+              CustomTextFormField(
+                labelText: "New Password".tr(),
+                textEditingController: _passwordTEC,
+                validator: FormValidator.validatePassword,
+                obscureText: true,
+              ).py12(),
+              CustomButton(
+                title: "Reset Password".tr(),
+                onPressed: () {
+                  if (_resetFormKey.currentState!.validate()) {
+                    widget.onSubmit(_passwordTEC.text);
+                  }
+                },
+              ).h(Vx.dp48),
+            ]).p20(),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:fuodz/pages/chat/order_chat.page.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/utils/app_routes.dart';
@@ -113,11 +112,12 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
       final args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.chatRoute),
-        builder: (context) => OrderChatPage(
-          orderCode: args['orderCode'],
-          chatType: args['chatType'],
-          receiverId: args['receiverId'],
-        ),
+        builder:
+            (context) => OrderChatPage(
+              orderCode: args['orderCode'],
+              chatType: args['chatType'],
+              receiverId: args['receiverId'],
+            ),
       );
 
     //

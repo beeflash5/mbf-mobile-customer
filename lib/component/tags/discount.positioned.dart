@@ -17,10 +17,12 @@ class DiscountPositiedView extends StatelessWidget {
       right: !Utils.isArabic ? null : 10,
       child: Visibility(
         visible: product.showDiscount,
-        child: VxBox(
-          child:
-              "-${product.discountPercentage}%".text.xs.semiBold.white.make(),
-        ).p4.bottomRounded(value: 5).color(AppColor.primaryColor).make(),
+        child:
+            VxBox(
+              child:
+                  "-${product.discountPercentage}%".text.xs.semiBold.white
+                      .make(),
+            ).p4.bottomRounded(value: 5).color(AppColor.primaryColor).make(),
       ),
     );
   }

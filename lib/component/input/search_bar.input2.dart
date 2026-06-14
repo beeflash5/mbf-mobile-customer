@@ -82,11 +82,7 @@ class SearchBarInput2 extends StatelessWidget {
           IconButton(
                 onPressed: null,
                 color: Colors.white,
-                icon: Icon(
-                  Icons.tune,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                icon: Icon(Icons.tune, color: Colors.white, size: 20),
               )
               .onInkTap(
                 onFilterPressed != null ? () => onFilterPressed!() : () {},

@@ -38,30 +38,32 @@ class _ApplyCouponState extends ConsumerState<ApplyCoupon> {
       UiSpacer.verticalSpace(space: 10),
       AuthServices.authenticated()
           ? CustomTextFormField(
-              hintText: "Coupon Code".tr(),
-              textEditingController: _couponTEC,
-              errorText: state.couponError ?? "",
-              onChanged: notifier.couponCodeChange,
-              suffixIcon: CustomButton(
-                child: const Icon(Icons.check),
-                isFixedHeight: true,
-                loading: _busy,
-                onPressed: state.canApplyCoupon
-                    ? () async {
-                        setState(() => _busy = true);
-                        await notifier.applyCoupon(_couponTEC.text);
-                        if (mounted) setState(() => _busy = false);
-                      }
-                    : null,
-              ).w(62).p8(),
-            )
+            hintText: "Coupon Code".tr(),
+            textEditingController: _couponTEC,
+            errorText: state.couponError ?? "",
+            onChanged: notifier.couponCodeChange,
+            suffixIcon:
+                CustomButton(
+                  child: const Icon(Icons.check),
+                  isFixedHeight: true,
+                  loading: _busy,
+                  onPressed:
+                      state.canApplyCoupon
+                          ? () async {
+                            setState(() => _busy = true);
+                            await notifier.applyCoupon(_couponTEC.text);
+                            if (mounted) setState(() => _busy = false);
+                          }
+                          : null,
+                ).w(62).p8(),
+          )
           : VStack([
-              EmptyState(
-                auth: true,
-                showImage: false,
-                actionPressed: () => context.pushWidget(LoginPage()),
-              ),
-            ]),
+            EmptyState(
+              auth: true,
+              showImage: false,
+              actionPressed: () => context.pushWidget(LoginPage()),
+            ),
+          ]),
     ]);
   }
 }

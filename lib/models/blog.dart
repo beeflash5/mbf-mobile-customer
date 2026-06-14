@@ -1,4 +1,3 @@
-
 class Blog {
   int id;
   String name;

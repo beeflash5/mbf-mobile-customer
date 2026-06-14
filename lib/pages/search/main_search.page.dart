@@ -51,11 +51,8 @@ class _MainSearchPageState extends ConsumerState<MainSearchPage> {
     final showProducts = state?.showProducts ?? false;
     final showServices = state?.showServices ?? false;
 
-    final tabCount = [
-      if (showVendors) 1,
-      if (showProducts) 1,
-      if (showServices) 1,
-    ].length;
+    final tabCount =
+        [if (showVendors) 1, if (showProducts) 1, if (showServices) 1].length;
 
     return BasePage(
       body: VStack([
@@ -67,75 +64,82 @@ class _MainSearchPageState extends ConsumerState<MainSearchPage> {
             notifier.setKeyword(keyword);
             notifier.startSearch();
           },
-          onFilterPressed: () => showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (_) => SearchFilterBottomSheet(
-              search: state?.search ?? Search(),
-              onSubmitted: notifier.updateSearch,
-            ),
-          ),
+          onFilterPressed:
+              () => showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder:
+                    (_) => SearchFilterBottomSheet(
+                      search: state?.search ?? Search(),
+                      onSubmitted: notifier.updateSearch,
+                    ),
+              ),
         ),
         if (isLoading) const LinearProgressIndicator(minHeight: 3),
         Expanded(
-          child: tabCount == 0
-              ? const Center(child: CircularProgressIndicator())
-              : Theme(
-                  data: Theme.of(context).copyWith(
-                    tabBarTheme: const TabBarThemeData(
-                      dividerColor: Colors.transparent,
+          child:
+              tabCount == 0
+                  ? const Center(child: CircularProgressIndicator())
+                  : Theme(
+                    data: Theme.of(context).copyWith(
+                      tabBarTheme: const TabBarThemeData(
+                        dividerColor: Colors.transparent,
+                      ),
                     ),
-                  ),
-                  child: DefaultTabController(
-                    length: tabCount,
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: Colors.grey.shade300,
-                                width: 1,
+                    child: DefaultTabController(
+                      length: tabCount,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
+                                ),
                               ),
                             ),
-                          ),
-                          child: TabBar(
-                            isScrollable: false,
-                            tabAlignment: TabAlignment.fill,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            indicator: UnderlineTabIndicator(
-                              borderSide: BorderSide(
-                                color: context.theme.primaryColor,
-                                width: 3,
+                            child: TabBar(
+                              isScrollable: false,
+                              tabAlignment: TabAlignment.fill,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              indicator: UnderlineTabIndicator(
+                                borderSide: BorderSide(
+                                  color: context.theme.primaryColor,
+                                  width: 3,
+                                ),
                               ),
+                              labelColor: AppColor.primaryColor,
+                              unselectedLabelColor: Utils.textColorByTheme(
+                                true,
+                              ),
+                              labelStyle: context.textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              tabs: [
+                                if (showVendors) Tab(text: "Vendors".tr()),
+                                if (showProducts) Tab(text: "Products".tr()),
+                                if (showServices) Tab(text: "Services".tr()),
+                              ],
                             ),
-                            labelColor: AppColor.primaryColor,
-                            unselectedLabelColor: Utils.textColorByTheme(true),
-                            labelStyle: context.textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                if (showVendors) const VendorSearchResultView(),
+                                if (showProducts)
+                                  const ProductSearchResultView(),
+                                if (showServices)
+                                  const ServiceSearchResultView(),
+                              ],
                             ),
-                            tabs: [
-                              if (showVendors) Tab(text: "Vendors".tr()),
-                              if (showProducts) Tab(text: "Products".tr()),
-                              if (showServices) Tab(text: "Services".tr()),
-                            ],
                           ),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              if (showVendors) const VendorSearchResultView(),
-                              if (showProducts) const ProductSearchResultView(),
-                              if (showServices) const ServiceSearchResultView(),
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
         ),
       ]).px(16),
     );

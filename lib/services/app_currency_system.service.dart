@@ -111,8 +111,10 @@ class AppCurrencySystemService {
   void initAppCurrencyChange() async {
     final context = AppService().navigatorKey.currentContext;
     if (context != null) {
-      final selectedCurrency =
-          await context.pushRoute('/profile/currency', extra: _currency);
+      final selectedCurrency = await context.pushRoute(
+        '/profile/currency',
+        extra: _currency,
+      );
 
       //selectedCurrency != null
       if (selectedCurrency != null && selectedCurrency is Currency) {

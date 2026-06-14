@@ -108,7 +108,8 @@ class NotificationService {
     try {
       final token = await AuthServices.getAuthBearerToken();
       if (token.isNotEmpty) {
-        final backendNotifications = await NotificationRequest().getNotifications();
+        final backendNotifications =
+            await NotificationRequest().getNotifications();
         if (backendNotifications.isNotEmpty) {
           return backendNotifications;
         }

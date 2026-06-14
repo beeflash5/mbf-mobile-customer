@@ -42,23 +42,22 @@ class ServiceOptionGroup {
         required: json["required"],
         maxOptions: json["max_options"] ?? null,
         photo: json["photo"],
-        options: json["options"] == null
-            ? []
-            : List<ServiceOption>.from(
-                json["options"].map(
-                  (x) => ServiceOption.fromJson(x),
+        options:
+            json["options"] == null
+                ? []
+                : List<ServiceOption>.from(
+                  json["options"].map((x) => ServiceOption.fromJson(x)),
                 ),
-              ),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "vendor_id": vendorId,
-        "multiple": multiple,
-        "required": required,
-        "max_options": maxOptions,
-        "photo": photo,
-        "options": List<dynamic>.from(options.map((x) => x.toJson())),
-      };
+    "id": id,
+    "name": name,
+    "vendor_id": vendorId,
+    "multiple": multiple,
+    "required": required,
+    "max_options": maxOptions,
+    "photo": photo,
+    "options": List<dynamic>.from(options.map((x) => x.toJson())),
+  };
 }

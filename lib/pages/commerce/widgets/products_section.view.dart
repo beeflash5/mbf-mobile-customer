@@ -59,81 +59,78 @@ class ProductsSectionView extends ConsumerWidget {
       byLocation: false,
       isHome: false,
     );
-    final asyncProducts =
-        ref.watch(productsListingControllerProvider(args));
+    final asyncProducts = ref.watch(productsListingControllerProvider(args));
     final products = asyncProducts.valueOrNull ?? const <Product>[];
     final isLoading = asyncProducts.isLoading;
 
     return CustomVisibilty(
       visible: !isLoading && products.isNotEmpty,
-      child: VStack([
-        HStack([
-          (!titleCapitalize ? title : title.toUpperCase())
-              .text
-              .semiBold
-              .xl
-              .make()
-              .expand(),
-          UiSpacer.horizontalSpace(),
-          HStack([
-            "See all"
-                .tr()
-                .text
-                .lg
-                .medium
-                .color(AppColor.primaryColor)
-                .make(),
-          ]).onInkTap(() {
-            if (onSeeAllPressed != null) {
-              onSeeAllPressed!();
-            } else {
-              _openSearchPage(context);
-            }
-          }),
-        ]).wFull(context),
-        UiSpacer.vSpace(10),
-        CustomVisibilty(
-          visible: !showGrid,
-          child: CustomListView(
-            isLoading: isLoading,
-            dataSet: products,
-            scrollDirection: scrollDirection ?? Axis.horizontal,
-            separatorBuilder:
-                (scrollDirection ?? Axis.horizontal) == Axis.horizontal
-                    ? (_, __) => 12.widthBox
-                    : null,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return FittedBox(
-                child: CommerceProductListItem(product, height: 80)
-                    .w(context.percentWidth * 35)
-                    .pOnly(bottom: itemBottomPadding ?? 0),
-              );
-            },
-          ).h(itemHeight ?? (Platform.isAndroid ? 160 : 190)),
-        ),
-        CustomVisibilty(
-          visible: showGrid,
-          child: CustomMasonryGridView(
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 15,
-            crossAxisCount: crossAxisCount ?? 2,
-            isLoading: isLoading,
-            items: List.generate(products.length, (index) {
-              final product = products[index];
-              return Container(
-                constraints: BoxConstraints(
-                  maxHeight: maxHeight ?? double.infinity,
-                ),
-                child: CommerceProductListItem(
-                  product,
-                  boxFit: BoxFit.cover,
-                ).wFull(context),
-              );
-            }),
-          ),
-        ),
-      ]).py12(),
+      child:
+          VStack([
+            HStack([
+              (!titleCapitalize ? title : title.toUpperCase()).text.semiBold.xl
+                  .make()
+                  .expand(),
+              UiSpacer.horizontalSpace(),
+              HStack([
+                "See all"
+                    .tr()
+                    .text
+                    .lg
+                    .medium
+                    .color(AppColor.primaryColor)
+                    .make(),
+              ]).onInkTap(() {
+                if (onSeeAllPressed != null) {
+                  onSeeAllPressed!();
+                } else {
+                  _openSearchPage(context);
+                }
+              }),
+            ]).wFull(context),
+            UiSpacer.vSpace(10),
+            CustomVisibilty(
+              visible: !showGrid,
+              child: CustomListView(
+                isLoading: isLoading,
+                dataSet: products,
+                scrollDirection: scrollDirection ?? Axis.horizontal,
+                separatorBuilder:
+                    (scrollDirection ?? Axis.horizontal) == Axis.horizontal
+                        ? (_, __) => 12.widthBox
+                        : null,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return FittedBox(
+                    child: CommerceProductListItem(product, height: 80)
+                        .w(context.percentWidth * 35)
+                        .pOnly(bottom: itemBottomPadding ?? 0),
+                  );
+                },
+              ).h(itemHeight ?? (Platform.isAndroid ? 160 : 190)),
+            ),
+            CustomVisibilty(
+              visible: showGrid,
+              child: CustomMasonryGridView(
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                crossAxisCount: crossAxisCount ?? 2,
+                isLoading: isLoading,
+                items: List.generate(products.length, (index) {
+                  final product = products[index];
+                  return Container(
+                    constraints: BoxConstraints(
+                      maxHeight: maxHeight ?? double.infinity,
+                    ),
+                    child: CommerceProductListItem(
+                      product,
+                      boxFit: BoxFit.cover,
+                    ).wFull(context),
+                  );
+                }),
+              ),
+            ),
+          ]).py12(),
     );
   }
 

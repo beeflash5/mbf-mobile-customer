@@ -18,35 +18,31 @@ class WelcomeListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onPressed(),
-      child: HStack(
-        [
-          //
-          VxCircle(
-            radius: 56,
-            backgroundColor: AppColor.accentColor.withOpacity(0.6),
-            child: Image.asset(
-              imagePath,
-              width: Vx.dp40,
-              height: Vx.dp40,
-            ).p8(),
-          ).p12(),
-          //
-          VStack(
-            [
-              "${title}".text.xl.color(AppColor.primaryColor).semiBold.make(),
-              "${text}".text.sm.make(),
-            ],
-          ).expand(),
-        ],
-      ).p12(),
-    )
-        .box
-        .roundedSM
-        .border(
-          color: AppColor.accentColor.withOpacity(0.6),
-          width: 3,
-        )
+          onTap: () => onPressed(),
+          child:
+              HStack([
+                //
+                VxCircle(
+                  radius: 56,
+                  backgroundColor: AppColor.accentColor.withOpacity(0.6),
+                  child:
+                      Image.asset(
+                        imagePath,
+                        width: Vx.dp40,
+                        height: Vx.dp40,
+                      ).p8(),
+                ).p12(),
+                //
+                VStack([
+                  "${title}".text.xl
+                      .color(AppColor.primaryColor)
+                      .semiBold
+                      .make(),
+                  "${text}".text.sm.make(),
+                ]).expand(),
+              ]).p12(),
+        ).box.roundedSM
+        .border(color: AppColor.accentColor.withOpacity(0.6), width: 3)
         .make()
         .pOnly(bottom: Vx.dp20);
   }

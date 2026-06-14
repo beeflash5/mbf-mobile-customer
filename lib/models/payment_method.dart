@@ -56,12 +56,16 @@ class PaymentMethod {
       instruction: json["instruction"],
       isActive: parseBoolOrInt(json["is_active"], 0),
       isCash: parseBoolOrInt(json["is_cash"], 0),
-      createdAt: json["created_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["created_at"].toString()) ?? DateTime.now(),
-      updatedAt: json["updated_at"] == null
-          ? DateTime.now()
-          : DateTime.tryParse(json["updated_at"].toString()) ?? DateTime.now(),
+      createdAt:
+          json["created_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["created_at"].toString()) ??
+                  DateTime.now(),
+      updatedAt:
+          json["updated_at"] == null
+              ? DateTime.now()
+              : DateTime.tryParse(json["updated_at"].toString()) ??
+                  DateTime.now(),
       formattedDate: json["formatted_date"] ?? "",
       photo: json["photo"] ?? "",
       useExternalBrowser: parseBool(json["use_external_browser"], false),

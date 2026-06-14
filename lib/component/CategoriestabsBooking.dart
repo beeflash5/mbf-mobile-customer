@@ -21,14 +21,14 @@ class CategoriesTabsBooking extends ConsumerStatefulWidget {
       _CategoriesTabsBookingState();
 }
 
-class _CategoriesTabsBookingState
-    extends ConsumerState<CategoriesTabsBooking> {
+class _CategoriesTabsBookingState extends ConsumerState<CategoriesTabsBooking> {
   int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    final asyncHome =
-        ref.watch(serviceHomeControllerProvider(widget.vendorType.id));
+    final asyncHome = ref.watch(
+      serviceHomeControllerProvider(widget.vendorType.id),
+    );
     final isLoading = asyncHome.isLoading;
     final state = asyncHome.valueOrNull;
     final cats = state?.serviceByCategories ?? const [];
@@ -66,9 +66,10 @@ class _CategoriesTabsBookingState
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: active
-                                ? context.primaryColor
-                                : Colors.transparent,
+                            color:
+                                active
+                                    ? context.primaryColor
+                                    : Colors.transparent,
                             width: 2.5,
                           ),
                         ),
@@ -98,19 +99,19 @@ class _CategoriesTabsBookingState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   "Best ${category?.name ?? ""} Deals".text.bold.xl.make(),
-                  "See All"
-                      .text
-                      .lg
+                  "See All".text.lg
                       .color(const Color(0xFF1B8A9E))
                       .make()
-                      .onTap(() => NavigationService.openServiceSearch(
-                            context,
-                            category: category,
-                            vendorType: widget.vendorType,
-                            showVendors: false,
-                            showServices: true,
-                            byLocation: false,
-                          )),
+                      .onTap(
+                        () => NavigationService.openServiceSearch(
+                          context,
+                          category: category,
+                          vendorType: widget.vendorType,
+                          showVendors: false,
+                          showServices: true,
+                          byLocation: false,
+                        ),
+                      ),
                 ],
               ),
               const SizedBox(height: 4),
@@ -121,43 +122,45 @@ class _CategoriesTabsBookingState
         const SizedBox(height: 16),
         LoadingShimmer(
           loading: category == null || isLoading,
-          child: services.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40),
-                  child: Center(child: Text("No services available")),
-                )
-              : SizedBox(
-                  height: widget.vendorType.id == 13 ? 360 : 300,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    itemCount: services.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 12),
-                    itemBuilder: (context, index) {
-                      final service = services[index];
-                      void open(s) => context.pushWidget(ServiceDetailsPage(s));
-                      if (widget.vendorType.id == 13) {
-                        return HomeServicesListItemTatto(
-                          height: 300,
+          child:
+              services.isEmpty
+                  ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40),
+                    child: Center(child: Text("No services available")),
+                  )
+                  : SizedBox(
+                    height: widget.vendorType.id == 13 ? 360 : 300,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      itemCount: services.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final service = services[index];
+                        void open(s) =>
+                            context.pushWidget(ServiceDetailsPage(s));
+                        if (widget.vendorType.id == 13) {
+                          return HomeServicesListItemTatto(
+                            height: 300,
+                            width: 170,
+                            service: service,
+                            onPressed: open,
+                            title: "Top Pick",
+                          );
+                        }
+                        return HomeServicesListItem(
+                          height: 290,
                           width: 170,
                           service: service,
                           onPressed: open,
                           title: "Top Pick",
                         );
-                      }
-                      return HomeServicesListItem(
-                        height: 290,
-                        width: 170,
-                        service: service,
-                        onPressed: open,
-                        title: "Top Pick",
-                      );
-                    },
+                      },
+                    ),
                   ),
-                ),
         ),
       ],
     );

@@ -48,9 +48,7 @@ class AuthRequest extends ApiService {
 
   //
   Future<ApiResponse> forgotPassword(String email) async {
-    final apiResult = await post(Api.forgotPassword, {
-      "email": email,
-    });
+    final apiResult = await post(Api.forgotPassword, {"email": email});
     return ApiResponse.fromResponse(apiResult);
   }
 
@@ -118,7 +116,7 @@ class AuthRequest extends ApiService {
       final base64Image = base64Encode(bytes);
       payload["photo"] = "data:image/jpeg;base64,$base64Image";
     }
-    
+
     final apiResult = await put(Api.updateProfile, payload);
     return ApiResponse.fromResponse(apiResult);
   }

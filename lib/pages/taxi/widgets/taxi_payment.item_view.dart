@@ -19,19 +19,13 @@ class TaxiPaymentItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        //
-        CustomImage(
-          imageUrl: paymentMethod.photo,
-          width: 30,
-          height: 30,
-        ),
-        //
-        UiSpacer.horizontalSpace(space: 10),
-        "${paymentMethod.name}".text.make(),
-      ],
-    )
+    return HStack([
+          //
+          CustomImage(imageUrl: paymentMethod.photo, width: 30, height: 30),
+          //
+          UiSpacer.horizontalSpace(space: 10),
+          "${paymentMethod.name}".text.make(),
+        ])
         .p4()
         .box
         .px8

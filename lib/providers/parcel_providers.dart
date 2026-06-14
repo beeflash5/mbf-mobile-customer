@@ -4,8 +4,7 @@ import 'package:fuodz/models/order.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/services/order.request.dart';
 
-final _orderRequestProvider =
-    Provider<OrderRequest>((_) => OrderRequest());
+final _orderRequestProvider = Provider<OrderRequest>((_) => OrderRequest());
 
 sealed class TrackOrderResult {
   const TrackOrderResult();
@@ -29,10 +28,9 @@ class ParcelTrackingController extends FamilyAsyncNotifier<Order?, int> {
   Future<TrackOrderResult> trackOrder(String code) async {
     state = const AsyncLoading();
     try {
-      final order = await ref.read(_orderRequestProvider).trackOrder(
-        code,
-        vendorTypeId: arg == 0 ? null : arg,
-      );
+      final order = await ref
+          .read(_orderRequestProvider)
+          .trackOrder(code, vendorTypeId: arg == 0 ? null : arg);
       state = AsyncData(order);
       return TrackOrderSuccess(order);
     } catch (e, st) {
@@ -42,8 +40,10 @@ class ParcelTrackingController extends FamilyAsyncNotifier<Order?, int> {
   }
 }
 
-final parcelTrackingControllerProvider = AsyncNotifierProvider.family<
-    ParcelTrackingController, Order?, int>(ParcelTrackingController.new);
+final parcelTrackingControllerProvider =
+    AsyncNotifierProvider.family<ParcelTrackingController, Order?, int>(
+      ParcelTrackingController.new,
+    );
 
 class ParcelHomeController extends Notifier<VendorType?> {
   @override
@@ -56,5 +56,5 @@ class ParcelHomeController extends Notifier<VendorType?> {
 
 final parcelHomeControllerProvider =
     NotifierProvider<ParcelHomeController, VendorType?>(
-  ParcelHomeController.new,
-);
+      ParcelHomeController.new,
+    );

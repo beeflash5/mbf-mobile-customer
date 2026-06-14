@@ -35,8 +35,9 @@ class _NewTaxiOrderLocationEntryViewState
   @override
   Widget build(BuildContext context) {
     final taxiState = ref.watch(taxiControllerProvider(widget.vendorType));
-    final entryState =
-        ref.watch(taxiOrderEntryControllerProvider(widget.vendorType));
+    final entryState = ref.watch(
+      taxiOrderEntryControllerProvider(widget.vendorType),
+    );
     final entryController = ref.read(
       taxiOrderEntryControllerProvider(widget.vendorType).notifier,
     );

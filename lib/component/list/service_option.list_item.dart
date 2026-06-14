@@ -30,57 +30,61 @@ class ServiceOptionListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currencySymbol = AppStrings.currentCurrencySymbol;
     final asyncState = ref.watch(serviceDetailsControllerProvider(service));
-    final notifier =
-        ref.read(serviceDetailsControllerProvider(service).notifier);
-    final selected = asyncState.valueOrNull?.selectedOptionIds
-            .contains(option.id) ??
-        false;
+    final notifier = ref.read(
+      serviceDetailsControllerProvider(service).notifier,
+    );
+    final selected =
+        asyncState.valueOrNull?.selectedOptionIds.contains(option.id) ?? false;
 
-    return HStack([
-      Checkbox(
-        visualDensity: VisualDensity.compact,
-        value: selected,
-        onChanged: (value) {
-          if (value != null) {
-            notifier.toggleOption(optionGroup, option);
-          }
-        },
-      ),
-      VStack([
-        HStack([
-          if (option.photo.isNotEmptyAndNotNull && option.photo.isNotDefaultImage)
-            CustomImage(
-              imageUrl: option.photo,
-              width: Vx.dp32,
-              height: Vx.dp32,
-              canZoom: true,
-              hideDefaultImg: true,
-            ).card.clip(Clip.antiAlias).roundedSM.make(),
-          option.name.text.medium.lg.make().expand(),
-          CurrencyHStack(
-            [
-              currencySymbol.text.sm.medium.make(),
-              option.price.convertCurrency
-                  .currencyValueFormat()
-                  .text
-                  .sm
-                  .bold
-                  .make(),
-            ],
-            crossAlignment: CrossAxisAlignment.end,
-          ),
-        ], crossAlignment: CrossAxisAlignment.center, spacing: 12),
-        (option.description.isNotEmptyAndNotNull &&
-                option.description.isNotNullOrBlank)
-            ? "${option.description}"
-                .text
-                .sm
-                .maxLines(3)
-                .overflow(TextOverflow.ellipsis)
-                .make()
-            : 0.widthBox,
-      ], spacing: 5).expand(),
-    ], spacing: 10, crossAlignment: CrossAxisAlignment.start)
+    return HStack(
+          [
+            Checkbox(
+              visualDensity: VisualDensity.compact,
+              value: selected,
+              onChanged: (value) {
+                if (value != null) {
+                  notifier.toggleOption(optionGroup, option);
+                }
+              },
+            ),
+            VStack([
+              HStack(
+                [
+                  if (option.photo.isNotEmptyAndNotNull &&
+                      option.photo.isNotDefaultImage)
+                    CustomImage(
+                      imageUrl: option.photo,
+                      width: Vx.dp32,
+                      height: Vx.dp32,
+                      canZoom: true,
+                      hideDefaultImg: true,
+                    ).card.clip(Clip.antiAlias).roundedSM.make(),
+                  option.name.text.medium.lg.make().expand(),
+                  CurrencyHStack([
+                    currencySymbol.text.sm.medium.make(),
+                    option.price.convertCurrency
+                        .currencyValueFormat()
+                        .text
+                        .sm
+                        .bold
+                        .make(),
+                  ], crossAlignment: CrossAxisAlignment.end),
+                ],
+                crossAlignment: CrossAxisAlignment.center,
+                spacing: 12,
+              ),
+              (option.description.isNotEmptyAndNotNull &&
+                      option.description.isNotNullOrBlank)
+                  ? "${option.description}".text.sm
+                      .maxLines(3)
+                      .overflow(TextOverflow.ellipsis)
+                      .make()
+                  : 0.widthBox,
+            ], spacing: 5).expand(),
+          ],
+          spacing: 10,
+          crossAlignment: CrossAxisAlignment.start,
+        )
         .p(10)
         .box
         .withRounded(value: Sizes.radiusSmall)

@@ -36,12 +36,11 @@ class ProfileState {
     String? appVersionInfo,
     bool? authenticated,
     User? currentUser,
-  }) =>
-      ProfileState(
-        appVersionInfo: appVersionInfo ?? this.appVersionInfo,
-        authenticated: authenticated ?? this.authenticated,
-        currentUser: currentUser ?? this.currentUser,
-      );
+  }) => ProfileState(
+    appVersionInfo: appVersionInfo ?? this.appVersionInfo,
+    authenticated: authenticated ?? this.authenticated,
+    currentUser: currentUser ?? this.currentUser,
+  );
 }
 
 class ProfileController extends AsyncNotifier<ProfileState> {
@@ -114,5 +113,5 @@ class ProfileController extends AsyncNotifier<ProfileState> {
 
 final profileControllerProvider =
     AsyncNotifierProvider<ProfileController, ProfileState>(
-  ProfileController.new,
-);
+      ProfileController.new,
+    );

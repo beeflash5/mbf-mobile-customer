@@ -21,10 +21,7 @@ class CouponRequest extends ApiService {
     };
 
     //
-    final apiResult = await get(
-      Api.coupons,
-      queryParameters: queryParameters,
-    );
+    final apiResult = await get(Api.coupons, queryParameters: queryParameters);
 
     print("queryParameters ==> $queryParameters");
 

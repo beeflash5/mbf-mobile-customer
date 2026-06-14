@@ -48,8 +48,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final notifier =
-          ref.read(searchControllerProvider(widget.search).notifier);
+      final notifier = ref.read(
+        searchControllerProvider(widget.search).notifier,
+      );
       notifier.setSelectedTag(2);
       notifier.startSearch();
     });
@@ -62,16 +63,16 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     super.dispose();
   }
 
-  void _openProduct(Product p) => context.pushWidget(ProductDetailsPage(product: p));
+  void _openProduct(Product p) =>
+      context.pushWidget(ProductDetailsPage(product: p));
   void _openService(Service s) => context.pushWidget(ServiceDetailsPage(s));
-  void _openVendor(Vendor v) => context.pushWidget(VendorDetailsPage(vendor: v));
+  void _openVendor(Vendor v) =>
+      context.pushWidget(VendorDetailsPage(vendor: v));
 
   @override
   Widget build(BuildContext context) {
-    final asyncState =
-        ref.watch(searchControllerProvider(widget.search));
-    final notifier =
-        ref.read(searchControllerProvider(widget.search).notifier);
+    final asyncState = ref.watch(searchControllerProvider(widget.search));
+    final notifier = ref.read(searchControllerProvider(widget.search).notifier);
     final state = asyncState.valueOrNull;
     final results = state?.results ?? const [];
     final selectTagId = state?.selectedTagId ?? 2;
@@ -96,27 +97,31 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               notifier.setKeyword(keyword);
               notifier.startSearch();
             },
-            onFilterPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => SearchFilterBottomSheet(
-                search: state?.search ?? widget.search,
-                onSubmitted: notifier.updateSearch,
-              ),
-            ),
+            onFilterPressed:
+                () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder:
+                      (_) => SearchFilterBottomSheet(
+                        search: state?.search ?? widget.search,
+                        onSubmitted: notifier.updateSearch,
+                      ),
+                ),
           ),
           Visibility(
-            visible: (state?.search?.byLocation ?? true) &&
+            visible:
+                (state?.search?.byLocation ?? true) &&
                 results.isEmpty &&
                 !isLoading,
-            child: "Results are currently based on your location. You can disable this in the filter section."
-                .tr()
-                .text
-                .center
-                .gray500
-                .makeCentered()
-                .py(10),
+            child:
+                "Results are currently based on your location. You can disable this in the filter section."
+                    .tr()
+                    .text
+                    .center
+                    .gray500
+                    .makeCentered()
+                    .py(10),
           ),
           VendorSearchHeaderview(
             selectedTagId: selectTagId,
@@ -131,61 +136,16 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               loading: isLoading,
               dataset: results,
               padding: const EdgeInsets.all(12),
-              listView: results.map((r) {
-                if (r is Product) {
-                  if (r.vendor.vendorType.isGrocery) {
-                    return GroceryProductListItem(
-                      product: r,
-                      onPressed: _openProduct,
-                      qtyUpdated: (p, q) =>
-                          CartHelper.addToCartDirectly(context, p, q),
-                    );
-                  } else if (r.vendor.vendorType.isCommerce) {
-                    return CommerceProductListItem(r, height: 80);
-                  }
-                  return HorizontalProductListItem(
-                    r,
-                    onPressed: _openProduct,
-                    qtyUpdated: (p, q) =>
-                        CartHelper.addToCartDirectly(context, p, q),
-                    padding: 0,
-                  );
-                } else if (r is Service) {
-                  return GridViewServiceListItem(
-                    service: r,
-                    onPressed: _openService,
-                  );
-                }
-                return VendorListItem(
-                  vendor: r as Vendor,
-                  onPressed: _openVendor,
-                );
-              }).toList(),
-            ).expand(),
-          CustomVisibilty(
-            visible: selectTagId != 1,
-            child: VStack([
-              CustomVisibilty(
-                visible: !showGrid,
-                child: CustomListView(
-                  refreshController: _refreshController,
-                  canRefresh: true,
-                  canPullUp: true,
-                  onRefresh: notifier.startSearch,
-                  onLoading: () =>
-                      notifier.startSearch(initialLoading: false),
-                  isLoading: isLoading,
-                  padding: const EdgeInsets.all(12),
-                  dataSet: results,
-                  itemBuilder: (context, index) {
-                    final r = results[index];
+              listView:
+                  results.map((r) {
                     if (r is Product) {
                       if (r.vendor.vendorType.isGrocery) {
                         return GroceryProductListItem(
                           product: r,
                           onPressed: _openProduct,
-                          qtyUpdated: (p, q) =>
-                              CartHelper.addToCartDirectly(context, p, q),
+                          qtyUpdated:
+                              (p, q) =>
+                                  CartHelper.addToCartDirectly(context, p, q),
                         );
                       } else if (r.vendor.vendorType.isCommerce) {
                         return CommerceProductListItem(r, height: 80);
@@ -193,8 +153,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       return HorizontalProductListItem(
                         r,
                         onPressed: _openProduct,
-                        qtyUpdated: (p, q) =>
-                            CartHelper.addToCartDirectly(context, p, q),
+                        qtyUpdated:
+                            (p, q) =>
+                                CartHelper.addToCartDirectly(context, p, q),
                         padding: 0,
                       );
                     } else if (r is Service) {
@@ -207,47 +168,106 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       vendor: r as Vendor,
                       onPressed: _openVendor,
                     );
-                  },
-                  separatorBuilder: (context, index) => 10.heightBox,
-                  emptyWidget: EmptySearch(),
-                ).expand(),
-              ),
-              CustomVisibilty(
-                visible: showGrid,
-                child: CustomDynamicHeightGridView(
-                  noScrollPhysics: true,
-                  refreshController: _refreshController,
-                  canRefresh: true,
-                  canPullUp: true,
-                  onRefresh: notifier.startSearch,
-                  onLoading: () =>
-                      notifier.startSearch(initialLoading: false),
-                  isLoading: isLoading,
-                  itemCount: results.length,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  padding: const EdgeInsets.all(12),
-                  itemBuilder: (context, index) {
-                    final r = results[index];
-                    if (r is Product) {
-                      return CommerceProductListItem(r, height: 80);
-                    } else if (r is Service) {
-                      return GridViewServiceListItem(
-                        service: r,
-                        onPressed: _openService,
-                      );
-                    }
-                    return VendorListItem(
-                      vendor: r as Vendor,
-                      onPressed: _openVendor,
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      UiSpacer.verticalSpace(space: 10),
-                  emptyWidget: EmptySearch(),
-                ).expand(),
-              ),
-            ]).expand(),
+                  }).toList(),
+            ).expand(),
+          CustomVisibilty(
+            visible: selectTagId != 1,
+            child:
+                VStack([
+                  CustomVisibilty(
+                    visible: !showGrid,
+                    child:
+                        CustomListView(
+                          refreshController: _refreshController,
+                          canRefresh: true,
+                          canPullUp: true,
+                          onRefresh: notifier.startSearch,
+                          onLoading:
+                              () => notifier.startSearch(initialLoading: false),
+                          isLoading: isLoading,
+                          padding: const EdgeInsets.all(12),
+                          dataSet: results,
+                          itemBuilder: (context, index) {
+                            final r = results[index];
+                            if (r is Product) {
+                              if (r.vendor.vendorType.isGrocery) {
+                                return GroceryProductListItem(
+                                  product: r,
+                                  onPressed: _openProduct,
+                                  qtyUpdated:
+                                      (p, q) => CartHelper.addToCartDirectly(
+                                        context,
+                                        p,
+                                        q,
+                                      ),
+                                );
+                              } else if (r.vendor.vendorType.isCommerce) {
+                                return CommerceProductListItem(r, height: 80);
+                              }
+                              return HorizontalProductListItem(
+                                r,
+                                onPressed: _openProduct,
+                                qtyUpdated:
+                                    (p, q) => CartHelper.addToCartDirectly(
+                                      context,
+                                      p,
+                                      q,
+                                    ),
+                                padding: 0,
+                              );
+                            } else if (r is Service) {
+                              return GridViewServiceListItem(
+                                service: r,
+                                onPressed: _openService,
+                              );
+                            }
+                            return VendorListItem(
+                              vendor: r as Vendor,
+                              onPressed: _openVendor,
+                            );
+                          },
+                          separatorBuilder: (context, index) => 10.heightBox,
+                          emptyWidget: EmptySearch(),
+                        ).expand(),
+                  ),
+                  CustomVisibilty(
+                    visible: showGrid,
+                    child:
+                        CustomDynamicHeightGridView(
+                          noScrollPhysics: true,
+                          refreshController: _refreshController,
+                          canRefresh: true,
+                          canPullUp: true,
+                          onRefresh: notifier.startSearch,
+                          onLoading:
+                              () => notifier.startSearch(initialLoading: false),
+                          isLoading: isLoading,
+                          itemCount: results.length,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          padding: const EdgeInsets.all(12),
+                          itemBuilder: (context, index) {
+                            final r = results[index];
+                            if (r is Product) {
+                              return CommerceProductListItem(r, height: 80);
+                            } else if (r is Service) {
+                              return GridViewServiceListItem(
+                                service: r,
+                                onPressed: _openService,
+                              );
+                            }
+                            return VendorListItem(
+                              vendor: r as Vendor,
+                              onPressed: _openVendor,
+                            );
+                          },
+                          separatorBuilder:
+                              (context, index) =>
+                                  UiSpacer.verticalSpace(space: 10),
+                          emptyWidget: EmptySearch(),
+                        ).expand(),
+                  ),
+                ]).expand(),
           ),
         ]).pOnly(left: Vx.dp16, right: Vx.dp16),
       ),

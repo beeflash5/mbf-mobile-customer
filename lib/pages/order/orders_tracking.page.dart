@@ -52,40 +52,42 @@ class OrderTrackingPage extends ConsumerWidget {
             right: 0,
             bottom: 0,
             child: SafeArea(
-              child: HStack([
-                CustomImage(imageUrl: order.driver!.photo)
-                    .wh(Vx.dp56, Vx.dp56)
-                    .box
-                    .roundedFull
-                    .shadowXs
-                    .clip(Clip.antiAlias)
-                    .make(),
-                VStack([
-                  order.driver!.name.text.xl.semiBold.make(),
-                  order.driver!.phone.text.make(),
-                ]).px12().expand(),
-                Visibility(
-                  visible: AppUISettings.canCallDriver,
-                  child: CustomButton(
-                    icon: Icons.phone,
-                    iconColor: Colors.white,
-                    title: "",
-                    color: AppColor.primaryColor,
-                    shapeRadius: Vx.dp24,
-                    onPressed: notifier.callDriver,
-                  ).wh(Vx.dp64, Vx.dp40).p12(),
-                ),
-              ])
-                  .p12()
-                  .box
-                  .color(context.theme.colorScheme.surface)
-                  .roundedSM
-                  .shadowXl
-                  .outerShadow3Xl
-                  .make()
-                  .wFull(context)
-                  .h(Vx.dp64 * 1.3)
-                  .p12(),
+              child:
+                  HStack([
+                        CustomImage(imageUrl: order.driver!.photo)
+                            .wh(Vx.dp56, Vx.dp56)
+                            .box
+                            .roundedFull
+                            .shadowXs
+                            .clip(Clip.antiAlias)
+                            .make(),
+                        VStack([
+                          order.driver!.name.text.xl.semiBold.make(),
+                          order.driver!.phone.text.make(),
+                        ]).px12().expand(),
+                        Visibility(
+                          visible: AppUISettings.canCallDriver,
+                          child:
+                              CustomButton(
+                                icon: Icons.phone,
+                                iconColor: Colors.white,
+                                title: "",
+                                color: AppColor.primaryColor,
+                                shapeRadius: Vx.dp24,
+                                onPressed: notifier.callDriver,
+                              ).wh(Vx.dp64, Vx.dp40).p12(),
+                        ),
+                      ])
+                      .p12()
+                      .box
+                      .color(context.theme.colorScheme.surface)
+                      .roundedSM
+                      .shadowXl
+                      .outerShadow3Xl
+                      .make()
+                      .wFull(context)
+                      .h(Vx.dp64 * 1.3)
+                      .p12(),
             ),
           ),
         ],

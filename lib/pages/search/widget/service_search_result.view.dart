@@ -53,16 +53,18 @@ class _ServiceSearchResultViewState
       isLoading: isLoading,
       childAspectRatio: (MediaQuery.of(context).size.width / 2.5) / 80,
       emptyWidget: EmptySearch(type: 'service'),
-      items: services
-          .map(
-            (s) => HomeServicesListItem(
-              height: 290,
-              width: double.infinity,
-              service: s,
-              onPressed: (svc) => context.pushWidget(ServiceDetailsPage(svc)),
-            ),
-          )
-          .toList(),
+      items:
+          services
+              .map(
+                (s) => HomeServicesListItem(
+                  height: 290,
+                  width: double.infinity,
+                  service: s,
+                  onPressed:
+                      (svc) => context.pushWidget(ServiceDetailsPage(svc)),
+                ),
+              )
+              .toList(),
     );
   }
 }

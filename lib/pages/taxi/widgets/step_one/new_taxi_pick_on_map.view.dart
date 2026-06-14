@@ -15,35 +15,27 @@ class NewTaxiPickOnMapButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entryState =
-        ref.watch(taxiOrderEntryControllerProvider(vendorType));
+    final entryState = ref.watch(taxiOrderEntryControllerProvider(vendorType));
     final entryController = ref.read(
       taxiOrderEntryControllerProvider(vendorType).notifier,
     );
     return Visibility(
       visible: entryState.showChooseOnMap,
-      child: HStack(
-        [
-          Icon(
-            Icons.map,
-            color: AppColor.primaryColor,
-          ),
-          "Choose a place on the map"
-              .tr()
-              .text
-              .lg
-              .medium
-              .make()
-              .px16()
-              .expand(),
-          Icon(
-            Utils.isArabic
-                ? Icons.chevron_left
-                : Icons.chevron_right,
-            color: Colors.grey.shade300,
-          ),
-        ],
-      )
+      child: HStack([
+            Icon(Icons.map, color: AppColor.primaryColor),
+            "Choose a place on the map"
+                .tr()
+                .text
+                .lg
+                .medium
+                .make()
+                .px16()
+                .expand(),
+            Icon(
+              Utils.isArabic ? Icons.chevron_left : Icons.chevron_right,
+              color: Colors.grey.shade300,
+            ),
+          ])
           .safeArea(top: false)
           .p12()
           .box

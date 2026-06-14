@@ -20,8 +20,7 @@ class ModernServiceGridviewListItem extends StatelessWidget {
       onTap: () {
         NavigationService.openServiceDetails(service);
       },
-      child: 
-      Container(
+      child: Container(
         padding: EdgeInsets.all(Sizes.paddingSizeSmall),
         decoration: BoxDecoration(
           color: Colors.white,

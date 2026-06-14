@@ -126,48 +126,50 @@ class ServiceBookingSummaryState {
       service: service ?? this.service,
       checkout: checkout ?? this.checkout,
       vendor: vendor ?? this.vendor,
-      vendorTypeId: identical(vendorTypeId, _sentinel)
-          ? this.vendorTypeId
-          : vendorTypeId as int?,
-      banner: identical(banner, _sentinel)
-          ? this.banner
-          : banner as ban.Banner?,
-      coupon:
-          identical(coupon, _sentinel) ? this.coupon : coupon as Coupon?,
-      deliveryAddress: identical(deliveryAddress, _sentinel)
-          ? this.deliveryAddress
-          : deliveryAddress as DeliveryAddress?,
+      vendorTypeId:
+          identical(vendorTypeId, _sentinel)
+              ? this.vendorTypeId
+              : vendorTypeId as int?,
+      banner:
+          identical(banner, _sentinel) ? this.banner : banner as ban.Banner?,
+      coupon: identical(coupon, _sentinel) ? this.coupon : coupon as Coupon?,
+      deliveryAddress:
+          identical(deliveryAddress, _sentinel)
+              ? this.deliveryAddress
+              : deliveryAddress as DeliveryAddress?,
       isPickup: isPickup ?? this.isPickup,
       isScheduled: isScheduled ?? this.isScheduled,
       deliveryAddressOutOfRange:
           deliveryAddressOutOfRange ?? this.deliveryAddressOutOfRange,
       paymentMethods: paymentMethods ?? this.paymentMethods,
-      selectedPaymentMethod: identical(selectedPaymentMethod, _sentinel)
-          ? this.selectedPaymentMethod
-          : selectedPaymentMethod as PaymentMethod?,
+      selectedPaymentMethod:
+          identical(selectedPaymentMethod, _sentinel)
+              ? this.selectedPaymentMethod
+              : selectedPaymentMethod as PaymentMethod?,
       availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
       dateFull: dateFull ?? this.dateFull,
       timeFull: timeFull ?? this.timeFull,
       tables: tables ?? this.tables,
-      tableSelected: identical(tableSelected, _sentinel)
-          ? this.tableSelected
-          : tableSelected as String?,
+      tableSelected:
+          identical(tableSelected, _sentinel)
+              ? this.tableSelected
+              : tableSelected as String?,
       isBusy: isBusy ?? this.isBusy,
       loadingTime: loadingTime ?? this.loadingTime,
       loadingTables: loadingTables ?? this.loadingTables,
       canSelectPaymentOption:
           canSelectPaymentOption ?? this.canSelectPaymentOption,
       canApplyCoupon: canApplyCoupon ?? this.canApplyCoupon,
-      couponError: identical(couponError, _sentinel)
-          ? this.couponError
-          : couponError,
+      couponError:
+          identical(couponError, _sentinel) ? this.couponError : couponError,
       couponBusy: couponBusy ?? this.couponBusy,
       durationQty: durationQty ?? this.durationQty,
       guests: guests ?? this.guests,
       selectTattoType: selectTattoType ?? this.selectTattoType,
-      guidSelected: identical(guidSelected, _sentinel)
-          ? this.guidSelected
-          : guidSelected as String?,
+      guidSelected:
+          identical(guidSelected, _sentinel)
+              ? this.guidSelected
+              : guidSelected as String?,
       newPhoto:
           identical(newPhoto, _sentinel) ? this.newPhoto : newPhoto as File?,
       ageConfirmed: ageConfirmed ?? this.ageConfirmed,
@@ -210,9 +212,8 @@ class ServiceBookingSummaryController
     }
     AppService().vendorId = arg.vendor.id;
 
-    final bool isServiceBooking = ["service", "tour", "booking", "bookings", "accommodation"]
-        .contains(arg.vendor.vendorType.slug.toLowerCase());
-    if (isServiceBooking) {
+    final bool isFoodOrBeverage = arg.vendor.isFoodOrBeverage;
+    if (isFoodOrBeverage) {
       co.isScheduled = true;
     }
 
@@ -220,7 +221,7 @@ class ServiceBookingSummaryController
       service: arg,
       checkout: co,
       vendor: arg.vendor,
-      isScheduled: isServiceBooking,
+      isScheduled: isFoodOrBeverage,
     );
   }
 
@@ -232,24 +233,28 @@ class ServiceBookingSummaryController
       banner = ban.Banner.fromJSON(jsonDecode(campaignData));
       await prefs.remove('campaign_data');
     }
-    final guests = (state.service.agebasePrice ?? [])
-        .asMap()
-        .entries
-        .map((entry) {
-      try {
-        final guest = entry.value;
-        return GuestModel(
-          id: guest.id,
-          name: guest.name,
-          description: guest.description,
-          qty: entry.key == 0 ? 1 : 0,
-          price: double.tryParse(guest.price.toString()) ?? 0,
-        );
-      } catch (e) {
-        debugPrint("Guest Parse Error ==> $e");
-        return GuestModel(id: 0, name: '', description: '', qty: 0, price: 0);
-      }
-    }).toList();
+    final guests =
+        (state.service.agebasePrice ?? []).asMap().entries.map((entry) {
+          try {
+            final guest = entry.value;
+            return GuestModel(
+              id: guest.id,
+              name: guest.name,
+              description: guest.description,
+              qty: entry.key == 0 ? 1 : 0,
+              price: double.tryParse(guest.price.toString()) ?? 0,
+            );
+          } catch (e) {
+            debugPrint("Guest Parse Error ==> $e");
+            return GuestModel(
+              id: 0,
+              name: '',
+              description: '',
+              qty: 0,
+              price: 0,
+            );
+          }
+        }).toList();
     String? guidSelected;
     if (state.service.guide?.isNotEmpty ?? false) {
       guidSelected = state.service.guide!.first.lang;
@@ -261,12 +266,27 @@ class ServiceBookingSummaryController
       guests: guests,
       guidSelected: guidSelected,
       vendorTypeId: vendorTypeId,
+      // Tattoo always requires a schedule — pre-enable it
+      isScheduled: (vendorTypeId == 13) ? true : state.isScheduled,
     );
     await Future.wait([
+      _fetchVendorDetails(),
       _fetchPaymentOptions(),
       _fetchDateUse(),
     ]);
     await _updateTotalOrderSummary();
+  }
+
+  Future<void> _fetchVendorDetails() async {
+    if (state.vendor == null) return;
+    try {
+      final fullVendor = await CheckoutSharedHelpers.fetchVendorDetails(
+        state.vendor!,
+      );
+      state = state.copyWith(vendor: fullVendor);
+    } catch (e) {
+      debugPrint("ServiceBooking fetchVendorDetails error: $e");
+    }
   }
 
   Future<void> _fetchPaymentOptions() async {
@@ -285,8 +305,7 @@ class ServiceBookingSummaryController
   Future<void> _fetchDateUse() async {
     if (state.vendor == null) return;
     try {
-      final dates =
-          await CheckoutSharedHelpers.fetchDateUse(state.vendor!.id);
+      final dates = await CheckoutSharedHelpers.fetchDateUse(state.vendor!.id);
       state = state.copyWith(dateFull: dates);
     } catch (e) {
       // ignore: avoid_print
@@ -322,35 +341,39 @@ class ServiceBookingSummaryController
       "coupon_code": state.checkout.coupon?.code ?? "",
       "vendor_id": state.vendor!.id,
       "service_id": state.service.id,
-      "options_ids":
-          state.service.selectedOptions.map((e) => e.id).toList(),
+      "options_ids": state.service.selectedOptions.map((e) => e.id).toList(),
       "qty": state.durationQty,
-      "guest_total": guestTotal,
     };
+    if (guestTotal > 0) {
+      payload["guest_total"] = guestTotal;
+    }
     state = state.copyWith(isBusy: true);
     try {
       final mCheckout = await _checkoutRequest.serviceOrderSummary(payload);
       final co = state.checkout;
-      
+
       final bool hasGuests = state.guests.isNotEmpty;
       final bool isTattoo = state.vendorTypeId == 13;
-      final double taxRate = mCheckout.tax_rate ?? (double.tryParse(state.vendor!.tax ?? "") ?? 0.0);
-      
+      final double taxRate =
+          mCheckout.tax_rate ??
+          (double.tryParse(state.vendor!.tax ?? "") ?? 0.0);
+
       final double optionsTotal = state.service.selectedOptions.fold<double>(
-        0, (sum, item) => sum + item.price,
+        0,
+        (sum, item) => sum + item.price,
       );
       final double optionsPrice = isTattoo ? 0 : optionsTotal;
-      
+
       double subTotalOut;
       double taxOut;
       double totalOut;
-      
-      if (hasGuests) {
+
+      if (hasGuests && guestTotal > 0) {
         subTotalOut = guestTotal * state.durationQty;
         taxOut = subTotalOut * taxRate / 100;
         double feesTotal = 0.0;
         for (var f in state.vendor!.fees) {
-           feesTotal += f.isPercentage ? (subTotalOut * f.value / 100) : f.value;
+          feesTotal += f.isPercentage ? (subTotalOut * f.value / 100) : f.value;
         }
         totalOut = subTotalOut + optionsPrice + taxOut + feesTotal;
       } else if (isTattoo) {
@@ -358,11 +381,12 @@ class ServiceBookingSummaryController
         taxOut = subTotalOut * taxRate / 100;
         double feesTotal = 0.0;
         for (var f in state.vendor!.fees) {
-           feesTotal += f.isPercentage ? (subTotalOut * f.value / 100) : f.value;
+          feesTotal += f.isPercentage ? (subTotalOut * f.value / 100) : f.value;
         }
         totalOut = subTotalOut + taxOut + feesTotal;
       } else {
-        subTotalOut = mCheckout.subTotal ?? state.service.sellPrice * state.durationQty;
+        subTotalOut =
+            mCheckout.subTotal ?? state.service.sellPrice * state.durationQty;
         taxOut = mCheckout.tax ?? (subTotalOut * taxRate / 100);
         totalOut = mCheckout.total ?? (subTotalOut + optionsPrice + taxOut);
       }
@@ -474,14 +498,55 @@ class ServiceBookingSummaryController
     final co = state.checkout;
     co.deliverySlotDate = dateStr;
     co.deliverySlotTime = "";
-    final times = state.vendor?.deliverySlots[index].times ?? [];
+
+    List<String> times = [];
+    final slots = state.vendor?.deliverySlots ?? [];
+    if (index >= 0 && index < slots.length) {
+      times = slots[index].times;
+    }
+
     state = state.copyWith(checkout: co, availableTimeSlots: times);
+    _fetchTimeUse(dateStr);
     _fetchTableAvailability();
+  }
+
+  Future<void> _fetchTimeUse(String dateStr) async {
+    if (state.vendor == null) return;
+    state = state.copyWith(loadingTime: true);
+    try {
+      final times = await CheckoutSharedHelpers.fetchTimeUse(
+        state.vendor!.id,
+        dateStr,
+      );
+      state = state.copyWith(timeFull: times, loadingTime: false);
+    } catch (e) {
+      state = state.copyWith(timeFull: [], loadingTime: false);
+      debugPrint("ServiceBooking fetchTimeUse error: $e");
+    }
   }
 
   void changeSelectedDeliveryTime(String time) {
     final co = state.checkout;
     co.deliverySlotTime = time;
+    state = state.copyWith(checkout: co);
+  }
+
+  /// For tattoo: set schedule date directly (no slot lookup needed).
+  void setTattooScheduleDate(String dateStr) {
+    final co = state.checkout;
+    co.deliverySlotDate = dateStr;
+    co.pickupDate = dateStr;
+    co.isScheduled = true;
+    co.deliverySlotTime = "";
+    co.pickupTime = null;
+    state = state.copyWith(checkout: co, isScheduled: true);
+  }
+
+  /// For tattoo: set schedule time directly.
+  void setTattooScheduleTime(String timeStr) {
+    final co = state.checkout;
+    co.deliverySlotTime = timeStr;
+    co.pickupTime = timeStr;
     state = state.copyWith(checkout: co);
   }
 
@@ -556,16 +621,18 @@ class ServiceBookingSummaryController
     if (v?.minOrder != null && v!.minOrder! > state.checkout.subTotal) {
       AlertService.error(
         title: "Minimum Order Value".tr(),
-        text: "Order value/amount is less than vendor accepted minimum order"
-            .tr(),
+        text:
+            "Order value/amount is less than vendor accepted minimum order"
+                .tr(),
       );
       return false;
     }
     if (v?.maxOrder != null && v!.maxOrder! < state.checkout.subTotal) {
       AlertService.error(
         title: "Maximum Order Value".tr(),
-        text: "Order value/amount is more than vendor accepted maximum order"
-            .tr(),
+        text:
+            "Order value/amount is more than vendor accepted maximum order"
+                .tr(),
       );
       return false;
     }
@@ -575,7 +642,25 @@ class ServiceBookingSummaryController
   Future<void> placeOrder(BuildContext context, {bool ignore = false}) async {
     final service = state.service;
     service.selectedQty = state.durationQty;
-    if (state.isScheduled && state.checkout.deliverySlotDate.isEmptyOrNull) {
+    final isTattoo = state.vendorTypeId == 13;
+    if (isTattoo) {
+      // Tattoo always needs a schedule date and time
+      if (state.checkout.deliverySlotDate.isEmptyOrNull) {
+        AlertService.error(
+          title: "Schedule Date".tr(),
+          text: "Please select your desired schedule date".tr(),
+        );
+        return;
+      }
+      if (state.checkout.deliverySlotTime.isEmptyOrNull) {
+        AlertService.error(
+          title: "Schedule Time".tr(),
+          text: "Please select your desired schedule time".tr(),
+        );
+        return;
+      }
+    } else if (state.isScheduled &&
+        state.checkout.deliverySlotDate.isEmptyOrNull) {
       AlertService.error(
         title: "Schedule Date".tr(),
         text: "Please select your desire order date".tr(),
@@ -588,8 +673,10 @@ class ServiceBookingSummaryController
         text: "Please select your desire order time".tr(),
       );
       return;
-    } else if (!state.isPickup &&
+    }
+    if (!state.isPickup &&
         service.location &&
+        !isTattoo &&
         state.deliveryAddress == null) {
       AlertService.error(
         title: "Booking address".tr(),
@@ -597,6 +684,7 @@ class ServiceBookingSummaryController
       );
       return;
     } else if (service.location &&
+        !isTattoo &&
         state.deliveryAddressOutOfRange &&
         !state.isPickup) {
       AlertService.error(
@@ -604,7 +692,8 @@ class ServiceBookingSummaryController
         text: "Booking address is out of vendor booking range".tr(),
       );
       return;
-    } else if (state.selectedPaymentMethod == null && state.vendorTypeId != 13) {
+    } else if (state.selectedPaymentMethod == null &&
+        state.vendorTypeId != 13) {
       AlertService.error(
         title: "Payment Methods".tr(),
         text: "Please select a payment method".tr(),
@@ -650,8 +739,21 @@ class ServiceBookingSummaryController
     try {
       final co = state.checkout;
       if (state.vendorTypeId == 13) {
-         // Auto-use Cash payment method (id 1) for Tattoo to match Next.js
-         co.paymentMethod = PaymentMethod(id: 1, name: 'Cash', slug: 'cash', isActive: 1, isCash: 1, createdAt: DateTime.now(), updatedAt: DateTime.now(), formattedDate: '', instruction: '', photo: '', useExternalBrowser: false, useWallet: 0);
+        // Auto-use Cash payment method (id 1) for Tattoo to match Next.js
+        co.paymentMethod = PaymentMethod(
+          id: 1,
+          name: 'Cash',
+          slug: 'cash',
+          isActive: 1,
+          isCash: 1,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          formattedDate: '',
+          instruction: '',
+          photo: '',
+          useExternalBrowser: false,
+          useWallet: 0,
+        );
       }
       co.total = co.totalWithTip;
       final apiResponse = await _checkoutRequest.newServiceOrder(
@@ -668,7 +770,13 @@ class ServiceBookingSummaryController
         banner_id: state.banner?.id,
         guide: state.guidSelected,
         guest: state.guests,
-        options_price: state.vendorTypeId == 13 ? 0 : state.service.selectedOptions.fold<double>(0, (sum, item) => sum + item.price),
+        options_price:
+            state.vendorTypeId == 13
+                ? 0
+                : state.service.selectedOptions.fold<double>(
+                  0,
+                  (sum, item) => sum + item.price,
+                ),
         tax_rate: co.tax_rate,
       );
       if (apiResponse.allGood) {
@@ -689,10 +797,7 @@ class ServiceBookingSummaryController
           );
         }
       } else {
-        AlertService.error(
-          title: "Checkout".tr(),
-          text: apiResponse.message,
-        );
+        AlertService.error(title: "Checkout".tr(), text: apiResponse.message);
       }
     } catch (e) {
       // ignore: avoid_print
@@ -706,15 +811,15 @@ class ServiceBookingSummaryController
     AppService().changeHomePageIndex(index: 2);
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).popUntil(
-        (route) =>
-            route.settings.name == AppRoutes.homeRoute || route.isFirst,
+        (route) => route.settings.name == AppRoutes.homeRoute || route.isFirst,
       );
     }
   }
 }
 
 final serviceBookingSummaryControllerProvider = NotifierProvider.autoDispose
-    .family<ServiceBookingSummaryController, ServiceBookingSummaryState,
-        Service>(
-  ServiceBookingSummaryController.new,
-);
+    .family<
+      ServiceBookingSummaryController,
+      ServiceBookingSummaryState,
+      Service
+    >(ServiceBookingSummaryController.new);

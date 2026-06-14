@@ -40,23 +40,18 @@ class _DropdownInputState extends State<DropdownInput> {
         contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         border: OutlineInputBorder(
           gapPadding: 2.0,
-          borderSide: BorderSide(
-            width: 10,
-            color: Colors.red,
-          ),
+          borderSide: BorderSide(width: 10, color: Colors.red),
         ),
       ),
-      style: TextStyle(
-        fontSize: 12,
-        color: context.textTheme.bodyLarge!.color,
-      ),
+      style: TextStyle(fontSize: 12, color: context.textTheme.bodyLarge!.color),
       value: selectedValue ?? widget.options.first,
-      items: widget.options.map((option) {
-        return DropdownMenuItem(
-          value: option,
-          child: "${option.name}".text.make(),
-        );
-      }).toList(),
+      items:
+          widget.options.map((option) {
+            return DropdownMenuItem(
+              value: option,
+              child: "${option.name}".text.make(),
+            );
+          }).toList(),
       onChanged: (value) {
         widget.onChanged(value);
         //

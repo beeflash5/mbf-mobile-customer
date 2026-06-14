@@ -16,25 +16,18 @@ class ProductOptionsHeader extends StatelessWidget {
   final String? description;
   @override
   Widget build(BuildContext context) {
-    return HStack(
-      [
-        //
-        Icon(
-          iconData ?? Icons.add_circle,
-          size: 20,
-        ).pOnly(right: Vx.dp20),
-        //
-        VStack(
-          [
-            title != null
-                ? title!.text.xl.semiBold.make()
-                : "Options".tr().text.lg.semiBold.make(),
-            description != null
-                ? description!.text.sm.make()
-                : UiSpacer.emptySpace(),
-          ],
-        ).expand(),
-      ],
-    ).px20().pOnly(top: Vx.dp20, bottom: Vx.dp12);
+    return HStack([
+      //
+      Icon(iconData ?? Icons.add_circle, size: 20).pOnly(right: Vx.dp20),
+      //
+      VStack([
+        title != null
+            ? title!.text.xl.semiBold.make()
+            : "Options".tr().text.lg.semiBold.make(),
+        description != null
+            ? description!.text.sm.make()
+            : UiSpacer.emptySpace(),
+      ]).expand(),
+    ]).px20().pOnly(top: Vx.dp20, bottom: Vx.dp12);
   }
 }
