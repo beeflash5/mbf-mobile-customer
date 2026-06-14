@@ -54,21 +54,15 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
       title: "Checkout".tr(),
       body: VStack([
         UiSpacer.verticalSpace(),
-        Visibility(
-          visible: !state.isPickup,
-          child: CustomTextFormField(
-            labelText: "Driver Tip".tr() + " (${AppStrings.currencySymbol})",
-            textEditingController: controller.driverTipTEC,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onFieldSubmitted: (_) => controller.updateTotalOrderSummary(),
-          ).pOnly(bottom: Vx.dp20),
-        ),
-        CustomTextFormField(
-          labelText: "Note".tr(),
-          textEditingController: controller.noteTEC,
-        ),
-        UiSpacer.divider().py12(),
+        if (vendor != null)
+          OrderDeliveryAddressPickerView(
+            vendor: vendor,
+            isPickup: state.isPickup,
+            onTogglePickup: controller.togglePickupStatus,
+            onPickAddress: () => controller.pickDeliveryAddress(context),
+            deliveryAddress: state.deliveryAddress,
+            deliveryAddressOutOfRange: state.deliveryAddressOutOfRange,
+          ),
         if (vendor != null)
           ScheduleOrderView(
             vendor: vendor,
@@ -88,15 +82,44 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             guestCountController: controller.guestCountTEC,
             onSelectTable: controller.selectTableSelecte,
           ),
-        if (vendor != null)
-          OrderDeliveryAddressPickerView(
-            vendor: vendor,
-            isPickup: state.isPickup,
-            onTogglePickup: controller.togglePickupStatus,
-            onPickAddress: () => controller.pickDeliveryAddress(context),
-            deliveryAddress: state.deliveryAddress,
-            deliveryAddressOutOfRange: state.deliveryAddressOutOfRange,
-          ),
+        if (vendor?.isFoodOrBeverage == true && state.isScheduled)
+          Column(
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  "Down Payment (${(AppStrings.down_payment % 1 == 0) ? AppStrings.down_payment.toInt().toString() : AppStrings.down_payment.toString()}%)"
+                      .text
+                      .semiBold
+                      .make(),
+                  state.checkout.dp.currencyValueFormat().text.semiBold.make(),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  "Balance".text.make(),
+                  state.checkout.sisa.currencyValueFormat().text.make(),
+                ],
+              ),
+              UiSpacer.verticalSpace(),
+            ],
+          ).pOnly(bottom: Vx.dp12),
+        CustomTextFormField(
+          labelText: "Note".tr(),
+          textEditingController: controller.noteTEC,
+        ).pOnly(bottom: Vx.dp20),
+        Visibility(
+          visible: !state.isPickup,
+          child: CustomTextFormField(
+            labelText: "Driver Tip".tr() + " (${AppStrings.currencySymbol})",
+            textEditingController: controller.driverTipTEC,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            onFieldSubmitted: (_) => controller.updateTotalOrderSummary(),
+          ).pOnly(bottom: Vx.dp20),
+        ),
         Visibility(
           visible: state.canSelectPaymentOption,
           child: PaymentMethodsView(
@@ -125,29 +148,6 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             fees: vendor.fees,
             mCurrencySymbol: AppStrings.currentCurrencySymbol,
             allowConvert: true,
-          ),
-        if (vendor?.isFoodOrBeverage == true && state.isScheduled)
-          Column(
-            children: [
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  "Down Payment (${(AppStrings.down_payment % 1 == 0) ? AppStrings.down_payment.toInt().toString() : AppStrings.down_payment.toString()}%)"
-                      .text
-                      .semiBold
-                      .make(),
-                  state.checkout.dp.currencyValueFormat().text.semiBold.make(),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  "Balance".text.make(),
-                  state.checkout.sisa.currencyValueFormat().text.make(),
-                ],
-              ),
-            ],
           ),
         if (state.checkout.deliveryAddress != null)
           CheckoutDriverCashDeliveryNoticeView(state.checkout.deliveryAddress!),
