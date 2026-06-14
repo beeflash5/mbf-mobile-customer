@@ -333,8 +333,10 @@ class Vendor {
       qty_tables:
           json["qty_tables"] == null
               ? 0
-              : int.parse(json["qty_tables"].toString()),
-      can_dinein: json["can_dinein"] == null ? null : json["can_dinein"] == 1,
+              : int.tryParse(json["qty_tables"].toString()) ?? 0,
+      can_dinein: json["can_dinein"] == null
+          ? null
+          : (json["can_dinein"].toString() == "1" || json["can_dinein"] == true),
     );
 
     //check if distance is null, then call utils to calculate distance
