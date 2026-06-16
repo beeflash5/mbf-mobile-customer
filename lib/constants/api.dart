@@ -186,7 +186,6 @@ class Api {
 
   static Future<String> redirectAuth({String? url, String? route}) async {
     final userToken = await AuthServices.getAuthBearerToken();
-    final webUrl = "$webBaseUrl/external/web/redirect";
-    return "$webUrl?token=$userToken&route=$route&url=$url";
+    return "$webBaseUrl/api/external/web/redirect?token=$userToken&route=$route&url=$url";
   }
 }

@@ -27,8 +27,10 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
     if (order.driver == null) return UiSpacer.emptySpace();
 
     bool isTattoo =
-        order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
-        order.vendor?.vendorType?.slug.toLowerCase() == 'tatto';
+        order.vendor?.vendorType.slug.toLowerCase() == 'tattoo' ||
+        order.vendor?.vendorType.slug.toLowerCase() == 'tatto' ||
+        order.vendor?.vendorType.slugUrl?.toLowerCase() == 'tattoo' ||
+        order.vendor?.vendorType.slugUrl?.toLowerCase() == 'tatto';
 
     return VStack([
       HStack([

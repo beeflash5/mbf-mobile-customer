@@ -69,7 +69,7 @@ class OrderDetailsItemsView extends StatelessWidget {
             ]).py4(),
           HStack([
             "Category".tr().text.make().expand(),
-            "${order.orderService?.service?.category?.name ?? order.orderService?.service?.subcategory?.name ?? order.vendor?.vendorType?.name ?? ''}"
+            "${order.orderService?.service?.category?.name ?? order.orderService?.service?.subcategory?.name ?? order.vendor?.vendorType.name ?? ''}"
                 .text
                 .semiBold
                 .lg

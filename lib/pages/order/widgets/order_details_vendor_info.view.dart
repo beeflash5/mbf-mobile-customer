@@ -29,8 +29,10 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isTattoo =
-        order.vendor?.vendorType?.slug.toLowerCase() == 'tattoo' ||
-        order.vendor?.vendorType?.slug.toLowerCase() == 'tatto';
+        order.vendor?.vendorType.slug.toLowerCase() == 'tattoo' ||
+        order.vendor?.vendorType.slug.toLowerCase() == 'tatto' ||
+        order.vendor?.vendorType.slugUrl?.toLowerCase() == 'tattoo' ||
+        order.vendor?.vendorType.slugUrl?.toLowerCase() == 'tatto';
 
     return VStack([
       HStack([
