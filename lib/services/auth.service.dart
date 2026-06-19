@@ -83,18 +83,18 @@ class AuthServices {
     dynamic jsonObject, {
     bool reload = true,
   }) async {
-    final currentUser = User.fromJson(jsonObject);
+    currentUser = User.fromJson(jsonObject);
     try {
       await LocalStorageService.prefs?.setString(
         AppStrings.userKey,
-        json.encode(currentUser.toJson()),
+        json.encode(currentUser!.toJson()),
       );
 
       //subscribe to firebase topic
       List<String> roles = [
         "all",
-        "${currentUser.id}",
-        "${currentUser.role}",
+        "${currentUser!.id}",
+        "${currentUser!.role}",
         "client",
       ];
 
