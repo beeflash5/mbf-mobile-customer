@@ -138,7 +138,7 @@ class RegisterController extends Notifier<RegisterState> {
   Future<RegisterPhase> _processCustomOTPVerification(String email) async {
     state = state.copyWith(isBusy: true);
     try {
-      await ref.read(_authRequestProvider).sendOTP(_accountPhoneNumber!, email);
+      await ref.read(_authRequestProvider).sendOTP(_accountPhoneNumber!, null);
       final result = const RegisterAwaitingOtp();
       state = state.copyWith(isBusy: false, phase: result);
       return result;
@@ -205,7 +205,7 @@ class RegisterController extends Notifier<RegisterState> {
     try {
       final response = await ref
           .read(_authRequestProvider)
-          .sendOTP(_accountPhoneNumber!, email);
+          .sendOTP(_accountPhoneNumber!, null);
       return RegisterAwaitingOtp(firebaseVerificationId: response.message);
     } catch (e) {
       return RegisterFailure('$e');

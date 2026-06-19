@@ -155,7 +155,10 @@ class ProductDetailsPage extends ConsumerWidget {
               ),
             ],
           ).box.color(AppColor.faintBgColor).make(),
-      bottomSheet: ProductDetailsCartBottomSheet(product: detail),
+      bottomNavigationBar: SafeArea(
+        minimum: EdgeInsets.only(bottom: Vx.dp16),
+        child: ProductDetailsCartBottomSheet(product: detail),
+      ),
     );
   }
 }

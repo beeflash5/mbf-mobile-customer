@@ -73,7 +73,7 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
         //
         "Enter Verification Code".tr().text.bold.xl.make(),
         ("Enter the 6-digit verification code sent to".tr() +
-                " ${widget.phone} ${widget.email != null ? " and sent to your email ${widget.email}" : ""}")
+                " ${widget.phone} ${widget.email != null ? " " : ""}")
             .text
             .gray600
             .sm
@@ -200,7 +200,9 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
         CustomButton(
           title: "Verify".tr(),
           loading:
-              loading || widget.vm.busy(widget.vm.otpLogin) || widget.vm.isBusy,
+              loading ||
+              (widget.vm?.busy(widget.vm?.otpLogin) ?? false) ||
+              (widget.vm?.isBusy ?? false),
           onPressed: () async {
             //
             if (smsCode == null || smsCode!.length != 6) {

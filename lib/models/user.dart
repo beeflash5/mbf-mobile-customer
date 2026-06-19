@@ -39,7 +39,7 @@ class User {
     }
     return User(
       id: json['id'] == null ? 0 : int.parse(json['id'].toString()),
-      code: json['code'],
+      code: json['code'] ?? "",
       name: json['name'] ?? "",
       email: json['email'] ?? "",
       phone: json['phone'] ?? "",

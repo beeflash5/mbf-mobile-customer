@@ -238,7 +238,7 @@ class FavouritesPage extends ConsumerWidget {
                               .p4(),
                     ),
                   ],
-                ).centered();
+                );
               },
               separatorBuilder: (_, __) => 10.heightBox,
             ),

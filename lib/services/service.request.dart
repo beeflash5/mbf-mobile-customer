@@ -41,11 +41,7 @@ class ServiceRequest extends ApiService {
     if (apiResponse.allGood) {
       List<Service> services = [];
       List<dynamic> serviceJsonList;
-      if (page == null || page == 0) {
-        serviceJsonList = (apiResponse.body as List);
-      } else {
-        serviceJsonList = apiResponse.data;
-      }
+      serviceJsonList = apiResponse.data;
 
       serviceJsonList.forEach((jsonObject) {
         try {

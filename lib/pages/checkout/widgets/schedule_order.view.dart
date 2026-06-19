@@ -108,53 +108,150 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                CustomTextFormField(
-                  isReadOnly: true,
-                  hintText: selectedDate ?? "mm/dd/yyyy",
-                  onTap: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (picked != null) {
-                      onSelectDate(
-                        DateFormat('yyyy-MM-dd', 'en').format(picked),
-                        0,
-                      );
-                    }
-                  },
-                ),
+                (isTattoo || vendor.deliverySlots.isNotEmpty)
+                    ? DropdownButtonFormField<String>(
+                      value:
+                          (selectedDate != null &&
+                                  vendor.deliverySlots.any(
+                                    (slot) =>
+                                        DateFormat(
+                                          'yyyy-MM-dd',
+                                          'en',
+                                        ).format(slot.date) ==
+                                        selectedDate,
+                                  ))
+                              ? selectedDate
+                              : null,
+                      items:
+                          vendor.deliverySlots
+                              .where(
+                                (slot) =>
+                                    !dateFull.contains(
+                                      DateFormat(
+                                        'yyyy-MM-dd',
+                                        'en',
+                                      ).format(slot.date),
+                                    ),
+                              )
+                              .map((slot) {
+                                final formattedDate = DateFormat(
+                                  'yyyy-MM-dd',
+                                  'en',
+                                ).format(slot.date);
+                                return DropdownMenuItem(
+                                  value: formattedDate,
+                                  child: Text(formattedDate),
+                                );
+                              })
+                              .toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          final index = vendor.deliverySlots.indexWhere(
+                            (slot) =>
+                                DateFormat(
+                                  'yyyy-MM-dd',
+                                  'en',
+                                ).format(slot.date) ==
+                                val,
+                          );
+                          onSelectDate(val, index >= 0 ? index : 0);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Select Date".tr(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                    )
+                    : CustomTextFormField(
+                      isReadOnly: true,
+                      hintText: selectedDate ?? "mm/dd/yyyy",
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime.now().add(
+                            const Duration(days: 365),
+                          ),
+                        );
+                        if (picked != null) {
+                          onSelectDate(
+                            DateFormat('yyyy-MM-dd', 'en').format(picked),
+                            0,
+                          );
+                        }
+                      },
+                    ),
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                CustomTextFormField(
-                  isReadOnly: true,
-                  hintText:
-                      (selectedTime != null && selectedTime!.trim().isNotEmpty)
-                          ? Jiffy.parse(
-                            '2024-01-01 ${selectedTime!.trim()}',
-                          ).format(pattern: 'hh:mm a')
-                          : "--:-- --",
-                  onTap: () async {
-                    final picked = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (picked != null) {
-                      final now = DateTime.now();
-                      final dt = DateTime(
-                        now.year,
-                        now.month,
-                        now.day,
-                        picked.hour,
-                        picked.minute,
-                      );
-                      onSelectTime(DateFormat('HH:mm:ss', 'en').format(dt));
-                    }
-                  },
-                ),
+                (isTattoo || availableTimeSlots.isNotEmpty)
+                    ? DropdownButtonFormField<String>(
+                      value:
+                          availableTimeSlots.contains(selectedTime)
+                              ? selectedTime
+                              : null,
+                      items:
+                          availableTimeSlots
+                              .where((time) => !timeFull.contains(time))
+                              .map(
+                                (time) => DropdownMenuItem(
+                                  value: time,
+                                  child: Text(
+                                    Jiffy.parse(
+                                      '2024-01-01 $time',
+                                    ).format(pattern: 'hh:mm a'),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                      onChanged: (val) {
+                        if (val != null) onSelectTime(val);
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Select Time".tr(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.primaryColor),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                    )
+                    : CustomTextFormField(
+                      isReadOnly: true,
+                      hintText:
+                          (selectedTime != null &&
+                                  selectedTime!.trim().isNotEmpty)
+                              ? Jiffy.parse(
+                                '2024-01-01 ${selectedTime!.trim()}',
+                              ).format(pattern: 'hh:mm a')
+                              : "--:-- --",
+                      onTap: () async {
+                        final picked = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (picked != null) {
+                          final now = DateTime.now();
+                          final dt = DateTime(
+                            now.year,
+                            now.month,
+                            now.day,
+                            picked.hour,
+                            picked.minute,
+                          );
+                          onSelectTime(DateFormat('HH:mm:ss', 'en').format(dt));
+                        }
+                      },
+                    ),
 
                 if ((isFood || vendor.can_dinein == true) &&
                     !isServiceBooking &&

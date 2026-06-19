@@ -141,9 +141,7 @@ class ForgotPasswordController extends Notifier<ForgotPasswordState> {
   Future<ForgotPasswordPhase> _processCustomForgotPassword() async {
     state = state.copyWith(isBusy: true);
     try {
-      await ref
-          .read(_authRequestProvider)
-          .sendOTP(_accountPhoneNumber!, _accountEmail);
+      await ref.read(_authRequestProvider).sendOTP(_accountPhoneNumber!, null);
       final result = ForgotAwaitingOtp(
         phone: _accountPhoneNumber,
         email: _accountEmail,

@@ -47,7 +47,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final u = s!.currentUser!;
     _nameCtrl.text = u.name;
     _emailCtrl.text = u.email;
-    final raw = (u.rawPhone ?? u.phone).replaceAll(RegExp(r'[^0-9]'), '');
+    String raw = (u.rawPhone ?? u.phone).replaceAll(RegExp(r'[^0-9]'), '');
+    final phoneCode = s.selectedCountry?.phoneCode ?? '';
+    if (phoneCode.isNotEmpty && raw.startsWith(phoneCode)) {
+      raw = raw.substring(phoneCode.length);
+    }
     _phoneCtrl.text = raw;
     _prefilled = true;
   }
