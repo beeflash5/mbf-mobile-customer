@@ -45,6 +45,7 @@ class Service {
     this.video,
     this.vendor_type_id,
     this.type,
+    this.isFavourite = false,
   }) {
     this.heroTag = 'service-$id-${DateTime.now().microsecondsSinceEpoch}';
   }
@@ -79,6 +80,7 @@ class Service {
   String? video;
   int? vendor_type_id;
   VendorType? type;
+  bool isFavourite;
 
   //add varibale to hold the selected options
   List<ServiceOption> selectedOptions = [];
@@ -142,7 +144,9 @@ class Service {
 
       // photos
       photos:
-          json["photos"] == null
+          json["photo"] != null
+              ? [json["photo"].toString()]
+              : json["photos"] == null
               ? []
               : List<String>.from(json["photos"].map((x) => x.toString())),
       location: json["location"] ?? true,
@@ -177,6 +181,7 @@ class Service {
       video: json["video"],
       vendor_type_id: json["vendor_type_id"],
       type: json["type"] == null ? null : VendorType.fromJson(json["type"]),
+      isFavourite: json["is_favourite"] ?? false,
     );
   }
 
@@ -249,4 +254,6 @@ class Service {
   bool get hasOptions {
     return optionGroups != null && (optionGroups?.length ?? 0) > 0;
   }
+
+  String get photo => photos.isNotEmpty ? photos.first : "";
 }

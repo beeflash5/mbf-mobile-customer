@@ -1,6 +1,7 @@
 import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/product.dart';
+import 'package:fuodz/models/service.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/api_service.dart';
 
@@ -15,8 +16,6 @@ class FavouriteRequest extends ApiService {
         try {
           if (jsonObject["product"] != null) {
             products.add(Product.fromJson(jsonObject["product"]));
-          } else if (jsonObject["service"] != null) {
-            products.add(Product.fromJson(jsonObject["service"]));
           }
         } catch (error) {
           print("error: $error");
@@ -29,8 +28,36 @@ class FavouriteRequest extends ApiService {
   }
 
   //
+  Future<List<Service>> favouriteServices() async {
+    final apiResult = await get(Api.favourites);
+    final apiResponse = ApiResponse.fromResponse(apiResult);
+    if (apiResponse.allGood) {
+      List<Service> services = [];
+      apiResponse.data.forEach((jsonObject) {
+        try {
+          if (jsonObject["service"] != null) {
+            services.add(Service.fromJson(jsonObject["service"]));
+          }
+        } catch (error) {
+          print("error: $error");
+        }
+      });
+      return services;
+    }
+
+    throw apiResponse.message!;
+  }
+
+  //
   Future<ApiResponse> makeFavourite(int id) async {
     final apiResult = await post(Api.favourites, {"product_id": id});
+
+    return ApiResponse.fromResponse(apiResult);
+  }
+
+  //
+  Future<ApiResponse> makeFavouriteService(int id) async {
+    final apiResult = await post(Api.favourites, {"service_id": id});
 
     return ApiResponse.fromResponse(apiResult);
   }

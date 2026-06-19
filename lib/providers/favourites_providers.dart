@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fuodz/models/product.dart';
+import 'package:fuodz/models/service.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/favourite.request.dart';
 
@@ -38,6 +39,35 @@ class FavouriteProductsController extends AsyncNotifier<List<Product>> {
 final favouriteProductsControllerProvider =
     AsyncNotifierProvider<FavouriteProductsController, List<Product>>(
       FavouriteProductsController.new,
+    );
+
+/// Controller list service favorit.
+class FavouriteServicesController extends AsyncNotifier<List<Service>> {
+  @override
+  Future<List<Service>> build() async {
+    return ref.read(favouritesRequestProvider).favouriteServices();
+  }
+
+  FavouriteRequest get _req => ref.read(favouritesRequestProvider);
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _req.favouriteServices());
+  }
+
+  Future<({bool ok, String message})> remove(Service service) async {
+    final res = await _req.removeFavourite(service.id);
+    if (res.allGood) {
+      final current = state.valueOrNull ?? [];
+      state = AsyncData(current.where((s) => s.id != service.id).toList());
+    }
+    return (ok: res.allGood, message: res.message ?? '');
+  }
+}
+
+final favouriteServicesControllerProvider =
+    AsyncNotifierProvider<FavouriteServicesController, List<Service>>(
+      FavouriteServicesController.new,
     );
 
 /// Controller list vendor favorit.

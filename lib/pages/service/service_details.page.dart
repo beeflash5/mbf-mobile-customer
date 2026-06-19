@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fuodz/pages/service/widgets/service_fav.btn.dart';
 import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/app_images.dart';
 import 'package:fuodz/utils/app_routes.dart';
@@ -398,6 +399,7 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
       //   onPressed: () => Navigator.pop(context),
       // ),
       actions: [
+        ServiceFavButton(service: vm.service),
         IconButton(
           icon: Container(
             padding: const EdgeInsets.all(8),

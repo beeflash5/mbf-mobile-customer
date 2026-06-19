@@ -1,10 +1,12 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fuodz/component/custom_image.view.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:fuodz/component/base.page.dart';
+import 'package:fuodz/component/custom_image.view.dart';
 import 'package:fuodz/component/custom_list_view.dart';
 import 'package:fuodz/component/list/dynamic_product.list_item.dart';
 import 'package:fuodz/component/list/vendor.list_item.dart';
@@ -12,6 +14,7 @@ import 'package:fuodz/component/states/error.state.dart';
 import 'package:fuodz/component/states/product.empty.dart';
 import 'package:fuodz/component/states/vendor.empty.dart';
 import 'package:fuodz/models/product.dart';
+import 'package:fuodz/models/service.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/providers/favourites_providers.dart';
 import 'package:fuodz/services/alert.service.dart';
@@ -43,6 +46,29 @@ class FavouritesPage extends ConsumerWidget {
     AlertService.dynamic(
       type: res.ok ? AlertType.success : AlertType.error,
       title: 'Remove Product From Favourite'.tr(),
+      text: res.message,
+    );
+  }
+
+  Future<void> _confirmRemoveService(
+    BuildContext context,
+    WidgetRef ref,
+    Service service,
+  ) async {
+    final confirmed = await AlertService.confirm(
+      title: 'Remove Service From Favourite'.tr(),
+      text:
+          'Are you sure you want to remove this service from your favourite list?'
+              .tr(),
+      confirmBtnText: 'Remove'.tr(),
+    );
+    if (!confirmed) return;
+    final res = await ref
+        .read(favouriteServicesControllerProvider.notifier)
+        .remove(service);
+    AlertService.dynamic(
+      type: res.ok ? AlertType.success : AlertType.error,
+      title: 'Remove Service From Favourite'.tr(),
       text: res.message,
     );
   }
@@ -82,6 +108,18 @@ class FavouritesPage extends ConsumerWidget {
     await ref.read(favouriteProductsControllerProvider.notifier).refresh();
   }
 
+  Future<void> _openServiceDetails(
+    BuildContext context,
+    WidgetRef ref,
+    Service service,
+  ) async {
+    await context.pushRoute(
+      '${AppRoutes.serviceDetails}/${service.id}',
+      extra: service,
+    );
+    await ref.read(favouriteServicesControllerProvider.notifier).refresh();
+  }
+
   Future<void> _openVendorDetails(
     BuildContext context,
     WidgetRef ref,
@@ -97,16 +135,20 @@ class FavouritesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(favouriteProductsControllerProvider);
+    final servicesAsync = ref.watch(favouriteServicesControllerProvider);
     final vendorsAsync = ref.watch(favouriteVendorsControllerProvider);
     final themeTextColor = Utils.textColorByPrimaryColor();
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: BasePage(
         showAppBar: true,
         showLeadingAction: true,
         title: 'Favourites'.tr(),
-        isLoading: productsAsync.isLoading && vendorsAsync.isLoading,
+        isLoading:
+            productsAsync.isLoading &&
+            vendorsAsync.isLoading &&
+            servicesAsync.isLoading,
         body: ContainedTabBarView(
           tabBarProperties: TabBarProperties(
             isScrollable: true,
@@ -129,10 +171,19 @@ class FavouritesPage extends ConsumerWidget {
               ),
             ),
           ),
-          tabs: [Tab(text: 'Proucts'.tr()), Tab(text: 'Vendors'.tr())],
+          tabs: [
+            Tab(text: 'Products'.tr()),
+            Tab(text: 'Services'.tr()),
+            Tab(text: 'Vendors'.tr()),
+          ],
           views: [
             // PRODUCTS TAB
             CustomListView(
+              canRefresh: true,
+              onRefresh:
+                  ref
+                      .read(favouriteProductsControllerProvider.notifier)
+                      .refresh,
               padding: EdgeInsets.all(Sizes.paddingSizeDefault),
               dataSet: productsAsync.valueOrNull ?? const [],
               isLoading: productsAsync.isLoading,
@@ -187,8 +238,95 @@ class FavouritesPage extends ConsumerWidget {
               },
               separatorBuilder: (_, __) => 10.heightBox,
             ),
+            // SERVICES TAB
+            CustomListView(
+              canRefresh: true,
+              onRefresh:
+                  ref
+                      .read(favouriteServicesControllerProvider.notifier)
+                      .refresh,
+              padding: EdgeInsets.all(Sizes.paddingSizeDefault),
+              dataSet: servicesAsync.valueOrNull ?? const [],
+              isLoading: servicesAsync.isLoading,
+              emptyWidget: EmptyProduct(
+                description:
+                    'Your favorite services will appear here. Start exploring and add services to your favorites!'
+                        .tr(),
+              ).p(Sizes.paddingSizeLarge),
+              errorWidget: LoadingError(
+                onrefresh:
+                    ref
+                        .read(favouriteServicesControllerProvider.notifier)
+                        .refresh,
+              ),
+              itemBuilder: (context, index) {
+                final list = servicesAsync.valueOrNull ?? const [];
+                final service = list[index];
+                return Stack(
+                  children: [
+                    // We can reuse DynamicProductListItem if it takes a Service?
+                    // No, DynamicProductListItem takes Product. We need a list item for service.
+                    // Let's use a Card or something similar for service list item.
+                    ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CustomImage(
+                              imageUrl: service.photo,
+                              width: 60,
+                              height: 60,
+                            ),
+                          ),
+                          title: Text(
+                            service.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(service.vendor.name),
+                          onTap:
+                              () => _openServiceDetails(context, ref, service),
+                        ).box
+                        .color(context.theme.colorScheme.surface)
+                        .roundedSM
+                        .outerShadow
+                        .p8
+                        .make()
+                        .onLongPress(
+                          () => _confirmRemoveService(context, ref, service),
+                          GlobalKey(),
+                        ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child:
+                          IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed:
+                                    () => _confirmRemoveService(
+                                      context,
+                                      ref,
+                                      service,
+                                    ),
+                              ).box
+                              .color(context.theme.colorScheme.surface)
+                              .roundedFull
+                              .outerShadow
+                              .make()
+                              .p4(),
+                    ),
+                  ],
+                );
+              },
+              separatorBuilder: (_, __) => 10.heightBox,
+            ),
             // VENDORS TAB
             CustomListView(
+              canRefresh: true,
+              onRefresh:
+                  ref.read(favouriteVendorsControllerProvider.notifier).refresh,
               padding: EdgeInsets.all(Sizes.paddingSizeDefault),
               dataSet: vendorsAsync.valueOrNull ?? const [],
               isLoading: vendorsAsync.isLoading,

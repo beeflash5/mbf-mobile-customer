@@ -8,10 +8,16 @@ import 'package:fuodz/models/service_option_group.dart';
 import 'package:fuodz/services/service.request.dart';
 import 'package:fuodz/services/vendor.request.dart';
 
+import 'package:fuodz/services/favourite.request.dart';
+
 final _serviceRequestProvider = Provider<ServiceRequest>(
   (_) => ServiceRequest(),
 );
 final _vendorRequestProvider = Provider<VendorRequest>((_) => VendorRequest());
+final _favouriteRequestProvider = Provider<FavouriteRequest>(
+  (_) => FavouriteRequest(),
+);
+
 
 class ServiceDetailsState {
   const ServiceDetailsState({
@@ -94,6 +100,42 @@ class ServiceDetailsController
       selected.add(option);
     }
     state = AsyncData(cur.copyWith(selectedOptions: selected));
+  }
+
+  Future<({bool ok, String? message})> addToFavourite() async {
+    final cur = state.valueOrNull;
+    if (cur == null) return (ok: false, message: null);
+    try {
+      final req = ref.read(_favouriteRequestProvider);
+      final res = await req.makeFavouriteService(cur.service.id);
+      if (res.allGood) {
+        final newService = cur.service;
+        newService.isFavourite = true;
+        state = AsyncData(cur.copyWith(service: newService));
+        return (ok: true, message: res.message);
+      }
+      return (ok: false, message: res.message);
+    } catch (e) {
+      return (ok: false, message: e.toString());
+    }
+  }
+
+  Future<({bool ok, String? message})> removeFromFavourite() async {
+    final cur = state.valueOrNull;
+    if (cur == null) return (ok: false, message: null);
+    try {
+      final req = ref.read(_favouriteRequestProvider);
+      final res = await req.removeFavourite(cur.service.id);
+      if (res.allGood) {
+        final newService = cur.service;
+        newService.isFavourite = false;
+        state = AsyncData(cur.copyWith(service: newService));
+        return (ok: true, message: res.message);
+      }
+      return (ok: false, message: res.message);
+    } catch (e) {
+      return (ok: false, message: e.toString());
+    }
   }
 }
 
