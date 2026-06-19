@@ -62,11 +62,6 @@ class OrderDetailsItemsView extends StatelessWidget {
               "Options".tr().text.make(),
               "${order.orderService?.options}".text.medium.sm.make(),
             ]).py4(),
-          if (order.note.isNotEmpty)
-            VStack([
-              "Note".tr().text.make(),
-              "${order.note}".text.medium.sm.make(),
-            ]).py4(),
           HStack([
             "Category".tr().text.make().expand(),
             "${order.orderService?.service?.category?.name ?? order.orderService?.service?.subcategory?.name ?? order.vendor?.vendorType.name ?? ''}"

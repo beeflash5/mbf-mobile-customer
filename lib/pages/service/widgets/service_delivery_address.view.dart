@@ -63,7 +63,7 @@ class ServiceDeliveryAddressPickerView extends StatelessWidget {
             Visibility(
               visible: deliveryAddressOutOfRange,
               child:
-                  "Booking address is out of vendor service range"
+                  "Schedule Order address is out of vendor service range"
                       .tr()
                       .text
                       .sm

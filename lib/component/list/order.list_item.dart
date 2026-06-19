@@ -44,9 +44,9 @@ class OrderListItem extends StatelessWidget {
               //amount and total products
               HStack([
                 (order.isPackageDelivery
-                        ? order.packageType?.name
+                        ? order.packageType?.name ?? "-"
                         : order.isSerice
-                        ? "${order.orderService?.service?.category?.name}"
+                        ? (order.orderService?.service?.category?.name ?? "-")
                         : "%s Product(s)".tr().fill([
                           order.orderProducts?.length ?? 0,
                         ]))!

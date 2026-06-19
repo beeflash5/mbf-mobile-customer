@@ -208,7 +208,7 @@ class Vendor {
           json["charge_per_km"] == null
               ? 0
               : int.parse(json["charge_per_km"].toString()),
-      isOpen: json["is_open"] == null ? true : json["is_open"],
+      isOpen: json["is_open"] == null ? true : (json["is_open"].toString() == "1" || json["is_open"].toString() == "true"),
       isActive:
           json["is_active"] == null
               ? 0
@@ -281,11 +281,11 @@ class Vendor {
       hasSubcategories:
           json["has_sub_categories"] == null
               ? false
-              : json["has_sub_categories"],
+              : (json["has_sub_categories"].toString() == "1" || json["has_sub_categories"].toString() == "true"),
       allowScheduleOrder:
           json["allow_schedule_order"] == null
               ? false
-              : json["allow_schedule_order"],
+              : (json["allow_schedule_order"].toString() == "1" || json["allow_schedule_order"].toString() == "true"),
 
       //
       minOrder:

@@ -66,7 +66,7 @@ class _ServiceBookingSummaryPageState
       appBarColor: Colors.white,
       showAppBar: true,
       title: Text(
-        "Booking Summary".tr(),
+        "Schedule Order Summary".tr(),
         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       showLeadingAction: true,

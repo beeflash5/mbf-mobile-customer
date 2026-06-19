@@ -39,8 +39,7 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
           "${order.driver?.name}".text.medium.xl.make().pOnly(bottom: Vx.dp20),
         ]).expand(),
         Visibility(
-          visible:
-              !isTattoo && order.canChatDriver && AppUISettings.canCallDriver,
+          visible: order.canChatDriver && AppUISettings.canCallDriver,
           child:
               CustomButton(
                 icon: Icons.phone,
@@ -51,7 +50,7 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
               ).wh(Vx.dp64, Vx.dp40).p12(),
         ),
       ]),
-      if (!isTattoo && order.canChatDriver && AppUISettings.canDriverChat)
+      if (order.canChatDriver && AppUISettings.canDriverChat)
         CustomButton(
           icon: Icons.chat,
           iconColor: Colors.white,

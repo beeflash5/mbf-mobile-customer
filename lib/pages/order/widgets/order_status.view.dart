@@ -47,10 +47,10 @@ class OrderStatusView extends StatelessWidget {
               .xl
               .make(),
         ]).expand(),
-        vendorTypeId == 13
+        (order.tatto_size != null && order.tatto_size!.isNotEmpty)
             ? VStack([
               "Cash Payment".tr().text.gray500.medium.sm.make(),
-              "(After Service)".text
+              "After Service".text
                   .color(AppColor.getStausColor(order.paymentStatus))
                   .medium
                   .xl

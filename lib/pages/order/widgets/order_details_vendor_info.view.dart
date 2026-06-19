@@ -29,6 +29,10 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isTattoo =
+        (order.tatto_placement?.isNotEmpty ?? false) ||
+        (order.tatto_size?.isNotEmpty ?? false) ||
+        (order.tatto_type_select?.isNotEmpty ?? false) ||
+        (order.attach?.isNotEmpty ?? false) ||
         order.vendor?.vendorType.slug.toLowerCase() == 'tattoo' ||
         order.vendor?.vendorType.slug.toLowerCase() == 'tatto' ||
         order.vendor?.vendorType.slugUrl?.toLowerCase() == 'tattoo' ||
@@ -46,8 +50,7 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
           order.vendor!.name.text.medium.xl.make().py8().pOnly(bottom: Vx.dp4),
         ]).expand(),
         Visibility(
-          visible:
-              !isTattoo && order.canChatVendor && AppUISettings.canCallVendor,
+          visible: order.tatto_size?.isEmpty ?? true,
           child:
               CustomButton(
                 icon: Icons.phone,
@@ -58,8 +61,7 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
               ).h(50).fittedBox(),
         ),
         Visibility(
-          visible:
-              !isTattoo && order.canChatVendor && AppUISettings.canVendorChat,
+          visible: order.tatto_size?.isEmpty ?? true,
           child:
               CustomButton(
                 icon: Icons.chat,

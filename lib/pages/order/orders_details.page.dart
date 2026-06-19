@@ -67,6 +67,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
     final order = state.order;
 
     return Scaffold(
+      extendBody: true,
       body: BasePage(
         title: "Order Details".tr(),
         showAppBar: true,
@@ -194,26 +195,23 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                                     ),
                                 paymentStatusBusy: state.paymentStatusBusy,
                               ),
-                              Visibility(
-                                child: VStack([
-                                  OrderStatusView(
-                                    order: order,
-                                    vendorTypeId: state.vendorTypeId,
-                                    onCheckIn: controller.checkIn,
-                                    onReschedule:
-                                        () => controller.rescedule(context),
-                                    onOpenOrderPayment:
-                                        () => controller.openOrderPayment(
-                                          context,
-                                        ),
-                                    onTrackOrder:
-                                        () => controller.trackOrder(context),
-                                    checkInBusy: state.checkInBusy,
-                                    orderBusy: state.orderBusy,
-                                  ).p20(),
-                                  UiSpacer.divider(),
-                                ]),
-                              ),
+                              VStack([
+                                OrderStatusView(
+                                  order: order,
+                                  vendorTypeId: state.vendorTypeId,
+                                  onCheckIn: controller.checkIn,
+                                  onReschedule:
+                                      () => controller.rescedule(context),
+                                  onOpenOrderPayment:
+                                      () =>
+                                          controller.openOrderPayment(context),
+                                  onTrackOrder:
+                                      () => controller.trackOrder(context),
+                                  checkInBusy: state.checkInBusy,
+                                  orderBusy: state.orderBusy,
+                                ).p20(),
+                                UiSpacer.divider(),
+                              ]),
                               if (order.confirmation_note != null)
                                 _actionRequired(
                                   context: context,
@@ -240,8 +238,17 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                                 child:
                                     "".tr().text.italic.light.xl.medium.make(),
                               ),
-                              "Note".tr().text.semiBold.xl.make().px20(),
-                              "${order.note}".text.light.sm.make().px20(),
+                              Visibility(
+                                visible:
+                                    order.note != null &&
+                                    order.note!.isNotEmpty &&
+                                    order.note != '--' &&
+                                    order.note != 'null',
+                                child: VStack([
+                                  "Note".tr().text.semiBold.xl.make().px20(),
+                                  "${order.note}".text.light.sm.make().px20(),
+                                ]),
+                              ),
                               UiSpacer.vSpace(5),
                               UiSpacer.divider(),
                               UiSpacer.vSpace(),
@@ -279,14 +286,16 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                     ],
                   ),
                 ),
-        bottomSheet:
+        bottomNavigationBar:
             widget.isOrderTracking
                 ? null
-                : OrderBottomSheet(
-                  order: order,
-                  onCancel: () => controller.cancelOrder(context),
-                  isBusy: state.isBusy,
-                  orderBusy: state.orderBusy,
+                : SafeArea(
+                  child: OrderBottomSheet(
+                    order: order,
+                    onCancel: () => controller.cancelOrder(context),
+                    isBusy: state.isBusy,
+                    orderBusy: state.orderBusy,
+                  ),
                 ),
       ),
     );
