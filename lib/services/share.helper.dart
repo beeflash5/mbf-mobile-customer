@@ -14,7 +14,8 @@ class ShareHelper {
     } else if (product.deep_link != null && product.deep_link!.isNotEmpty) {
       shareLink = product.deep_link!;
     } else {
-      shareLink = '${Api.appShareLink}product/${product.id}/${product.name}';
+      shareLink =
+          '${Api.appShareLink}/product/${product.id}/${slugify(product.name)}';
     }
     await Share.share(
       shareLink,
@@ -29,7 +30,8 @@ class ShareHelper {
     } else if (vendor.deep_link != null && vendor.deep_link!.isNotEmpty) {
       shareLink = vendor.deep_link!;
     } else {
-      shareLink = "${Api.appShareLink}/vendor/${vendor.id}";
+      shareLink =
+          "${Api.appShareLink}/partner/${vendor.id}/${slugify(vendor.name)}";
     }
     await Share.share(
       shareLink,
@@ -44,11 +46,22 @@ class ShareHelper {
     } else if (service.deep_link != null && service.deep_link!.isNotEmpty) {
       shareLink = service.deep_link!;
     } else {
-      shareLink = "${Api.appShareLink}/service/${service.id}";
+      shareLink =
+          "${Api.appShareLink}/service/${service.id}/${slugify(service.name)}";
     }
     await Share.share(
       shareLink,
       sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
     );
+  }
+
+  static String slugify(String text) {
+    return text
+        .replaceAll("'", " ") 
+        .toLowerCase()
+        .trim()
+        .replaceAll(RegExp(r'[^a-z0-9\s-]'), '')
+        .replaceAll(RegExp(r'\s+'), '-')
+        .replaceAll(RegExp(r'-+'), '-');
   }
 }
