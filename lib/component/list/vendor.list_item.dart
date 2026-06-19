@@ -200,7 +200,6 @@ class VendorListItem extends StatelessWidget {
           ], crossAlignment: CrossAxisAlignment.end).p8(),
         ])
         .onInkTap(() => this.onPressed(this.vendor))
-        .w(175)
         .box
         .outerShadow
         .color(context.theme.colorScheme.surface)

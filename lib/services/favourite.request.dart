@@ -13,7 +13,11 @@ class FavouriteRequest extends ApiService {
       List<Product> products = [];
       apiResponse.data.forEach((jsonObject) {
         try {
-          products.add(Product.fromJson(jsonObject["product"]));
+          if (jsonObject["product"] != null) {
+            products.add(Product.fromJson(jsonObject["product"]));
+          } else if (jsonObject["service"] != null) {
+            products.add(Product.fromJson(jsonObject["service"]));
+          }
         } catch (error) {
           print("error: $error");
         }
