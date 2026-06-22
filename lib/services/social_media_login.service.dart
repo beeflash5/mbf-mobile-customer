@@ -146,9 +146,14 @@ class SocialMediaLoginService {
     }
   }
 
-  Future<void> appleLoginAndroid({required SocialLoginToast onError}) async {
+  Future<void> appleLoginAndroid({
+    required Future<void> Function(ApiResponse) onApiResponse,
+    required SocialLoginRegister onNeedsRegister,
+    required SocialLoginToast onError,
+  }) async {
+    AlertService.showLoading();
     try {
-      await SignInWithApple.getAppleIDCredential(
+      final credential = await SignInWithApple.getAppleIDCredential(
         scopes: const [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
@@ -160,10 +165,38 @@ class SocialMediaLoginService {
           ),
         ),
       );
+      final oauthCredential = OAuthProvider('apple.com').credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+      final userAccount = await FirebaseAuth.instance.signInWithCredential(
+        oauthCredential,
+      );
+      try {
+        final apiResponse = await _authRequest.socialLogin(
+          userAccount.user!.email ?? '',
+          credential.identityToken,
+          'apple',
+          uid: userAccount.user?.uid,
+        );
+        AlertService.stopLoading();
+        if (apiResponse != null) await onApiResponse(apiResponse);
+      } catch (error) {
+        AlertService.stopLoading();
+        onError('$error');
+        if (error.toString().toLowerCase().contains('register')) {
+          onNeedsRegister(
+            email: userAccount.user?.email,
+            name: userAccount.user?.displayName,
+          );
+        }
+      }
     } on SignInWithAppleAuthorizationException catch (e) {
+      AlertService.stopLoading();
       if (e.code == AuthorizationErrorCode.canceled) return;
       onError(e.message);
     } catch (error) {
+      AlertService.stopLoading();
       onError('$error');
     }
   }

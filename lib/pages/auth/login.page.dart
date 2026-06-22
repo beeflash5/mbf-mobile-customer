@@ -36,26 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(loginControllerProvider.notifier).listenAppleCallback((
-        data,
-      ) async {
-        final notifier = ref.read(loginControllerProvider.notifier);
-        final idToken = data.idToken;
-        if (idToken == null || idToken.isEmpty) return;
-        final payload = notifier.parseJwt(idToken);
-        final email = payload?['email'];
-        final apiResponse = await notifier.authRequest.loginAppleAndroid(
-          email ?? '',
-          idToken,
-          'apple',
-        );
-        if (apiResponse == null) return;
-        if (apiResponse.hasError()) {
-          AlertService.error(title: 'Login Failed', text: apiResponse.message);
-          return;
-        }
-        await _handleLoginResult(await notifier.handleDeviceLogin(apiResponse));
-      });
+      // (Deep link Apple login callback is no longer needed since SignInWithApple natively handles the intent redirect)
     });
   }
 
@@ -195,6 +176,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ).onInkTap(() {
                       if (Platform.isAndroid) {
                         _socialMediaLoginService.appleLoginAndroid(
+                          onApiResponse: _onSocialApiResponse,
+                          onNeedsRegister:
+                              ({email, name}) => context.pushWidget(
+                                RegisterPage(email: email, name: name),
+                              ),
                           onError: ToastService.toastError,
                         );
                       } else {

@@ -227,32 +227,6 @@ class AuthRequest extends ApiService {
     }
   }
 
-  Future<ApiResponse?> loginAppleAndroid(
-    String email,
-    String? firebaseVerificationId,
-    String provider, {
-    String? nonce,
-    String? uid,
-  }) async {
-    //
-    final apiResult = await post(Api.socialLoginAppleAndroid, {
-      "provider": provider,
-      "email": email,
-      "firebase_id_token": firebaseVerificationId,
-      "nonce": nonce,
-      "uid": uid,
-      "tokens": await FirebaseTokenService().getDeviceToken(),
-    });
-    final apiResponse = ApiResponse.fromResponse(apiResult);
-    if (apiResponse.allGood) {
-      return apiResponse;
-    } else if (apiResponse.code == 401) {
-      return null;
-    } else {
-      throw apiResponse.message!;
-    }
-  }
-
   Future<ApiResponse> deleteProfile({String? password, String? reason}) async {
     final apiResult = await post(Api.accountDelete, {
       "_method": "DELETE",

@@ -134,6 +134,9 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your gallery for profile photo.</string>
 
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need access to your gallery to save QR Code images.</string>
+
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need permission to make audio calls</string>
 

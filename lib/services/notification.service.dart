@@ -111,7 +111,13 @@ class NotificationService {
         final backendNotifications =
             await NotificationRequest().getNotifications();
         if (backendNotifications.isNotEmpty) {
-          return backendNotifications;
+          return backendNotifications.where((element) {
+            String? bodyStr = element.body?.toLowerCase();
+            String? titleStr = element.title?.toLowerCase();
+            bool isConfirmOrder = (bodyStr != null && (bodyStr.contains("konfirmasi pesanan") || bodyStr.contains("harap konfirmasi"))) ||
+                (titleStr != null && (titleStr.contains("konfirmasi pesanan") || titleStr.contains("harap konfirmasi")));
+            return !isConfirmOrder;
+          }).toList();
         }
       }
     } catch (e) {
@@ -141,6 +147,12 @@ class NotificationService {
                 : false,
         timeStamp: notificationObject.value["timeStamp"],
       );
+    }).where((element) {
+      String? bodyStr = element.body?.toLowerCase();
+      String? titleStr = element.title?.toLowerCase();
+      bool isConfirmOrder = (bodyStr != null && (bodyStr.contains("konfirmasi pesanan") || bodyStr.contains("harap konfirmasi"))) ||
+          (titleStr != null && (titleStr.contains("konfirmasi pesanan") || titleStr.contains("harap konfirmasi")));
+      return !isConfirmOrder;
     }).toList();
   }
 

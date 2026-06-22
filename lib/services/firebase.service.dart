@@ -92,6 +92,14 @@ class FirebaseService {
         title == null) {
       return;
     }
+
+    String? bodyStr = (message?.notification?.body ?? body ?? message?.data["body"])?.toString().toLowerCase();
+    String? titleStr = (message?.notification?.title ?? title ?? message?.data["title"])?.toString().toLowerCase();
+    if ((bodyStr != null && (bodyStr.contains("konfirmasi pesanan") || bodyStr.contains("harap konfirmasi"))) ||
+        (titleStr != null && (titleStr.contains("konfirmasi pesanan") || titleStr.contains("harap konfirmasi")))) {
+      return;
+    }
+
     //Saving the notification
     notificationModel = NotificationModel();
     notificationModel!.title =
@@ -117,6 +125,13 @@ class FirebaseService {
   //
   showNotification(RemoteMessage message) async {
     if (message.notification == null && message.data["title"] == null) {
+      return;
+    }
+
+    String? bodyStr = (message.notification?.body ?? message.data["body"])?.toString().toLowerCase();
+    String? titleStr = (message.notification?.title ?? message.data["title"])?.toString().toLowerCase();
+    if ((bodyStr != null && (bodyStr.contains("konfirmasi pesanan") || bodyStr.contains("harap konfirmasi"))) ||
+        (titleStr != null && (titleStr.contains("konfirmasi pesanan") || titleStr.contains("harap konfirmasi")))) {
       return;
     }
 
