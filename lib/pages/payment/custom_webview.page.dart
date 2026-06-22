@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -8,10 +9,13 @@ import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/api_service.dart';
 import 'package:fuodz/component/base.page.dart';
+import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:fuodz/utils/extensions/context.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CustomWebviewPage extends StatefulWidget {
   //
@@ -40,6 +44,7 @@ class _CustomWebviewPageState extends State<CustomWebviewPage> {
     cacheEnabled: false,
     clearSessionCache: true,
     useHybridComposition: true,
+    useOnDownloadStart: true,
   );
 
   PullToRefreshController? pullToRefreshController;
@@ -167,6 +172,72 @@ class _CustomWebviewPageState extends State<CustomWebviewPage> {
             setState(() {
               this.url = url.toString();
             });
+          },
+
+          onDownloadStartRequest: (controller, req) async {
+
+            final url = req.url.toString();
+
+            if (url.startsWith("data:image")) {
+              try {
+                // loading UI
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder:
+                      (_) => const Center(child: CircularProgressIndicator()),
+                );
+
+                final base64Data = url.split(",").last;
+                final bytes = base64Decode(base64Data);
+
+                final dir = await getTemporaryDirectory();
+
+                final file = File(
+                  "${dir.path}/img_${DateTime.now().millisecondsSinceEpoch}.png",
+                );
+
+                await file.writeAsBytes(bytes);
+
+                final result = await GallerySaver.saveImage(file.path);
+
+                Navigator.pop(context); // close loading
+
+                if (result == true) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                        "Image saved successfully",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.green, // success color
+                      duration: const Duration(seconds: 5),
+                      action: SnackBarAction(
+                        label: "OPEN",
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          await launchUrlString(
+                            "content://media/external/images/media",
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                }
+              } catch (e) {
+                Navigator.pop(context);
+
+                print("Download failed: $e");
+
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text("Failed: $e")));
+              }
+
+              return;
+            }
+
+            await launchUrlString(url, mode: LaunchMode.externalApplication);
           },
           onPermissionRequest: (controller, permissionRequest) async {
             //
