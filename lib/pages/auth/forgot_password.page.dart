@@ -118,7 +118,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                   child: VStack([
                     CustomTextFormField(
                       labelText: "Phone Number".tr(),
-                      hintText: "Enter your phone number".tr(),
+                      hintText: "Phone Number".tr(),
                       keyboardType: TextInputType.phone,
                       textEditingController: _phoneCtrl,
                       prefixIcon: GestureDetector(
