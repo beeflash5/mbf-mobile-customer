@@ -22,6 +22,7 @@ class ApiResponse {
 
     switch (code) {
       case 200:
+      case 201:
         try {
           message = body is Map ? (body["message"] ?? "") : "";
         } catch (error) {

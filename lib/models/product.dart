@@ -101,8 +101,25 @@ class Product {
     if (json["variants"] != null) {
       final variantsList = List<dynamic>.from(json["variants"]);
       if (variantsList.isNotEmpty) {
+        // Collect existing option IDs to prevent duplication (matching Next.js behavior)
+        final existingOptionIds = <int>{};
+        for (final group in productOptions) {
+          for (final option in group.options) {
+            existingOptionIds.add(option.id);
+          }
+        }
+
+        // Deduplicate variants by ID and filter out those already present in optionGroups
+        final uniqueVariantsMap = <int, dynamic>{};
+        for (final v in variantsList) {
+          final int vId = v["id"] ?? 0;
+          if (vId != 0 && !existingOptionIds.contains(vId)) {
+            uniqueVariantsMap[vId] = v;
+          }
+        }
+
         final variantOptions =
-            variantsList.map((v) {
+            uniqueVariantsMap.values.map((v) {
               return Option(
                 id: v["id"] ?? 0,
                 name: v["name"] ?? "",
@@ -116,18 +133,20 @@ class Product {
               );
             }).toList();
 
-        productOptions.insert(
-          0,
-          OptionGroup(
-            id: -1,
-            name: "Variant",
-            multiple: 0,
-            required: 0, // "None" is allowed by default
-            isActive: 1,
-            photo: "",
-            options: variantOptions,
-          ),
-        );
+        if (variantOptions.isNotEmpty) {
+          productOptions.insert(
+            0,
+            OptionGroup(
+              id: -1,
+              name: "Variant",
+              multiple: 0,
+              required: 0, // "None" is allowed by default
+              isActive: 1,
+              photo: "",
+              options: variantOptions,
+            ),
+          );
+        }
       }
     }
     return Product(
@@ -176,17 +195,18 @@ class Product {
       vendorId: int.parse(json["vendor_id"].toString()),
       categoryId: json["category_id"],
       photo: json["photo"] ?? "",
-      vendor: json["vendor"] == null
-          ? Vendor.fromJson({
-              "id": json["vendor_id"] ?? 0,
-              "vendor_type_id": json["vendor_type_id"] ?? 0,
-            })
-          : Vendor.fromJson({
-              ...json["vendor"],
-              if (json["vendor"]["vendor_type_id"] == null &&
-                  json["vendor_type_id"] != null)
-                "vendor_type_id": json["vendor_type_id"]
-            }),
+      vendor:
+          json["vendor"] == null
+              ? Vendor.fromJson({
+                "id": json["vendor_id"] ?? 0,
+                "vendor_type_id": json["vendor_type_id"] ?? 0,
+              })
+              : Vendor.fromJson({
+                ...json["vendor"],
+                if (json["vendor"]["vendor_type_id"] == null &&
+                    json["vendor_type_id"] != null)
+                  "vendor_type_id": json["vendor_type_id"],
+              }),
       optionGroups: productOptions,
       digitalFiles:
           json["digital_files"] == null

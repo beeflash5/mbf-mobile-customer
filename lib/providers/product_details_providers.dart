@@ -146,6 +146,16 @@ class ProductDetailsController
     return null;
   }
 
+  /// Remove all selections from [group] (used by the "None" deselect button).
+  void clearOptionGroup(OptionGroup group) {
+    final cur = state.valueOrNull;
+    if (cur == null) return;
+    final selected = [
+      ...cur.selectedOptions.where((o) => o.optionGroupId != group.id),
+    ];
+    state = AsyncData(_recalculate(cur.copyWith(selectedOptions: selected)));
+  }
+
   String? optionGroupRequirementCheck() {
     final cur = state.valueOrNull;
     if (cur == null) return null;
@@ -153,9 +163,10 @@ class ProductDetailsController
       final hasSelection = cur.selectedOptions.any(
         (o) => o.optionGroupId == group.id,
       );
-      if (group.required == 1 && !hasSelection) {
-        return "You are required to select at least one option of ${group.name}";
-      }
+      // By user request, make options optional even if the API says required == 1
+      // if (group.required == 1 && !hasSelection) {
+      //   return "You are required to select at least one option of ${group.name}";
+      // }
     }
     return null;
   }

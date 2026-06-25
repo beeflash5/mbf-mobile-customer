@@ -25,9 +25,13 @@ class CartUIServices extends CartServices {
         int freeQty = 0;
         bool thereIsFreeQty = await CartServices.cartItemQtyAvailable(
           cart.product!,
+          optionsIds: cart.optionsIds,
         );
         if (thereIsFreeQty) {
-          freeQty = await CartServices.productQtyAllowed(cart.product!);
+          freeQty = await CartServices.productQtyAllowed(
+            cart.product!,
+            optionsIds: cart.optionsIds,
+          );
           thereIsFreeQty = freeQty >= cart.selectedQty!;
         }
         //if there is not enough avaiable qty to process the product to cart
@@ -73,7 +77,10 @@ class CartUIServices extends CartServices {
     Cart cart,
   ) async {
     bool canAddToCart = true;
-    int freeQty = await CartServices.productQtyAllowed(cart.product!);
+    int freeQty = await CartServices.productQtyAllowed(
+      cart.product!,
+      optionsIds: cart.optionsIds,
+    );
     //if there is not enough avaiable qty to process the product to cart
     if (newQty > freeQty) {
       //

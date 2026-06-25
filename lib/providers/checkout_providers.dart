@@ -71,6 +71,7 @@ class CheckoutState {
   bool get isFoodOrder {
     if (vendor?.isFoodOrBeverage == true) return true;
     if (vendor?.can_dinein == true) return true;
+    if ((vendor?.qty_tables ?? 0) > 0) return true;
     // Fallback: read from the first cart item's embedded vendor
     final items = checkout.cartItems;
     if (items != null && items.isNotEmpty) {
@@ -78,6 +79,7 @@ class CheckoutState {
       if (v != null) {
         if (v.isFoodOrBeverage) return true;
         if (v.can_dinein == true) return true;
+        if ((v.qty_tables ?? 0) > 0) return true;
       }
     }
     return false;
@@ -166,8 +168,8 @@ class CheckoutController
     if (CartServices.productsInCart.isNotEmpty) {
       final prod = CartServices.productsInCart[0].product;
       primary = prod?.vendor;
-      if (primary != null && primary.vendorTypeId == 0 && prod?.vendor_type_id != null) {
-        primary.vendorTypeId = int.tryParse(prod!.vendor_type_id.toString()) ?? 0;
+      if (primary != null && prod?.vendor_type_id != null) {
+        primary.vendorTypeId = int.tryParse(prod!.vendor_type_id.toString()) ?? primary.vendorTypeId;
       }
     }
     return CheckoutState(checkout: arg, vendor: primary);

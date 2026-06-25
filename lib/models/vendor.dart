@@ -416,14 +416,34 @@ class Vendor {
   bool get isFoodOrBeverage {
     final slug = vendorType.slug.toLowerCase();
     final slugUrl = (vendorType.slugUrl ?? "").toLowerCase();
+
+    final hasFoodCategory = categories.any((cat) {
+      final catSlug = (cat.slug ?? "").toLowerCase();
+      final catSlugUrl = (cat.slugUrl ?? "").toLowerCase();
+      return ["food", "beverage", "beverages", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(catSlug) ||
+          ["food", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(catSlugUrl) ||
+          catSlug.contains("food") ||
+          catSlugUrl.contains("food") ||
+          catSlug.contains("beverage") ||
+          catSlugUrl.contains("beverage") ||
+          catSlug.contains("food-beverage") ||
+          catSlugUrl.contains("food-beverage");
+    });
+
     return (can_dinein == true) ||
+        (qty_tables != null && qty_tables! > 0) ||
         vendorTypeId == 2 ||
-        ["food", "beverage", "beverages", "food-beverage"].contains(slug) ||
-        ["food", "food-beverage"].contains(slugUrl) ||
+        hasFoodCategory ||
+        ["food", "beverage", "beverages", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(slug) ||
+        ["food", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(slugUrl) ||
         slug.contains("food") ||
         slugUrl.contains("food") ||
         slug.contains("beverage") ||
-        slugUrl.contains("beverage");
+        slugUrl.contains("beverage") ||
+        slug.contains("food-beverage") ||
+        slugUrl.contains("food-beverage") ||
+        slug == "/products-category/food-beverage" ||
+        slugUrl == "/products-category/food-beverage";
   }
 
   //

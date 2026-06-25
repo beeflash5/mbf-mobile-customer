@@ -5,6 +5,7 @@ import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/cart.service.dart';
 import 'package:fuodz/services/product.request.dart';
+import 'package:fuodz/providers/cart_providers.dart';
 
 class ProductBoughtTogetherState {
   const ProductBoughtTogetherState({
@@ -86,6 +87,7 @@ class ProductBoughtTogetherController
           Cart(product: product, selectedQty: 1, price: product.sellPrice),
         );
       }
+      await ref.read(cartControllerProvider.notifier).reload();
       state = AsyncData(s.copyWith(isAddingToCart: false));
       return true;
     } catch (_) {

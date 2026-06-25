@@ -11,6 +11,8 @@ import 'package:fuodz/services/cart_ui.service.dart';
 import 'package:fuodz/utils/extensions/dynamic.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/utils/utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fuodz/providers/cart_providers.dart';
 
 /// Static equivalent of MyBaseViewModel.addToCartDirectly so any widget can
 /// add to cart without an inherited VM.
@@ -27,6 +29,11 @@ class CartHelper {
       if (idx >= 0) {
         inCart.removeAt(idx);
         await CartServices.saveCartItems(inCart);
+        if (context.mounted) {
+          await ProviderScope.containerOf(
+            context,
+          ).read(cartControllerProvider.notifier).reload();
+        }
       }
       return;
     }
@@ -56,6 +63,11 @@ class CartHelper {
           await CartServices.saveCartItems(inCart);
         } else {
           await CartServices.addToCart(cart);
+        }
+        if (context.mounted) {
+          await ProviderScope.containerOf(
+            context,
+          ).read(cartControllerProvider.notifier).reload();
         }
       } else if (product.isDigital) {
         AlertService.confirm(
@@ -98,11 +110,16 @@ class CartHelper {
     bool force = false,
     bool skip = false,
   }) async {
+    final int qty =
+        (product.selectedQty == null || product.selectedQty! < 1)
+            ? 1
+            : product.selectedQty!;
+    product.selectedQty = qty;
     final cart =
         Cart()
           ..price = subTotal
           ..product = product
-          ..selectedQty = product.selectedQty
+          ..selectedQty = qty
           ..options = selectedOptions
           ..optionsIds = selectedOptionsIDs;
     try {
@@ -113,6 +130,11 @@ class CartHelper {
       );
       if (canAdd || force) {
         await CartServices.addToCart(cart);
+        if (context.mounted) {
+          await ProviderScope.containerOf(
+            context,
+          ).read(cartControllerProvider.notifier).reload();
+        }
         if (!skip && context.mounted) {
           await AlertService.custom(
             type: AlertType.success,

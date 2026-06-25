@@ -43,6 +43,18 @@ class CheckoutSharedHelpers {
       v.vendorTypeId = vendor.vendorTypeId;
     }
 
+    // If both the API and original vendor lacked a full vendorType, fetch types
+    if ((v.vendorType.id == 0 || v.vendorType.slug.isEmpty) &&
+        v.vendorTypeId != 0) {
+      try {
+        final types = await VendorTypeRequest().index();
+        final match = types.where((t) => t.id == v.vendorTypeId).toList();
+        if (match.isNotEmpty) {
+          v.vendorType = match.first;
+        }
+      } catch (_) {}
+    }
+
     // Resolve missing vendor type slug from global list, mimicking Next.js
     if (v.vendorType.slug.isEmpty && v.vendorTypeId > 0) {
       try {
@@ -60,8 +72,12 @@ class CheckoutSharedHelpers {
     }
     // deliverySlots are never returned by /api/vendors/{id}, so always copy them from the original object.
     v.deliverySlots = vendor.deliverySlots;
-    v.can_dinein ??= vendor.can_dinein;
-    v.qty_tables ??= vendor.qty_tables;
+    if (v.can_dinein == null || v.can_dinein == false) {
+      v.can_dinein = vendor.can_dinein;
+    }
+    if (v.qty_tables == null || v.qty_tables == 0) {
+      v.qty_tables = vendor.qty_tables;
+    }
 
     return v;
   }

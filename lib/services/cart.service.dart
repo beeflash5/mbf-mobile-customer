@@ -96,14 +96,32 @@ class CartServices {
   static addToCart(Cart cart) async {
     //
     if (cart.selectedQty == null || cart.selectedQty == 0) {
-      throw "Please select quantity".tr();
-    }
-    if (cart.selectedQty == null || cart.selectedQty == 0) {
       cart.selectedQty = 1;
     }
     try {
       final mProductsInCart = productsInCart;
-      mProductsInCart.add(cart);
+
+      // Check if identical product + options combo already exists
+      final List<int> sortedNew = List<int>.from(cart.optionsIds ?? [])..sort();
+      bool foundExisting = false;
+
+      for (final existing in mProductsInCart) {
+        if (existing.product?.id == cart.product?.id) {
+          final List<int> sortedExisting =
+              List<int>.from(existing.optionsIds ?? [])..sort();
+          if (_listEquals(sortedExisting, sortedNew)) {
+            existing.selectedQty =
+                (existing.selectedQty ?? 1) + cart.selectedQty!;
+            foundExisting = true;
+            break;
+          }
+        }
+      }
+
+      if (!foundExisting) {
+        mProductsInCart.add(cart);
+      }
+
       await LocalStorageService.prefs!.setString(
         cartItemsKey,
         jsonEncode(mProductsInCart),
@@ -214,16 +232,59 @@ class CartServices {
     return addedQty;
   }
 
-  static Future<int> productQtyAllowed(Product product) async {
-    int addedQty = await productQtyInCart(product);
+  /// Like [productQtyInCart] but only counts cart entries whose sorted
+  /// options-ID list matches [optionsIds].  Pass null/empty to count all
+  /// entries for that product (falls back to the original behaviour).
+  static Future<int> productQtyInCartWithOptions(
+    Product product,
+    List<int>? optionsIds,
+  ) async {
+    await getCartItems();
+    final List<int> sortedNew = List<int>.from(optionsIds ?? [])..sort();
+    // If no options are involved, delegate to the plain method.
+    if (sortedNew.isEmpty) return productQtyInCart(product);
+
+    int addedQty = 0;
+    for (final item in productsInCart) {
+      if (item.product?.id != product.id) continue;
+      final List<int> sortedExisting = List<int>.from(item.optionsIds ?? [])..sort();
+      if (_listEquals(sortedExisting, sortedNew)) {
+        addedQty += item.selectedQty!;
+      }
+    }
+    return addedQty;
+  }
+
+  static bool _listEquals(List<int> a, List<int> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static Future<int> productQtyAllowed(
+    Product product, {
+    List<int>? optionsIds,
+  }) async {
+    final int addedQty =
+        optionsIds != null && optionsIds.isNotEmpty
+            ? await productQtyInCartWithOptions(product, optionsIds)
+            : await productQtyInCart(product);
     if (product.availableQty == null) {
       return 20;
     }
     return (product.availableQty ?? 20) - addedQty;
   }
 
-  static Future<bool> cartItemQtyAvailable(Product product) async {
-    int addedQty = await productQtyInCart(product);
+  static Future<bool> cartItemQtyAvailable(
+    Product product, {
+    List<int>? optionsIds,
+  }) async {
+    final int addedQty =
+        optionsIds != null && optionsIds.isNotEmpty
+            ? await productQtyInCartWithOptions(product, optionsIds)
+            : await productQtyInCart(product);
     return product.availableQty == null || (addedQty < product.availableQty!);
   }
 

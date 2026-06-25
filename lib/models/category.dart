@@ -14,6 +14,8 @@ class Category {
   VendorType? vendorType;
   String color;
   bool hasSubcategories;
+  String? slug;
+  String? slugUrl;
   int services_count = 0;
   int products_count = 0;
 
@@ -22,6 +24,8 @@ class Category {
     required this.name,
     required this.imageUrl,
     required this.photo,
+    this.slug,
+    this.slugUrl,
     this.products = const [],
     this.services = const [],
     this.subcategories = const [],
@@ -38,6 +42,8 @@ class Category {
       name: (jsonObject["name"] ?? "").toString().parseLocalized(),
       imageUrl: jsonObject["photo"] ?? "",
       photo: jsonObject["photo"] ?? "",
+      slug: jsonObject["slug"],
+      slugUrl: jsonObject["slug_url"],
       color: jsonObject["color"] != null ? jsonObject["color"] : '#000000',
       hasSubcategories:
           jsonObject["has_subcategories"] != null
@@ -65,6 +71,8 @@ class Category {
     "id": id,
     "name": name,
     "photo": imageUrl,
+    "slug": slug,
+    "slug_url": slugUrl,
     "color": color,
     "products": List<Map<String, dynamic>>.from(
       products.map((x) => x.toJson()),

@@ -86,27 +86,46 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
         if (state.hasAgeRestricted)
           VStack([
-            "Batas Usia (Age Limit)".tr().text.lg.bold.color(Vx.red800).make(),
-            UiSpacer.verticalSpace(space: 10),
-            HStack([
-              Checkbox(
-                value: state.ageConfirmed,
-                onChanged: controller.toggleAgeConfirmed,
-                activeColor: Vx.red600,
-              ).pOnly(right: 10),
-              VStack([
-                "I confirm that I am old enough to purchase the products in this order.".tr().text.sm.color(Vx.red700).make(),
-                "(Saya mengonfirmasi bahwa saya sudah cukup umur untuk membeli produk ini.)".tr().text.xs.color(Vx.red700).make(),
-              ]).expand(),
-            ]).onInkTap(() => controller.toggleAgeConfirmed(!state.ageConfirmed)),
-          ])
-          .p12()
-          .box
-          .roundedSM
-          .color(Vx.red50)
-          .border(color: Vx.red200)
-          .make()
-          .pOnly(bottom: Vx.dp20),        CustomTextFormField(
+                "Batas Usia (Age Limit)"
+                    .tr()
+                    .text
+                    .lg
+                    .bold
+                    .color(Vx.red800)
+                    .make(),
+                UiSpacer.verticalSpace(space: 10),
+                HStack([
+                  Checkbox(
+                    value: state.ageConfirmed,
+                    onChanged: controller.toggleAgeConfirmed,
+                    activeColor: Vx.red600,
+                  ).pOnly(right: 10),
+                  VStack([
+                    "I confirm that I am old enough to purchase the products in this order."
+                        .tr()
+                        .text
+                        .sm
+                        .color(Vx.red700)
+                        .make(),
+                    "(Saya mengonfirmasi bahwa saya sudah cukup umur untuk membeli produk ini.)"
+                        .tr()
+                        .text
+                        .xs
+                        .color(Vx.red700)
+                        .make(),
+                  ]).expand(),
+                ]).onInkTap(
+                  () => controller.toggleAgeConfirmed(!state.ageConfirmed),
+                ),
+              ])
+              .p12()
+              .box
+              .roundedSM
+              .color(Vx.red50)
+              .border(color: Vx.red200)
+              .make()
+              .pOnly(bottom: Vx.dp20),
+        CustomTextFormField(
           labelText: "Note".tr(),
           textEditingController: controller.noteTEC,
         ).pOnly(bottom: Vx.dp20),

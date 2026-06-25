@@ -45,7 +45,22 @@ class OptionGroup {
     options:
         json["options"] == null
             ? []
-            : List<Option>.from(json["options"].map((x) => Option.fromJson(x))),
+            : (() {
+              final list = List<Option>.from(
+                json["options"].map((x) => Option.fromJson(x)),
+              );
+              final groupId = json["id"];
+              // Deduplicate by option ID to fix backend duplicate array issue
+              final uniqueMap = <int, Option>{};
+              for (final opt in list) {
+                // Ensure optionGroupId is linked properly
+                if (groupId != null) {
+                  opt.optionGroupId = groupId;
+                }
+                uniqueMap[opt.id] = opt;
+              }
+              return uniqueMap.values.toList();
+            })(),
     maxOptions: json["max_options"] ?? null,
   );
 

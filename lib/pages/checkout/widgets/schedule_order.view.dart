@@ -69,9 +69,10 @@ class ScheduleOrderView extends StatelessWidget {
         !isTattoo;
     // Use explicit override from caller if provided, otherwise compute locally
     final bool isFood =
-        (isFoodOverride ?? vendor.isFoodOrBeverage) &&
+        isFoodOverride ??
+        (vendor.isFoodOrBeverage &&
         !isTattoo &&
-        !isServiceBooking;
+        !isServiceBooking);
 
     return Visibility(
       visible:
@@ -253,8 +254,7 @@ class ScheduleOrderView extends StatelessWidget {
                       },
                     ),
 
-                if ((isFood || vendor.can_dinein == true) &&
-                    !isServiceBooking &&
+                if ((isFood || vendor.can_dinein == true || (vendor.qty_tables ?? 0) > 0) &&
                     !isTattoo &&
                     guestCountController != null)
                   Column(
@@ -274,7 +274,9 @@ class ScheduleOrderView extends StatelessWidget {
                         textEditingController: guestCountController,
                       ),
                       UiSpacer.verticalSpace(space: 20),
-                      if (vendor.can_dinein == true && onSelectTable != null)
+                      if ((vendor.can_dinein == true || isFood) &&
+                          (vendor.qty_tables ?? 0) > 0 &&
+                          onSelectTable != null)
                         Column(
                           children: [
                             "Dine-in".tr().text.lg.make(),
