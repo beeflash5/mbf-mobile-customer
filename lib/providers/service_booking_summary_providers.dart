@@ -213,7 +213,9 @@ class ServiceBookingSummaryController
     AppService().vendorId = arg.vendor.id;
 
     final bool isFoodOrBeverage = arg.vendor.isFoodOrBeverage;
-    if (isFoodOrBeverage) {
+    final bool isTattoo = (arg.vendor_type_id ?? arg.vendor.vendorTypeId) == 13;
+
+    if (isFoodOrBeverage || isTattoo) {
       co.isScheduled = true;
     }
 
@@ -221,7 +223,7 @@ class ServiceBookingSummaryController
       service: arg,
       checkout: co,
       vendor: arg.vendor,
-      isScheduled: isFoodOrBeverage,
+      isScheduled: isFoodOrBeverage || isTattoo,
     );
   }
 
@@ -624,13 +626,18 @@ class ServiceBookingSummaryController
   Future<void> placeOrder(BuildContext context, {bool ignore = false}) async {
     final service = state.service;
     service.selectedQty = state.durationQty;
-    if (state.isScheduled && state.checkout.deliverySlotDate.isEmptyOrNull) {
+    final isTattoo =
+        state.vendor?.vendorType.slug.toLowerCase() == "tattoo" ||
+        state.vendorTypeId == 13;
+    final requireSchedule = true;
+
+    if (requireSchedule && state.checkout.deliverySlotDate.isEmptyOrNull) {
       AlertService.error(
         title: "Schedule Date".tr(),
         text: "Please select your desire order date".tr(),
       );
       return;
-    } else if (state.isScheduled &&
+    } else if (requireSchedule &&
         state.checkout.deliverySlotTime.isEmptyOrNull) {
       AlertService.error(
         title: "Schedule Time".tr(),
@@ -638,7 +645,6 @@ class ServiceBookingSummaryController
       );
       return;
     }
-    final isTattoo = state.vendor?.vendorType.slug.toLowerCase() == "tattoo";
     if (!state.isPickup &&
         service.location &&
         !isTattoo &&

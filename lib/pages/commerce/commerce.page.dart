@@ -18,6 +18,10 @@ import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/utils/product_fetch_data_type.enum.dart';
 import 'package:fuodz/utils/sizes.dart';
 import 'package:fuodz/pages/flash_sale/widgets/flash_sale.view.dart';
+import 'package:fuodz/pages/cart/cart.page.dart';
+import 'package:fuodz/services/cart.service.dart';
+import 'package:fuodz/utils/utils.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class CommercePage extends ConsumerStatefulWidget {
   const CommercePage(this.vendorType, {super.key});
@@ -80,6 +84,37 @@ class _CommercePageState extends ConsumerState<CommercePage>
                   Icons.notifications,
                   color: context.primaryColor,
                   size: 28,
+                ),
+              ),
+              const SizedBox(width: 10),
+              InkWell(
+                onTap: () => context.pushWidget(CartPage()),
+                child: StreamBuilder<int>(
+                  stream: CartServices.cartItemsCountStream.stream,
+                  initialData: CartServices.productsInCart.length,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    Widget child = Icon(
+                      Icons.shopping_cart_outlined,
+                      color: context.primaryColor,
+                      size: 28,
+                    );
+                    if (snapshot.hasData && snapshot.data > 0) {
+                      return child.badge(
+                        position:
+                            Utils.isArabic
+                                ? VxBadgePosition.leftTop
+                                : VxBadgePosition.rightTop,
+                        count: snapshot.data,
+                        color: Colors.red,
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }
+                    return child;
+                  },
                 ),
               ),
               const SizedBox(width: 10),

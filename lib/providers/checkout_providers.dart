@@ -542,13 +542,17 @@ class CheckoutController
   }
 
   Future<void> placeOrder(BuildContext context, {bool ignore = false}) async {
-    if (state.isScheduled && state.checkout.deliverySlotDate.isEmptyOrNull) {
+    final orderVendor = state.checkout.cartItems?.first.product?.vendor ?? state.vendor;
+    final isTattoo = orderVendor?.vendorType.slug.toLowerCase() == "tattoo" || orderVendor?.vendorTypeId == 13;
+    final requireSchedule = true;
+
+    if (requireSchedule && state.checkout.deliverySlotDate.isEmptyOrNull) {
       AlertService.error(
         title: "Delivery Date".tr(),
         text: "Please select your desire order date".tr(),
       );
       return;
-    } else if (state.isScheduled &&
+    } else if (requireSchedule &&
         state.checkout.deliverySlotTime.isEmptyOrNull) {
       AlertService.error(
         title: "Delivery Time".tr(),

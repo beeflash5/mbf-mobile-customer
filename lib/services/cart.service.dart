@@ -8,6 +8,7 @@ import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/local_storage.service.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
+import 'package:fuodz/services/cart_backend.service.dart';
 
 class CartServices {
   //
@@ -131,6 +132,9 @@ class CartServices {
       //update total item in cart count
       await updateTotalCartItemCount(productsInCart.length);
       await getCartItems();
+      
+      // Sync to backend
+      CartBackendService.syncCartItems();
     } catch (error) {
       print("Saving Cart Error => $error");
     }
@@ -146,6 +150,9 @@ class CartServices {
     await updateTotalCartItemCount(productsInCart.length);
 
     await getCartItems();
+    
+    // Sync to backend
+    CartBackendService.syncCartItems();
   }
 
   static updateTotalCartItemCount(int total) async {

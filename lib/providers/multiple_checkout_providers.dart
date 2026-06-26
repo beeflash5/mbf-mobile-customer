@@ -15,6 +15,7 @@ import 'package:fuodz/services/checkout.request.dart';
 import 'package:fuodz/services/checkout_shared.helper.dart';
 import 'package:fuodz/services/toast.service.dart';
 import 'package:fuodz/utils/app_routes.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class MultipleCheckoutState {
   const MultipleCheckoutState({
@@ -380,7 +381,7 @@ class MultipleCheckoutController
     bool isScheduled = value == true ? false : true;
     final co = state.checkout;
     co.deliveryAddress = isPickup ? null : state.deliveryAddress;
-    
+
     String? tableSelected = state.tableSelected;
     if (isPickup) {
       tableSelected = null;
@@ -470,8 +471,28 @@ class MultipleCheckoutController
       );
       return;
     }
-    
+
     final vendor = state.vendor;
+    final isTattoo =
+        vendor?.vendorType.slug.toLowerCase() == "tattoo" ||
+        vendor?.vendorTypeId == 13;
+    final requireSchedule = true;
+
+    if (requireSchedule && state.checkout.deliverySlotDate.isEmptyOrNull) {
+      AlertService.error(
+        title: "Delivery Date".tr(),
+        text: "Please select your desire order date".tr(),
+      );
+      return;
+    } else if (requireSchedule &&
+        state.checkout.deliverySlotTime.isEmptyOrNull) {
+      AlertService.error(
+        title: "Delivery Time".tr(),
+        text: "Please select your desire order time".tr(),
+      );
+      return;
+    }
+
     if (vendor != null && vendor.can_dinein == true && state.isScheduled) {
       final guestCount = int.tryParse(guestCountTEC.text) ?? 0;
       if (guestCount < 3) {
@@ -498,13 +519,14 @@ class MultipleCheckoutController
       }
       final co = state.checkout;
       co.total = co.totalWithTip;
-      co.reser_guest = state.isScheduled == true
-          ? (guestCountTEC.text.isEmpty
-              ? null
-              : int.tryParse(guestCountTEC.text))
-          : null;
+      co.reser_guest =
+          state.isScheduled == true
+              ? (guestCountTEC.text.isEmpty
+                  ? null
+                  : int.tryParse(guestCountTEC.text))
+              : null;
       co.reser_table = state.isScheduled == true ? state.tableSelected : null;
-      
+
       final apiResponse = await _checkoutRequest.newMultipleVendorOrder(
         co,
         tip: driverTipTEC.text,
