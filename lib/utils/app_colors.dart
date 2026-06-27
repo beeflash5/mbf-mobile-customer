@@ -85,7 +85,11 @@ class AppColor {
 
   static Color getStausColor(String status) {
     //'pending','preparing','enroute','failed','cancelled','delivered'
-    final statusColorName = "${status}Color";
+    String lookupStatus = status;
+    if (status == "completed") {
+      lookupStatus = "delivered";
+    }
+    final statusColorName = "${lookupStatus}Color";
     try {
       return Vx.hexToColor(colorEnv(statusColorName));
     } catch (error) {

@@ -63,6 +63,7 @@ class AppColor {
     'failed': 'failedColor',
     'cancelled': 'cancelledColor',
     'delivered': 'deliveredColor',
+    'completed': 'deliveredColor',
     'successful': 'successfulColor',
   };
 
