@@ -11,6 +11,7 @@ import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app_currency_system.service.dart';
 import 'package:fuodz/services/auth.service.dart';
 import 'package:fuodz/services/firebase.service.dart';
+import 'package:fuodz/services/cart_backend.service.dart';
 import 'package:fuodz/services/settings.request.dart';
 import 'package:fuodz/services/websocket.service.dart';
 import 'package:fuodz/utils/app_colors.dart';
@@ -51,6 +52,7 @@ class SplashService {
       await loadAppSettings(context);
       if (AuthServices.authenticated()) {
         await AuthServices.getCurrentUser(force: true);
+        await CartBackendService.loadFromBackend();
       }
       if (!context.mounted) return;
       await loadNextPage(context);

@@ -7,6 +7,7 @@ import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/firebase.service.dart';
 import 'package:fuodz/services/api_service.dart';
 import 'package:fuodz/services/splash.service.dart';
+import 'package:fuodz/services/cart_backend.service.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 
 import 'local_storage.service.dart';
@@ -113,8 +114,13 @@ class AuthServices {
         );
       }
 
+      if (reload) {
+        await CartBackendService.loadFromBackend();
+      }
+
       return currentUser;
     } catch (error) {
+      print("Save user error: $error");
       return null;
     }
   }

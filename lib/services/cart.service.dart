@@ -134,7 +134,7 @@ class CartServices {
       await getCartItems();
       
       // Sync to backend
-      CartBackendService.syncCartItems();
+      CartBackendService.addToBackend(cart);
     } catch (error) {
       print("Saving Cart Error => $error");
     }
