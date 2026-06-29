@@ -83,6 +83,11 @@ class CartState {
 class CartController extends Notifier<CartState> {
   @override
   CartState build() {
+    final sub = CartServices.cartItemsCountStream.stream.listen((_) {
+      state = _recalculate(CartState(cartItems: CartServices.productsInCart));
+    });
+    ref.onDispose(() => sub.cancel());
+
     final items = CartServices.productsInCart;
     return _recalculate(CartState(cartItems: items));
   }
