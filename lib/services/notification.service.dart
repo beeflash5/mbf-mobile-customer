@@ -31,9 +31,9 @@ class NotificationService {
       if (!isAllowed) {
         // Insert here your friendly dialog box before call the request method
         // This is very important to not harm the user experience
-        if (Platform.isAndroid) {
+        // if (Platform.isAndroid) {
           await AwesomeNotifications().requestPermissionToSendNotifications();
-        }
+        // }
       }
     });
   }

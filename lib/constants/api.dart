@@ -1,10 +1,11 @@
 import 'package:fuodz/services/auth.service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Api {
   // REST API → Spring backend (api.mybalifriendz.co). The endpoint paths below
   // are served by Spring, ported 1:1 from the old Laravel routes.
   static String get baseUrl {
-    return "https://api.mybalifriendz.co/api";
+    return dotenv.env["API_BASE_URL"]!; // "https://api.mybalifriendz.co/api";
     // return "https://mybalifriendz.co/api";
     // return "http://192.168.1.6:8000/api";
   }
@@ -13,7 +14,9 @@ class Api {
   // Laravel Echo/Reverb broadcasting are NOT served by Spring — they stay on
   // the Laravel web app. Derived from the API host by default; override here.
   static String get webBaseUrl {
-    return "https://mybalifriendz.co";
+    return dotenv.env["WEB_BASE_URL"]!; // ?? "https://mybalifriendz.co";
+
+    // return "https://mybalifriendz.co";
   }
 
   static const appSettings = "/app/settings";

@@ -15,6 +15,7 @@ import 'package:fuodz/services/app_colors.dart';
 import 'package:fuodz/utils/app_languages.dart';
 import 'package:fuodz/utils/local_storage.service.dart';
 import 'package:fuodz/services/local_storage.service.dart' as old_ls;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// SSL handshake override (allow self-signed certs).
 class _MyHttpOverrides extends HttpOverrides {
@@ -29,6 +30,14 @@ void main() async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      const env = String.fromEnvironment("ENV", defaultValue: "dev");
+
+      await dotenv.load(fileName: ".env.$env");
+
+      print("Current ENV: $env");
+      print("API URL: ${dotenv.env["API_BASE_URL"]}");
+      print("WEB URL: ${dotenv.env["WEB_BASE_URL"]}");
 
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
