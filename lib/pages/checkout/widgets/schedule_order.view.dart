@@ -251,9 +251,7 @@ class ScheduleOrderView extends StatelessWidget {
                       },
                     ),
 
-                if (vendor.can_dinein == true &&
-                    !isTattoo &&
-                    guestCountController != null)
+                if ((vendor.qty_tables ?? 0) > 0)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

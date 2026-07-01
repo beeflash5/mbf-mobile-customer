@@ -602,14 +602,16 @@ class _ServiceBookingSummaryPageState
                               ),
                               borderRadius: BorderRadius.circular(16),
                               items:
-                                  service.guide
-                                      ?.map(
-                                        (lang) => DropdownMenuItem<String>(
-                                          value: lang.lang,
-                                          child: Text(lang.lang),
-                                        ),
-                                      )
-                                      .toList(),
+                                  service.guide?.map((lang) {
+                                    final displayName = lang.lang;
+                                    debugPrint(
+                                      '[Dropdown Guide] id=${lang.id} lang.lang=$displayName',
+                                    );
+                                    return DropdownMenuItem<String>(
+                                      value: displayName,
+                                      child: Text(displayName),
+                                    );
+                                  }).toList(),
                               onChanged: controller.setGuide,
                             ),
                           ),

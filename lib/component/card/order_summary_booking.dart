@@ -151,23 +151,7 @@ class OrderSummaryBooking extends StatelessWidget {
             const SizedBox(height: 5),
           ],
         ),
-      if (guidSelected != null)
-        Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                "Guide".tr().text.make(),
-                guidSelected!.text
-                    .color(const Color(0xff808080))
-                    .semiBold
-                    .make(),
-              ],
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
+
       const SizedBox(height: 8),
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
