@@ -88,7 +88,7 @@ class ScheduleOrderView extends StatelessWidget {
                   ? "Reservation".tr().text.lg.semiBold.make()
                   : "Schedule Order".tr().text.lg.semiBold.make(),
               UiSpacer.verticalSpace(space: 10),
-              if (!isFood && !isTattoo)
+              if (!isFood)
                 HStack([
                   Checkbox(
                     value: isScheduled,

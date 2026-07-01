@@ -215,7 +215,7 @@ class ServiceBookingSummaryController
     final bool isFoodOrBeverage = arg.vendor.isFoodOrBeverage;
     final bool isTattoo = (arg.vendor_type_id ?? arg.vendor.vendorTypeId) == 13;
 
-    if (isFoodOrBeverage || isTattoo) {
+    if (isFoodOrBeverage) {
       co.isScheduled = true;
     }
 
@@ -223,7 +223,7 @@ class ServiceBookingSummaryController
       service: arg,
       checkout: co,
       vendor: arg.vendor,
-      isScheduled: isFoodOrBeverage || isTattoo,
+      isScheduled: isFoodOrBeverage,
     );
   }
 
@@ -627,7 +627,7 @@ class ServiceBookingSummaryController
     final service = state.service;
     service.selectedQty = state.durationQty;
     final isTattoo = state.checkout.isTattoo;
-    final requireSchedule = !isTattoo;
+    final requireSchedule = state.isScheduled;
 
     final hasDate = !state.checkout.deliverySlotDate.isEmptyOrNull;
     final hasTime = !state.checkout.deliverySlotTime.isEmptyOrNull;

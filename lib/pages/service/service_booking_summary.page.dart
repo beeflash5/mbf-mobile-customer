@@ -236,7 +236,7 @@ class _ServiceBookingSummaryPageState
                     ),
                   ),
                 // For tattoo, ScheduleOrderView appears before Tattoo Type
-                if (vendor != null && state.vendorTypeId == 13)
+                if (vendor != null && (state.checkout.isTattoo || state.vendorTypeId == 13))
                   ScheduleOrderView(
                     vendor: vendor,
                     isScheduled: state.isScheduled,
@@ -254,11 +254,11 @@ class _ServiceBookingSummaryPageState
                     tableSelected: state.tableSelected,
                     guestCountController: controller.guestCountTEC,
                     onSelectTable: controller.selectTableSelecte,
-                    isTattooOverride: state.checkout.isTattoo,
+                    isTattooOverride: state.checkout.isTattoo || state.vendorTypeId == 13,
                     isFoodOverride: state.checkout.isFood,
                   ),
 
-                if (state.checkout.isTattoo)
+                if (state.checkout.isTattoo || state.vendorTypeId == 13)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -336,7 +336,7 @@ class _ServiceBookingSummaryPageState
                   ),
 
                 // For non-tattoo, Note and ScheduleOrderView appear at the bottom
-                if (!state.checkout.isTattoo) ...[
+                if (!(state.checkout.isTattoo || state.vendorTypeId == 13)) ...[
                   CustomTextFormField(
                     labelText: "Note".tr(),
                     textEditingController: controller.noteTEC,
@@ -360,7 +360,7 @@ class _ServiceBookingSummaryPageState
                       tableSelected: state.tableSelected,
                       guestCountController: controller.guestCountTEC,
                       onSelectTable: controller.selectTableSelecte,
-                      isTattooOverride: state.checkout.isTattoo,
+                      isTattooOverride: state.checkout.isTattoo || state.vendorTypeId == 13,
                       isFoodOverride: state.checkout.isFood,
                     ),
                 ],
