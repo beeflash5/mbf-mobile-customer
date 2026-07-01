@@ -254,9 +254,11 @@ class _ServiceBookingSummaryPageState
                     tableSelected: state.tableSelected,
                     guestCountController: controller.guestCountTEC,
                     onSelectTable: controller.selectTableSelecte,
+                    isTattooOverride: state.checkout.isTattoo,
+                    isFoodOverride: state.checkout.isFood,
                   ),
 
-                if (state.vendorTypeId == 13)
+                if (state.checkout.isTattoo)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -334,7 +336,7 @@ class _ServiceBookingSummaryPageState
                   ),
 
                 // For non-tattoo, Note and ScheduleOrderView appear at the bottom
-                if (state.vendorTypeId != 13) ...[
+                if (!state.checkout.isTattoo) ...[
                   CustomTextFormField(
                     labelText: "Note".tr(),
                     textEditingController: controller.noteTEC,
@@ -358,6 +360,8 @@ class _ServiceBookingSummaryPageState
                       tableSelected: state.tableSelected,
                       guestCountController: controller.guestCountTEC,
                       onSelectTable: controller.selectTableSelecte,
+                      isTattooOverride: state.checkout.isTattoo,
+                      isFoodOverride: state.checkout.isFood,
                     ),
                 ],
 

@@ -19,6 +19,8 @@ class CheckOut {
   String? pickupDate;
   bool? isPickup;
   bool? isScheduled;
+  bool isTattoo;
+  bool isFood;
   DeliveryAddress? deliveryAddress;
   String deliverySlotDate;
   String deliverySlotTime;
@@ -46,6 +48,8 @@ class CheckOut {
     this.total = 0.00,
     this.totalWithTip = 0.00,
     this.isPickup,
+    this.isTattoo = false,
+    this.isFood = false,
     this.deliveryAddress,
     this.isScheduled,
     this.pickupDate,
@@ -104,6 +108,8 @@ class CheckOut {
                   : double.parse(json["total"].toString()))
               : double.parse(json["total_with_tip"].toString()),
       isPickup: json["is_pickup"] == null ? false : json["is_pickup"],
+      isTattoo: json["is_tattoo"] ?? false,
+      isFood: json["is_food"] ?? false,
       isScheduled: json["is_scheduled"] == null ? false : json["is_scheduled"],
       pickupDate: json["pickup_date"] == null ? "" : json["pickup_date"],
       pickupTime: json["pickup_time"] == null ? "" : json["pickup_time"],

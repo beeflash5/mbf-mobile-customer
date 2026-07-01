@@ -142,7 +142,8 @@ class CheckoutState {
       isBusy: isBusy ?? this.isBusy,
       loadingTime: loadingTime ?? this.loadingTime,
       loadingTables: loadingTables ?? this.loadingTables,
-      canSelectPaymentOption: canSelectPaymentOption ?? this.canSelectPaymentOption,
+      canSelectPaymentOption:
+          canSelectPaymentOption ?? this.canSelectPaymentOption,
       ageConfirmed: ageConfirmed ?? this.ageConfirmed,
     );
   }
@@ -169,7 +170,9 @@ class CheckoutController
       final prod = CartServices.productsInCart[0].product;
       primary = prod?.vendor;
       if (primary != null && prod?.vendor_type_id != null) {
-        primary.vendorTypeId = int.tryParse(prod!.vendor_type_id.toString()) ?? primary.vendorTypeId;
+        primary.vendorTypeId =
+            int.tryParse(prod!.vendor_type_id.toString()) ??
+            primary.vendorTypeId;
       }
     }
     return CheckoutState(checkout: arg, vendor: primary);
@@ -542,9 +545,12 @@ class CheckoutController
   }
 
   Future<void> placeOrder(BuildContext context, {bool ignore = false}) async {
-    final orderVendor = state.checkout.cartItems?.first.product?.vendor ?? state.vendor;
-    final isTattoo = orderVendor?.vendorType.slug.toLowerCase() == "tattoo" || orderVendor?.vendorTypeId == 13;
-    final requireSchedule = true;
+    final orderVendor =
+        state.checkout.cartItems?.first.product?.vendor ?? state.vendor;
+    final isTattoo =
+        orderVendor?.vendorType.slug.toLowerCase() == "tattoo" ||
+        orderVendor?.vendorTypeId == 13;
+    final requireSchedule = state.isScheduled;
 
     if (requireSchedule && state.checkout.deliverySlotDate.isEmptyOrNull) {
       AlertService.error(
@@ -559,18 +565,12 @@ class CheckoutController
         text: "Please select your desire order time".tr(),
       );
       return;
-    } else if (!state.isPickup && _pickupOnlyProduct()) {
-      AlertService.error(
-        title: "Product".tr(),
-        text:
-            "There seems to be products that can not be delivered in your cart"
-                .tr(),
-      );
-      return;
     } else if (state.hasAgeRestricted && !state.ageConfirmed) {
       AlertService.error(
         title: "Age Limit".tr(),
-        text: "You must be old enough to purchase this product. (Customer harus cukup umur untuk membeli produk ini)".tr(),
+        text:
+            "You must be old enough to purchase this product. (Customer harus cukup umur untuk membeli produk ini)"
+                .tr(),
       );
       return;
     } else if (!state.isPickup &&

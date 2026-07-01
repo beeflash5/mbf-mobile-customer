@@ -356,7 +356,7 @@ class ServiceBookingSummaryController
       final co = state.checkout;
 
       final bool hasGuests = state.guests.isNotEmpty;
-      final bool isTattoo = state.vendorTypeId == 13;
+      final bool isTattoo = mCheckout.isTattoo;
       final double taxRate =
           mCheckout.tax_rate ??
           (double.tryParse(state.vendor!.tax ?? "") ?? 0.0);
@@ -626,24 +626,27 @@ class ServiceBookingSummaryController
   Future<void> placeOrder(BuildContext context, {bool ignore = false}) async {
     final service = state.service;
     service.selectedQty = state.durationQty;
-    final isTattoo =
-        state.vendor?.vendorType.slug.toLowerCase() == "tattoo" ||
-        state.vendorTypeId == 13;
-    final requireSchedule = true;
+    final isTattoo = state.checkout.isTattoo;
+    final requireSchedule = !isTattoo;
 
-    if (requireSchedule && state.checkout.deliverySlotDate.isEmptyOrNull) {
-      AlertService.error(
-        title: "Schedule Date".tr(),
-        text: "Please select your desire order date".tr(),
-      );
-      return;
-    } else if (requireSchedule &&
-        state.checkout.deliverySlotTime.isEmptyOrNull) {
-      AlertService.error(
-        title: "Schedule Time".tr(),
-        text: "Please select your desire order time".tr(),
-      );
-      return;
+    final hasDate = !state.checkout.deliverySlotDate.isEmptyOrNull;
+    final hasTime = !state.checkout.deliverySlotTime.isEmptyOrNull;
+
+    if (requireSchedule || hasDate || hasTime) {
+      if (!hasDate) {
+        AlertService.error(
+          title: "Schedule Date".tr(),
+          text: "Please select your desire order date".tr(),
+        );
+        return;
+      }
+      if (!hasTime) {
+        AlertService.error(
+          title: "Schedule Time".tr(),
+          text: "Please select your desire order time".tr(),
+        );
+        return;
+      }
     }
     if (!state.isPickup &&
         service.location &&

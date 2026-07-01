@@ -63,7 +63,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             deliveryAddress: state.deliveryAddress,
             deliveryAddressOutOfRange: state.deliveryAddressOutOfRange,
           ),
-        if (vendor != null)
+        if (vendor != null && !state.isPickup)
           ScheduleOrderView(
             vendor: vendor,
             isScheduled: state.isScheduled,

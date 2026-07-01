@@ -33,6 +33,7 @@ class ScheduleOrderView extends StatelessWidget {
     this.onSelectTable,
     // Explicit override – caller knows better than vendor.isFoodOrBeverage
     this.isFoodOverride,
+    this.isTattooOverride,
   });
 
   final Vendor vendor;
@@ -52,12 +53,14 @@ class ScheduleOrderView extends StatelessWidget {
   final TextEditingController? guestCountController;
   final ValueChanged<String>? onSelectTable;
   final bool? isFoodOverride;
+  final bool? isTattooOverride;
 
   @override
   Widget build(BuildContext context) {
     final bool isTattoo =
-        vendor.vendorType.slug.toLowerCase() == "tattoo" ||
-        vendor.vendorType.id == 13;
+        isTattooOverride ??
+        (vendor.vendorType.slug.toLowerCase() == "tattoo" ||
+            vendor.vendorType.id == 13);
     final bool isServiceBooking =
         [
           "service",
@@ -251,7 +254,7 @@ class ScheduleOrderView extends StatelessWidget {
                       },
                     ),
 
-                if ((vendor.qty_tables ?? 0) > 0)
+                if (isFood && (vendor.qty_tables ?? 0) > 0)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -269,9 +272,7 @@ class ScheduleOrderView extends StatelessWidget {
                         textEditingController: guestCountController,
                       ),
                       UiSpacer.verticalSpace(space: 20),
-                      if (vendor.can_dinein == true &&
-                          (vendor.qty_tables ?? 0) > 0 &&
-                          onSelectTable != null)
+                      if (isFood && (vendor.qty_tables ?? 0) > 0)
                         Column(
                           children: [
                             "Dine-in".tr().text.lg.make(),

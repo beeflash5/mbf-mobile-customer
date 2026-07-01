@@ -133,7 +133,7 @@ class Vendor {
   String? shareable_link;
   String? deep_link;
   int? qty_tables;
-  bool? can_dinein;
+  int? can_dinein;
   // List<int>? table_use;
   //
   List<VendorDay> days = [];
@@ -208,7 +208,11 @@ class Vendor {
           json["charge_per_km"] == null
               ? 0
               : int.parse(json["charge_per_km"].toString()),
-      isOpen: json["is_open"] == null ? true : (json["is_open"].toString() == "1" || json["is_open"].toString() == "true"),
+      isOpen:
+          json["is_open"] == null
+              ? true
+              : (json["is_open"].toString() == "1" ||
+                  json["is_open"].toString() == "true"),
       isActive:
           json["is_active"] == null
               ? 0
@@ -281,11 +285,13 @@ class Vendor {
       hasSubcategories:
           json["has_sub_categories"] == null
               ? false
-              : (json["has_sub_categories"].toString() == "1" || json["has_sub_categories"].toString() == "true"),
+              : (json["has_sub_categories"].toString() == "1" ||
+                  json["has_sub_categories"].toString() == "true"),
       allowScheduleOrder:
           json["allow_schedule_order"] == null
               ? false
-              : (json["allow_schedule_order"].toString() == "1" || json["allow_schedule_order"].toString() == "true"),
+              : (json["allow_schedule_order"].toString() == "1" ||
+                  json["allow_schedule_order"].toString() == "true"),
 
       //
       minOrder:
@@ -334,9 +340,7 @@ class Vendor {
           json["qty_tables"] == null
               ? 0
               : int.tryParse(json["qty_tables"].toString()) ?? 0,
-      can_dinein: json["can_dinein"] == null
-          ? null
-          : (json["can_dinein"].toString() == "1" || json["can_dinein"].toString() == "true" || json["can_dinein"] == true),
+      can_dinein: json["can_dinein"],
     );
 
     //check if distance is null, then call utils to calculate distance
@@ -420,8 +424,20 @@ class Vendor {
     final hasFoodCategory = categories.any((cat) {
       final catSlug = (cat.slug ?? "").toLowerCase();
       final catSlugUrl = (cat.slugUrl ?? "").toLowerCase();
-      return ["food", "beverage", "beverages", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(catSlug) ||
-          ["food", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(catSlugUrl) ||
+      return [
+            "food",
+            "beverage",
+            "beverages",
+            "food-beverage",
+            "/products-category/food-beverage",
+            "products-category/food-beverage",
+          ].contains(catSlug) ||
+          [
+            "food",
+            "food-beverage",
+            "/products-category/food-beverage",
+            "products-category/food-beverage",
+          ].contains(catSlugUrl) ||
           catSlug.contains("food") ||
           catSlugUrl.contains("food") ||
           catSlug.contains("beverage") ||
@@ -434,8 +450,20 @@ class Vendor {
         (qty_tables != null && qty_tables! > 0) ||
         vendorTypeId == 2 ||
         hasFoodCategory ||
-        ["food", "beverage", "beverages", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(slug) ||
-        ["food", "food-beverage", "/products-category/food-beverage", "products-category/food-beverage"].contains(slugUrl) ||
+        [
+          "food",
+          "beverage",
+          "beverages",
+          "food-beverage",
+          "/products-category/food-beverage",
+          "products-category/food-beverage",
+        ].contains(slug) ||
+        [
+          "food",
+          "food-beverage",
+          "/products-category/food-beverage",
+          "products-category/food-beverage",
+        ].contains(slugUrl) ||
         slug.contains("food") ||
         slugUrl.contains("food") ||
         slug.contains("beverage") ||
