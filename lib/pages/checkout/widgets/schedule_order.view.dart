@@ -253,7 +253,7 @@ class ScheduleOrderView extends StatelessWidget {
                       },
                     ),
 
-                if ((isFood || vendor.can_dinein == true || (vendor.qty_tables ?? 0) > 0) &&
+                if ((isFood || vendor.can_dinein == true) &&
                     !isTattoo &&
                     guestCountController != null)
                   Column(
@@ -273,7 +273,7 @@ class ScheduleOrderView extends StatelessWidget {
                         textEditingController: guestCountController,
                       ),
                       UiSpacer.verticalSpace(space: 20),
-                      if ((vendor.can_dinein == true || isFood) &&
+                      if (vendor.can_dinein == true &&
                           (vendor.qty_tables ?? 0) > 0 &&
                           onSelectTable != null)
                         Column(

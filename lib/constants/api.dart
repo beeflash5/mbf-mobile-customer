@@ -1,5 +1,5 @@
-import 'package:fuodz/services/auth.service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fuodz/services/auth.service.dart';
 
 class Api {
   // REST API → Spring backend (api.mybalifriendz.co). The endpoint paths below
