@@ -55,7 +55,7 @@ class VendorTypeHomeListItemVerticalHome extends StatelessWidget {
                     vendorType.name.text
                         .overflow(TextOverflow.ellipsis)
                         .sm
-                        .color(Colors.black)
+                        // .color(Colors.black)
                         .make(),
                   ],
                 ).centered(), // ❗ HAPUS .w()
