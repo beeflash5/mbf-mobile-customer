@@ -162,14 +162,15 @@ class Order {
   static DateTime _parseDateTime(dynamic value) {
     if (value == null) return DateTime.now();
     final str = value.toString();
-    if (str.endsWith("Z") || 
-        str.contains("+") || 
-        (str.lastIndexOf("-") > 10)) {
+    if (str.endsWith("Z") || str.contains("+") || (str.lastIndexOf("-") > 10)) {
       return DateTime.tryParse(str)?.toLocal() ?? DateTime.now();
     }
-    return (DateTime.tryParse(str.contains("T") ? "${str}Z" : "${str.replaceFirst(' ', 'T')}Z") ?? 
-            DateTime.tryParse(str) ?? 
-            DateTime.now()).toLocal();
+    return (DateTime.tryParse(
+              str.contains("T") ? "${str}Z" : "${str.replaceFirst(' ', 'T')}Z",
+            ) ??
+            DateTime.tryParse(str) ??
+            DateTime.now())
+        .toLocal();
   }
 
   factory Order.fromJson(dynamic json) {
@@ -225,7 +226,9 @@ class Order {
               : double.tryParse(json["tax_rate"].toString()),
       tip: json["tip"] == null ? null : double.tryParse(json["tip"].toString()),
       total:
-          json["total"] == null ? null : double.tryParse(json["total"].toString()),
+          json["total"] == null
+              ? null
+              : double.tryParse(json["total"].toString()),
       deliveryAddressId:
           json["delivery_address_id"] == null
               ? null
@@ -240,7 +243,9 @@ class Order {
               ? null
               : int.tryParse(json["vendor_id"].toString()),
       userId:
-          json["user_id"] == null ? 0 : int.tryParse(json["user_id"].toString()) ?? 0,
+          json["user_id"] == null
+              ? 0
+              : int.tryParse(json["user_id"].toString()) ?? 0,
       driverId:
           json["driver_id"] == null
               ? null
@@ -248,8 +253,11 @@ class Order {
       createdAt: _parseDateTime(json["created_at"]),
       updatedAt: _parseDateTime(json["updated_at"]),
       formattedDate:
-          json["formatted_date"] == null ? null : json["formatted_date"],
-      paymentLink: json["payment_link"] == null ? "" : json["payment_link"],
+          json["formatted_date"] == null
+              ? ""
+              : json["formatted_date"].toString(),
+      paymentLink:
+          json["payment_link"] == null ? "" : json["payment_link"].toString(),
       //
       statuses:
           json["statuses"] == null
@@ -334,7 +342,10 @@ class Order {
       attach: json["attach"] != null ? json["attach"] : null,
 
       dp: json["dp"] == null ? null : double.tryParse(json["dp"].toString()),
-      sisa: json["sisa"] == null ? null : double.tryParse(json["sisa"].toString()),
+      sisa:
+          json["sisa"] == null
+              ? null
+              : double.tryParse(json["sisa"].toString()),
       dp_status:
           json["dp_status"] == null
               ? 0
@@ -355,7 +366,9 @@ class Order {
       checkin_status: json["checkin_status"] ?? false,
       can_reschedule: json["can_reschedule"] ?? false,
       check_in:
-          json["check_in"] == null ? 0 : int.tryParse(json["check_in"].toString()) ?? 0,
+          json["check_in"] == null
+              ? 0
+              : int.tryParse(json["check_in"].toString()) ?? 0,
       confirmation_note:
           json["confirmation_note"] == null ? null : json["confirmation_note"],
       confirmation_customer:

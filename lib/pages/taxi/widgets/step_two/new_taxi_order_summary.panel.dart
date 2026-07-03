@@ -8,7 +8,7 @@ import 'package:fuodz/component/button/custom_text_button.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/pages/taxi/widgets/order_taxi.button.dart';
 import 'package:fuodz/pages/taxi/widgets/step_two/new_taxi_order_payment_method.selection_view.dart';
-import 'package:fuodz/pages/taxi/widgets/step_two/new_taxi_order_vehicle_type.list_view.dart';
+import 'package:fuodz/pages/taxi/widgets/step_two/new_style_taxi_order_vehicle_type.list_view.dart';
 import 'package:fuodz/pages/taxi/widgets/taxi_discount_section.dart';
 import 'package:fuodz/providers/taxi_order_summary_providers.dart';
 import 'package:fuodz/providers/taxi_providers.dart';
@@ -49,7 +49,7 @@ class NewTaxiOrderSummaryPanel extends ConsumerWidget {
                     ).h(24),
                   ]),
                   UiSpacer.verticalSpace(),
-                  TaxiVehicleTypeListView(
+                  NewTaxiVehicleTypeListView(
                     vendorType: vendorType,
                     min: false,
                   ).expand(),

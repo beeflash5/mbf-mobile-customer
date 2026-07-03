@@ -1084,7 +1084,30 @@ class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
     if (!apiResponse.allGood) {
       AlertService.error(title: "Order failed".tr(), text: apiResponse.message);
     } else {
-      final order = Order.fromJson(apiResponse.body["order"]);
+      dynamic orderJson = apiResponse.body["order"];
+      if (orderJson == null && apiResponse.body is Map) {
+        if (apiResponse.body["data"] != null && apiResponse.body["data"] is Map && apiResponse.body["data"]["order"] != null) {
+          orderJson = apiResponse.body["data"]["order"];
+        } else if (apiResponse.body.containsKey("id")) {
+          orderJson = apiResponse.body;
+        } else if (apiResponse.body.containsKey("order_id")) {
+          orderJson = {
+            "id": apiResponse.body["order_id"],
+            "code": apiResponse.body["code"],
+            "payment_link": apiResponse.body["link"],
+            "status": "pending",
+            "payment_status": "pending",
+            "user": null,
+          };
+        }
+      }
+
+      if (orderJson == null) {
+        AlertService.error(title: "Order failed".tr(), text: "Invalid server response or order is null");
+        return;
+      }
+      
+      final order = Order.fromJson(orderJson);
       state = state.copyWith(onGoingOrderTrip: order);
       final paymentLink = apiResponse.body["link"];
       if (paymentLink != null && paymentLink.toString().trim().isNotEmpty) {

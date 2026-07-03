@@ -43,7 +43,17 @@ class TaxiRequest extends ApiService {
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       List<VehicleType> vehicleTypes = [];
-      (apiResponse.body as List).forEach((object) {
+      dynamic responseBody = apiResponse.body;
+      List<dynamic> listData = [];
+      if (responseBody is List) {
+        listData = responseBody;
+      } else if (responseBody is Map && responseBody.containsKey('data')) {
+        listData = responseBody['data'];
+      } else if (responseBody is Map) {
+        print("API Response body is an unhandled Map: $responseBody");
+      }
+
+      listData.forEach((object) {
         //
         try {
           final vehicleType = VehicleType.fromJson(object);
