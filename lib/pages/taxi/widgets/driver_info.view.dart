@@ -38,6 +38,8 @@ class TaxiDriverInfoView extends StatelessWidget {
         ]).px12().expand(),
         //vehicle info
         VStack([
+          if (order.taxiOrder?.vehicleType != null)
+            "${order.taxiOrder?.vehicleType.name}".text.lg.bold.make(),
           "${driver.vehicle?.reg_no}".text.xl2.semiBold.make(),
           "${driver.vehicle?.vehicleInfo}".text.medium.sm.make(),
         ], crossAlignment: CrossAxisAlignment.end),
