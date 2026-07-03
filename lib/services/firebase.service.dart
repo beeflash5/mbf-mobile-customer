@@ -26,8 +26,10 @@ import 'package:fuodz/services/chat.service.dart';
 import 'package:fuodz/services/notification.service.dart';
 import 'package:fuodz/services/toast.service.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:singleton/singleton.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'firebase_token.service.dart';
 
@@ -93,10 +95,20 @@ class FirebaseService {
       return;
     }
 
-    String? bodyStr = (message?.notification?.body ?? body ?? message?.data["body"])?.toString().toLowerCase();
-    String? titleStr = (message?.notification?.title ?? title ?? message?.data["title"])?.toString().toLowerCase();
-    if ((bodyStr != null && (bodyStr.contains("konfirmasi pesanan") || bodyStr.contains("harap konfirmasi"))) ||
-        (titleStr != null && (titleStr.contains("konfirmasi pesanan") || titleStr.contains("harap konfirmasi")))) {
+    String? bodyStr =
+        (message?.notification?.body ?? body ?? message?.data["body"])
+            ?.toString()
+            .toLowerCase();
+    String? titleStr =
+        (message?.notification?.title ?? title ?? message?.data["title"])
+            ?.toString()
+            .toLowerCase();
+    if ((bodyStr != null &&
+            (bodyStr.contains("konfirmasi pesanan") ||
+                bodyStr.contains("harap konfirmasi"))) ||
+        (titleStr != null &&
+            (titleStr.contains("konfirmasi pesanan") ||
+                titleStr.contains("harap konfirmasi")))) {
       return;
     }
 
@@ -128,10 +140,20 @@ class FirebaseService {
       return;
     }
 
-    String? bodyStr = (message.notification?.body ?? message.data["body"])?.toString().toLowerCase();
-    String? titleStr = (message.notification?.title ?? message.data["title"])?.toString().toLowerCase();
-    if ((bodyStr != null && (bodyStr.contains("konfirmasi pesanan") || bodyStr.contains("harap konfirmasi"))) ||
-        (titleStr != null && (titleStr.contains("konfirmasi pesanan") || titleStr.contains("harap konfirmasi")))) {
+    String? bodyStr =
+        (message.notification?.body ?? message.data["body"])
+            ?.toString()
+            .toLowerCase();
+    String? titleStr =
+        (message.notification?.title ?? message.data["title"])
+            ?.toString()
+            .toLowerCase();
+    if ((bodyStr != null &&
+            (bodyStr.contains("konfirmasi pesanan") ||
+                bodyStr.contains("harap konfirmasi"))) ||
+        (titleStr != null &&
+            (titleStr.contains("konfirmasi pesanan") ||
+                titleStr.contains("harap konfirmasi")))) {
       return;
     }
 
@@ -214,6 +236,10 @@ class FirebaseService {
         final hasProduct = notificationPayloadData!.containsKey("product");
         final hasVendor = notificationPayloadData!.containsKey("vendor");
         final hasService = notificationPayloadData!.containsKey("service");
+        final hasUpdateApps = notificationPayloadData!.containsKey(
+          "update_application",
+        );
+
         //
         if (isChat) {
           String chatPath = notificationPayloadData!['path'] ?? "";
@@ -339,6 +365,32 @@ class FirebaseService {
             GoRouter.of(
               AppService().navigatorKey.currentContext!,
             ).go(AppRoutes.homeRoute);
+          }
+        } else if (hasUpdateApps) {
+          print("Opening app store for update");
+          try {
+            PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+            if (Platform.isAndroid) {
+              // Google Play
+              final packageName = packageInfo.packageName;
+
+              await launchUrl(
+                Uri.parse("market://details?id=$packageName"),
+                mode: LaunchMode.externalApplication,
+              );
+            } else if (Platform.isIOS) {
+              // App Store
+
+              const appStoreId = "id6781575289";
+
+              await launchUrl(
+                Uri.parse("https://apps.apple.com/app/id$appStoreId"),
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          } catch (error) {
+            ToastService.toastError("Unable to open the app store".tr());
           }
         }
         //regular notifications
