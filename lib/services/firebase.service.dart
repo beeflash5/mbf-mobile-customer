@@ -79,7 +79,11 @@ class FirebaseService {
     //normal notification listener
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       saveNewNotification(message);
-      showNotification(message);
+
+        if (Platform.isAndroid) {
+    showNotification(message);
+  }
+      
       //
       refreshOrdersList(message);
     });

@@ -80,25 +80,27 @@ class _HomePageState extends ConsumerState<HomePage>
       child: BasePage(
         backgroundColor: AppColor.faintBgColor,
         body: SafeArea(
-          child: UpgradeAlert(
-            showIgnore: !AppUpgradeSettings.forceUpgrade(),
-            shouldPopScope: () => !AppUpgradeSettings.forceUpgrade(),
-            dialogStyle:
-                Platform.isIOS
-                    ? UpgradeDialogStyle.cupertino
-                    : UpgradeDialogStyle.material,
-            upgrader: Upgrader(),
-            child: PageView(
-              controller: notifier.pageController,
-              onPageChanged: notifier.onPageChanged,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                _homeView ?? WelcomePage(),
-                MainSearchPage(),
-                const OrdersPage(),
-                ProfilePage(),
-              ],
-            ),
+          child:
+          // UpgradeAlert(
+          //   showIgnore: !AppUpgradeSettings.forceUpgrade(),
+          //   shouldPopScope: () => !AppUpgradeSettings.forceUpgrade(),
+          //   dialogStyle:
+          //       Platform.isIOS
+          //           ? UpgradeDialogStyle.cupertino
+          //           : UpgradeDialogStyle.material,
+          //   upgrader: Upgrader(),
+          //   child:
+          PageView(
+            controller: notifier.pageController,
+            onPageChanged: notifier.onPageChanged,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _homeView ?? WelcomePage(),
+              MainSearchPage(),
+              const OrdersPage(),
+              ProfilePage(),
+            ],
+            // ),
           ),
         ),
         fab: AppUISettings.showCart ? const CartHomeFab() : null,

@@ -97,7 +97,7 @@ class AuthServices {
         "${currentUser!.id}",
         "${currentUser!.role}",
         "client",
-        // "doc",
+        //"doc",
       ];
 
       for (var role in roles) {
