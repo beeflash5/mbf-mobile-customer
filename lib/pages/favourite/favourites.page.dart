@@ -281,8 +281,20 @@ class FavouritesPage extends ConsumerWidget {
                             service.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
                           ),
-                          subtitle: Text(service.vendor.name),
+                          subtitle: Text(
+                            service.vendor.name,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white70
+                                  : Colors.black87,
+                            ),
+                          ),
                           onTap:
                               () => _openServiceDetails(context, ref, service),
                         ).box

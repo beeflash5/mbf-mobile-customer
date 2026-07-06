@@ -18,17 +18,23 @@ class FavVendorTag extends ConsumerStatefulWidget {
 }
 
 class _FavVendorTagState extends ConsumerState<FavVendorTag> {
+  late bool _isFav;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFav = widget.vendor.isFavourite;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isBusy =
-        ref
-            .watch(favouriteVendorControllerProvider(widget.vendor.id))
-            .isLoading;
+        ref.watch(favouriteVendorControllerProvider(widget.vendor.id)).isLoading;
 
     return isBusy
         ? BusyIndicator().wh(18, 18).p4()
         : Icon(
-          widget.vendor.isFavourite ? Icons.favorite : Icons.favorite_border,
+          _isFav ? Icons.favorite : Icons.favorite_border,
           size: 22,
           color: Theme.of(context).primaryColor,
         ).p4().onTap(_handleTap);
@@ -43,9 +49,12 @@ class _FavVendorTagState extends ConsumerState<FavVendorTag> {
     }
     final result = await ref
         .read(favouriteVendorControllerProvider(widget.vendor.id).notifier)
-        .toggle(vendorId: widget.vendor.id, current: widget.vendor.isFavourite);
+        .toggle(vendorId: widget.vendor.id, current: _isFav);
     if (result != null && mounted) {
-      setState(() => widget.vendor.isFavourite = result);
+      setState(() {
+        _isFav = result;
+        widget.vendor.isFavourite = result;
+      });
     }
   }
 }

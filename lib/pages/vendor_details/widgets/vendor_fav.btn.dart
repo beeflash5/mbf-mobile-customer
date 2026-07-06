@@ -21,6 +21,13 @@ class VendorFavButton extends ConsumerStatefulWidget {
 
 class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
   bool _busy = false;
+  late bool _isFav;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFav = widget.vendor.isFavourite;
+  }
 
   Future<void> _toggleFav() async {
     if (!AuthServices.authenticated()) {
@@ -33,20 +40,20 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
     );
     final result = await notifier.toggle(
       vendorId: widget.vendor.id,
-      current: widget.vendor.isFavourite,
+      current: _isFav,
     );
     if (!mounted) return;
     setState(() => _busy = false);
 
     if (result != null) {
-      // result contains the new isFavourite value
       setState(() {
+        _isFav = result;
         widget.vendor.isFavourite = result;
       });
       if (result) {
         AlertService.success(text: "Added to favourite list");
       } else {
-        AlertService.success(text: "Removed from favourite list");
+        AlertService.error(text: "Removed from favourite list");
       }
     } else {
       AlertService.error(text: "Failed to update favourite");
@@ -59,7 +66,7 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
       loading: _busy,
       color: Colors.transparent,
       child: Icon(
-        (!AuthServices.authenticated() || !widget.vendor.isFavourite)
+        (!AuthServices.authenticated() || !_isFav)
             ? Icons.favorite_border
             : Icons.favorite,
         color: widget.color ?? Colors.red,

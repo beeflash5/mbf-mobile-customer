@@ -21,6 +21,13 @@ class ProductFavButton extends ConsumerStatefulWidget {
 
 class _ProductFavButtonState extends ConsumerState<ProductFavButton> {
   bool _busy = false;
+  late bool _isFav;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFav = widget.product.isFavourite;
+  }
 
   Future<void> _toggleFav() async {
     if (!AuthServices.authenticated()) {
@@ -32,14 +39,25 @@ class _ProductFavButtonState extends ConsumerState<ProductFavButton> {
       productDetailsControllerProvider(widget.product).notifier,
     );
     final result =
-        widget.product.isFavourite
+        _isFav
             ? await notifier.removeFromFavourite()
             : await notifier.addToFavourite();
     if (!mounted) return;
-    setState(() => _busy = false);
+    setState(() {
+      _busy = false;
+      if (result.ok) {
+        _isFav = !_isFav;
+        widget.product.isFavourite = _isFav;
+      }
+    });
     if (result.ok) {
       if (result.message != null) {
-        AlertService.success(text: result.message!);
+        if (_isFav) {
+          // _isFav was true before toggle → we just removed
+          AlertService.error(text: result.message!);
+        } else {
+          AlertService.success(text: result.message!);
+        }
       }
     } else if (result.message != null) {
       AlertService.error(text: result.message!);
@@ -48,15 +66,11 @@ class _ProductFavButtonState extends ConsumerState<ProductFavButton> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncState = ref.watch(
-      productDetailsControllerProvider(widget.product),
-    );
-    final liveProduct = asyncState.valueOrNull?.product ?? widget.product;
     return CustomOutlineButton(
       loading: _busy,
       color: Colors.transparent,
       child: Icon(
-        (!AuthServices.authenticated() || !liveProduct.isFavourite)
+        (!AuthServices.authenticated() || !_isFav)
             ? Icons.favorite_border
             : Icons.favorite,
         color: widget.color ?? Colors.red,
