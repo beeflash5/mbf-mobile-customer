@@ -8,6 +8,7 @@ import 'package:fuodz/component/custom_text_form_field.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/providers/taxi_providers.dart';
 import 'package:fuodz/utils/app_colors.dart';
+import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class TaxiDiscountSection extends ConsumerWidget {
@@ -59,7 +60,15 @@ class TaxiDiscountSection extends ConsumerWidget {
                   loading: taxiState.couponBusy,
                   onPressed:
                       taxiState.canApplyCoupon
-                          ? taxiController.applyCoupon
+                          ? () async {
+                              final success = await taxiController.applyCoupon();
+                              if (success) {
+                                AlertService.success(
+                                  title: "Coupon Applied".tr(),
+                                  text: "Coupon applied successfully".tr(),
+                                );
+                              }
+                            }
                           : null,
                 ).h(Vx.dp56),
                 taxiState.couponError != null

@@ -1,8 +1,7 @@
-import 'package:custom_faqs/custom_faqs.dart';
+import 'package:fuodz/pages/profile/faq.page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/checkout.dart';
 import 'package:fuodz/models/order.dart';
@@ -426,9 +425,7 @@ class AppRouter {
       GoRoute(
         path: '/faq',
         name: 'faq',
-        builder:
-            (_, __) =>
-                CustomFaqPage(title: 'Faqs', link: Api.baseUrl + Api.faqs),
+        builder: (_, __) => const FaqPage(),
       ),
     ],
   );

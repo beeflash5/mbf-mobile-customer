@@ -712,17 +712,18 @@ class NewParcelController
     state = state.copyWith(canApplyCoupon: code.isNotEmpty);
   }
 
-  Future<void> applyCoupon() async {
+  Future<bool> applyCoupon() async {
     state = state.copyWith(couponBusy: true);
     try {
       await prepareOrderSummary();
-      state = state.copyWith(couponError: null);
+      state = state.copyWith(couponError: null, couponBusy: false);
+      return true;
     } catch (error) {
       // ignore: avoid_print
       print("NewParcel applyCoupon error: $error");
-      state = state.copyWith(couponError: error);
+      state = state.copyWith(couponError: error, couponBusy: false);
+      return false;
     }
-    state = state.copyWith(couponBusy: false);
   }
 
   void clearCoupon() {

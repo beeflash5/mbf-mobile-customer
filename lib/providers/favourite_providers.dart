@@ -23,6 +23,9 @@ class FavouriteProductController extends FamilyAsyncNotifier<bool, int> {
               ? await req.removeFavourite(productId)
               : await req.makeFavourite(productId);
       final newVal = res.allGood ? !current : current;
+      if (res.allGood) {
+        ref.read(favouriteIdsProvider.notifier).toggleProduct(productId, newVal);
+      }
       state = AsyncData(false);
       return res.allGood ? newVal : null;
     } catch (e, st) {
@@ -64,3 +67,37 @@ final favouriteVendorControllerProvider =
     AsyncNotifierProvider.family<FavouriteVendorController, bool, int>(
       FavouriteVendorController.new,
     );
+
+class FavouriteIdsNotifier extends StateNotifier<AsyncValue<Map<String, List<int>>>> {
+  final Ref ref;
+  FavouriteIdsNotifier(this.ref) : super(const AsyncLoading()) {
+    fetchIds();
+  }
+
+  Future<void> fetchIds() async {
+    try {
+      final req = ref.read(_favouriteRequestProvider);
+      final ids = await req.getFavouriteIds();
+      state = AsyncData(ids);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
+  }
+
+  void toggleProduct(int productId, bool isFav) {
+    if (state is AsyncData) {
+      final data = state.value!;
+      final pIds = List<int>.from(data['product_ids'] ?? []);
+      if (isFav && !pIds.contains(productId)) {
+        pIds.add(productId);
+      } else if (!isFav) {
+        pIds.remove(productId);
+      }
+      state = AsyncData({...data, 'product_ids': pIds});
+    }
+  }
+}
+
+final favouriteIdsProvider = StateNotifierProvider<FavouriteIdsNotifier, AsyncValue<Map<String, List<int>>>>((ref) {
+  return FavouriteIdsNotifier(ref);
+});

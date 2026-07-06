@@ -157,45 +157,55 @@ class _SearchFilterBottomSheetState
                             .text
                             .color(const Color(0xff828282))
                             .make(),
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            thumbColor: const Color(0xffEEC860),
-                            inactiveTrackColor: Colors.grey.shade300,
-                            rangeThumbShape: const RoundRangeSliderThumbShape(
-                              enabledThumbRadius: 10,
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: widget.search?.minPrice,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  hintText: "Min",
+                                  filled: true,
+                                  fillColor: context.theme.colorScheme.surface,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                  ),
+                                ),
+                                style: TextStyle(color: context.textTheme.bodyMedium?.color),
+                                onChanged: (v) => widget.search?.minPrice = v,
+                              ),
                             ),
-                          ),
-                          child: FormBuilderRangeSlider(
-                            key: ValueKey(
-                              "${widget.search?.minPrice}-${widget.search?.maxPrice}-$_refreshKey",
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: widget.search?.maxPrice,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  hintText: "Max",
+                                  filled: true,
+                                  fillColor: context.theme.colorScheme.surface,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                  ),
+                                ),
+                                style: TextStyle(color: context.textTheme.bodyMedium?.color),
+                                onChanged: (v) => widget.search?.maxPrice = v,
+                              ),
                             ),
-                            name: "price",
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            initialValue: RangeValues(
-                              (double.tryParse(
-                                        widget.search?.minPrice ?? "0",
-                                      ) ??
-                                      0)
-                                  .clamp(0, 1000000)
-                                  .toDouble(),
-                              (double.tryParse(
-                                        widget.search?.maxPrice ?? "1000000",
-                                      ) ??
-                                      1000000)
-                                  .clamp(0, 1000000)
-                                  .toDouble(),
-                            ),
-                            min: 0,
-                            max: 1000000,
-                            onChanged: (values) {
-                              widget.search?.minPrice =
-                                  values?.start.toInt().toString();
-                              widget.search?.maxPrice =
-                                  values?.end.toInt().toString();
-                            },
-                          ).wFull(context),
+                          ],
                         ),
                       ],
                     ),
@@ -220,7 +230,7 @@ class _SearchFilterBottomSheetState
                           value: widget.search?.ratting,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: context.theme.colorScheme.surface,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 14,
@@ -238,9 +248,9 @@ class _SearchFilterBottomSheetState
                               ),
                             ),
                           ),
-                          hint: const Text("Select rating"),
-                          dropdownColor: Colors.white,
-                          iconEnabledColor: Colors.black,
+                          hint: Text("Select rating", style: TextStyle(color: context.textTheme.bodyMedium?.color)),
+                          dropdownColor: context.theme.colorScheme.surface,
+                          iconEnabledColor: context.textTheme.bodyMedium?.color,
                           items: List.generate(5, (index) {
                             final rating = index + 1;
                             return DropdownMenuItem<int>(
@@ -253,7 +263,7 @@ class _SearchFilterBottomSheetState
                                     size: 18,
                                   ),
                                   8.widthBox,
-                                  Text("$rating+"),
+                                  Text("$rating+", style: TextStyle(color: context.textTheme.bodyMedium?.color)),
                                 ],
                               ),
                             );

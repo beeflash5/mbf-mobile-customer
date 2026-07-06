@@ -942,7 +942,7 @@ class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
     state = state.copyWith(canScheduleTaxiOrder: enabled, checkout: co);
   }
 
-  Future<void> applyCoupon() async {
+  Future<bool> applyCoupon() async {
     state = state.copyWith(couponBusy: true);
     try {
       final coupon = await _cartRequest.fetchCoupon(
@@ -951,12 +951,13 @@ class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
       );
       if (coupon.useLeft <= 0) throw "Coupon use limit exceeded".tr();
       if (coupon.expired) throw "Coupon has expired".tr();
-      state = state.copyWith(coupon: coupon, couponError: null);
+      state = state.copyWith(coupon: coupon, couponError: null, couponBusy: false);
       calculateTotalAmount();
+      return true;
     } catch (error) {
-      state = state.copyWith(couponError: error);
+      state = state.copyWith(couponError: error, couponBusy: false);
+      return false;
     }
-    state = state.copyWith(couponBusy: false);
   }
 
   Future<void> proceedToStep2(BuildContext context) async {

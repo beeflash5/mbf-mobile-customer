@@ -99,4 +99,24 @@ class FavouriteRequest extends ApiService {
     final apiResult = await delete("${Api.favouriteVendors}/$vendorId");
     return ApiResponse.fromResponse(apiResult);
   }
+
+  //
+  Future<Map<String, List<int>>> getFavouriteIds() async {
+    final apiResult = await get("${Api.favourites}/ids");
+    final apiResponse = ApiResponse.fromResponse(apiResult);
+    if (apiResponse.allGood) {
+      try {
+        final data = apiResponse.body as Map<String, dynamic>;
+        final productIds = (data['product_ids'] as List).map((e) => e as int).toList();
+        final serviceIds = (data['service_ids'] as List).map((e) => e as int).toList();
+        return {
+          'product_ids': productIds,
+          'service_ids': serviceIds,
+        };
+      } catch (e) {
+        return {'product_ids': [], 'service_ids': []};
+      }
+    }
+    throw apiResponse.message!;
+  }
 }

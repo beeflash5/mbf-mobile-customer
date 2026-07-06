@@ -35,10 +35,6 @@ dependencies:
   cupertino_icons: ^1.0.5
   currency_formatter: ^2.0.1
   custom_clippers: ^2.0.0
-  custom_faqs:
-    git:
-      url: https://github.com/ambrosethebuild/custom_faqs
-      ref: main
   dartx: ^1.1.0
   device_info_plus: ^12.1.0
   dio: ^5.8.0+1

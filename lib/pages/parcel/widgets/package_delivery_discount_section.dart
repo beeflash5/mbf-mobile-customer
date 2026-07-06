@@ -5,6 +5,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:fuodz/component/button/custom_button.dart';
 import 'package:fuodz/component/custom_text_form_field.dart';
 import 'package:fuodz/providers/new_parcel_providers.dart';
+import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class ParcelDeliveryDiscountSection extends StatefulWidget {
@@ -51,11 +52,17 @@ class _ParcelDeliveryDiscountSectionState
                 loading: state.couponBusy,
                 onPressed:
                     state.canApplyCoupon
-                        ? () {
-                          if (controller.couponTEC.text.isEmpty) return;
-                          controller.applyCoupon();
-                          setState(() => showClearButton = true);
-                        }
+                        ? () async {
+                            if (controller.couponTEC.text.isEmpty) return;
+                            final success = await controller.applyCoupon();
+                            if (success) {
+                              setState(() => showClearButton = true);
+                              AlertService.success(
+                                title: "Coupon Applied".tr(),
+                                text: "Coupon applied successfully".tr(),
+                              );
+                            }
+                          }
                         : null,
               ).h(48),
             ),

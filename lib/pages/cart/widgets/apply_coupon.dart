@@ -10,6 +10,7 @@ import 'package:fuodz/component/states/empty.state.dart';
 import 'package:fuodz/pages/auth/login.page.dart';
 import 'package:fuodz/providers/cart_providers.dart';
 import 'package:fuodz/services/auth.service.dart';
+import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 
 class ApplyCoupon extends ConsumerStatefulWidget {
@@ -48,12 +49,18 @@ class _ApplyCouponState extends ConsumerState<ApplyCoupon> {
                   isFixedHeight: true,
                   loading: _busy,
                   onPressed:
-                      state.canApplyCoupon
+                    state.canApplyCoupon
                           ? () async {
-                            setState(() => _busy = true);
-                            await notifier.applyCoupon(_couponTEC.text);
-                            if (mounted) setState(() => _busy = false);
-                          }
+                              setState(() => _busy = true);
+                              final result = await notifier.applyCoupon(_couponTEC.text);
+                              if (mounted) setState(() => _busy = false);
+                              if (result is CouponSuccess) {
+                                AlertService.success(
+                                  title: "Coupon Applied".tr(),
+                                  text: "Coupon applied successfully".tr(),
+                                );
+                              }
+                            }
                           : null,
                 ).w(62).p8(),
           )

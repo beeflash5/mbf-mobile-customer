@@ -572,7 +572,7 @@ class ServiceBookingSummaryController
     state = state.copyWith(canApplyCoupon: code.isNotBlank);
   }
 
-  Future<void> applyCoupon() async {
+  Future<bool> applyCoupon() async {
     state = state.copyWith(couponBusy: true);
     try {
       final coupon = await _cartRequest.fetchCoupon(
@@ -590,14 +590,15 @@ class ServiceBookingSummaryController
       } else {
         co.discount = coupon.discount;
       }
-      state = state.copyWith(coupon: coupon, checkout: co, couponError: null);
+      state = state.copyWith(coupon: coupon, checkout: co, couponError: null, couponBusy: false);
       _updateTotalOrderSummary();
+      return true;
     } catch (error) {
       // ignore: avoid_print
       print("ServiceBooking applyCoupon error: $error");
-      state = state.copyWith(couponError: error);
+      state = state.copyWith(couponError: error, couponBusy: false);
+      return false;
     }
-    state = state.copyWith(couponBusy: false);
   }
 
   bool _verifyVendorOrderAmountCheck() {

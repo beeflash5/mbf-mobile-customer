@@ -18,6 +18,7 @@ import 'package:fuodz/pages/checkout/widgets/schedule_order.view.dart';
 import 'package:fuodz/pages/service/widgets/service_delivery_address.view.dart';
 import 'package:fuodz/pages/service/widgets/service_discount_section.dart';
 import 'package:fuodz/providers/service_booking_summary_providers.dart';
+import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app_currency_system.service.dart';
 import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/app_images.dart';
@@ -236,7 +237,8 @@ class _ServiceBookingSummaryPageState
                     ),
                   ),
                 // For tattoo, ScheduleOrderView appears before Tattoo Type
-                if (vendor != null && (state.checkout.isTattoo || state.vendorTypeId == 13))
+                if (vendor != null &&
+                    (state.checkout.isTattoo || state.vendorTypeId == 13))
                   ScheduleOrderView(
                     vendor: vendor,
                     isScheduled: state.isScheduled,
@@ -254,7 +256,8 @@ class _ServiceBookingSummaryPageState
                     tableSelected: state.tableSelected,
                     guestCountController: controller.guestCountTEC,
                     onSelectTable: controller.selectTableSelecte,
-                    isTattooOverride: state.checkout.isTattoo || state.vendorTypeId == 13,
+                    isTattooOverride:
+                        state.checkout.isTattoo || state.vendorTypeId == 13,
                     isFoodOverride: state.checkout.isFood,
                   ),
 
@@ -276,11 +279,16 @@ class _ServiceBookingSummaryPageState
                           ),
                         ],
                         onChanged: controller.onSelectTattooType,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: "Tatto Type",
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                           hintText: "Select",
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
+                          border: const OutlineInputBorder(),
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 10,
                           ),
@@ -360,7 +368,8 @@ class _ServiceBookingSummaryPageState
                       tableSelected: state.tableSelected,
                       guestCountController: controller.guestCountTEC,
                       onSelectTable: controller.selectTableSelecte,
-                      isTattooOverride: state.checkout.isTattoo || state.vendorTypeId == 13,
+                      isTattooOverride:
+                          state.checkout.isTattoo || state.vendorTypeId == 13,
                       isFoodOverride: state.checkout.isFood,
                     ),
                 ],
@@ -646,7 +655,15 @@ class _ServiceBookingSummaryPageState
                               canApply: state.canApplyCoupon,
                               applying: state.couponBusy,
                               onChanged: controller.couponCodeChange,
-                              onApply: controller.applyCoupon,
+                              onApply: () async {
+                                final success = await controller.applyCoupon();
+                                if (success) {
+                                  AlertService.success(
+                                    title: "Coupon Applied".tr(),
+                                    text: "Coupon applied successfully".tr(),
+                                  );
+                                }
+                              },
                               errorText: state.couponError?.toString(),
                             )
                             .p20()

@@ -28,6 +28,12 @@ class _FavPositiedViewState extends ConsumerState<FavPositiedView> {
             .watch(favouriteProductControllerProvider(widget.product.id))
             .isLoading;
 
+    final globalFavs = ref.watch(favouriteIdsProvider);
+    final bool isFav = globalFavs.maybeWhen(
+      data: (data) => data['product_ids']?.contains(widget.product.id) ?? widget.product.isFavourite,
+      orElse: () => widget.product.isFavourite,
+    );
+
     return Positioned(
       top: 0,
       left: !Utils.isArabic ? null : 0,
@@ -36,16 +42,16 @@ class _FavPositiedViewState extends ConsumerState<FavPositiedView> {
           isBusy
               ? BusyIndicator().wh(18, 18).p4()
               : Icon(
-                widget.product.isFavourite
+                isFav
                     ? Icons.favorite
                     : Icons.favorite_border,
                 color: AppColor.primaryColor,
                 size: 20,
-              ).p4().onTap(_handleTap),
+              ).p4().onTap(() => _handleTap(isFav)),
     );
   }
 
-  Future<void> _handleTap() async {
+  Future<void> _handleTap(bool isFav) async {
     if (!AuthServices.authenticated()) {
       context.pushRoute(AppRoutes.loginRoute);
       return;
@@ -54,7 +60,7 @@ class _FavPositiedViewState extends ConsumerState<FavPositiedView> {
         .read(favouriteProductControllerProvider(widget.product.id).notifier)
         .toggle(
           productId: widget.product.id,
-          current: widget.product.isFavourite,
+          current: isFav,
         );
     if (result != null && mounted) {
       setState(() => widget.product.isFavourite = result);
