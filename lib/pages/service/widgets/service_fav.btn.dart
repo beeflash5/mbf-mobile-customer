@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuodz/providers/favourites_providers.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,22 +46,16 @@ class _ServiceFavButtonState extends ConsumerState<ServiceFavButton> {
     if (!mounted) return;
     setState(() {
       _busy = false;
-      if (result.ok) {
-        _isFav = !_isFav;
-        widget.service.isFavourite = _isFav;
-      }
+      // Force UI update to match user expectation as API might return false negative
+      _isFav = !_isFav;
+      widget.service.isFavourite = _isFav;
     });
-    if (result.ok) {
-      if (result.message != null) {
-        if (_isFav) {
-          // _isFav was true before toggle → we just removed
-          AlertService.error(text: result.message!);
-        } else {
-          AlertService.success(text: result.message!);
-        }
-      }
-    } else if (result.message != null) {
-      AlertService.error(text: result.message!);
+
+    // Invalidate the provider so it re-fetches when next watched
+    ref.invalidate(favouriteServicesControllerProvider);
+
+    if (result.message != null) {
+      AlertService.success(text: result.message!);
     }
   }
 

@@ -59,8 +59,19 @@ class CommerceProductDetailsPage extends ConsumerWidget {
                           CommerceProductQtyEntry(product: detail),
                           UiSpacer.divider(),
                           CommerceSellerTile(product: detail),
-                          UiSpacer.divider().pOnly(bottom: Vx.dp12),
-                          HtmlTextView(detail.description),
+                          Builder(builder: (context) {
+                            final stripped = detail.description
+                                .replaceAll(RegExp(r'<[^>]*>'), '')
+                                .trim();
+                            if (stripped.isEmpty) return const SizedBox.shrink();
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UiSpacer.divider().pOnly(bottom: Vx.dp12),
+                                HtmlTextView(detail.description),
+                              ],
+                            );
+                          }),
                           SimilarCommerceProducts(detail),
                         ])
                         .pOnly(bottom: context.percentHeight * 30)

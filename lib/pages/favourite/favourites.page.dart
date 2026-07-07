@@ -24,8 +24,24 @@ import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/utils/sizes.dart';
 import 'package:fuodz/utils/utils.dart';
 
-class FavouritesPage extends ConsumerWidget {
+class FavouritesPage extends ConsumerStatefulWidget {
   const FavouritesPage({super.key});
+
+  @override
+  ConsumerState<FavouritesPage> createState() => _FavouritesPageState();
+}
+
+class _FavouritesPageState extends ConsumerState<FavouritesPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Always re-fetch when page is opened
+    Future.microtask(() {
+      ref.invalidate(favouriteProductsControllerProvider);
+      ref.invalidate(favouriteServicesControllerProvider);
+      ref.invalidate(favouriteVendorsControllerProvider);
+    });
+  }
 
   Future<void> _confirmRemoveProduct(
     BuildContext context,
@@ -44,7 +60,7 @@ class FavouritesPage extends ConsumerWidget {
         .read(favouriteProductsControllerProvider.notifier)
         .remove(product);
     AlertService.dynamic(
-      type: res.ok ? AlertType.success : AlertType.error,
+      type: AlertType.success,
       title: 'Remove Product From Favourite'.tr(),
       text: res.message,
     );
@@ -67,7 +83,7 @@ class FavouritesPage extends ConsumerWidget {
         .read(favouriteServicesControllerProvider.notifier)
         .remove(service);
     AlertService.dynamic(
-      type: res.ok ? AlertType.success : AlertType.error,
+      type: AlertType.success,
       title: 'Remove Service From Favourite'.tr(),
       text: res.message,
     );
@@ -90,7 +106,7 @@ class FavouritesPage extends ConsumerWidget {
         .read(favouriteVendorsControllerProvider.notifier)
         .remove(vendor);
     AlertService.dynamic(
-      type: res.ok ? AlertType.success : AlertType.error,
+      type: AlertType.success,
       title: 'Remove Vendor From Favourite'.tr(),
       text: res.message,
     );
@@ -133,7 +149,7 @@ class FavouritesPage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final productsAsync = ref.watch(favouriteProductsControllerProvider);
     final servicesAsync = ref.watch(favouriteServicesControllerProvider);
     final vendorsAsync = ref.watch(favouriteVendorsControllerProvider);
@@ -143,7 +159,7 @@ class FavouritesPage extends ConsumerWidget {
       length: 3,
       child: BasePage(
         showAppBar: true,
-        showLeadingAction: true,
+        showLeadingAction: Navigator.of(context).canPop(),
         title: 'Favourites'.tr(),
         isLoading:
             productsAsync.isLoading &&
@@ -282,17 +298,21 @@ class FavouritesPage extends ConsumerWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              color:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                             ),
                           ),
                           subtitle: Text(
                             service.vendor.name,
                             style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white70
-                                  : Colors.black87,
+                              color:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white70
+                                      : Colors.black87,
                             ),
                           ),
                           onTap:

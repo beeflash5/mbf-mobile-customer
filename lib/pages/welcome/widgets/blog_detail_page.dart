@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuodz/models/blog.dart';
 import 'package:intl/intl.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class BlogDetailPage extends StatelessWidget {
   const BlogDetailPage({super.key, required this.blog});
@@ -22,7 +23,7 @@ class BlogDetailPage extends StatelessWidget {
     final cleanText = stripHtml(blog.description);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.backgroundColor,
       body: CustomScrollView(
         slivers: [
           /// 🔥 IMAGE HEADER
@@ -30,7 +31,7 @@ class BlogDetailPage extends StatelessWidget {
             expandedHeight: 280,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
             pinned: true,
-            backgroundColor: Colors.white,
+            backgroundColor: context.backgroundColor,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
@@ -84,10 +85,10 @@ class BlogDetailPage extends StatelessWidget {
                   /// DESCRIPTION
                   Text(
                     cleanText,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       height: 1.6,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                   ),
 

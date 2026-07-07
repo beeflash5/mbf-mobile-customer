@@ -14,10 +14,16 @@ class HtmlTextView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Hide widget entirely if there's no content
+    if (htmlContent.trim().isEmpty) return const SizedBox.shrink();
+
+    final textColor = Theme.of(context).textTheme.bodyMedium?.color;
+
     return Padding(
       padding: padding,
       child: HtmlWidget(
         htmlContent,
+        textStyle: TextStyle(color: textColor),
         onTapImage: (ImageMetadata imageMetadata) {
           try {
             launchUrlString(imageMetadata.sources.first.url);
