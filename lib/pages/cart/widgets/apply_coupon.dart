@@ -49,18 +49,25 @@ class _ApplyCouponState extends ConsumerState<ApplyCoupon> {
                   isFixedHeight: true,
                   loading: _busy,
                   onPressed:
-                    state.canApplyCoupon
+                      state.canApplyCoupon
                           ? () async {
-                              setState(() => _busy = true);
-                              final result = await notifier.applyCoupon(_couponTEC.text);
-                              if (mounted) setState(() => _busy = false);
-                              if (result is CouponSuccess) {
-                                AlertService.success(
-                                  title: "Coupon Applied".tr(),
-                                  text: "Coupon applied successfully".tr(),
-                                );
-                              }
+                            setState(() => _busy = true);
+                            final result = await notifier.applyCoupon(
+                              _couponTEC.text,
+                            );
+                            if (mounted) setState(() => _busy = false);
+                            if (result is CouponSuccess) {
+                              AlertService.success(
+                                title: "Coupon Applied".tr(),
+                                text: "Coupon applied successfully".tr(),
+                              );
+                            } else if (result is CouponFailure) {
+                              AlertService.error(
+                                title: "Coupon Failed".tr(),
+                                text: result.message.toString().tr(),
+                              );
                             }
+                          }
                           : null,
                 ).w(62).p8(),
           )

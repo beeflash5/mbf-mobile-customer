@@ -212,6 +212,9 @@ class CartController extends Notifier<CartState> {
         return const CouponFailure("Coupon has expired");
       }
       state = _recalculate(state.copyWith(coupon: coupon));
+      if (state.couponError != null) {
+        return CouponFailure(state.couponError);
+      }
       return CouponSuccess(coupon);
     } catch (e) {
       state = _recalculate(state.copyWith(clearCoupon: true));
