@@ -393,7 +393,10 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black
+                            : Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
