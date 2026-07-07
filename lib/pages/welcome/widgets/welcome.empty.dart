@@ -60,7 +60,7 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
@@ -86,10 +86,14 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
                 children: [
                   "Hi, ${currentUser?.name ?? ""}!".text
                       .fontWeight(FontWeight.bold)
-                      .color(Colors.black)
+                      .color(context.isDarkMode ? Colors.white : Colors.black)
                       .make(),
                   "Explore the real Bali with locals".text
-                      .color(context.primaryColor)
+                      .color(
+                        context.isDarkMode
+                            ? Colors.white
+                            : context.primaryColor,
+                      )
                       .make(),
                 ],
               )
@@ -99,10 +103,14 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
                 children: [
                   "My Bali Friendz".text
                       .fontWeight(FontWeight.bold)
-                      .color(Colors.black)
+                      .color(context.isDarkMode ? Colors.white : Colors.black)
                       .make(),
                   "Explore the real Bali with locals".text
-                      .color(context.primaryColor)
+                      .color(
+                        context.isDarkMode
+                            ? Colors.white
+                            : context.primaryColor,
+                      )
                       .make(),
                 ],
               ),
@@ -129,10 +137,17 @@ class _EmptyWelcomeState extends ConsumerState<EmptyWelcome> {
                 );
                 if (snapshot.hasData && snapshot.data > 0) {
                   return child.badge(
-                    position: Utils.isArabic ? VxBadgePosition.leftTop : VxBadgePosition.rightTop,
+                    position:
+                        Utils.isArabic
+                            ? VxBadgePosition.leftTop
+                            : VxBadgePosition.rightTop,
                     count: snapshot.data,
                     color: Colors.red,
-                    textStyle: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
                   );
                 }
                 return child;

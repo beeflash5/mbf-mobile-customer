@@ -279,9 +279,11 @@ class _AmazonStyledCommerceProductDetailsPageState
                       .make()
                       .p8(),
             ).px20(),
-            UiSpacer.divider(height: 2, thickness: 1).py12(),
             FrequentlyBoughtTogetherView(detail),
-            HtmlTextView(detail.description),
+            if (detail.description.trim().isNotEmpty) ...[
+              UiSpacer.divider(height: 2, thickness: 1).py12(),
+              HtmlTextView(detail.description),
+            ],
             UiSpacer.divider(height: 2, thickness: 1).py12(),
             VStack([
               UiSpacer.vSpace(20),

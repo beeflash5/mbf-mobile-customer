@@ -26,7 +26,7 @@ import 'package:fuodz/utils/app_ui_settings.dart';
 import 'package:fuodz/utils/app_upgrade_settings.dart';
 
 import 'order/orders.page.dart';
-import 'search/main_search.page.dart';
+import 'favourite/favourites.page.dart';
 import 'welcome/widgets/cart.fab.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -96,18 +96,15 @@ class _HomePageState extends ConsumerState<HomePage>
             physics: const NeverScrollableScrollPhysics(),
             children: [
               _homeView ?? WelcomePage(),
-              MainSearchPage(),
+              const FavouritesPage(),
               const OrdersPage(),
               ProfilePage(),
             ],
             // ),
           ),
         ),
-        fab: AppUISettings.showCart ? const CartHomeFab() : null,
-        fabLocation:
-            AppUISettings.showCart
-                ? FloatingActionButtonLocation.centerDocked
-                : null,
+        fab: null,
+        fabLocation: null,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: context.backgroundColor,
@@ -127,10 +124,7 @@ class _HomePageState extends ConsumerState<HomePage>
               elevation: 0,
               activeIndex: state.currentIndex,
               onTap: notifier.onTabChange,
-              gapLocation:
-                  AppUISettings.showCart
-                      ? GapLocation.center
-                      : GapLocation.none,
+              gapLocation: GapLocation.none,
               notchSmoothness: NotchSmoothness.defaultEdge,
               leftCornerRadius: 0,
               rightCornerRadius: 0,
@@ -138,16 +132,16 @@ class _HomePageState extends ConsumerState<HomePage>
               tabBuilder: (int index, bool isActive) {
                 final color =
                     isActive ? AppColor.primaryColor : const Color(0xff879092);
-                const titles = ["Home", "Explore", "Booking", "Profile"];
+                const titles = ["Home", "Favorite", "Booking", "Profile"];
                 const icons = [
                   HugeIcons.strokeRoundedHome03,
-                  HugeIcons.strokeRoundedSearch01,
+                  Icons.favorite_border,
                   HugeIcons.strokeRoundedInboxUnread,
                   HugeIcons.strokeRoundedUser,
                 ];
                 const filledIcons = [
                   HugeIcons.strokeRoundedHome02,
-                  HugeIcons.strokeRoundedSearch01,
+                  Icons.favorite,
                   HugeIcons.strokeRoundedInbox,
                   HugeIcons.strokeRoundedUser,
                 ];

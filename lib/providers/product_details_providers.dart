@@ -90,6 +90,18 @@ class ProductDetailsController
         .productDetails(arg.id);
     detail.heroTag = oldTag;
     if (detail.selectedQty < 1) detail.selectedQty = 1;
+
+    // The detail API endpoint may not return `variants`, but the list endpoint does.
+    // Preserve any variant OptionGroups (id == -1) from the original arg product
+    // so they are not lost after a fresh fetch.
+    final hasVariantGroup = detail.optionGroups.any((g) => g.id == -1);
+    if (!hasVariantGroup) {
+      final argVariantGroups = arg.optionGroups.where((g) => g.id == -1).toList();
+      if (argVariantGroups.isNotEmpty) {
+        detail.optionGroups = [...argVariantGroups, ...detail.optionGroups];
+      }
+    }
+
     return _recalculate(ProductDetailsState(product: detail));
   }
 

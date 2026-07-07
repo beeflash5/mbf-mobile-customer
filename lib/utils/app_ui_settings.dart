@@ -71,7 +71,7 @@ class AppUISettings extends AppStrings {
   }
 
   static bool get showCart {
-    return false;
+    return true;
   }
 
   //call settings

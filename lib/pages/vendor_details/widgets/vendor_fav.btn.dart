@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuodz/providers/favourites_providers.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -50,10 +51,13 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
         _isFav = result;
         widget.vendor.isFavourite = result;
       });
+      // Invalidate the provider so it re-fetches when next watched
+      ref.invalidate(favouriteVendorsControllerProvider);
+
       if (result) {
         AlertService.success(text: "Added to favourite list");
       } else {
-        AlertService.error(text: "Removed from favourite list");
+        AlertService.success(text: "Removed from favourite list");
       }
     } else {
       AlertService.error(text: "Failed to update favourite");

@@ -11,6 +11,7 @@ import 'package:fuodz/component/cart_page_action.dart';
 import 'package:fuodz/component/custom_image.view.dart';
 import 'package:fuodz/component/states/loading_indicator.dart';
 import 'package:fuodz/component/webviewer.dart';
+import 'package:fuodz/component/html_text_view.dart';
 import 'package:fuodz/models/option_group.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/pages/product/widgets/product_details.header.dart';
@@ -89,16 +90,27 @@ class ProductDetailsPage extends ConsumerWidget {
                 child:
                     VStack([
                           ProductDetailsHeader(product: detail),
-                          if (detail.description.trim().isNotEmpty) ...[
-                            UiSpacer.divider(height: 1, thickness: 2).py12(),
-                            WebViewer(
-                              url: detail.description_url,
-                              height: 50,
-                              isScrollable: false,
-                              showProgressBar: true,
-                              enableJavaScript: true,
-                            ),
-                          ],
+                          Builder(
+                            builder: (context) {
+                              // Strip HTML tags to properly detect truly-empty descriptions
+                              final stripped =
+                                  detail.description
+                                      .replaceAll(RegExp(r'<[^>]*>'), '')
+                                      .trim();
+                              if (stripped.isEmpty)
+                                return const SizedBox.shrink();
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UiSpacer.divider(
+                                    height: 1,
+                                    thickness: 2,
+                                  ).py12(),
+                                  HtmlTextView(detail.description),
+                                ],
+                              );
+                            },
+                          ),
                           Visibility(
                             visible: detail.optionGroups.isNotEmpty,
                             child: VStack([
