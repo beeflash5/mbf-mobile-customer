@@ -109,86 +109,140 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isTattoo || isServiceBooking || vendor.deliverySlots.isNotEmpty)
-                    ? DropdownButtonFormField<String>(
-                      value:
-                          (selectedDate != null &&
-                                  vendor.deliverySlots.any(
-                                    (slot) =>
-                                        DateFormat(
-                                          'yyyy-MM-dd',
-                                          'en',
-                                        ).format(slot.date) ==
-                                        selectedDate,
-                                  ))
-                              ? selectedDate
-                              : null,
-                      items:
-                          vendor.deliverySlots
-                              .where(
-                                (slot) =>
-                                    !dateFull.contains(
-                                      DateFormat(
-                                        'yyyy-MM-dd',
-                                        'en',
-                                      ).format(slot.date),
-                                    ),
-                              )
-                              .map((slot) {
-                                final formattedDate = DateFormat(
-                                  'yyyy-MM-dd',
-                                  'en',
-                                ).format(slot.date);
-                                return DropdownMenuItem(
-                                  value: formattedDate,
-                                  child: Text(formattedDate),
-                                );
-                              })
-                              .toList(),
-                      onChanged: (val) {
-                        if (val != null) {
-                          final index = vendor.deliverySlots.indexWhere(
-                            (slot) =>
-                                DateFormat(
-                                  'yyyy-MM-dd',
-                                  'en',
-                                ).format(slot.date) ==
-                                val,
-                          );
-                          onSelectDate(val, index >= 0 ? index : 0);
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Select Date".tr(),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColor.primaryColor),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
-                      ),
-                    )
-                    : CustomTextFormField(
-                      isReadOnly: true,
-                      hintText: selectedDate ?? "mm/dd/yyyy",
+                Builder(
+                  builder: (ctx) {
+                    final Set<String> availableDates = vendor.deliverySlots
+                        .where(
+                          (slot) => !dateFull.contains(
+                            DateFormat('yyyy-MM-dd', 'en').format(slot.date),
+                          ),
+                        )
+                        .map(
+                          (slot) =>
+                              DateFormat('yyyy-MM-dd', 'en').format(slot.date),
+                        )
+                        .toSet();
+
+                    final bool hasSlots =
+                        (isTattoo ||
+                            isServiceBooking ||
+                            vendor.deliverySlots.isNotEmpty) &&
+                        availableDates.isNotEmpty;
+
+                    String? displayDate;
+                    try {
+                      if (selectedDate != null) {
+                        displayDate = DateFormat('EEE, dd MMM yyyy', 'en')
+                            .format(DateTime.parse(selectedDate!));
+                      }
+                    } catch (_) {
+                      displayDate = selectedDate;
+                    }
+
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(8),
                       onTap: () async {
+                        final now = DateTime.now();
+                        final DateTime safeFirst;
+                        final DateTime safeLast;
+                        bool Function(DateTime)? predicate;
+
+                        if (hasSlots) {
+                          final sorted = availableDates.toList()..sort();
+                          safeFirst = DateTime.parse(sorted.first);
+                          safeLast = DateTime.parse(sorted.last)
+                              .add(const Duration(days: 1));
+                          predicate = (day) {
+                            final f =
+                                DateFormat('yyyy-MM-dd', 'en').format(day);
+                            return availableDates.contains(f);
+                          };
+                        } else {
+                          safeFirst = now;
+                          safeLast = now.add(const Duration(days: 365));
+                          predicate = null;
+                        }
+
+                        final initialDate =
+                            safeFirst.isAfter(now) ? safeFirst : now;
+
                         final picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime.now().add(
-                            const Duration(days: 365),
+                          context: ctx,
+                          initialDate: initialDate,
+                          firstDate: safeFirst,
+                          lastDate: safeLast,
+                          selectableDayPredicate: predicate,
+                          builder: (context, child) => Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme:
+                                  Theme.of(context).colorScheme.copyWith(
+                                        primary: AppColor.primaryColor,
+                                      ),
+                            ),
+                            child: child!,
                           ),
                         );
+
                         if (picked != null) {
-                          onSelectDate(
-                            DateFormat('yyyy-MM-dd', 'en').format(picked),
-                            0,
+                          final formatted =
+                              DateFormat('yyyy-MM-dd', 'en').format(picked);
+                          final index = vendor.deliverySlots.indexWhere(
+                            (slot) =>
+                                DateFormat('yyyy-MM-dd', 'en')
+                                    .format(slot.date) ==
+                                formatted,
                           );
+                          onSelectDate(formatted, index >= 0 ? index : 0);
                         }
                       },
-                    ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: selectedDate != null
+                                ? AppColor.primaryColor
+                                : const Color(0xffD9D9D9),
+                            width: selectedDate != null ? 1.5 : 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.date_range,
+                              size: 20,
+                              color: AppColor.primaryColor,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                displayDate ?? 'Select Date'.tr(),
+                                style: TextStyle(
+                                  color: selectedDate != null
+                                      ? Colors.black87
+                                      : const Color(0xff808080),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            if (hasSlots)
+                              Text(
+                                '${availableDates.length} ${"dates available".tr()}',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xff808080),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),

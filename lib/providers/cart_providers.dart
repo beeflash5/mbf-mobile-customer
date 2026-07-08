@@ -36,6 +36,7 @@ class CartState {
     this.coupon,
     this.canApplyCoupon = false,
     this.couponError,
+    this.selectedVendorId,
   });
   final List<Cart> cartItems;
   final int totalCartItems;
@@ -45,6 +46,7 @@ class CartState {
   final Coupon? coupon;
   final bool canApplyCoupon;
   final String? couponError;
+  final int? selectedVendorId;
 
   CartState copyWith({
     List<Cart>? cartItems,
@@ -57,6 +59,7 @@ class CartState {
     bool? canApplyCoupon,
     String? couponError,
     bool clearCouponError = false,
+    int? selectedVendorId,
   }) => CartState(
     cartItems: cartItems ?? this.cartItems,
     totalCartItems: totalCartItems ?? this.totalCartItems,
@@ -66,6 +69,7 @@ class CartState {
     coupon: clearCoupon ? null : (coupon ?? this.coupon),
     canApplyCoupon: canApplyCoupon ?? this.canApplyCoupon,
     couponError: clearCouponError ? null : (couponError ?? this.couponError),
+    selectedVendorId: selectedVendorId ?? this.selectedVendorId,
   );
 
   /// Compose a CheckOut object representing this cart state.
@@ -76,7 +80,7 @@ class CartState {
       ..discount = discountCartPrice
       ..total = totalCartPrice
       ..totalWithTip = totalCartPrice
-      ..cartItems = cartItems;
+      ..cartItems = cartItems.where((c) => selectedVendorId == null || c.product?.vendorId == selectedVendorId).toList();
   }
 }
 
@@ -101,7 +105,18 @@ class CartController extends Notifier<CartState> {
     bool isFixedDiscountApplied = false;
     bool anyItemValid = false;
 
-    for (final cartItem in s.cartItems) {
+    // Set default selectedVendorId if not set
+    int? currentVendorId = s.selectedVendorId;
+    if (currentVendorId == null && s.cartItems.isNotEmpty) {
+      currentVendorId = s.cartItems.first.product?.vendorId;
+    } else if (s.cartItems.isEmpty) {
+      currentVendorId = null;
+    }
+
+    // Only process items for selected vendor
+    final itemsToProcess = s.cartItems.where((c) => currentVendorId == null || c.product?.vendorId == currentVendorId).toList();
+
+    for (final cartItem in itemsToProcess) {
       totalCartItems += cartItem.selectedQty!;
       final totalProductPrice = cartItem.price! * cartItem.selectedQty!;
       subTotalPrice += totalProductPrice;
@@ -173,6 +188,7 @@ class CartController extends Notifier<CartState> {
       totalCartPrice: subTotalPrice - discountCartPrice,
       couponError: couponError,
       clearCouponError: couponError == null,
+      selectedVendorId: currentVendorId,
     );
   }
 
@@ -240,6 +256,18 @@ class CartController extends Notifier<CartState> {
   Future<void> clearCart() async {
     await CartServices.saveCartItems([]);
     await reload();
+  }
+
+  Future<void> clearSelectedVendorItems() async {
+    if (state.selectedVendorId == null) return;
+    final remainingItems = state.cartItems.where((c) => c.product?.vendorId != state.selectedVendorId).toList();
+    await CartServices.saveCartItems(remainingItems);
+    state = state.copyWith(selectedVendorId: null); // Reset selection
+    await reload();
+  }
+
+  void selectVendor(int vendorId) {
+    state = _recalculate(state.copyWith(selectedVendorId: vendorId));
   }
 }
 

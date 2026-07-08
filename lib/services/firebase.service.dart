@@ -8,6 +8,7 @@ import 'package:awesome_notifications/awesome_notifications.dart'
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firestore_chat/firestore_chat.dart';
+import 'package:flutter/material.dart';
 import 'package:fuodz/utils/app_routes.dart';
 import 'package:fuodz/utils/app_ui_settings.dart';
 import 'package:go_router/go_router.dart';
@@ -80,10 +81,10 @@ class FirebaseService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       saveNewNotification(message);
 
-        if (Platform.isAndroid) {
-    showNotification(message);
-  }
-      
+      if (Platform.isAndroid) {
+        showNotification(message);
+      }
+
       //
       refreshOrdersList(message);
     });
@@ -251,14 +252,26 @@ class FirebaseService {
           if (parts.length >= 3) {
             final orderCode = parts[1];
             final chatType = parts[2];
-            GoRouter.of(AppService().navigatorKey.currentContext!).push(
-              AppRoutes.chatRoute,
-              extra: {
-                'orderCode': orderCode,
-                'chatType': chatType,
-                'receiverId': 0, // Backend will auto-resolve
-              },
-            );
+
+            // Wait for context to be available
+            BuildContext? context = AppService().navigatorKey.currentContext;
+            int retries = 0;
+            while (context == null && retries < 10) {
+              await Future.delayed(const Duration(milliseconds: 200));
+              context = AppService().navigatorKey.currentContext;
+              retries++;
+            }
+
+            if (context != null) {
+              GoRouter.of(context).push(
+                AppRoutes.chatRoute,
+                extra: {
+                  'orderCode': orderCode,
+                  'chatType': chatType,
+                  'receiverId': 0, // Backend will auto-resolve
+                },
+              );
+            }
           }
         }
         //order

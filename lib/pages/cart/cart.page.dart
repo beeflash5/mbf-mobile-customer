@@ -1,4 +1,5 @@
 import 'package:dotted_line/dotted_line.dart';
+import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +13,6 @@ import 'package:fuodz/component/list/cart.list_item.dart';
 import 'package:fuodz/component/states/cart.empty.dart';
 import 'package:fuodz/pages/auth/login.page.dart';
 import 'package:fuodz/pages/cart/widgets/amount_tile.dart';
-import 'package:fuodz/pages/cart/widgets/apply_coupon.dart';
 import 'package:fuodz/pages/checkout/checkout.page.dart';
 import 'package:fuodz/pages/checkout/multiple_order_checkout.page.dart';
 import 'package:fuodz/pages/product/product_details.page.dart';
@@ -48,7 +48,9 @@ class CartPage extends ConsumerWidget {
       result = await context.pushWidget(CheckoutPage(checkout: checkOut));
     }
     if (result == true) {
-      await ref.read(cartControllerProvider.notifier).clearCart();
+      await ref
+          .read(cartControllerProvider.notifier)
+          .clearSelectedVendorItems();
       if (context.mounted) Navigator.of(context).pop();
     }
   }
@@ -65,6 +67,13 @@ class CartPage extends ConsumerWidget {
     final summaryStyle = context.textTheme.bodyLarge!.copyWith(
       fontSize: Sizes.fontSizeLarge,
     );
+
+    // Group items by vendor
+    final vendorGroups = <int, List<Cart>>{};
+    for (final cart in state.cartItems) {
+      final vId = cart.product?.vendorId ?? -1;
+      vendorGroups.putIfAbsent(vId, () => []).add(cart);
+    }
 
     return BasePage(
       showAppBar: true,
@@ -84,103 +93,137 @@ class CartPage extends ConsumerWidget {
               EmptyCart().centered().expand()
             else
               VStack([
-                    CustomListView(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
-                      noScrollPhysics: true,
-                      dataSet: state.cartItems,
-                      separatorBuilder: (_, __) => 12.heightBox,
-                      itemBuilder: (context, index) {
-                        final cart = state.cartItems[index];
-                        final product = cart.product;
-                        return InkWell(
-                          child: CartListItem(
-                            key: Key("${cart.product?.id}:$index"),
-                            cart,
-                            onQuantityChange:
-                                (qty) => notifier.updateCartItemQuantity(
-                                  context,
-                                  index,
-                                  qty,
-                                ),
-                            deleteCartItem: () => notifier.deleteCartItem(index),
-                          ),
-                          onTap:
-                              () => context.pushWidget(
-                                ProductDetailsPage(product: product!),
+                VStack([
+                  ...vendorGroups.entries.map((entry) {
+                    final vendorId = entry.key;
+                    final groupItems = entry.value;
+                    final vendorName =
+                        groupItems.first.product?.vendor?.name ?? "Vendor";
+                    final isSelected = state.selectedVendorId == vendorId;
+
+                    return VStack([
+                      // Vendor Header
+                      HStack([
+                            Radio<int>(
+                              value: vendorId,
+                              groupValue: state.selectedVendorId,
+                              activeColor: AppColor.primaryColor,
+                              onChanged: (val) {
+                                if (val != null) notifier.selectVendor(val);
+                              },
+                            ),
+                            vendorName.text.bold.size(16).make().expand(),
+                          ])
+                          .pSymmetric(h: 8)
+                          .box
+                          .color(
+                            isSelected
+                                ? AppColor.primaryColor.withOpacity(0.05)
+                                : Colors.transparent,
+                          )
+                          .make(),
+
+                      // Items for this vendor
+                      CustomListView(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                        noScrollPhysics: true,
+                        dataSet: groupItems,
+                        separatorBuilder: (_, __) => 12.heightBox,
+                        itemBuilder: (context, index) {
+                          final cart = groupItems[index];
+                          final originalIndex = state.cartItems.indexOf(cart);
+                          return Opacity(
+                            opacity: isSelected ? 1.0 : 0.5,
+                            child: InkWell(
+                              child: CartListItem(
+                                key: Key("${cart.product?.id}:$originalIndex"),
+                                cart,
+                                onQuantityChange:
+                                    (qty) => notifier.updateCartItemQuantity(
+                                      context,
+                                      originalIndex,
+                                      qty,
+                                    ),
+                                deleteCartItem:
+                                    () =>
+                                        notifier.deleteCartItem(originalIndex),
                               ),
-                        );
-                      },
-                    ).box.color(AppColor.faintBgColor).make(),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: context.backgroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                            offset: const Offset(4, -4),
-                          ),
-                        ],
+                              onTap:
+                                  () => context.pushWidget(
+                                    ProductDetailsPage(product: cart.product!),
+                                  ),
+                            ),
+                          );
+                        },
                       ),
+                    ]).box.margin(const EdgeInsets.only(bottom: 12)).make();
+                  }),
+                ]).box.color(AppColor.faintBgColor).make(),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: context.backgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 4,
+                        spreadRadius: 1,
+                        offset: const Offset(4, -4),
+                      ),
+                    ],
+                  ),
+                  child: VStack([
+                    AmountTile(
+                      "Total Item".tr(),
+                      state.totalCartItems.toString(),
+                      amountStyle: summaryStyle,
+                    ),
+                    AmountTile(
+                      "Sub-Total".tr(),
+                      "$currencySymbol ${state.subTotalPrice.convertCurrency}"
+                          .currencyFormat(),
+                      amountStyle: summaryStyle,
+                    ),
+                    Visibility(
+                      visible:
+                          state.coupon != null && !state.coupon!.for_delivery,
+                      child: AmountTile(
+                        "Discount".tr(),
+                        "$currencySymbol ${state.discountCartPrice.convertCurrency}"
+                            .currencyFormat(),
+                        amountStyle: summaryStyle,
+                      ),
+                    ),
+                    Visibility(
+                      visible:
+                          state.coupon != null && state.coupon!.for_delivery,
                       child: VStack([
-                        const ApplyCoupon(),
-                        10.heightBox,
-                        AmountTile(
-                          "Total Item".tr(),
-                          state.totalCartItems.toString(),
-                          amountStyle: summaryStyle,
-                        ),
-                        AmountTile(
-                          "Sub-Total".tr(),
-                          "$currencySymbol ${state.subTotalPrice.convertCurrency}"
-                              .currencyFormat(),
-                          amountStyle: summaryStyle,
-                        ),
-                        Visibility(
-                          visible:
-                              state.coupon != null && !state.coupon!.for_delivery,
-                          child: AmountTile(
-                            "Discount".tr(),
-                            "$currencySymbol ${state.discountCartPrice.convertCurrency}"
-                                .currencyFormat(),
-                            amountStyle: summaryStyle,
-                          ),
-                        ),
-                        Visibility(
-                          visible:
-                              state.coupon != null && state.coupon!.for_delivery,
-                          child: VStack([
-                            DottedLine(
-                              dashColor: context.textTheme.bodyLarge!.color!,
-                            ).py12(),
-                            "Discount will be applied to delivery fee on checkout"
-                                .tr()
-                                .text
-                                .medium
-                                .make(),
-                          ]).py(4),
-                        ),
                         DottedLine(
                           dashColor: context.textTheme.bodyLarge!.color!,
-                        ).py(10),
-                        AmountTile(
-                          "Total".tr(),
-                          "$currencySymbol ${state.totalCartPrice.convertCurrency}"
-                              .currencyFormat(),
-                          amountStyle: totalStyle,
-                        ),
-                        CustomButton(
-                          title: "CHECKOUT".tr(),
-                          onPressed: () => _checkout(context, ref),
-                        ).h(Vx.dp48).py32(),
-                      ]),
+                        ).py12(),
+                        "Discount will be applied to delivery fee on checkout"
+                            .tr()
+                            .text
+                            .medium
+                            .make(),
+                      ]).py(4),
                     ),
-                  ])
-                  .pOnly(bottom: context.mq.viewPadding.bottom)
-                  .scrollVertical()
-                  .expand(),
+                    DottedLine(
+                      dashColor: context.textTheme.bodyLarge!.color!,
+                    ).py(10),
+                    AmountTile(
+                      "Total".tr(),
+                      "$currencySymbol ${state.totalCartPrice.convertCurrency}"
+                          .currencyFormat(),
+                      amountStyle: totalStyle,
+                    ),
+                    CustomButton(
+                      title: "CHECKOUT".tr(),
+                      onPressed: () => _checkout(context, ref),
+                    ).h(Vx.dp48).py32(),
+                  ]),
+                ),
+              ]).pOnly(bottom: context.mq.viewPadding.bottom).scrollVertical().expand(),
           ]),
         ),
       ),
