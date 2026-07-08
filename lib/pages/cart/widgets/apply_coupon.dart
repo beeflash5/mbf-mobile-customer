@@ -45,7 +45,7 @@ class _ApplyCouponState extends ConsumerState<ApplyCoupon> {
             onChanged: notifier.couponCodeChange,
             suffixIcon:
                 CustomButton(
-                  child: const Icon(Icons.check),
+                  child: const Icon(Icons.check, color: Colors.white),
                   isFixedHeight: true,
                   loading: _busy,
                   onPressed:

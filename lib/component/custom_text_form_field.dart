@@ -72,6 +72,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         labelText: widget.labelText,
         hintText: widget.hintText,
         errorText: widget.errorText,
+        errorMaxLines: 5,
         enabledBorder:
             widget.underline
                 ? InputStyles.inputUnderlineEnabledBorder()

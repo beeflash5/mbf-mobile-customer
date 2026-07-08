@@ -44,7 +44,17 @@ class ApplyDiscountController extends Notifier<ApplyDiscountState> {
   Future<Coupon?> apply({required String code, int? vendorTypeId}) async {
     state = state.copyWith(isBusy: true, clearError: true);
     try {
-      final fetched = await _cart.fetchCoupon(code, vendorTypeId: vendorTypeId);
+      final fetched = await _cart.fetchCoupon(code);
+      if (vendorTypeId != null &&
+          fetched.vendorTypeId != null &&
+          fetched.vendorTypeId != vendorTypeId) {
+        state = state.copyWith(
+          isBusy: false,
+          error: "Coupon can't be used for this vendor type.",
+          clearCoupon: true,
+        );
+        return null;
+      }
       if (fetched.useLeft <= 0) {
         state = state.copyWith(
           isBusy: false,

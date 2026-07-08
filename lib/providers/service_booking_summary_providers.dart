@@ -577,8 +577,10 @@ class ServiceBookingSummaryController
     try {
       final coupon = await _cartRequest.fetchCoupon(
         couponTEC.text,
-        vendorTypeId: state.vendor!.vendorType.id,
       );
+      if (coupon.vendorTypeId != null && coupon.vendorTypeId != state.vendor!.vendorType.id) {
+        throw "Coupon can't be used for this vendor type.".tr();
+      }
       if (coupon.useLeft <= 0) {
         throw "Coupon use limit exceeded".tr();
       } else if (coupon.expired) {

@@ -109,7 +109,7 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isTattoo || vendor.deliverySlots.isNotEmpty)
+                (isTattoo || isServiceBooking || vendor.deliverySlots.isNotEmpty)
                     ? DropdownButtonFormField<String>(
                       value:
                           (selectedDate != null &&
@@ -192,7 +192,7 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isTattoo || availableTimeSlots.isNotEmpty)
+                (isTattoo || isServiceBooking || availableTimeSlots.isNotEmpty)
                     ? DropdownButtonFormField<String>(
                       value:
                           availableTimeSlots.contains(selectedTime)

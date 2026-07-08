@@ -63,7 +63,7 @@ class _ServiceDiscountSectionState extends State<ServiceDiscountSection> {
             textEditingController: widget.couponController,
             errorText: widget.errorText,
             onChanged: widget.onChanged,
-          ).expand(flex: 2),
+          ).expand(),
           UiSpacer.horizontalSpace(),
           Column(
             children: [
@@ -72,12 +72,12 @@ class _ServiceDiscountSectionState extends State<ServiceDiscountSection> {
                 isFixedHeight: true,
                 loading: widget.applying,
                 onPressed: widget.canApply ? widget.onApply : null,
-              ).h(Vx.dp56),
+              ).h(Vx.dp56).w(100),
               widget.errorText != null
                   ? UiSpacer.verticalSpace(space: 12)
                   : UiSpacer.verticalSpace(space: 1),
             ],
-          ).expand(),
+          ),
         ]),
       ),
     ]);

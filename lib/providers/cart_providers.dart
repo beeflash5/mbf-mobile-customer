@@ -98,6 +98,8 @@ class CartController extends Notifier<CartState> {
     double discountCartPrice = 0;
     String? couponError;
     final coupon = s.coupon;
+    bool isFixedDiscountApplied = false;
+    bool anyItemValid = false;
 
     for (final cartItem in s.cartItems) {
       totalCartItems += cartItem.selectedQty!;
@@ -110,29 +112,38 @@ class CartController extends Notifier<CartState> {
       final foundVendor = coupon?.vendors.firstOrNullWhere(
         (vendor) => cartItem.product?.vendorId == vendor.id,
       );
-
       bool skipCalculation = false;
-      if (foundProduct?.vendor.vendorType.id == coupon?.vendorTypeId) {
-        skipCalculation = false;
-      } else if (foundVendor?.vendorType.id == coupon?.vendorTypeId) {
-        skipCalculation = false;
-      } else if (cartItem.product?.vendor.vendorTypeId ==
-          coupon?.vendorTypeId) {
-        skipCalculation = false;
+      if (coupon != null) {
+        if (coupon.products.isNotEmpty && coupon.vendors.isNotEmpty) {
+          skipCalculation = foundProduct == null && foundVendor == null;
+          if (skipCalculation) couponError = "Coupon doesn't apply to this item".tr();
+        } else if (coupon.products.isNotEmpty) {
+          skipCalculation = foundProduct == null;
+          if (skipCalculation) couponError = "Coupon doesn't apply to this product".tr();
+        } else if (coupon.vendors.isNotEmpty) {
+          skipCalculation = foundVendor == null;
+          if (skipCalculation) couponError = "Coupon doesn't apply to this vendor".tr();
+        } else {
+          // Both products and vendors are empty
+          skipCalculation = false;
+        }
+
+        if (coupon.for_delivery) {
+          skipCalculation = true;
+          // Delivery coupons are applied elsewhere
+        }
       } else {
         skipCalculation = true;
-        couponError = "Coupon can't be used with vendor type".tr();
       }
-      if (coupon?.for_delivery ?? false) skipCalculation = true;
 
       if (!skipCalculation && coupon != null) {
-        if (foundProduct != null ||
-            foundVendor != null ||
-            (coupon.products.isEmpty && coupon.vendors.isEmpty)) {
-          if (coupon.percentage == 1) {
-            discountCartPrice += (coupon.discount / 100) * totalProductPrice;
-          } else {
+        anyItemValid = true;
+        if (coupon.percentage == 1) {
+          discountCartPrice += (coupon.discount / 100) * totalProductPrice;
+        } else {
+          if (!isFixedDiscountApplied) {
             discountCartPrice += coupon.discount;
+            isFixedDiscountApplied = true;
           }
         }
       }
@@ -144,7 +155,11 @@ class CartController extends Notifier<CartState> {
           subTotalPrice,
           discountCartPrice,
         );
-        couponError = null;
+        if (anyItemValid) {
+          couponError = null;
+        } else if (couponError == null) {
+          couponError = "Coupon is not applicable to any item in the cart".tr();
+        }
       } catch (e) {
         discountCartPrice = 0;
         couponError = '$e';

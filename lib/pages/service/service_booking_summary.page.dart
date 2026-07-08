@@ -676,35 +676,47 @@ class _ServiceBookingSummaryPageState
                     borderType: BorderType.RRect,
                     padding: const EdgeInsets.all(0),
                   ).py12(),
-                const DottedLine().py12(),
-
-                if (service.ageRestricted)
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade50,
-                      border: Border.all(color: Colors.orange.shade200),
-                      borderRadius: BorderRadius.circular(8),
+                const DottedLine().py12(),                if (service.ageRestricted)
+                  VStack([
+                    "Batas Usia (Age Limit)"
+                        .tr()
+                        .text
+                        .lg
+                        .bold
+                        .color(Vx.red800)
+                        .make(),
+                    UiSpacer.verticalSpace(space: 10),
+                    HStack([
+                      Checkbox(
+                        value: state.ageConfirmed,
+                        onChanged: controller.toggleAgeConfirmed,
+                        activeColor: Vx.red600,
+                      ).pOnly(right: 10),
+                      VStack([
+                        "I confirm that I am old enough to purchase this service."
+                            .tr()
+                            .text
+                            .sm
+                            .color(Vx.red700)
+                            .make(),
+                        "(Saya mengonfirmasi bahwa saya sudah cukup umur untuk membeli layanan ini.)"
+                            .tr()
+                            .text
+                            .xs
+                            .color(Vx.red700)
+                            .make(),
+                      ]).expand(),
+                    ]).onInkTap(
+                      () => controller.toggleAgeConfirmed(!state.ageConfirmed),
                     ),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: state.ageConfirmed,
-                          onChanged: controller.toggleAgeConfirmed,
-                          activeColor: AppColor.primaryColor,
-                        ),
-                        Expanded(
-                          child:
-                              "I confirm that I meet the age requirement to purchase this service. (Saya menyetujui bahwa saya cukup umur untuk membeli layanan ini)"
-                                  .text
-                                  .size(12)
-                                  .color(Colors.orange.shade800)
-                                  .make(),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ])
+                  .p12()
+                  .box
+                  .roundedSM
+                  .color(Vx.red50)
+                  .border(color: Vx.red200)
+                  .make()
+                  .pOnly(bottom: Vx.dp20),
 
                 if (state.vendorTypeId != 13)
                   PaymentMethodsView(

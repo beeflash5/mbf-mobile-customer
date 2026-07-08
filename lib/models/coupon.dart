@@ -97,7 +97,7 @@ class Coupon {
               : List<Vendor>.from(
                 json["vendors"].map((x) => Vendor.fromJson(x)),
               ),
-      for_delivery: json["for_delivery"] == null ? false : json["for_delivery"],
+      for_delivery: json["for_delivery"] == null ? false : (json["for_delivery"].toString() == "1" || json["for_delivery"] == true),
     );
   }
 
