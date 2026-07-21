@@ -59,7 +59,7 @@ ios/Flutter/ephemeral/
 *.env
 *.pem
 *.keystore
-
+.openclaw/
 # =========================
 # BUILD OUTPUT (EXTRA SAFETY)
 # =========================
