@@ -166,19 +166,35 @@ class _SearchFilterBottomSheetState
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   hintText: "Min",
+                                  hintStyle: TextStyle(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade400
+                                            : Colors.grey.shade600,
+                                  ),
                                   filled: true,
                                   fillColor: context.theme.colorScheme.surface,
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 14,
+                                  ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFFE3E3E3),
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFFE3E3E3),
+                                    ),
                                   ),
                                 ),
-                                style: TextStyle(color: context.textTheme.bodyMedium?.color),
+                                style: TextStyle(
+                                  color: context.textTheme.bodyMedium?.color,
+                                ),
                                 onChanged: (v) => widget.search?.minPrice = v,
                               ),
                             ),
@@ -189,19 +205,35 @@ class _SearchFilterBottomSheetState
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   hintText: "Max",
+                                  hintStyle: TextStyle(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade400
+                                            : Colors.grey.shade600,
+                                  ),
                                   filled: true,
                                   fillColor: context.theme.colorScheme.surface,
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 14,
+                                  ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFFE3E3E3),
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(color: Color(0xFFE3E3E3)),
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFFE3E3E3),
+                                    ),
                                   ),
                                 ),
-                                style: TextStyle(color: context.textTheme.bodyMedium?.color),
+                                style: TextStyle(
+                                  color: context.textTheme.bodyMedium?.color,
+                                ),
                                 onChanged: (v) => widget.search?.maxPrice = v,
                               ),
                             ),
@@ -248,7 +280,12 @@ class _SearchFilterBottomSheetState
                               ),
                             ),
                           ),
-                          hint: Text("Select rating", style: TextStyle(color: context.textTheme.bodyMedium?.color)),
+                          hint: Text(
+                            "Select rating",
+                            style: TextStyle(
+                              color: context.textTheme.bodyMedium?.color,
+                            ),
+                          ),
                           dropdownColor: context.theme.colorScheme.surface,
                           iconEnabledColor: context.textTheme.bodyMedium?.color,
                           items: List.generate(5, (index) {
@@ -263,7 +300,13 @@ class _SearchFilterBottomSheetState
                                     size: 18,
                                   ),
                                   8.widthBox,
-                                  Text("$rating+", style: TextStyle(color: context.textTheme.bodyMedium?.color)),
+                                  Text(
+                                    "$rating+",
+                                    style: TextStyle(
+                                      color:
+                                          context.textTheme.bodyMedium?.color,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );

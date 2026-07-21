@@ -71,6 +71,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,
+        hintStyle: TextStyle(
+          color:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade400
+                  : Colors.grey.shade600,
+        ),
         errorText: widget.errorText,
         errorMaxLines: 5,
         enabledBorder:

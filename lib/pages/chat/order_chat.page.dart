@@ -289,7 +289,13 @@ class _OrderChatPageState extends State<OrderChatPage> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.attach_file),
+                  icon: Icon(
+                    Icons.attach_file,
+                    color:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
+                  ),
                   onPressed: _pickImage,
                 ),
                 Expanded(
@@ -297,6 +303,12 @@ class _OrderChatPageState extends State<OrderChatPage> {
                     controller: messageController,
                     decoration: InputDecoration(
                       hintText: "Type a message".tr(),
+                      hintStyle: TextStyle(
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

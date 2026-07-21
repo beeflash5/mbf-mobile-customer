@@ -70,7 +70,14 @@ class DeliveryAddressPicker extends ConsumerWidget {
           ]).p16().box.outerShadow.color(context.cardColor).make(),
           CustomTextFormField(
             hintText: "Search".tr(),
-            prefixIcon: const Icon(Icons.search, size: 20),
+            prefixIcon: Icon(
+              Icons.search,
+              size: 20,
+              color:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade400
+                      : Colors.grey.shade600,
+            ),
             onChanged: notifier.filter,
           ).p20(),
           CustomVisibilty(
