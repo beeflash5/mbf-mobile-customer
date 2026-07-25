@@ -27,7 +27,20 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
   @override
   void initState() {
     super.initState();
+    // Check both the model field AND the global IDs cache so that
+    // navigating from the Wishlist page (where isFavourite may be false
+    // on the model) still shows a filled heart.
     _isFav = widget.vendor.isFavourite;
+  }
+
+  /// Returns true if the vendor is in the user's favourites,
+  /// consulting the global IDs cache as the authoritative source.
+  bool get _effectiveIsFav {
+    final idsState = ref.watch(favouriteIdsProvider);
+    final fromCache = idsState.valueOrNull?['vendor_ids']?.contains(widget.vendor.id);
+    // If the cache has a definitive answer, trust it; otherwise fall back to model.
+    if (fromCache != null) return fromCache;
+    return _isFav;
   }
 
   Future<void> _toggleFav() async {
@@ -36,12 +49,13 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
       return;
     }
     setState(() => _busy = true);
+    final currentFav = _effectiveIsFav;
     final notifier = ref.read(
       favouriteVendorControllerProvider(widget.vendor.id).notifier,
     );
     final result = await notifier.toggle(
       vendorId: widget.vendor.id,
-      current: _isFav,
+      current: currentFav,
     );
     if (!mounted) return;
     setState(() => _busy = false);
@@ -66,11 +80,12 @@ class _VendorFavButtonState extends ConsumerState<VendorFavButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isFav = _effectiveIsFav;
     return CustomOutlineButton(
       loading: _busy,
       color: Colors.transparent,
       child: Icon(
-        (!AuthServices.authenticated() || !_isFav)
+        (!AuthServices.authenticated() || !isFav)
             ? Icons.favorite_border
             : Icons.favorite,
         color: widget.color ?? Colors.red,

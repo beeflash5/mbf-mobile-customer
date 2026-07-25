@@ -48,7 +48,7 @@ class _OrderChatPageState extends State<OrderChatPage> {
     final user = await AuthServices.getCurrentUser();
     if (mounted) {
       setState(() {
-        currentUserId = user?.id;
+        currentUserId = user.id;
       });
     }
 
@@ -61,6 +61,7 @@ class _OrderChatPageState extends State<OrderChatPage> {
     try {
       Dio dio = Dio();
       final token = await AuthServices.getAuthBearerToken();
+      // ignore: unnecessary_null_comparison
       if (token != null) {
         dio.options.headers["Authorization"] = "Bearer $token";
       }
@@ -198,8 +199,15 @@ class _OrderChatPageState extends State<OrderChatPage> {
       showAppBar: true,
       showLeadingAction: true,
       title: "Chat".tr(),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          tooltip: "Refresh".tr(),
+          onPressed: isBusy ? null : _fetchHistory,
+        ),
+      ],
       body: Column(
-        children: [
+          children: [
           Expanded(
             child:
                 isBusy

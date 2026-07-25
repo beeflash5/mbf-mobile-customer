@@ -13,6 +13,7 @@ import 'package:fuodz/component/list/cart.list_item.dart';
 import 'package:fuodz/component/states/cart.empty.dart';
 import 'package:fuodz/pages/auth/login.page.dart';
 import 'package:fuodz/pages/cart/widgets/amount_tile.dart';
+import 'package:fuodz/pages/cart/widgets/apply_coupon.dart';
 import 'package:fuodz/pages/checkout/checkout.page.dart';
 import 'package:fuodz/pages/checkout/multiple_order_checkout.page.dart';
 import 'package:fuodz/pages/product/product_details.page.dart';
@@ -98,7 +99,7 @@ class CartPage extends ConsumerWidget {
                     final vendorId = entry.key;
                     final groupItems = entry.value;
                     final vendorName =
-                        groupItems.first.product?.vendor?.name ?? "Vendor";
+                        groupItems.first.product?.vendor.name ?? 'Vendor';
                     final isSelected = state.selectedVendorId == vendorId;
 
                     return VStack([
@@ -173,6 +174,10 @@ class CartPage extends ConsumerWidget {
                     ],
                   ),
                   child: VStack([
+                    const ApplyCoupon().pOnly(bottom: Vx.dp12),
+                    DottedLine(
+                      dashColor: context.textTheme.bodyLarge!.color!,
+                    ).py(6),
                     AmountTile(
                       "Total Item".tr(),
                       state.totalCartItems.toString(),
