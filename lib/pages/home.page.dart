@@ -132,7 +132,7 @@ class _HomePageState extends ConsumerState<HomePage>
               tabBuilder: (int index, bool isActive) {
                 final color =
                     isActive ? AppColor.primaryColor : const Color(0xff879092);
-                const titles = ["Home", "Favorite", "Booking", "Profile"];
+                const titles = ["Home", "Wishlist", "Booking", "Profile"];
                 const icons = [
                   HugeIcons.strokeRoundedHome03,
                   Icons.favorite_border,

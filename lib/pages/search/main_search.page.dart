@@ -112,9 +112,11 @@ class _MainSearchPageState extends ConsumerState<MainSearchPage> {
                                 ),
                               ),
                               labelColor: AppColor.primaryColor,
-                              unselectedLabelColor: Utils.textColorByTheme(
-                                true,
-                              ),
+                              unselectedLabelColor:
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                               labelStyle: context.textTheme.bodyLarge!.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),

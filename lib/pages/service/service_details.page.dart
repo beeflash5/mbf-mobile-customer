@@ -246,7 +246,10 @@ class _ServiceDetailsPageState extends ConsumerState<ServiceDetailsPage> {
               labelColor: Theme.of(context).primaryColor,
 
               /// INACTIVE
-              unselectedLabelColor: Colors.black54,
+              unselectedLabelColor:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade400
+                      : Colors.black54,
 
               /// INDICATOR
               indicator: UnderlineTabIndicator(

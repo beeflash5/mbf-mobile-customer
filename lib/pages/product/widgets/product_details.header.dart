@@ -65,18 +65,6 @@ class ProductDetailsHeader extends StatelessWidget {
 
         //price
         VStack([
-          //price
-          CurrencyHStack([
-            currencySymbol.text.lg.bold.make(),
-            (product.showDiscount
-                    ? product.discountPrice.convertCurrency
-                        .currencyValueFormat()
-                    : product.price.convertCurrency.currencyValueFormat())
-                .text
-                .xl2
-                .bold
-                .make(),
-          ], crossAlignment: CrossAxisAlignment.end),
           //discount
           CustomVisibilty(
             visible: product.showDiscount,
@@ -91,6 +79,19 @@ class ProductDetailsHeader extends StatelessWidget {
                   .make(),
             ]),
           ),
+          //price
+          CurrencyHStack([
+            currencySymbol.text.lg.color(context.primaryColor).bold.make(),
+            (product.showDiscount
+                    ? product.discountPrice.convertCurrency
+                        .currencyValueFormat()
+                    : product.price.convertCurrency.currencyValueFormat())
+                .text
+                .color(context.primaryColor)
+                .xl2
+                .bold
+                .make(),
+          ], crossAlignment: CrossAxisAlignment.end),
         ]),
       ]),
 
