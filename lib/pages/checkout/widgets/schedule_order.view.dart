@@ -78,6 +78,7 @@ class ScheduleOrderView extends StatelessWidget {
     return Visibility(
       visible:
           (isFoodOverride == true) ||
+          (isTattooOverride == true) ||
           vendor.allowScheduleOrder ||
           isServiceBooking ||
           isTattoo ||
@@ -88,7 +89,9 @@ class ScheduleOrderView extends StatelessWidget {
                   ? "Reservation".tr().text.lg.semiBold.make()
                   : "Schedule Order".tr().text.lg.semiBold.make(),
               UiSpacer.verticalSpace(space: 10),
-              if (!isFood)
+              // For food, tattoo, and service-type bookings show the date/time
+              // picker directly — no checkbox needed (mirrors Next.js behaviour).
+              if (!isFood && !isServiceBooking)
                 HStack([
                   Checkbox(
                     value: isScheduled,
@@ -104,7 +107,7 @@ class ScheduleOrderView extends StatelessWidget {
                 ]).onInkTap(() => onToggleScheduled(!isScheduled)),
             ]).wFull(context),
             Visibility(
-              visible: isScheduled,
+              visible: isScheduled || isServiceBooking,
               child: VStack([
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),

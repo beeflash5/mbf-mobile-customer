@@ -215,7 +215,19 @@ class ServiceBookingSummaryController
     final bool isFoodOrBeverage = arg.vendor.isFoodOrBeverage;
     final bool isTattoo = (arg.vendor_type_id ?? arg.vendor.vendorTypeId) == 13;
 
-    if (isFoodOrBeverage) {
+    // Service/tour/accommodation booking also requires schedule — auto-enable
+    // so the date/time picker is immediately visible (mirrors Next.js behaviour).
+    final bool isServiceBooking = [
+      "service",
+      "tour",
+      "booking",
+      "bookings",
+      "accommodation",
+    ].contains(arg.vendor.vendorType.slug.toLowerCase()) && !isTattoo;
+
+    final bool autoScheduled = isFoodOrBeverage || isServiceBooking;
+
+    if (autoScheduled) {
       co.isScheduled = true;
     }
 
@@ -223,7 +235,7 @@ class ServiceBookingSummaryController
       service: arg,
       checkout: co,
       vendor: arg.vendor,
-      isScheduled: isFoodOrBeverage,
+      isScheduled: autoScheduled,
     );
   }
 
