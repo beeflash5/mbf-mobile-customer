@@ -20,7 +20,11 @@ class CommerceProductOptionGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VStack([
-      "${optionGroup.name}".text.lg.semiBold.make(),
+      HStack([
+        "${optionGroup.name}".text.lg.semiBold.make().expand(),
+        if (optionGroup.required == 1)
+          " *".text.red500.sm.bold.make(),
+      ]).px20(),
       Visibility(
         visible: optionGroup.maxOptions != null,
         child:

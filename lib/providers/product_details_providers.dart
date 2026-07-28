@@ -172,13 +172,14 @@ class ProductDetailsController
     final cur = state.valueOrNull;
     if (cur == null) return null;
     for (final group in cur.product.optionGroups) {
+      // Skip synthetic variant groups (id == -1)
+      if (group.id == -1) continue;
       final hasSelection = cur.selectedOptions.any(
         (o) => o.optionGroupId == group.id,
       );
-      // By user request, make options optional even if the API says required == 1
-      // if (group.required == 1 && !hasSelection) {
-      //   return "You are required to select at least one option of ${group.name}";
-      // }
+      if (group.required == 1 && !hasSelection) {
+        return "You are required to select at least one option of ${group.name}";
+      }
     }
     return null;
   }
