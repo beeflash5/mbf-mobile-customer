@@ -11,6 +11,7 @@ import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/cart.service.dart';
+import 'package:fuodz/services/cart_backend.service.dart';
 import 'package:fuodz/services/checkout.request.dart';
 import 'package:fuodz/services/checkout_shared.helper.dart';
 import 'package:fuodz/services/toast.service.dart';
@@ -539,6 +540,7 @@ class MultipleCheckoutController
           text: apiResponse.message,
         );
         await CartServices.clearCart();
+        await CartBackendService.loadFromBackend();
         AppService().changeHomePageIndex(index: 2);
         if (Navigator.of(context).canPop()) {
           Navigator.of(context).popUntil(

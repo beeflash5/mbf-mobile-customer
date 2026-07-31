@@ -37,7 +37,7 @@ dependencies:
   custom_clippers: ^2.0.0
   dartx: ^1.1.0
   device_info_plus: ^12.1.0
-  dio: ^5.8.0+1
+  dio: ^5.11.0
   dio_http_cache_lts: ^0.4.2
   dotted_border: ^2.0.0+2
   dotted_line: ^3.1.0

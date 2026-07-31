@@ -185,6 +185,7 @@ class ApiService {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
         message = 'Connection timeout. Periksa koneksi internet Anda.';
         break;
       case DioExceptionType.badCertificate:

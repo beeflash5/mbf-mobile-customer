@@ -122,13 +122,13 @@ class CartBackendService extends ApiService {
             }).toList();
 
         CartServices.productsInCart = parsedCarts;
-        await CartServices.updateTotalCartItemCount(parsedCarts.length);
+        await CartServices.updateTotalCartItemCount(CartServices.totalCartQuantity);
 
         await LocalStorageService.prefs!.setString(
           CartServices.cartItemsKey,
           jsonEncode(parsedCarts),
         );
-        CartServices.cartItemsCountStream.add(parsedCarts.length);
+        CartServices.cartItemsCountStream.add(CartServices.totalCartQuantity);
       }
     } catch (e) {
       print("Failed to load cart from backend: $e");

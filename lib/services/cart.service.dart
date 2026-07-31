@@ -38,7 +38,15 @@ class CartServices {
     }
 
     //
-    cartItemsCountStream.add(productsInCart.length);
+    cartItemsCountStream.add(totalCartQuantity);
+  }
+
+  static int get totalCartQuantity {
+    int total = 0;
+    for (var cartItem in productsInCart) {
+      total += cartItem.selectedQty ?? 1;
+    }
+    return total;
   }
 
   //
@@ -92,6 +100,18 @@ class CartServices {
     await updateTotalCartItemCount(0);
     productsInCart = [];
     await getCartItems();
+    CartBackendService.syncCartItems();
+  }
+
+  static clearVendorCart(int vendorId) async {
+    productsInCart.removeWhere((c) => c.product?.vendorId == vendorId);
+    await LocalStorageService.prefs?.setString(
+      cartItemsKey,
+      jsonEncode(productsInCart),
+    );
+    await updateTotalCartItemCount(totalCartQuantity);
+    await getCartItems();
+    CartBackendService.syncCartItems();
   }
 
   static addToCart(Cart cart) async {
@@ -130,7 +150,7 @@ class CartServices {
       //
       productsInCart = mProductsInCart;
       //update total item in cart count
-      await updateTotalCartItemCount(productsInCart.length);
+      await updateTotalCartItemCount(totalCartQuantity);
       await getCartItems();
       
       // Sync to backend
@@ -140,16 +160,16 @@ class CartServices {
     }
   }
 
-  static saveCartItems(List<Cart> productsInCart) async {
+  static saveCartItems(List<Cart> items) async {
     await LocalStorageService.prefs?.setString(
       cartItemsKey,
-      jsonEncode(productsInCart),
+      jsonEncode(items),
     );
 
-    //update total item in cart count
-    await updateTotalCartItemCount(productsInCart.length);
-
     await getCartItems();
+
+    //update total item in cart count
+    await updateTotalCartItemCount(totalCartQuantity);
     
     // Sync to backend
     CartBackendService.syncCartItems();
@@ -306,10 +326,8 @@ class CartServices {
     return total;
   }
 
-  //
   static refreshState() async {
     await getCartItems();
-    int count = productsInCart.length;
-    updateTotalCartItemCount(count);
+    updateTotalCartItemCount(totalCartQuantity);
   }
 }
