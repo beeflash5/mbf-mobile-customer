@@ -6,7 +6,6 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:fuodz/component/base.page.dart';
-import 'package:fuodz/component/custom_image.view.dart';
 import 'package:fuodz/component/custom_list_view.dart';
 import 'package:fuodz/component/list/dynamic_product.list_item.dart';
 import 'package:fuodz/component/list/vendor.list_item.dart';

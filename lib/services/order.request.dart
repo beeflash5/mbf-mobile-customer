@@ -26,9 +26,8 @@ class OrderRequest extends ApiService {
         jsonArray = List<dynamic>.from(apiResponse.body);
       } else if (apiResponse.body is Map && apiResponse.body['data'] is List) {
         jsonArray = List<dynamic>.from(apiResponse.body['data']);
-      } else if (apiResponse.data is List) {
+      } else
         jsonArray = List<dynamic>.from(apiResponse.data);
-      }
 
       for (var jsonObject in jsonArray) {
         try {

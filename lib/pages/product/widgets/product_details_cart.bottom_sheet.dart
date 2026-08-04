@@ -11,7 +11,6 @@ import 'package:fuodz/component/button/qty_stepper.dart';
 import 'package:fuodz/component/currency_hstack.dart';
 import 'package:fuodz/component/states/loading_indicator.dart';
 import 'package:fuodz/models/product.dart';
-import 'package:fuodz/pages/auth/login.page.dart';
 import 'package:fuodz/providers/product_details_providers.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app_currency_system.service.dart';

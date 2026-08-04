@@ -212,11 +212,7 @@ class CheckoutRequest extends ApiService {
       "fees": fees,
       "token": checkout.token,
       "duration": service.selectedQty,
-      "schedule_order":
-          (checkout.deliverySlotDate != null &&
-                  checkout.deliverySlotDate!.isNotEmpty)
-              ? 1
-              : 0,
+      "schedule_order": (checkout.deliverySlotDate.isNotEmpty) ? 1 : 0,
 
       // tattoo
       "tatto_type": tatto_type,

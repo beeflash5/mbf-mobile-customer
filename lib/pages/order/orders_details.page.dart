@@ -240,8 +240,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                               ),
                               Visibility(
                                 visible:
-                                    order.note != null &&
-                                    order.note!.isNotEmpty &&
+                                    order.note.isNotEmpty &&
                                     order.note != '--' &&
                                     order.note != 'null',
                                 child: VStack([

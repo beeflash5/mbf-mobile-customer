@@ -6,7 +6,6 @@ import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/models/coupon.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/local_storage.service.dart';
-import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:fuodz/services/cart_backend.service.dart';
 
@@ -128,8 +127,9 @@ class CartServices {
 
       for (final existing in mProductsInCart) {
         if (existing.product?.id == cart.product?.id) {
-          final List<int> sortedExisting =
-              List<int>.from(existing.optionsIds ?? [])..sort();
+          final List<int> sortedExisting = List<int>.from(
+            existing.optionsIds ?? [],
+          )..sort();
           if (_listEquals(sortedExisting, sortedNew)) {
             existing.selectedQty =
                 (existing.selectedQty ?? 1) + cart.selectedQty!;
@@ -152,7 +152,7 @@ class CartServices {
       //update total item in cart count
       await updateTotalCartItemCount(totalCartQuantity);
       await getCartItems();
-      
+
       // Sync to backend
       CartBackendService.addToBackend(cart);
     } catch (error) {
@@ -161,16 +161,13 @@ class CartServices {
   }
 
   static saveCartItems(List<Cart> items) async {
-    await LocalStorageService.prefs?.setString(
-      cartItemsKey,
-      jsonEncode(items),
-    );
+    await LocalStorageService.prefs?.setString(cartItemsKey, jsonEncode(items));
 
     await getCartItems();
 
     //update total item in cart count
     await updateTotalCartItemCount(totalCartQuantity);
-    
+
     // Sync to backend
     CartBackendService.syncCartItems();
   }
@@ -274,7 +271,8 @@ class CartServices {
     int addedQty = 0;
     for (final item in productsInCart) {
       if (item.product?.id != product.id) continue;
-      final List<int> sortedExisting = List<int>.from(item.optionsIds ?? [])..sort();
+      final List<int> sortedExisting = List<int>.from(item.optionsIds ?? [])
+        ..sort();
       if (_listEquals(sortedExisting, sortedNew)) {
         addedQty += item.selectedQty!;
       }

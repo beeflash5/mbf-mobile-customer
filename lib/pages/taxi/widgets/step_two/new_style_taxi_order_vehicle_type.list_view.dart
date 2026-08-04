@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fuodz/services/app_currency_system.service.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:fuodz/component/list/new_horizontal_vehicle_type.list_item.dart';
 import 'package:fuodz/component/states/loading_indicator.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/providers/taxi_providers.dart';

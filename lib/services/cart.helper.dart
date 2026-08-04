@@ -110,10 +110,7 @@ class CartHelper {
     bool force = false,
     bool skip = false,
   }) async {
-    final int qty =
-        (product.selectedQty == null || product.selectedQty! < 1)
-            ? 1
-            : product.selectedQty!;
+    final int qty = (product.selectedQty < 1) ? 1 : product.selectedQty;
     product.selectedQty = qty;
     final cart =
         Cart()

@@ -14,7 +14,6 @@ import 'package:fuodz/component/card/custom_image_slider.dart';
 import 'package:fuodz/component/cart_page_action.dart';
 import 'package:fuodz/component/html_text_view.dart';
 import 'package:fuodz/models/product.dart';
-import 'package:fuodz/pages/cart/cart.page.dart';
 import 'package:fuodz/pages/product/widgets/add_to_cart.btn.dart';
 import 'package:fuodz/pages/product/widgets/amazon/frequently_bought_together.view.dart';
 import 'package:fuodz/pages/product/widgets/buy_now.btn.dart';

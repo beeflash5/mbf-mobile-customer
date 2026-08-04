@@ -7,10 +7,8 @@ import 'package:awesome_notifications/awesome_notifications.dart'
     hide NotificationModel;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/utils/app_routes.dart';
-import 'package:fuodz/utils/app_ui_settings.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fuodz/models/notification.dart';
 import 'package:fuodz/models/order.dart';
@@ -23,7 +21,6 @@ import 'package:fuodz/services/service.request.dart';
 import 'package:fuodz/services/vendor.request.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app.service.dart';
-import 'package:fuodz/services/chat.service.dart';
 import 'package:fuodz/services/notification.service.dart';
 import 'package:fuodz/services/toast.service.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';

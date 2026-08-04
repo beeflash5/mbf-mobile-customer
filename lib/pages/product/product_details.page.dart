@@ -10,7 +10,6 @@ import 'package:fuodz/component/button/share.btn.dart';
 import 'package:fuodz/component/cart_page_action.dart';
 import 'package:fuodz/component/custom_image.view.dart';
 import 'package:fuodz/component/states/loading_indicator.dart';
-import 'package:fuodz/component/webviewer.dart';
 import 'package:fuodz/component/html_text_view.dart';
 import 'package:fuodz/models/option_group.dart';
 import 'package:fuodz/models/product.dart';

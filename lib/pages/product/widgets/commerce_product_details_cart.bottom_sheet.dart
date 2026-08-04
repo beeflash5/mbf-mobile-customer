@@ -6,7 +6,6 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:fuodz/models/product.dart';
-import 'package:fuodz/pages/cart/cart.page.dart';
 import 'package:fuodz/pages/product/widgets/add_to_cart.btn.dart';
 import 'package:fuodz/pages/product/widgets/buy_now.btn.dart';
 import 'package:fuodz/providers/product_details_providers.dart';

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/models/option.dart';
@@ -122,7 +121,9 @@ class CartBackendService extends ApiService {
             }).toList();
 
         CartServices.productsInCart = parsedCarts;
-        await CartServices.updateTotalCartItemCount(CartServices.totalCartQuantity);
+        await CartServices.updateTotalCartItemCount(
+          CartServices.totalCartQuantity,
+        );
 
         await LocalStorageService.prefs!.setString(
           CartServices.cartItemsKey,

@@ -11,7 +11,6 @@ import 'package:fuodz/services/api_service.dart';
 import 'package:fuodz/component/base.page.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:fuodz/utils/extensions/context.dart';
@@ -175,7 +174,6 @@ class _CustomWebviewPageState extends State<CustomWebviewPage> {
           },
 
           onDownloadStartRequest: (controller, req) async {
-
             final url = req.url.toString();
 
             if (url.startsWith("data:image")) {

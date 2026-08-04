@@ -9,7 +9,6 @@ import 'package:fuodz/models/search.dart';
 import 'package:fuodz/providers/main_search_providers.dart';
 import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
-import 'package:fuodz/utils/utils.dart';
 
 import 'widget/product_search_result.view.dart';
 import 'widget/search.header.dart';

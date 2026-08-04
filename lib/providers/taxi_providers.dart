@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:dartx/dartx.dart'
     hide IterableFirstOrNull, StringIsNotBlankExtension;
-import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +23,6 @@ import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/pages/delivery_address/widgets/address_search.view.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/cart.request.dart';
-import 'package:fuodz/services/chat.service.dart';
 import 'package:fuodz/services/checkout_shared.helper.dart';
 import 'package:fuodz/services/geocoder.service.dart';
 import 'package:fuodz/services/location.service.dart';
@@ -40,7 +38,6 @@ import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/app_images.dart';
 import 'package:fuodz/utils/app_routes.dart';
 import 'package:fuodz/utils/app_strings.dart';
-import 'package:fuodz/utils/app_ui_settings.dart';
 import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/utils/map.utils.dart';
 
@@ -951,7 +948,11 @@ class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
       );
       if (coupon.useLeft <= 0) throw "Coupon use limit exceeded".tr();
       if (coupon.expired) throw "Coupon has expired".tr();
-      state = state.copyWith(coupon: coupon, couponError: null, couponBusy: false);
+      state = state.copyWith(
+        coupon: coupon,
+        couponError: null,
+        couponBusy: false,
+      );
       calculateTotalAmount();
       return true;
     } catch (error) {
@@ -1087,7 +1088,9 @@ class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
     } else {
       dynamic orderJson = apiResponse.body["order"];
       if (orderJson == null && apiResponse.body is Map) {
-        if (apiResponse.body["data"] != null && apiResponse.body["data"] is Map && apiResponse.body["data"]["order"] != null) {
+        if (apiResponse.body["data"] != null &&
+            apiResponse.body["data"] is Map &&
+            apiResponse.body["data"]["order"] != null) {
           orderJson = apiResponse.body["data"]["order"];
         } else if (apiResponse.body.containsKey("id")) {
           orderJson = apiResponse.body;
@@ -1104,10 +1107,13 @@ class TaxiController extends AutoDisposeFamilyNotifier<TaxiState, VendorType> {
       }
 
       if (orderJson == null) {
-        AlertService.error(title: "Order failed".tr(), text: "Invalid server response or order is null");
+        AlertService.error(
+          title: "Order failed".tr(),
+          text: "Invalid server response or order is null",
+        );
         return;
       }
-      
+
       final order = Order.fromJson(orderJson);
       state = state.copyWith(onGoingOrderTrip: order);
       final paymentLink = apiResponse.body["link"];

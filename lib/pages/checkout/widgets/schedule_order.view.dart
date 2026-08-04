@@ -6,7 +6,6 @@ import 'package:velocity_x/velocity_x.dart';
 
 import 'package:fuodz/component/busy_indicator.dart';
 import 'package:fuodz/component/custom_grid_view.dart';
-import 'package:fuodz/component/custom_list_view.dart';
 import 'package:fuodz/component/custom_text_form_field.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/utils/app_colors.dart';
@@ -91,7 +90,7 @@ class ScheduleOrderView extends StatelessWidget {
               UiSpacer.verticalSpace(space: 10),
               // For food, tattoo, and service-type bookings show the date/time
               // picker directly — no checkbox needed (mirrors Next.js behaviour).
-              if (!isFood && !isServiceBooking)
+              if (!isFood && !isServiceBooking && !isTattoo)
                 HStack([
                   Checkbox(
                     value: isScheduled,
@@ -107,24 +106,31 @@ class ScheduleOrderView extends StatelessWidget {
                 ]).onInkTap(() => onToggleScheduled(!isScheduled)),
             ]).wFull(context),
             Visibility(
-              visible: isScheduled || isServiceBooking,
+              visible: isScheduled || isServiceBooking || isFood || isTattoo,
               child: VStack([
                 UiSpacer.verticalSpace(),
                 "Date".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
                 Builder(
                   builder: (ctx) {
-                    final Set<String> availableDates = vendor.deliverySlots
-                        .where(
-                          (slot) => !dateFull.contains(
-                            DateFormat('yyyy-MM-dd', 'en').format(slot.date),
-                          ),
-                        )
-                        .map(
-                          (slot) =>
-                              DateFormat('yyyy-MM-dd', 'en').format(slot.date),
-                        )
-                        .toSet();
+                    final Set<String> availableDates =
+                        vendor.deliverySlots
+                            .where(
+                              (slot) =>
+                                  !dateFull.contains(
+                                    DateFormat(
+                                      'yyyy-MM-dd',
+                                      'en',
+                                    ).format(slot.date),
+                                  ),
+                            )
+                            .map(
+                              (slot) => DateFormat(
+                                'yyyy-MM-dd',
+                                'en',
+                              ).format(slot.date),
+                            )
+                            .toSet();
 
                     final bool hasSlots =
                         (isTattoo ||
@@ -135,8 +141,10 @@ class ScheduleOrderView extends StatelessWidget {
                     String? displayDate;
                     try {
                       if (selectedDate != null) {
-                        displayDate = DateFormat('EEE, dd MMM yyyy', 'en')
-                            .format(DateTime.parse(selectedDate!));
+                        displayDate = DateFormat(
+                          'EEE, dd MMM yyyy',
+                          'en',
+                        ).format(DateTime.parse(selectedDate!));
                       }
                     } catch (_) {
                       displayDate = selectedDate;
@@ -153,11 +161,14 @@ class ScheduleOrderView extends StatelessWidget {
                         if (hasSlots) {
                           final sorted = availableDates.toList()..sort();
                           safeFirst = DateTime.parse(sorted.first);
-                          safeLast = DateTime.parse(sorted.last)
-                              .add(const Duration(days: 1));
+                          safeLast = DateTime.parse(
+                            sorted.last,
+                          ).add(const Duration(days: 1));
                           predicate = (day) {
-                            final f =
-                                DateFormat('yyyy-MM-dd', 'en').format(day);
+                            final f = DateFormat(
+                              'yyyy-MM-dd',
+                              'en',
+                            ).format(day);
                             return availableDates.contains(f);
                           };
                         } else {
@@ -175,24 +186,27 @@ class ScheduleOrderView extends StatelessWidget {
                           firstDate: safeFirst,
                           lastDate: safeLast,
                           selectableDayPredicate: predicate,
-                          builder: (context, child) => Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme:
-                                  Theme.of(context).colorScheme.copyWith(
-                                        primary: AppColor.primaryColor,
-                                      ),
-                            ),
-                            child: child!,
-                          ),
+                          builder:
+                              (context, child) => Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: Theme.of(context).colorScheme
+                                      .copyWith(primary: AppColor.primaryColor),
+                                ),
+                                child: child!,
+                              ),
                         );
 
                         if (picked != null) {
-                          final formatted =
-                              DateFormat('yyyy-MM-dd', 'en').format(picked);
+                          final formatted = DateFormat(
+                            'yyyy-MM-dd',
+                            'en',
+                          ).format(picked);
                           final index = vendor.deliverySlots.indexWhere(
                             (slot) =>
-                                DateFormat('yyyy-MM-dd', 'en')
-                                    .format(slot.date) ==
+                                DateFormat(
+                                  'yyyy-MM-dd',
+                                  'en',
+                                ).format(slot.date) ==
                                 formatted,
                           );
                           onSelectDate(formatted, index >= 0 ? index : 0);
@@ -205,9 +219,10 @@ class ScheduleOrderView extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: selectedDate != null
-                                ? AppColor.primaryColor
-                                : const Color(0xffD9D9D9),
+                            color:
+                                selectedDate != null
+                                    ? AppColor.primaryColor
+                                    : const Color(0xffD9D9D9),
                             width: selectedDate != null ? 1.5 : 1.0,
                           ),
                           borderRadius: BorderRadius.circular(8),
@@ -225,9 +240,10 @@ class ScheduleOrderView extends StatelessWidget {
                               child: Text(
                                 displayDate ?? 'Select Date'.tr(),
                                 style: TextStyle(
-                                  color: selectedDate != null
-                                      ? Colors.black87
-                                      : const Color(0xff808080),
+                                  color:
+                                      selectedDate != null
+                                          ? Colors.black87
+                                          : const Color(0xff808080),
                                   fontSize: 14,
                                 ),
                               ),

@@ -73,7 +73,7 @@ class OrderTaxiButton extends ConsumerWidget {
                     visible: taxiState.subTotal > taxiState.total,
                     child: HStack([
                       taxiState.subTotal
-                          .convertIf(selectedVehicleType?.currency == null)
+                          .convertIf(selectedVehicleType.currency == null)
                           .currencyValueFormat()
                           .text
                           .color(textColor)
@@ -81,7 +81,7 @@ class OrderTaxiButton extends ConsumerWidget {
                           .lineThrough
                           .make(),
                       taxiState.total
-                          .convertIf(selectedVehicleType?.currency == null)
+                          .convertIf(selectedVehicleType.currency == null)
                           .currencyValueFormat()
                           .text
                           .color(textColor)
@@ -94,7 +94,7 @@ class OrderTaxiButton extends ConsumerWidget {
                     visible: !(taxiState.subTotal > taxiState.total),
                     child:
                         taxiState.total
-                            .convertIf(selectedVehicleType?.currency == null)
+                            .convertIf(selectedVehicleType.currency == null)
                             .currencyValueFormat()
                             .text
                             .color(textColor)

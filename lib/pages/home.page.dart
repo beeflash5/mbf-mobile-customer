@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:upgrader/upgrader.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:fuodz/component/base.page.dart';
@@ -22,12 +19,9 @@ import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/services/navigation.service.dart';
 import 'package:fuodz/utils/app_colors.dart';
 import 'package:fuodz/utils/app_strings.dart';
-import 'package:fuodz/utils/app_ui_settings.dart';
-import 'package:fuodz/utils/app_upgrade_settings.dart';
 
 import 'order/orders.page.dart';
 import 'favourite/favourites.page.dart';
-import 'welcome/widgets/cart.fab.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});

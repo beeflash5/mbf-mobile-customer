@@ -330,9 +330,7 @@ class Order {
       fees:
           (fees == null || fees is! List)
               ? []
-              : List<OrderFee>.from(
-                (fees as List).map((x) => OrderFee.fromJson(x)),
-              ),
+              : List<OrderFee>.from((fees).map((x) => OrderFee.fromJson(x))),
 
       tatto_placement:
           json["tatto_placement"] != null ? json["tatto_placement"] : null,

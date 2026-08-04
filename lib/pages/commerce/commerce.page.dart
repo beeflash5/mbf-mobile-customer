@@ -21,7 +21,6 @@ import 'package:fuodz/pages/flash_sale/widgets/flash_sale.view.dart';
 import 'package:fuodz/pages/cart/cart.page.dart';
 import 'package:fuodz/services/cart.service.dart';
 import 'package:fuodz/utils/utils.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class CommercePage extends ConsumerStatefulWidget {
   const CommercePage(this.vendorType, {super.key});

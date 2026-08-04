@@ -23,7 +23,6 @@ import 'package:fuodz/pages/flash_sale/widgets/flash_sale.view.dart';
 import 'package:fuodz/pages/cart/cart.page.dart';
 import 'package:fuodz/services/cart.service.dart';
 import 'package:fuodz/utils/utils.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class FoodPage extends ConsumerStatefulWidget {
   const FoodPage(this.vendorType, {super.key});
@@ -90,10 +89,17 @@ class _FoodPageState extends ConsumerState<FoodPage>
                     );
                     if (snapshot.hasData && snapshot.data > 0) {
                       return child.badge(
-                        position: Utils.isArabic ? VxBadgePosition.leftTop : VxBadgePosition.rightTop,
+                        position:
+                            Utils.isArabic
+                                ? VxBadgePosition.leftTop
+                                : VxBadgePosition.rightTop,
                         count: snapshot.data,
                         color: Colors.red,
-                        textStyle: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
                       );
                     }
                     return child;

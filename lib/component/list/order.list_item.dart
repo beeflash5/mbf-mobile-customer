@@ -49,7 +49,7 @@ class OrderListItem extends StatelessWidget {
                         ? (order.orderService?.service?.category?.name ?? "-")
                         : "%s Product(s)".tr().fill([
                           order.orderProducts?.length ?? 0,
-                        ]))!
+                        ]))
                     .text
                     .medium
                     .make()

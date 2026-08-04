@@ -25,7 +25,6 @@ import 'package:fuodz/utils/extensions/router.dart';
 import 'package:fuodz/pages/cart/cart.page.dart';
 import 'package:fuodz/services/cart.service.dart';
 import 'package:fuodz/utils/utils.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class EmptyWelcome extends ConsumerStatefulWidget {
   const EmptyWelcome({super.key});

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/services/firebase_token.service.dart';
