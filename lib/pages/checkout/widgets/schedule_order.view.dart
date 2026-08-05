@@ -265,7 +265,7 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 "Time".tr().text.lg.make(),
                 UiSpacer.verticalSpace(space: 10),
-                (isTattoo || isServiceBooking || availableTimeSlots.isNotEmpty)
+                availableTimeSlots.isNotEmpty
                     ? DropdownButtonFormField<String>(
                       value:
                           availableTimeSlots.contains(selectedTime)

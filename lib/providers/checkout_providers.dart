@@ -82,6 +82,7 @@ class CheckoutState {
         if (v.can_dinein == true) return true;
         if ((v.qty_tables ?? 0) > 0) return true;
       }
+      if (items.first.product?.vendor_type_id == 2) return true;
     }
     return false;
   }
