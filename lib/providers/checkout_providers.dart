@@ -216,9 +216,13 @@ class CheckoutController
     print(
       '[CHECKOUT] vendor=${v.id}, isFoodOrder=${state.isFoodOrder}, isFoodOrBeverage=${v.isFoodOrBeverage}, can_dinein=${v.can_dinein}, vendorTypeId=${v.vendorTypeId}, slug=${v.vendorType.slug}',
     );
-    if (v.allowOnlyDelivery) {
+    final hasNonDeliverable = (state.checkout.cartItems ??
+            CartServices.productsInCart)
+        .any((i) => i.product?.canBeDelivered == false);
+
+    if (v.allowOnlyDelivery && !hasNonDeliverable) {
       state = state.copyWith(isPickup: false);
-    } else if (v.allowOnlyPickup) {
+    } else if (v.allowOnlyPickup || hasNonDeliverable) {
       state = state.copyWith(isPickup: true);
     }
     // Mirror Next.js: food & not pickup → reservation auto-open
@@ -573,15 +577,6 @@ class CheckoutController
         text:
             "You must be old enough to purchase this product. (Customer harus cukup umur untuk membeli produk ini)"
                 .tr(),
-      );
-      return;
-    } else if (!state.isPickup &&
-        state.checkout.deliveryAddress == null &&
-        state.deliveryAddress == null &&
-        !(state.vendor?.can_dinein == true && state.isScheduled)) {
-      AlertService.error(
-        title: "Delivery Address".tr(),
-        text: "Please add or select a delivery address.".tr(),
       );
       return;
     } else if (state.selectedPaymentMethod == null) {

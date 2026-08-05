@@ -113,28 +113,46 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 Builder(
                   builder: (ctx) {
-                    final Set<String> availableDates =
+                    final daysMap = <String, int>{
+                      "monday": 1, "tuesday": 2, "wednesday": 3,
+                      "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7
+                    };
+                    
+                    final Set<String> availableDates = {};
+                    if (vendor.days.isNotEmpty) {
+                      final validDays = vendor.days
+                          .map((d) => daysMap[d.name.toLowerCase()])
+                          .whereType<int>()
+                          .toList();
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
+                      for (int i = 0; i < 180; i++) {
+                        final d = today.add(Duration(days: i));
+                        if (validDays.contains(d.weekday)) {
+                          final dateStr = DateFormat('yyyy-MM-dd', 'en').format(d);
+                          if (!dateFull.contains(dateStr)) {
+                            availableDates.add(dateStr);
+                          }
+                        }
+                      }
+                    } else {
+                      availableDates.addAll(
                         vendor.deliverySlots
                             .where(
-                              (slot) =>
-                                  !dateFull.contains(
-                                    DateFormat(
-                                      'yyyy-MM-dd',
-                                      'en',
-                                    ).format(slot.date),
-                                  ),
+                              (slot) => !dateFull.contains(
+                                DateFormat('yyyy-MM-dd', 'en').format(slot.date),
+                              ),
                             )
                             .map(
-                              (slot) => DateFormat(
-                                'yyyy-MM-dd',
-                                'en',
-                              ).format(slot.date),
-                            )
-                            .toSet();
+                              (slot) => DateFormat('yyyy-MM-dd', 'en').format(slot.date),
+                            ),
+                      );
+                    }
 
                     final bool hasSlots =
                         (isTattoo ||
                             isServiceBooking ||
+                            vendor.days.isNotEmpty ||
                             vendor.deliverySlots.isNotEmpty) &&
                         availableDates.isNotEmpty;
 
