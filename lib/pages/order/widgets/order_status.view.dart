@@ -191,7 +191,7 @@ class OrderStatusView extends StatelessWidget {
             CustomButton(title: "Reschedule", onPressed: onReschedule),
           ],
         ),
-      if (['ready'].contains(order.status) &&
+      if (['preparing', 'ready'].contains(order.status) &&
           order.dp_status == 1 &&
           order.sisa_status == 0 &&
           order.vendor?.vendorType.slug == 'food')
