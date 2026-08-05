@@ -113,20 +113,15 @@ class ScheduleOrderView extends StatelessWidget {
                 UiSpacer.verticalSpace(space: 10),
                 Builder(
                   builder: (ctx) {
-                    final daysMap = <String, int>{
-                      "monday": 1, "tuesday": 2, "wednesday": 3,
-                      "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7
-                    };
-                    
                     final Set<String> availableDates = {};
                     if (vendor.days.isNotEmpty) {
                       final validDays = vendor.days
-                          .map((d) => daysMap[d.name.toLowerCase()])
+                          .map((d) => d.id)
                           .whereType<int>()
                           .toList();
                       final now = DateTime.now();
                       final today = DateTime(now.year, now.month, now.day);
-                      for (int i = 0; i < 180; i++) {
+                      for (int i = 0; i < 365; i++) {
                         final d = today.add(Duration(days: i));
                         if (validDays.contains(d.weekday)) {
                           final dateStr = DateFormat('yyyy-MM-dd', 'en').format(d);
@@ -135,7 +130,7 @@ class ScheduleOrderView extends StatelessWidget {
                           }
                         }
                       }
-                    } else {
+                    } else if (!isServiceBooking && !isTattoo) {
                       availableDates.addAll(
                         vendor.deliverySlots
                             .where(
