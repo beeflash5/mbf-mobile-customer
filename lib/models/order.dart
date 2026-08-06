@@ -503,10 +503,18 @@ class Order {
   //getters
 
   //
-  get isPaymentPending =>
-      paymentStatus == "pending" &&
-      ["pending", "scheduled"].contains(status) &&
-      (paymentMethod == null || paymentMethod?.isCash != 1);
+  get isPaymentPending {
+    bool normalPayment = paymentStatus == "pending" &&
+        ["pending", "scheduled"].contains(status) &&
+        (paymentMethod == null || paymentMethod?.isCash != 1);
+
+    bool sisaPayment = sisa_status == 0 &&
+        dp_status == 1 &&
+        (paymentMethod == null || paymentMethod?.isCash != 1) &&
+        ["preparing", "ready"].contains(status);
+
+    return normalPayment || sisaPayment;
+  }
 
   bool get isOngoing =>
       ![
