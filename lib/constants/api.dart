@@ -78,6 +78,10 @@ class Api {
   static const order_checkin = "/order/checkin";
   static const trackOrder = "/track/order";
   static const syncDriverLocation = "/orders/{order}/driver/location/sync";
+
+  /// POST /orders/{id}/pay-remaining — get or create a gateway checkout URL
+  /// for the remaining balance (sisa) after DP has been paid.
+  static String orderPayRemaining(int orderId) => "/orders/$orderId/pay-remaining";
   static const packageOrders = "/package/orders";
   static const packageOrderSummary = "/package/order/summary";
   static const generalOrderDeliveryFeeSummary =

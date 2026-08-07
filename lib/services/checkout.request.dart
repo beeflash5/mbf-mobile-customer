@@ -423,4 +423,21 @@ class CheckoutRequest extends ApiService {
 
     throw apiResponse.message!;
   }
+
+  /// Calls `POST /orders/{id}/pay-remaining` to get or create a gateway
+  /// checkout URL for the remaining balance (sisa).
+  ///
+  /// Returns the payment URL string on success.
+  /// Throws a [String] error message on failure.
+  Future<String> getSisaPaymentLink(int orderId) async {
+    final apiResult = await post(Api.orderPayRemaining(orderId), {});
+    final apiResponse = ApiResponse.fromResponse(apiResult);
+    if (apiResponse.allGood) {
+      final link = apiResponse.body?['link']?.toString() ?? '';
+      if (link.isNotEmpty) return link;
+      throw 'No payment link returned from server';
+    }
+    throw apiResponse.message ?? 'Failed to get remaining balance payment link';
+  }
 }
+

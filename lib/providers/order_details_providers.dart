@@ -17,6 +17,7 @@ import 'package:fuodz/pages/checkout/widgets/payment_methods.view.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/checkout_shared.helper.dart';
+import 'package:fuodz/services/checkout.request.dart';
 import 'package:fuodz/services/order.request.dart';
 import 'package:fuodz/services/order_details_websocket.service.dart';
 import 'package:fuodz/services/payment.helper.dart';
@@ -297,7 +298,34 @@ class OrderDetailsController
 
   Future<dynamic> openOrderPayment(BuildContext context) async {
     final order = state.order;
-    if ((order.paymentMethod?.slug ?? "offline") != "offline") {
+
+    // ── Remaining balance (sisa) flow ───────────────────────────────────────
+    // When DP has been paid (dp_status == 1) but sisa is still outstanding
+    // (sisa_status == 0), request a fresh gateway invoice for the sisa amount
+    // from Spring instead of reusing the stale DP payment URL.
+    if ((order.dp ?? 0) > 0 &&
+        order.dp_status == 1 &&
+        order.sisa_status == 0) {
+      final slug = order.paymentMethod?.slug ?? 'offline';
+      // Cash / wallet: no gateway link needed — nothing to open.
+      if (slug == 'offline' || slug == 'cash' || slug == 'wallet') {
+        return;
+      }
+      try {
+        final checkoutReq = CheckoutRequest();
+        final sisaUrl = await checkoutReq.getSisaPaymentLink(order.id);
+        if (slug == 'offline') {
+          return PaymentHelper.openExternalWebpageLink(sisaUrl);
+        }
+        return PaymentHelper.openWebpageLink(context, sisaUrl);
+      } catch (e) {
+        ToastService.toastError('$e');
+        return;
+      }
+    }
+
+    // ── Normal (first-time / non-DP) payment flow ───────────────────────────
+    if ((order.paymentMethod?.slug ?? 'offline') != 'offline') {
       return PaymentHelper.openWebpageLink(context, order.paymentLink);
     }
     return PaymentHelper.openExternalWebpageLink(order.paymentLink);
