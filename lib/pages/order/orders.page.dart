@@ -18,6 +18,7 @@ import 'package:fuodz/pages/order/taxi_order_details.page.dart';
 import 'package:fuodz/providers/orders_providers.dart';
 import 'package:fuodz/services/auth.service.dart';
 import 'package:fuodz/services/payment.helper.dart';
+import 'package:fuodz/services/order.service.dart';
 import 'package:fuodz/utils/sizes.dart';
 
 class OrdersPage extends ConsumerStatefulWidget {
@@ -94,11 +95,9 @@ class _OrdersPageState extends ConsumerState<OrdersPage>
                 order: order,
                 orderPressed: () => _openOrderDetails(order),
                 onPayPressed:
-                    () => PaymentHelper.openOrderPayment(
-                      context,
-                      order.paymentLink,
-                      offline:
-                          (order.paymentMethod?.slug ?? 'offline') == 'offline',
+                    () => OrderService.openOrderPayment(
+                      order,
+                      context: context,
                     ),
               );
             },
